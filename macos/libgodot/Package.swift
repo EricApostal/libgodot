@@ -6,26 +6,24 @@ import PackageDescription
 let package = Package(
     name: "libgodot",
     platforms: [
-        .macOS("10.15")
+        .macOS("14.0")
     ],
     products: [
         .library(name: "libgodot", targets: ["libgodot"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/migueldeicaza/SwiftGodot", revision: "20d2d7a35d2ad392ec556219ea004da14ab7c1d4"),
+        .package(
+            url: "https://github.com/migueldeicaza/SwiftGodotKit", branch: "main"),
+    ],
     targets: [
         // Binary distribution of libgodot. Replace the placeholder checksum below
         // by running (from this directory):
         //   swift package compute-checksum libgodot.xcframework.zip
         // after downloading the archive from the URL.
-        .binaryTarget(
-            name: "LibGodotBinary",
-            url:
-                "https://github.com/migueldeicaza/SwiftGodotKit/releases/download/0.60.2/mac_libgodot.xcframework.zip",
-            checksum: "652f731db8ce584af743c6957f75d0f90e7575e363eaee481cb43f4e0ccf8dce"
-        ),
         .target(
             name: "libgodot",
-            dependencies: ["LibGodotBinary"],
+            dependencies: ["SwiftGodot", "SwiftGodotKit"],
             resources: [
                 // If your plugin requires a privacy manifest, for example if it collects user
                 // data, update the PrivacyInfo.xcprivacy file to describe your plugin's
@@ -37,6 +35,6 @@ let package = Package(
                 // the following instructions to add them:
                 // https://developer.apple.com/documentation/xcode/bundling-resources-with-a-swift-package
             ]
-        ),
+        )
     ]
 )
