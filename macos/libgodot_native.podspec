@@ -3,18 +3,30 @@
 # Run `pod lib lint libgodot.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'libgodot'
+  s.name             = 'LibgodotNative'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin project.'
+  s.summary          = 'Workaround for stupid pods bug'
   s.description      = <<-DESC
-A new Flutter plugin project.
+Workaround for stupid pods bug
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
 
   s.source           = { :path => '.' }
-  s.source_files = 'libgodot/Sources/libgodot/**/*'
+  s.module_name      = 'LibgodotNative'
+
+  s.prepare_command = <<-CMD
+    echo "Building libgodot native library..."
+    cd build
+    chmod +x build.sh
+    ./build.sh
+    cd ..
+  CMD
+  
+
+  s.vendored_frameworks = 'libgodot.xcframework'
+
 
   # If your plugin requires a privacy manifest, for example if it collects user
   # data, update the PrivacyInfo.xcprivacy file to describe your plugin's
@@ -23,7 +35,6 @@ A new Flutter plugin project.
   # s.resource_bundles = {'libgodot_privacy' => ['libgodot/Sources/libgodot/PrivacyInfo.xcprivacy']}
 
   s.dependency 'FlutterMacOS'
-  s.dependency 'LibgodotNative'
 
   s.platform = :osx, '10.11'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }

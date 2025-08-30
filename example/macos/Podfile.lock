@@ -2,21 +2,28 @@ PODS:
   - FlutterMacOS (1.0.0)
   - libgodot (0.0.1):
     - FlutterMacOS
+    - LibgodotNative
+  - LibgodotNative (0.0.1):
+    - FlutterMacOS
 
 DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
   - libgodot (from `Flutter/ephemeral/.symlinks/plugins/libgodot/macos`)
+  - LibgodotNative (from `/Users/eric/Documents/development/languages/dart/libgodot/macos/native`)
 
 EXTERNAL SOURCES:
   FlutterMacOS:
     :path: Flutter/ephemeral
   libgodot:
     :path: Flutter/ephemeral/.symlinks/plugins/libgodot/macos
+  LibgodotNative:
+    :path: "/Users/eric/Documents/development/languages/dart/libgodot/macos/native"
 
 SPEC CHECKSUMS:
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
-  libgodot: 0052874f0868e414c140381d74f85da4f34a24f4
+  libgodot: 368580230f82ebe25e4896f6f6037e96fff856f0
+  LibgodotNative: 827b4af90606ae70b12c379c19481784a112909b
 
-PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009
+PODFILE CHECKSUM: 6cbd949c5992404e0ed9d72cc0d91c96ea2a1b61
 
 COCOAPODS: 1.16.2
