@@ -13,13 +13,19 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
+        // Binary distribution of libgodot. Replace the placeholder checksum below
+        // by running (from this directory):
+        //   swift package compute-checksum libgodot.xcframework.zip
+        // after downloading the archive from the URL.
         .binaryTarget(
-            name: "libgodotBinary",
-            path: "../../../../../../../build/libgodot.xcframework.zip"
+            name: "LibGodotBinary",
+            url:
+                "https://github.com/migueldeicaza/SwiftGodotKit/releases/download/0.60.2/mac_libgodot.xcframework.zip",
+            checksum: "652f731db8ce584af743c6957f75d0f90e7575e363eaee481cb43f4e0ccf8dce"
         ),
         .target(
             name: "libgodot",
-            dependencies: ["libgodotBinary"],
+            dependencies: ["LibGodotBinary"],
             resources: [
                 // If your plugin requires a privacy manifest, for example if it collects user
                 // data, update the PrivacyInfo.xcprivacy file to describe your plugin's
