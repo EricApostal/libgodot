@@ -13,9 +13,13 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
+        .binaryTarget(
+            name: "libgodotBinary",
+            path: "../build/libgodot.xcframework.zip"
+        ),
         .target(
             name: "libgodot",
-            dependencies: [],
+            dependencies: ["libgodotBinary"],
             resources: [
                 // If your plugin requires a privacy manifest, for example if it collects user
                 // data, update the PrivacyInfo.xcprivacy file to describe your plugin's
@@ -27,6 +31,6 @@ let package = Package(
                 // the following instructions to add them:
                 // https://developer.apple.com/documentation/xcode/bundling-resources-with-a-swift-package
             ]
-        )
+        ),
     ]
 )

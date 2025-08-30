@@ -16,6 +16,15 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'libgodot/Sources/libgodot/**/*'
 
+  # Build the native libgodot library before installing the pod
+  s.prepare_command = <<-CMD
+    echo "Building libgodot native library..."
+    cd build
+    chmod +x build.sh
+    ./build.sh
+    cd ..
+  CMD
+
   # If your plugin requires a privacy manifest, for example if it collects user
   # data, update the PrivacyInfo.xcprivacy file to describe your plugin's
   # privacy impact, and then uncomment this line. For more information,
