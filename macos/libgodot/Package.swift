@@ -15,7 +15,7 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "libgodotBinary",
-            path: "../build/libgodot.xcframework.zip"
+            path: "../../../../../../../build/libgodot.xcframework.zip"
         ),
         .target(
             name: "libgodot",
