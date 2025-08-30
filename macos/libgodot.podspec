@@ -5,25 +5,43 @@
 Pod::Spec.new do |s|
   s.name             = 'libgodot'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin project.'
+  s.summary          = 'Godot engine integration for Flutter (macOS).' 
   s.description      = <<-DESC
-A new Flutter plugin project.
-                       DESC
+Flutter macOS plugin bridging to a vendored Godot engine xcframework while providing Swift glue code.
+  DESC
   s.homepage         = 'http://example.com'
-  s.license          = { :file => '../LICENSE' }
+  s.license          = { :type => 'MIT', :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
 
-  s.source           = { :path => '.' }
-  s.source_files = 'libgodot/Sources/libgodot/**/*'
+  # Provide a dummy git source (required primary key) even though we vend via path.
+  s.source           = { :git => 'https://example.com/libgodot.git', :tag => s.version.to_s }
 
-  # If your plugin requires a privacy manifest, for example if it collects user
-  # data, update the PrivacyInfo.xcprivacy file to describe your plugin's
-  # privacy impact, and then uncomment this line. For more information,
-  # see https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
-  # s.resource_bundles = {'libgodot_privacy' => ['libgodot/Sources/libgodot/PrivacyInfo.xcprivacy']}
+  # Build (if needed) prior to integrating subspecs; subspecs themselves cannot have prepare_command.
+  s.prepare_command = <<-CMD
+    echo "[libgodot] Root prepare step: verifying libgodot.xcframework"
+    if [ ! -d "libgodot.xcframework" ]; then
+      echo "xcframework missing; attempting build...";
+      if [ -d build ]; then cd build; fi
+      if [ -x build.sh ]; then chmod +x build.sh; ./build.sh; else echo "build.sh not found"; fi
+    else
+      echo "xcframework present."
+    fi
+  CMD
 
-  s.dependency 'FlutterMacOS'
-  s.dependency 'LibgodotNative'
+  # Work around CocoaPods/Flutter issue by splitting source files and vendored framework
+  # into subspecs. Both are part of default_subspecs so a simple `pod libgodot` install
+  # includes engine + plugin code without Podfile customization.
+  s.default_subspecs = ['Core', 'Engine']
+
+  s.subspec 'Core' do |core|
+    core.source_files = 'libgodot/Sources/libgodot/**/*'
+    core.dependency 'FlutterMacOS'
+  end
+
+  s.subspec 'Engine' do |eng|
+    eng.vendored_frameworks = 'libgodot.xcframework'
+    eng.dependency 'FlutterMacOS'
+  end
 
   s.platform = :osx, '10.11'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }

@@ -28,22 +28,6 @@ flutter_macos_podfile_setup
 
 target 'Runner' do
   use_frameworks!
-
-  # Explicitly declare the secondary development pod spec that the main
-  # 'libgodot' pod (added by flutter_install_all_macos_pods) depends on.
-  # Without this, CocoaPods can't resolve 'libgodot-native' because it's not
-  # published to a spec repo and not otherwise referenced in the Podfile.
-  # Resolve the plugin's macOS folder directly via relative path to avoid timing
-  # issues with Flutter's .symlinks directory generation.
-  libgodot_plugin_macos_dir = File.expand_path(File.join(__dir__, '..', '..', 'macos', 'native'))
-  native_podspec_path = File.join(libgodot_plugin_macos_dir, 'LibgodotNative.podspec')
-  if File.exist?(native_podspec_path)
-    # Use development pod (path) so CocoaPods skips fetching strategy.
-    pod 'LibgodotNative', :path => libgodot_plugin_macos_dir
-  else
-    puts "warning: libgodot_native.podspec not found at #{native_podspec_path}"
-  end
-
   flutter_install_all_macos_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
     inherit! :search_paths
