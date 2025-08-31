@@ -52,57 +52,10 @@ final class GodotAPI {
   private(set) var rnsAppleGetLayer: FnRNSAppleGetLayer?
   private(set) var rnsAppleDestroy: FnRNSAppleDestroy?
 
-  // Attempt to open a plausible set of library names once.
   private init() {
-    let candidates = [
-      "libgodot.dylib",  // generic name if installed in rpath
-      "libgodot.macos.template_debug.dev.arm64.dylib",  // debug template name from assets
-    ]
-    var handle: UnsafeMutableRawPointer? = nil
-    for name in candidates {
-      handle = dlopen(name, RTLD_NOW | RTLD_GLOBAL)
-      if handle != nil { break }
-    }
-    // Fallback: global namespace (symbols already loaded by Dart FFI)
-    if handle == nil { handle = dlopen(nil, RTLD_NOW) }
-    guard let h = handle else {
-      NSLog(
-        "[libgodot][swift] Failed to dlopen any libgodot candidate; dynamic symbols unavailable")
-      return
-    }
-    func sym<T>(_ name: String, as: T.Type) -> T? {
-      unsafeBitCast(dlsym(h, name), to: Optional<T>.self)
-    }
-    isAvailable = sym("libgodot_display_server_embedded_is_available", as: FnIsAvailable.self)
-    processEvents = sym("libgodot_display_server_embedded_process_events", as: FnProcessEvents.self)
-    resizeWindow = sym("libgodot_display_server_embedded_resize_window", as: FnResizeWindow.self)
-    getWindowSize = sym(
-      "libgodot_display_server_embedded_get_window_size", as: FnGetWindowSize.self)
-    swapBuffers = sym("libgodot_display_server_embedded_swap_buffers", as: FnSwapBuffers.self)
-    setContentScale = sym(
-      "libgodot_display_server_embedded_set_content_scale", as: FnSetContentScale.self)
-    keyInput = sym("libgodot_display_server_embedded_key", as: FnKey.self)
-    mouseSetMode = sym("libgodot_display_server_embedded_mouse_set_mode", as: FnMouseSetMode.self)
-    windowSetTitle = sym(
-      "libgodot_display_server_embedded_window_set_title", as: FnWindowSetTitle.self)
-    glMakeCurrent = sym(
-      "libgodot_display_server_embedded_gl_window_make_current", as: FnGLMakeCurrent.self)
-    setNativeSurface = sym(
-      "libgodot_display_server_embedded_set_native_surface", as: FnSetNativeSurface.self)
-    setMetalLayer = sym(
-      "libgodot_display_server_embedded_set_metal_layer", as: FnSetMetalLayer.self)
-    createNativeWindow = sym(
-      "libgodot_display_server_embedded_create_native_window", as: FnCreateNativeWindow.self)
-    deleteWindow = sym("libgodot_display_server_embedded_delete_window", as: FnDeleteWindow.self)
-    registerEmbeddedDriver = sym(
-      "libgodot_display_server_embedded_register_embedded_driver", as: FnRegisterEmbeddedDriver.self
-    )
-    rnsAppleCreate = sym(
-      "libgodot_rendering_native_surface_apple_create", as: FnRNSAppleCreate.self)
-    rnsAppleGetLayer = sym(
-      "libgodot_rendering_native_surface_apple_get_layer", as: FnRNSAppleGetLayer.self)
-    rnsAppleDestroy = sym(
-      "libgodot_rendering_native_surface_apple_destroy", as: FnRNSAppleDestroy.self)
+    // this used to load from the dylib but it wasn't stable so overriding the symbols shall do
+    // ngl I really should just do this in the dart layer and pass handles...
+
   }
 
   // Allow overriding resolved symbols with raw function pointer addresses
@@ -183,6 +136,7 @@ private final class GodotRenderLoop {
 
   func startIfNeeded() {
     guard !running else { return }
+
     if api.isAvailable?() != 1 {
       NSLog(
         "[libgodot][swift] DisplayServerEmbedded not available yet (\(api.isAvailable?() ?? -1));"
@@ -253,6 +207,12 @@ final class GodotHostView: NSView {
         ml.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
         ml.isOpaque = true
         ml.backgroundColor = NSColor.black.cgColor
+        // START APPLE RENDER SURFACE SHIT HERE
+        let rendererNativeSurface = rnsAppleCreate(
+          UInt(bitPattern: Unmanaged.passUnretained(renderingLayer!).toOpaque())
+        )
+        api.setNativeSurface(rendererNativeSurface)
+
       } else {
         layer?.backgroundColor = NSColor.black.cgColor
       }
