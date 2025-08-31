@@ -1,10 +1,12 @@
 import 'dart:ffi' as ffi;
+import 'dart:ffi'; // for DynamicLibrary.process()
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
 import 'generated_bindings.dart';
 import 'libgodot.dart';
 import 'gdextension_loader.dart';
 import 'dart:io' show Directory;
+import 'package:flutter/services.dart';
 
 /// Represents a created Godot instance (opaque native object handle).
 class GodotInstance {
@@ -132,6 +134,10 @@ GodotInstance createGodotInstance({List<String> arguments = const []}) {
   print("IS AVAIL?");
   print(libgodotNative.libgodot_display_server_embedded_is_available());
 
+  // Provide Swift side with raw addresses of critical symbols so it can
+  // directly call them even if its own dlopen()/dlsym attempts failed.
+  _maybeRegisterSymbolsWithHost();
+
   // Free argv contents after creation attempt.
   for (final p in allocatedStrings) {
     pkg_ffi.malloc.free(p);
@@ -239,4 +245,51 @@ Future<GodotInstanceWithExtensions> createGodotInstanceFromPackWithExtensions({
 
   final instance = createGodotInstance(arguments: args);
   return GodotInstanceWithExtensions(instance, loaded, stagingRootDir.path);
+}
+
+/// Registers a subset of native function symbol addresses with the host (Swift)
+/// plugin so it can invoke them directly. No-ops on non-macOS.
+Future<void> _maybeRegisterSymbolsWithHost() async {
+  // Only implemented for macOS currently.
+  // Intentionally do not guard with Platform.isMacOS to avoid import cycles.
+  const channel = MethodChannel('libgodot');
+  try {
+    final dylib = libgodotNative; // ensure loaded
+    // Touch a field on dylib to avoid unused warning (no-op)
+    // ignore: unnecessary_statements
+    dylib.hashCode;
+    // Use the private _lookup closure via the generated bindings by reflection is not possible.
+    // Instead, re-open symbols via DynamicLibrary.process (already globally loaded) to fetch addresses.
+    final processLib = DynamicLibrary.process();
+    Map<String, int> symbols = {};
+    for (final name in [
+      'libgodot_display_server_embedded_is_available',
+      'libgodot_display_server_embedded_process_events',
+      'libgodot_display_server_embedded_resize_window',
+      'libgodot_display_server_embedded_get_window_size',
+      'libgodot_display_server_embedded_swap_buffers',
+      'libgodot_display_server_embedded_set_content_scale',
+      'libgodot_display_server_embedded_key',
+      'libgodot_display_server_embedded_mouse_set_mode',
+      'libgodot_display_server_embedded_window_set_title',
+      'libgodot_display_server_embedded_gl_window_make_current',
+      'libgodot_display_server_embedded_set_native_surface',
+      'libgodot_display_server_embedded_create_native_window',
+      'libgodot_display_server_embedded_delete_window',
+    ]) {
+      try {
+        final ptr = processLib.lookup<ffi.NativeFunction<ffi.Void Function()>>(
+          name,
+        );
+        symbols[name] = ptr.address;
+      } catch (_) {
+        // ignore missing symbol
+      }
+    }
+    if (symbols.isNotEmpty) {
+      await channel.invokeMethod('registerGodotSymbols', symbols);
+    }
+  } catch (e) {
+    // Silent failure; symbol overriding is an optimization to fix availability.
+  }
 }

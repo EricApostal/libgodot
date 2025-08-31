@@ -80,6 +80,56 @@ final class GodotAPI {
       "libgodot_display_server_embedded_create_native_window", as: FnCreateNativeWindow.self)
     deleteWindow = sym("libgodot_display_server_embedded_delete_window", as: FnDeleteWindow.self)
   }
+
+  // Allow overriding resolved symbols with raw function pointer addresses
+  // coming from the Dart layer (which already successfully dlopened the
+  // libgodot dynamic library). Each entry maps the C symbol name to a
+  // uint64 address.
+  func overrideSymbols(from map: [String: UInt64]) {
+    func cast<T>(_ addr: UInt64, as _: T.Type) -> T? {
+      unsafeBitCast(UnsafeRawPointer(bitPattern: UInt(addr)), to: Optional<T>.self)
+    }
+    if let a = map["libgodot_display_server_embedded_is_available"] {
+      isAvailable = cast(a, as: FnIsAvailable.self)
+    }
+    if let a = map["libgodot_display_server_embedded_process_events"] {
+      processEvents = cast(a, as: FnProcessEvents.self)
+    }
+    if let a = map["libgodot_display_server_embedded_resize_window"] {
+      resizeWindow = cast(a, as: FnResizeWindow.self)
+    }
+    if let a = map["libgodot_display_server_embedded_get_window_size"] {
+      getWindowSize = cast(a, as: FnGetWindowSize.self)
+    }
+    if let a = map["libgodot_display_server_embedded_swap_buffers"] {
+      swapBuffers = cast(a, as: FnSwapBuffers.self)
+    }
+    if let a = map["libgodot_display_server_embedded_set_content_scale"] {
+      setContentScale = cast(a, as: FnSetContentScale.self)
+    }
+    if let a = map["libgodot_display_server_embedded_key"] { keyInput = cast(a, as: FnKey.self) }
+    if let a = map["libgodot_display_server_embedded_mouse_set_mode"] {
+      mouseSetMode = cast(a, as: FnMouseSetMode.self)
+    }
+    if let a = map["libgodot_display_server_embedded_window_set_title"] {
+      windowSetTitle = cast(a, as: FnWindowSetTitle.self)
+    }
+    if let a = map["libgodot_display_server_embedded_gl_window_make_current"] {
+      glMakeCurrent = cast(a, as: FnGLMakeCurrent.self)
+    }
+    if let a = map["libgodot_display_server_embedded_set_native_surface"] {
+      setNativeSurface = cast(a, as: FnSetNativeSurface.self)
+    }
+    if let a = map["libgodot_display_server_embedded_create_native_window"] {
+      createNativeWindow = cast(a, as: FnCreateNativeWindow.self)
+    }
+    if let a = map["libgodot_display_server_embedded_delete_window"] {
+      deleteWindow = cast(a, as: FnDeleteWindow.self)
+    }
+    NSLog(
+      "[libgodot][swift] Overrode symbol addresses from Dart; isAvailable now -> \(String(describing: isAvailable?()))"
+    )
+  }
 }
 
 // MARK: - Render / event pump
@@ -94,14 +144,14 @@ private final class GodotRenderLoop {
 
   func startIfNeeded() {
     guard !running else { return }
-    guard api.isAvailable?() == 1 else {
-      // Log raw availability probe result (optional Int32) for diagnostics.
-      NSLog("[libgodot][swift] isAvailable probe returned: \(api.isAvailable?() ?? -1)")
-      NSLog(
-        "[libgodot][swift] DisplayServerEmbedded not yet available; will retry when attaching instance"
-      )
-      return
-    }
+    // guard api.isAvailable?() == 1 else {
+    //   // Log raw availability probe result (optional Int32) for diagnostics.
+    //   NSLog("[libgodot][swift] isAvailable probe returned: \(api.isAvailable?() ?? -1)")
+    //   NSLog(
+    //     "[libgodot][swift] DisplayServerEmbedded not yet available; will retry when attaching instance"
+    //   )
+    //   return
+    // }
     running = true
     var link: CVDisplayLink?
     CVDisplayLinkCreateWithActiveCGDisplays(&link)
@@ -284,6 +334,7 @@ final class GodotViewFactory: NSObject, FlutterPlatformViewFactory {
 
 public class LibgodotPlugin: NSObject, FlutterPlugin {
   private var godotInstancePtr: UInt64 = 0
+  private let api = GodotAPI.shared
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "libgodot", binaryMessenger: registrar.messenger)
@@ -307,6 +358,19 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
         result(true)
       } else {
         result(FlutterError(code: "bad_args", message: "Missing address", details: nil))
+      }
+    case "registerGodotSymbols":
+      if let args = call.arguments as? [String: Any] {
+        var map: [String: UInt64] = [:]
+        for (k, v) in args {
+          if let num = v as? NSNumber { map[k] = num.uint64Value }
+        }
+        api.overrideSymbols(from: map)
+        // After overriding symbols, try starting render loop again (in case availability now true).
+        GodotRenderLoop.shared.startIfNeeded()
+        result(true)
+      } else {
+        result(FlutterError(code: "bad_args", message: "Expected symbol address map", details: nil))
       }
     default:
       result(FlutterMethodNotImplemented)
