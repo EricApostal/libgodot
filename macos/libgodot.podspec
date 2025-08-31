@@ -15,6 +15,9 @@ A new Flutter plugin project.
 
   s.source           = { :path => '.' }
   s.source_files = 'libgodot/Sources/libgodot/**/*'
+  # Ship the Godot engine binary (xcframework) with the plugin so the dependent
+  # libgodot_example target embeds it and dyld can locate the engine dylib.
+  s.vendored_frameworks = 'libgodot/Vendor/libgodot.xcframework'
 
   # If your plugin requires a privacy manifest, for example if it collects user
   # data, update the PrivacyInfo.xcprivacy file to describe your plugin's

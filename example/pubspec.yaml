@@ -47,6 +47,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  config:
+    disable-swift-package-manager: false
 
 
   # The following line ensures that the Material Icons font is
@@ -56,6 +58,7 @@ flutter:
 
   assets:
     - assets/game.pck
+    - assets/libgodot.macos.template_debug.dev.arm64.dylib
 
   # To add assets to your application, add an assets section, like this:
   # assets:
