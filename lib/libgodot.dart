@@ -40,7 +40,6 @@ Future<void> initializeLibgodot() async {
   }
   _libgodotNative = await _loadLibgodotFromAssets();
 
-  String pckPath;
   String renderingDriver = 'metal';
   String renderingMethod = 'mobile';
   List<String> extraArgs = const [];
@@ -58,7 +57,10 @@ Future<void> initializeLibgodot() async {
     throw Exception('Temp PCK file not found at ${tempFile.path}');
   }
 
-  final args = <String>[
+  final pckPath = tempFile.path;
+
+  List<String> args = [
+    '/usr/bin/libgodot_embed',
     '--main-pack',
     pckPath,
     '--rendering-driver',
@@ -69,6 +71,18 @@ Future<void> initializeLibgodot() async {
     'embedded',
     ...extraArgs,
   ];
+
+  final argc = args.length;
+
+  final argv = pkg_ffi.calloc<ffi.Pointer<ffi.Char>>(argc);
+  final allocatedStrings = <ffi.Pointer<pkg_ffi.Utf8>>[];
+  for (var i = 0; i < argc; i++) {
+    final s = args[i].toNativeUtf8();
+    allocatedStrings.add(s);
+    argv[i] = s.cast();
+  }
+
+  registerGodot();
 
   print("getting handle");
   final handle = _libgodotNative!.libgodot_create_godot_instance(
@@ -105,48 +119,49 @@ Future<void> initializeLibgodot() async {
 
 /// Load the libgodot dylib by extracting it from Flutter assets.
 Future<native.NativeLibrary> _loadLibgodotFromAssets() async {
-  final tempDir = Directory.systemTemp;
-  final dylibName = 'libgodot.macos.template_debug.dev.arm64.dylib';
-  final extractedFile = File(path.join(tempDir.path, 'libgodot', dylibName));
+  // Centralized helper to extract (+chmod) a dylib asset into a temp folder.
+  Future<File> _extractDylib(String assetFileName) async {
+    final tempDir = Directory.systemTemp;
+    final outFile = File(path.join(tempDir.path, 'libgodot', assetFileName));
+    await outFile.parent.create(recursive: true);
 
-  // Create directory if it doesn't exist
-  await extractedFile.parent.create(recursive: true);
-
-  // Check if we already have the dylib extracted and it's newer than our app
-  final assetKey = 'assets/$dylibName';
-  bool shouldExtract = true;
-
-  if (await extractedFile.exists()) {
-    shouldExtract = true;
-  }
-
-  if (shouldExtract) {
+    // Always overwrite in debug / dev scenarios for now.
     try {
-      final assetData = await rootBundle.load(assetKey);
-      final bytes = assetData.buffer.asUint8List();
-
-      await extractedFile.writeAsBytes(bytes);
-
-      // Make it executable (important!)
-      final result = await Process.run('chmod', ['+x', extractedFile.path]);
-      if (result.exitCode != 0) {
-        throw StateError('Failed to make dylib executable: ${result.stderr}');
+      final data = await rootBundle.load('assets/$assetFileName');
+      await outFile.writeAsBytes(
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+        flush: true,
+      );
+      final chmod = await Process.run('chmod', ['+x', outFile.path]);
+      if (chmod.exitCode != 0) {
+        throw StateError('chmod failed: ${chmod.stderr}');
       }
     } catch (e) {
       throw StateError(
-        'Failed to extract libgodot dylib from assets: $e. '
-        'Make sure $assetKey is listed in pubspec.yaml assets.',
+        'Failed to extract $assetFileName from assets: $e. Ensure it is listed under flutter.assets in pubspec.yaml',
       );
     }
+    return outFile;
   }
 
+  // Primary engine template binary.
+  final libgodotFile = await _extractDylib(
+    'libgodot.macos.template_debug.dev.arm64.dylib',
+  );
+  // Dart VM embedding bridge expected by the engine side (already used by bindings).
+  final libDart = await _extractDylib('libdart_dll.dylib');
+  // GDExtension that implements Dart <-> Godot (newly added here for completeness).
+  final libGodotDart = await _extractDylib('libgodot_dart.dylib');
+
+  // Only open the core libgodot dylib; the others are located via dlopen by Godot / process.
   try {
-    final dylib = DynamicLibrary.open(extractedFile.path);
+    final dylib = DynamicLibrary.open(libgodotFile.path);
+    DynamicLibrary.open(libDart.path);
+    DynamicLibrary.open(libGodotDart.path);
+
     return native.NativeLibrary(dylib);
   } catch (e) {
-    throw StateError(
-      'Failed to load extracted libgodot dylib from ${extractedFile.path}: $e',
-    );
+    throw StateError('Failed to load libgodot (${libgodotFile.path}): $e');
   }
 }
 
