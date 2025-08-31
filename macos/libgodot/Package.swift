@@ -23,7 +23,8 @@ let package = Package(
         // after downloading the archive from the URL.
         .target(
             name: "libgodot",
-            dependencies: ["SwiftGodot", "SwiftGodotKit"],
+            dependencies: ["SwiftGodot",
+                .target(name: "mac_libgodot")],
             resources: [
                 // If your plugin requires a privacy manifest, for example if it collects user
                 // data, update the PrivacyInfo.xcprivacy file to describe your plugin's
@@ -35,6 +36,10 @@ let package = Package(
                 // the following instructions to add them:
                 // https://developer.apple.com/documentation/xcode/bundling-resources-with-a-swift-package
             ]
-        )
+        ),
+        .binaryTarget(
+            name: "mac_libgodot",
+            url: "https://github.com/migueldeicaza/SwiftGodotKit/releases/download/0.60.2/mac_libgodot.xcframework.zip",
+            checksum: "652f731db8ce584af743c6957f75d0f90e7575e363eaee481cb43f4e0ccf8dce"),
     ]
 )

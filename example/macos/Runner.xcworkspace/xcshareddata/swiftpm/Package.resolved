@@ -25,15 +25,6 @@
       "state" : {
         "revision" : "20d2d7a35d2ad392ec556219ea004da14ab7c1d4"
       }
-    },
-    {
-      "identity" : "swiftgodotkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/migueldeicaza/SwiftGodotKit",
-      "state" : {
-        "branch" : "main",
-        "revision" : "505494d367a3c332d80cf74168e273232014e516"
-      }
     }
   ],
   "version" : 2
