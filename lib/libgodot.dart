@@ -82,8 +82,6 @@ Future<void> initializeLibgodot() async {
     argv[i] = s.cast();
   }
 
-  registerGodot();
-
   print("getting handle");
   final handle = _libgodotNative!.libgodot_create_godot_instance(
     argc,
@@ -106,26 +104,23 @@ Future<void> initializeLibgodot() async {
     throw StateError('Failed to create Godot instance (null handle)');
   }
 
-  // Wrap native handle in generated binding object so higher-level API can use it.
-  _godotInstance = GodotInstance.withNonNullOwner(handle);
+  registerGodot(_extensionInitializePtr.address, _initCallbackPtr.address);
 
-  // (Optional) Probe availability of embedded display server.
+  print("SPAWNING INSTANCE!");
+  _godotInstance = GodotInstance.withNonNullOwner(handle);
+  print("SPAWNED!");
+
   final available = _libgodotNative!
       .libgodot_display_server_embedded_is_available();
-  if (available == 0) {
-    // Not throwing yet; availability may change after further initialization.
-  }
+  if (available == 0) {}
 }
 
-/// Load the libgodot dylib by extracting it from Flutter assets.
 Future<native.NativeLibrary> _loadLibgodotFromAssets() async {
-  // Centralized helper to extract (+chmod) a dylib asset into a temp folder.
   Future<File> _extractDylib(String assetFileName) async {
     final tempDir = Directory.systemTemp;
     final outFile = File(path.join(tempDir.path, 'libgodot', assetFileName));
     await outFile.parent.create(recursive: true);
 
-    // Always overwrite in debug / dev scenarios for now.
     try {
       final data = await rootBundle.load('assets/$assetFileName');
       await outFile.writeAsBytes(
@@ -144,20 +139,17 @@ Future<native.NativeLibrary> _loadLibgodotFromAssets() async {
     return outFile;
   }
 
-  // Primary engine template binary.
   final libgodotFile = await _extractDylib(
     'libgodot.macos.template_debug.dev.arm64.dylib',
   );
-  // Dart VM embedding bridge expected by the engine side (already used by bindings).
   final libDart = await _extractDylib('libdart_dll.dylib');
-  // GDExtension that implements Dart <-> Godot (newly added here for completeness).
   final libGodotDart = await _extractDylib('libgodot_dart.dylib');
 
-  // Only open the core libgodot dylib; the others are located via dlopen by Godot / process.
   try {
     final dylib = DynamicLibrary.open(libgodotFile.path);
     DynamicLibrary.open(libDart.path);
     DynamicLibrary.open(libGodotDart.path);
+    print("All dynamic libraries attached!");
 
     return native.NativeLibrary(dylib);
   } catch (e) {
@@ -165,19 +157,12 @@ Future<native.NativeLibrary> _loadLibgodotFromAssets() async {
   }
 }
 
-// ---------------- Internal embedding helpers (modeled after Swift) ----------------
-
 GodotInstance? _godotInstance;
 GodotInstance? get godotInstance => _godotInstance;
 
-// Extension (lifecycle) callbacks Godot will invoke at levels.
-void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {
-  // Placeholder: register types or resources if needed.
-}
+void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
 
-void _extensionDeinitialize(ffi.Pointer<ffi.Void> userdata, int level) {
-  // Placeholder cleanup logic.
-}
+void _extensionDeinitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
 
 final _extensionInitializePtr =
     ffi.Pointer.fromFunction<
@@ -194,7 +179,6 @@ int _gdExtensionInit(
   ffi.Pointer<native.GDExtensionInitialization> initPtr,
 ) {
   final init = initPtr.ref;
-  // Match Swift using CORE level; adjust to SCENE if rendering services required earlier.
   init.minimum_initialization_levelAsInt = native
       .GDExtensionInitializationLevel
       .GDEXTENSION_INITIALIZATION_CORE
