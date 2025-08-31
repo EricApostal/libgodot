@@ -45,6 +45,12 @@ class _MyAppState extends State<MyApp> {
       print(
         'Godot instance created (pack=${tempFile.path}) valid=${instance.isValid}',
       );
+      if (instance.isValid) {
+        const channel = MethodChannel('libgodot');
+        await channel.invokeMethod('attachGodotInstance', {
+          'address': instance.address,
+        });
+      }
     } catch (e, st) {
       print('Failed to load or start Godot pack: $e\n$st');
     }

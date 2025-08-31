@@ -22,56 +22,14 @@ NativeLibrary _loadLibgodot() {
     );
   }
 
-  // Candidates to try in order. Adjust names to match your actual framework/dylib.
-  // 1. Directly vendored dynamic library name (if CocoaPods copied it to rpath).
-  const dylibNames = <String>[
-    'libgodot.dylib',
-    // If the binary inside a framework has a different name, add it here.
-  ];
+  final name = 'libgodot.framework/libgodot';
 
-  // 2. Framework binary inside app bundle Frameworks directory.
-  const frameworkNames = <String>[
-    'libgodot.framework/libgodot', // Standard case.
-  ];
+  final execDir = File(Platform.resolvedExecutable).parent;
+  final frameworksDir = Directory('${execDir.parent.path}/Frameworks');
 
-  DynamicLibrary? opened;
+  final full = File('${frameworksDir.path}/$name');
 
-  // Try direct dylib names first (will search default locations inc. @rpath).
-  for (final name in dylibNames) {
-    try {
-      opened = DynamicLibrary.open(name);
-      break;
-    } catch (_) {
-      // Continue trying.
-    }
-  }
-
-  // If still null, attempt to resolve inside the executable bundle.
-  if (opened == null) {
-    try {
-      // Platform.resolvedExecutable -> .../MyApp.app/Contents/MacOS/MyApp
-      final execDir = File(Platform.resolvedExecutable).parent; // .../MacOS
-      final frameworksDir = Directory('${execDir.parent.path}/Frameworks');
-      if (frameworksDir.existsSync()) {
-        for (final f in frameworkNames) {
-          final full = File('${frameworksDir.path}/$f');
-          if (full.existsSync()) {
-            try {
-              opened = DynamicLibrary.open(full.path);
-              break;
-            } catch (_) {
-              // keep trying
-            }
-          }
-        }
-      }
-    } catch (_) {
-      // Ignore and continue to fallback.
-    }
-  }
-
-  // Final fallback: if linked statically into the process (static framework / archive).
-  opened ??= DynamicLibrary.process();
+  final opened = DynamicLibrary.open(full.path);
 
   return NativeLibrary(opened);
 }

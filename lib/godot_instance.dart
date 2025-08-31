@@ -3,6 +3,8 @@ import 'package:ffi/ffi.dart' as pkg_ffi;
 
 import 'generated_bindings.dart';
 import 'libgodot.dart';
+import 'gdextension_loader.dart';
+import 'dart:io' show Directory;
 
 /// Represents a created Godot instance (opaque native object handle).
 class GodotInstance {
@@ -13,6 +15,9 @@ class GodotInstance {
 
   /// Returns whether the underlying native instance pointer is non-null.
   bool get isValid => _handle != ffi.nullptr && !_disposed;
+
+  /// Raw native pointer address (0 if disposed/invalid).
+  int get address => isValid ? _handle.address : 0;
 
   /// Destroy the underlying Godot instance. Safe to call multiple times.
   void dispose() {
@@ -163,4 +168,72 @@ GodotInstance createGodotInstanceFromPack({
     ...extraArgs,
   ];
   return createGodotInstance(arguments: args);
+}
+
+/// Container returned when creating an instance while also staging one or more
+/// GDExtension asset descriptors.
+class GodotInstanceWithExtensions {
+  GodotInstanceWithExtensions(this.instance, this.extensions, this.stagingRoot);
+  final GodotInstance instance;
+  final List<LoadedGDExtension> extensions;
+
+  /// Common root directory used to stage the extension descriptors & binaries.
+  final String stagingRoot;
+}
+
+/// Creates a Godot instance from a `.pck` while staging & exposing one or more
+/// GDExtensions that are packaged as Flutter assets.
+///
+/// Each entry in [gdextensionDescriptorAssetPaths] must be the asset path to a
+/// `.gdextension` file (as declared under `assets:` in your pubspec). Their
+/// referenced platform library files are also copied. All staged files share a
+/// single temporary directory so we can append a single `--path` argument to
+/// help Godot locate them at startup.
+///
+/// Returns a [GodotInstanceWithExtensions] so you can inspect where files were
+/// written if needed. The core [GodotInstance] is in `.instance`.
+Future<GodotInstanceWithExtensions> createGodotInstanceFromPackWithExtensions({
+  required String pckPath,
+  required List<String> gdextensionDescriptorAssetPaths,
+  String renderingDriver = 'metal',
+  String renderingMethod = 'mobile',
+  List<String> extraArgs = const [],
+  String buildType = 'debug',
+}) async {
+  if (gdextensionDescriptorAssetPaths.isEmpty) {
+    throw ArgumentError('gdextensionDescriptorAssetPaths must not be empty');
+  }
+
+  // Stage all extensions into one temp directory.
+  final stagingRootDir = await Directory.systemTemp.createTemp('gdext_stage_');
+  final loaded = <LoadedGDExtension>[];
+  for (final assetPath in gdextensionDescriptorAssetPaths) {
+    final ext = await loadGDExtensionFromAssets(
+      descriptorAssetPath: assetPath,
+      buildType: buildType,
+      targetRoot: stagingRootDir,
+      overwriteIfExists: true,
+    );
+    loaded.add(ext);
+  }
+
+  // Build args including a path override pointing at the staging root so Godot
+  // can discover the descriptors. (If this proves insufficient in practice,
+  // users may need to mirror project settings or register extensions manually.)
+  final args = <String>[
+    '--path',
+    stagingRootDir.path,
+    '--main-pack',
+    pckPath,
+    '--rendering-driver',
+    renderingDriver,
+    '--rendering-method',
+    renderingMethod,
+    '--display-driver',
+    'embedded',
+    ...extraArgs,
+  ];
+
+  final instance = createGodotInstance(arguments: args);
+  return GodotInstanceWithExtensions(instance, loaded, stagingRootDir.path);
 }

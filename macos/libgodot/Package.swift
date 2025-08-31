@@ -13,11 +13,15 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
+        // Local binary Godot engine (xcframework) packaged inside Vendor/
+        .binaryTarget(
+            name: "GodotEngine",
+            path: "Vendor/libgodot.xcframework"
+        ),
         .target(
             name: "libgodot",
             dependencies: [
-
-                .target(name: "mac_libgodot")
+                "GodotEngine"
             ],
             resources: [
                 // If your plugin requires a privacy manifest, for example if it collects user
@@ -31,10 +35,5 @@ let package = Package(
                 // https://developer.apple.com/documentation/xcode/bundling-resources-with-a-swift-package
             ]
         ),
-        .binaryTarget(
-            name: "mac_libgodot",
-            url:
-                "https://github.com/migueldeicaza/SwiftGodotKit/releases/download/0.60.2/mac_libgodot.xcframework.zip",
-            checksum: "652f731db8ce584af743c6957f75d0f90e7575e363eaee481cb43f4e0ccf8dce"),
     ]
 )

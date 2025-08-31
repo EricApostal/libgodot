@@ -41,11 +41,12 @@ flutter:
         pluginClass: LibgodotPlugin
         
 ffigen:
-  output: 'generated_bindings.dart'
+  output: 'lib/generated_bindings.dart'
   headers:
     entry-points:
       - 'third_party/libgodot.h'
       - 'third_party/gdextension_interface.h'
+      - 'third_party/display_server_embedded.h'
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

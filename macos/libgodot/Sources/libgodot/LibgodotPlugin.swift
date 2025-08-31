@@ -49,6 +49,8 @@ final class GodotViewFactory: NSObject, FlutterPlatformViewFactory {
 // MARK: - Plugin
 
 public class LibgodotPlugin: NSObject, FlutterPlugin {
+  private var godotInstancePtr: UInt64 = 0
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "libgodot", binaryMessenger: registrar.messenger)
     let instance = LibgodotPlugin()
@@ -62,6 +64,15 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "getPlatformVersion":
       result("macOS " + ProcessInfo.processInfo.operatingSystemVersionString)
+    case "attachGodotInstance":
+      if let args = call.arguments as? [String: Any], let addr = args["address"] as? NSNumber {
+        godotInstancePtr = addr.uint64Value
+        NSLog("[libgodot] Received Godot instance pointer: 0x%llx", godotInstancePtr)
+        // TODO: Obtain rendering surface / layer from instance and attach to existing GodotHostView instances.
+        result(true)
+      } else {
+        result(FlutterError(code: "bad_args", message: "Missing address", details: nil))
+      }
     default:
       result(FlutterMethodNotImplemented)
     }
