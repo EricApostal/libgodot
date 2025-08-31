@@ -207,11 +207,18 @@ final class GodotHostView: NSView {
         ml.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
         ml.isOpaque = true
         ml.backgroundColor = NSColor.black.cgColor
-        // START APPLE RENDER SURFACE SHIT HERE
-        let rendererNativeSurface = rnsAppleCreate(
-          UInt(bitPattern: Unmanaged.passUnretained(renderingLayer!).toOpaque())
-        )
-        api.setNativeSurface(rendererNativeSurface)
+        // Register metal layer with Godot (if helper exported)
+        if let setMetalLayer = api.setMetalLayer {
+          _ = setMetalLayer(Unmanaged.passUnretained(ml).toOpaque())
+        }
+        // Create RenderingNativeSurfaceApple via exported helper (optional)
+        if let rnsCreate = api.rnsAppleCreate {
+          let layerPtr = UInt64(UInt(bitPattern: Unmanaged.passUnretained(ml).toOpaque()))
+          nativeSurface = rnsCreate(layerPtr)
+          if let nativeSurface {
+            _ = api.setNativeSurface?(nativeSurface)
+          }
+        }
 
       } else {
         layer?.backgroundColor = NSColor.black.cgColor
