@@ -31,3 +31,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 /build/
 /coverage/
+
+# macOS build artifacts (exclude large binaries)
+macos/build/
+macos/build/libgodot.dylib
+macos/build/libgodot.xcframework.zip
