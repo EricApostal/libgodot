@@ -179,41 +179,17 @@ private final class GodotRenderLoop {
   private var running = false
   private let api = GodotAPI.shared
   private let queue = DispatchQueue(label: "libgodot.renderloop")
-  private var retryTimer: DispatchSourceTimer?
-  private var retryAttempts = 0
   private init() {}
 
   func startIfNeeded() {
     guard !running else { return }
     if api.isAvailable?() != 1 {
-      if retryTimer == nil {
-        NSLog(
-          "[libgodot][swift] DisplayServerEmbedded not available yet (\(api.isAvailable?() ?? -1)); polling"
-        )
-        let t = DispatchSource.makeTimerSource(queue: queue)
-        t.schedule(deadline: .now() + .milliseconds(120), repeating: .milliseconds(120))
-        t.setEventHandler { [weak self] in
-          guard let self else { return }
-          if self.api.isAvailable?() == 1 {
-            self.retryTimer?.cancel()
-            self.retryTimer = nil
-            DispatchQueue.main.async { self.startIfNeeded() }
-          } else {
-            self.retryAttempts += 1
-            if self.retryAttempts % 10 == 0 {
-              NSLog(
-                "[libgodot][swift] waiting for DisplayServerEmbedded (attempt=\(self.retryAttempts))"
-              )
-            }
-          }
-        }
-        retryTimer = t
-        t.resume()
-      }
+      NSLog(
+        "[libgodot][swift] DisplayServerEmbedded not available yet (\(api.isAvailable?() ?? -1));"
+      )
+
       return
     }
-    retryTimer?.cancel()
-    retryTimer = nil
     running = true
     var link: CVDisplayLink?
     CVDisplayLinkCreateWithActiveCGDisplays(&link)
@@ -259,8 +235,6 @@ final class GodotHostView: NSView {
   private var startedOnce = false
   private var nativeWindowId: Int32 = 0
   private var surfaceBound = false
-  private var bindRetryTimer: DispatchSourceTimer?
-  private var bindFailures = 0
   private var nativeSurface: UnsafeMutableRawPointer?  // RenderingNativeSurfaceApple*
 
   override var wantsUpdateLayer: Bool { true }
@@ -269,8 +243,10 @@ final class GodotHostView: NSView {
   override init(frame frameRect: NSRect) {
     super.init(frame: frameRect)
     wantsLayer = true  // assign a CAMetalLayer for Metal backend
+    NSLog("Checking if can import metal...")
     #if canImport(Metal)
       self.layer = CAMetalLayer()
+      NSLog("We can import metal")
       if let ml = metalLayer {
         ml.pixelFormat = .bgra8Unorm
         ml.framebufferOnly = true
@@ -281,6 +257,7 @@ final class GodotHostView: NSView {
         layer?.backgroundColor = NSColor.black.cgColor
       }
     #else
+      NSLog("VERY BAD - No metal??")
       layer?.backgroundColor = NSColor.black.cgColor
     #endif
   }
@@ -294,13 +271,10 @@ final class GodotHostView: NSView {
     updateContentScale()
     if !startedOnce {
       startedOnce = true
-      // Try to set a title hint (non-fatal if fails)
       if let titleFn = api.windowSetTitle {
         let title = "Godot Embedded"
         title.withCString { _ = titleFn($0, 0) }
       }
-      bindNativeSurfaceIfNeeded()
-      startBindRetryIfNeeded()
     }
   }
 
@@ -324,22 +298,6 @@ final class GodotHostView: NSView {
     #endif
   }
 
-  // MARK: Input forwarding (basic)
-  private func sendKey(event: NSEvent, pressed: Bool) {
-    guard let keyFn = api.keyInput else { return }
-    // Godot expects key (logical), char code (UTF32), unshifted, physical, modifiers mask.
-    // Use keyCode as physical, attempt to derive chars for char_code.
-    let chars = event.charactersIgnoringModifiers ?? ""
-    let scalar = chars.unicodeScalars.first?.value ?? 0
-    let modifiers = UInt32(event.modifierFlags.rawValue & 0xFFFF)
-    let physical = Int32(event.keyCode)
-    let logical = Int32(scalar)  // Approximation
-    _ = keyFn(logical, UInt32(scalar), logical, physical, modifiers, pressed ? 1 : 0, 0)
-  }
-
-  override func keyDown(with event: NSEvent) { sendKey(event: event, pressed: true) }
-  override func keyUp(with event: NSEvent) { sendKey(event: event, pressed: false) }
-
   private func resizeEmbeddedWindowIfNeeded(force: Bool = false) {
     guard let resize = api.resizeWindow else { return }
     let scale = window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 1.0
@@ -348,73 +306,8 @@ final class GodotHostView: NSView {
     let newSize = CGSize(width: pixelWidth, height: pixelHeight)
     guard force || newSize != lastPixelSize else { return }
     lastPixelSize = newSize
-    bindNativeSurfaceIfNeeded()  // ensure surface + window exist before resize
     let r = resize(Int32(pixelWidth), Int32(pixelHeight), 0)
     // if r != 0 { NSLog("[libgodot][swift] resize_window failed with code %d", r) }
-  }
-
-  private func bindNativeSurfaceIfNeeded() {
-    guard !surfaceBound else { return }
-    // Prefer primary set_native_surface; fall back to set_metal_layer helper if present.
-    #if canImport(Metal)
-      guard let ml = metalLayer else { return }
-      // If the embedded DisplayServer isn't available yet, postpone binding; we'll retry via timer.
-      if api.isAvailable?() != 1 {
-        return
-      }
-      var res: Int32 = -1
-      // Create RenderingNativeSurfaceApple if helper exists and we haven't yet.
-      if nativeSurface == nil, let create = api.rnsAppleCreate {
-        let layerPtr = Unmanaged.passUnretained(ml).toOpaque()
-        let layerOpaque = UInt64(UInt(bitPattern: layerPtr))
-        nativeSurface = create(layerOpaque)
-        if nativeSurface == nil {
-          NSLog("[libgodot][swift] rnsAppleCreate returned nil; will retry")
-        } else {
-          NSLog(
-            "[libgodot][swift] Created RenderingNativeSurfaceApple ptr=\(nativeSurface!) layer=\(layerOpaque)"
-          )
-        }
-      }
-      if let surf = nativeSurface, let setSurf = api.setNativeSurface {
-        res = setSurf(surf)
-      } else if nativeSurface == nil, let setML = api.setMetalLayer {  // legacy raw layer helper
-        let rawPtr = Unmanaged.passUnretained(ml).toOpaque()
-        res = setML(rawPtr)
-      } else if nativeSurface == nil, let setRaw = api.setNativeSurface {  // last resort (likely -1)
-        let rawPtr = Unmanaged.passUnretained(ml).toOpaque()
-        res = setRaw(rawPtr)
-      } else {
-        NSLog("[libgodot][swift] No surface binding path available; will retry")
-        return
-      }
-      if res == 0 {
-        surfaceBound = true
-        let surfacePtrForWindow = nativeSurface ?? Unmanaged.passUnretained(ml).toOpaque()
-        if let createWin = api.createNativeWindow {
-          var winId: Int32 = 0
-          let cr = createWin(surfacePtrForWindow, &winId)
-          if cr == 0 { nativeWindowId = winId }
-          if let makeCurrent = api.glMakeCurrent { _ = makeCurrent(Int32(nativeWindowId)) }
-        }
-        DispatchQueue.main.async { GodotRenderLoop.shared.startIfNeeded() }
-        NSLog(
-          "[libgodot][swift] Bound native surface (rns=\(String(describing: nativeSurface))) win=\(nativeWindowId); isAvailable=\(api.isAvailable?() ?? -1)"
-        )
-        stopBindRetry()
-      } else {
-        NSLog(
-          "[libgodot][swift] set_native_surface failed code=\(res); isAvailable=\(api.isAvailable?() ?? -1) nativeSurface=\(String(describing: nativeSurface)) (will keep retrying)"
-        )
-        bindFailures += 1
-        if bindFailures == 20 {
-          NSLog(
-            "[libgodot][swift][diagnostic] Still failing to bind native surface. Ensure libgodot_rendering_native_surface_apple_create is exported and returns a valid RenderingNativeSurfaceApple Ref."
-          )
-        }
-        if bindFailures > 300 { stopBindRetry() }
-      }
-    #endif
   }
 
   deinit {
@@ -422,21 +315,7 @@ final class GodotHostView: NSView {
       _ = destroy(surf)
       NSLog("[libgodot][swift] Destroyed RenderingNativeSurfaceApple")
     }
-  }
 
-  private func startBindRetryIfNeeded() {
-    guard bindRetryTimer == nil, !surfaceBound else { return }
-    let t = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
-    t.schedule(deadline: .now() + .milliseconds(150), repeating: .milliseconds(150))
-    t.setEventHandler { [weak self] in self?.bindNativeSurfaceIfNeeded() }
-    bindRetryTimer = t
-    t.resume()
-    NSLog("[libgodot][swift] Started native surface bind retry timer")
-  }
-
-  private func stopBindRetry() {
-    bindRetryTimer?.cancel()
-    bindRetryTimer = nil
   }
 }
 
@@ -502,10 +381,12 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
         GodotRenderLoop.shared.startIfNeeded()
         result(true)
       } else {
-        result(FlutterError(code: "bad_args", message: "Expected symbol address map", details: nil))
+        result(
+          FlutterError(code: "bad_args", message: "Expected symbol address map", details: nil))
       }
     default:
       result(FlutterMethodNotImplemented)
     }
   }
+
 }
