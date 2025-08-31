@@ -93,6 +93,583 @@ class NativeLibrary {
   late final _libgodot_destroy_godot_instance =
       _libgodot_destroy_godot_instancePtr
           .asFunction<void Function(GDExtensionObjectPtr)>();
+
+  /// @name DisplayServerEmbedded C bindings
+  /// @since 4.4
+  ///
+  /// Lightweight C wrappers around a subset of DisplayServerEmbedded functionality
+  /// for host applications embedding Godot. All functions are no-ops (or return
+  /// an error code) if the embedded display server singleton is not available.
+  int libgodot_display_server_embedded_is_available() {
+    return _libgodot_display_server_embedded_is_available();
+  }
+
+  late final _libgodot_display_server_embedded_is_availablePtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function()>>(
+        'libgodot_display_server_embedded_is_available',
+      );
+  late final _libgodot_display_server_embedded_is_available =
+      _libgodot_display_server_embedded_is_availablePtr
+          .asFunction<int Function()>();
+
+  void libgodot_display_server_embedded_process_events() {
+    return _libgodot_display_server_embedded_process_events();
+  }
+
+  late final _libgodot_display_server_embedded_process_eventsPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>(
+        'libgodot_display_server_embedded_process_events',
+      );
+  late final _libgodot_display_server_embedded_process_events =
+      _libgodot_display_server_embedded_process_eventsPtr
+          .asFunction<void Function()>();
+
+  int libgodot_display_server_embedded_resize_window(
+    int p_width,
+    int p_height,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_resize_window(
+      p_width,
+      p_height,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_resize_windowPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int, ffi.Int)>>(
+        'libgodot_display_server_embedded_resize_window',
+      );
+  late final _libgodot_display_server_embedded_resize_window =
+      _libgodot_display_server_embedded_resize_windowPtr
+          .asFunction<int Function(int, int, int)>();
+
+  int libgodot_display_server_embedded_get_window_size(
+    int p_window_id,
+    ffi.Pointer<ffi.Int> r_width,
+    ffi.Pointer<ffi.Int> r_height,
+  ) {
+    return _libgodot_display_server_embedded_get_window_size(
+      p_window_id,
+      r_width,
+      r_height,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_get_window_sizePtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)
+        >
+      >('libgodot_display_server_embedded_get_window_size');
+  late final _libgodot_display_server_embedded_get_window_size =
+      _libgodot_display_server_embedded_get_window_sizePtr
+          .asFunction<
+            int Function(int, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)
+          >();
+
+  int libgodot_display_server_embedded_set_content_scale(double p_scale) {
+    return _libgodot_display_server_embedded_set_content_scale(p_scale);
+  }
+
+  late final _libgodot_display_server_embedded_set_content_scalePtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Float)>>(
+        'libgodot_display_server_embedded_set_content_scale',
+      );
+  late final _libgodot_display_server_embedded_set_content_scale =
+      _libgodot_display_server_embedded_set_content_scalePtr
+          .asFunction<int Function(double)>();
+
+  int libgodot_display_server_embedded_touch_press(
+    int p_index,
+    int p_x,
+    int p_y,
+    int p_pressed,
+    int p_double_click,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_touch_press(
+      p_index,
+      p_x,
+      p_y,
+      p_pressed,
+      p_double_click,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_touch_pressPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Int, ffi.Int, ffi.Int, ffi.Int, ffi.Int, ffi.Int)
+        >
+      >('libgodot_display_server_embedded_touch_press');
+  late final _libgodot_display_server_embedded_touch_press =
+      _libgodot_display_server_embedded_touch_pressPtr
+          .asFunction<int Function(int, int, int, int, int, int)>();
+
+  int libgodot_display_server_embedded_touch_drag(
+    int p_index,
+    int p_prev_x,
+    int p_prev_y,
+    int p_x,
+    int p_y,
+    double p_pressure,
+    double p_tilt_x,
+    double p_tilt_y,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_touch_drag(
+      p_index,
+      p_prev_x,
+      p_prev_y,
+      p_x,
+      p_y,
+      p_pressure,
+      p_tilt_x,
+      p_tilt_y,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_touch_dragPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Int,
+            ffi.Int,
+            ffi.Int,
+            ffi.Int,
+            ffi.Int,
+            ffi.Float,
+            ffi.Float,
+            ffi.Float,
+            ffi.Int,
+          )
+        >
+      >('libgodot_display_server_embedded_touch_drag');
+  late final _libgodot_display_server_embedded_touch_drag =
+      _libgodot_display_server_embedded_touch_dragPtr
+          .asFunction<
+            int Function(int, int, int, int, int, double, double, double, int)
+          >();
+
+  int libgodot_display_server_embedded_touches_canceled(
+    int p_index,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_touches_canceled(
+      p_index,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_touches_canceledPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>(
+        'libgodot_display_server_embedded_touches_canceled',
+      );
+  late final _libgodot_display_server_embedded_touches_canceled =
+      _libgodot_display_server_embedded_touches_canceledPtr
+          .asFunction<int Function(int, int)>();
+
+  int libgodot_display_server_embedded_key(
+    int p_key,
+    int p_char_code,
+    int p_unshifted_key,
+    int p_physical_key,
+    int p_modifiers,
+    int p_pressed,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_key(
+      p_key,
+      p_char_code,
+      p_unshifted_key,
+      p_physical_key,
+      p_modifiers,
+      p_pressed,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_keyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Int,
+            ffi.UnsignedInt,
+            ffi.Int,
+            ffi.Int,
+            ffi.UnsignedInt,
+            ffi.Int,
+            ffi.Int,
+          )
+        >
+      >('libgodot_display_server_embedded_key');
+  late final _libgodot_display_server_embedded_key =
+      _libgodot_display_server_embedded_keyPtr
+          .asFunction<int Function(int, int, int, int, int, int, int)>();
+
+  int libgodot_display_server_embedded_mouse_set_mode(int p_mouse_mode) {
+    return _libgodot_display_server_embedded_mouse_set_mode(p_mouse_mode);
+  }
+
+  late final _libgodot_display_server_embedded_mouse_set_modePtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int)>>(
+        'libgodot_display_server_embedded_mouse_set_mode',
+      );
+  late final _libgodot_display_server_embedded_mouse_set_mode =
+      _libgodot_display_server_embedded_mouse_set_modePtr
+          .asFunction<int Function(int)>();
+
+  int libgodot_display_server_embedded_mouse_get_mode(
+    ffi.Pointer<ffi.Int> r_mouse_mode,
+  ) {
+    return _libgodot_display_server_embedded_mouse_get_mode(r_mouse_mode);
+  }
+
+  late final _libgodot_display_server_embedded_mouse_get_modePtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Int>)>>(
+        'libgodot_display_server_embedded_mouse_get_mode',
+      );
+  late final _libgodot_display_server_embedded_mouse_get_mode =
+      _libgodot_display_server_embedded_mouse_get_modePtr
+          .asFunction<int Function(ffi.Pointer<ffi.Int>)>();
+
+  int libgodot_display_server_embedded_mouse_get_position(
+    ffi.Pointer<ffi.Int> r_x,
+    ffi.Pointer<ffi.Int> r_y,
+  ) {
+    return _libgodot_display_server_embedded_mouse_get_position(r_x, r_y);
+  }
+
+  late final _libgodot_display_server_embedded_mouse_get_positionPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)
+        >
+      >('libgodot_display_server_embedded_mouse_get_position');
+  late final _libgodot_display_server_embedded_mouse_get_position =
+      _libgodot_display_server_embedded_mouse_get_positionPtr
+          .asFunction<
+            int Function(ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)
+          >();
+
+  int libgodot_display_server_embedded_mouse_get_button_state() {
+    return _libgodot_display_server_embedded_mouse_get_button_state();
+  }
+
+  late final _libgodot_display_server_embedded_mouse_get_button_statePtr =
+      _lookup<ffi.NativeFunction<ffi.UnsignedInt Function()>>(
+        'libgodot_display_server_embedded_mouse_get_button_state',
+      );
+  late final _libgodot_display_server_embedded_mouse_get_button_state =
+      _libgodot_display_server_embedded_mouse_get_button_statePtr
+          .asFunction<int Function()>();
+
+  int libgodot_display_server_embedded_window_set_mode(
+    int p_mode,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_window_set_mode(
+      p_mode,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_set_modePtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>(
+        'libgodot_display_server_embedded_window_set_mode',
+      );
+  late final _libgodot_display_server_embedded_window_set_mode =
+      _libgodot_display_server_embedded_window_set_modePtr
+          .asFunction<int Function(int, int)>();
+
+  int libgodot_display_server_embedded_window_get_mode(
+    int p_window_id,
+    ffi.Pointer<ffi.Int> r_mode,
+  ) {
+    return _libgodot_display_server_embedded_window_get_mode(
+      p_window_id,
+      r_mode,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_get_modePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Int>)>
+      >('libgodot_display_server_embedded_window_get_mode');
+  late final _libgodot_display_server_embedded_window_get_mode =
+      _libgodot_display_server_embedded_window_get_modePtr
+          .asFunction<int Function(int, ffi.Pointer<ffi.Int>)>();
+
+  int libgodot_display_server_embedded_window_set_vsync_mode(
+    int p_vsync_mode,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_window_set_vsync_mode(
+      p_vsync_mode,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_set_vsync_modePtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>(
+        'libgodot_display_server_embedded_window_set_vsync_mode',
+      );
+  late final _libgodot_display_server_embedded_window_set_vsync_mode =
+      _libgodot_display_server_embedded_window_set_vsync_modePtr
+          .asFunction<int Function(int, int)>();
+
+  int libgodot_display_server_embedded_window_get_vsync_mode(
+    int p_window_id,
+    ffi.Pointer<ffi.Int> r_vsync_mode,
+  ) {
+    return _libgodot_display_server_embedded_window_get_vsync_mode(
+      p_window_id,
+      r_vsync_mode,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_get_vsync_modePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Int>)>
+      >('libgodot_display_server_embedded_window_get_vsync_mode');
+  late final _libgodot_display_server_embedded_window_get_vsync_mode =
+      _libgodot_display_server_embedded_window_get_vsync_modePtr
+          .asFunction<int Function(int, ffi.Pointer<ffi.Int>)>();
+
+  int libgodot_display_server_embedded_window_set_flag(
+    int p_flag,
+    int p_enabled,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_window_set_flag(
+      p_flag,
+      p_enabled,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_set_flagPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int, ffi.Int)>>(
+        'libgodot_display_server_embedded_window_set_flag',
+      );
+  late final _libgodot_display_server_embedded_window_set_flag =
+      _libgodot_display_server_embedded_window_set_flagPtr
+          .asFunction<int Function(int, int, int)>();
+
+  int libgodot_display_server_embedded_window_get_flag(
+    int p_flag,
+    int p_window_id,
+    ffi.Pointer<ffi.Int> r_enabled,
+  ) {
+    return _libgodot_display_server_embedded_window_get_flag(
+      p_flag,
+      p_window_id,
+      r_enabled,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_get_flagPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Int, ffi.Int, ffi.Pointer<ffi.Int>)
+        >
+      >('libgodot_display_server_embedded_window_get_flag');
+  late final _libgodot_display_server_embedded_window_get_flag =
+      _libgodot_display_server_embedded_window_get_flagPtr
+          .asFunction<int Function(int, int, ffi.Pointer<ffi.Int>)>();
+
+  int libgodot_display_server_embedded_window_attach_instance_id(
+    int p_object_id,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_window_attach_instance_id(
+      p_object_id,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_attach_instance_idPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.LongLong, ffi.Int)>>(
+        'libgodot_display_server_embedded_window_attach_instance_id',
+      );
+  late final _libgodot_display_server_embedded_window_attach_instance_id =
+      _libgodot_display_server_embedded_window_attach_instance_idPtr
+          .asFunction<int Function(int, int)>();
+
+  int libgodot_display_server_embedded_window_get_attached_instance_id(
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_window_get_attached_instance_id(
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_get_attached_instance_idPtr =
+      _lookup<ffi.NativeFunction<ffi.LongLong Function(ffi.Int)>>(
+        'libgodot_display_server_embedded_window_get_attached_instance_id',
+      );
+  late final _libgodot_display_server_embedded_window_get_attached_instance_id =
+      _libgodot_display_server_embedded_window_get_attached_instance_idPtr
+          .asFunction<int Function(int)>();
+
+  int libgodot_display_server_embedded_set_native_surface(
+    GDExtensionObjectPtr p_native_surface_ref,
+  ) {
+    return _libgodot_display_server_embedded_set_native_surface(
+      p_native_surface_ref,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_set_native_surfacePtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(GDExtensionObjectPtr)>>(
+        'libgodot_display_server_embedded_set_native_surface',
+      );
+  late final _libgodot_display_server_embedded_set_native_surface =
+      _libgodot_display_server_embedded_set_native_surfacePtr
+          .asFunction<int Function(GDExtensionObjectPtr)>();
+
+  int libgodot_display_server_embedded_create_native_window(
+    GDExtensionObjectPtr p_native_surface_ref,
+    ffi.Pointer<ffi.Int> r_window_id,
+  ) {
+    return _libgodot_display_server_embedded_create_native_window(
+      p_native_surface_ref,
+      r_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_create_native_windowPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(GDExtensionObjectPtr, ffi.Pointer<ffi.Int>)
+        >
+      >('libgodot_display_server_embedded_create_native_window');
+  late final _libgodot_display_server_embedded_create_native_window =
+      _libgodot_display_server_embedded_create_native_windowPtr
+          .asFunction<
+            int Function(GDExtensionObjectPtr, ffi.Pointer<ffi.Int>)
+          >();
+
+  int libgodot_display_server_embedded_delete_window(int p_window_id) {
+    return _libgodot_display_server_embedded_delete_window(p_window_id);
+  }
+
+  late final _libgodot_display_server_embedded_delete_windowPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int)>>(
+        'libgodot_display_server_embedded_delete_window',
+      );
+  late final _libgodot_display_server_embedded_delete_window =
+      _libgodot_display_server_embedded_delete_windowPtr
+          .asFunction<int Function(int)>();
+
+  int libgodot_display_server_embedded_window_get_native_handle(
+    int p_handle_type,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_window_get_native_handle(
+      p_handle_type,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_get_native_handlePtr =
+      _lookup<ffi.NativeFunction<ffi.LongLong Function(ffi.Int, ffi.Int)>>(
+        'libgodot_display_server_embedded_window_get_native_handle',
+      );
+  late final _libgodot_display_server_embedded_window_get_native_handle =
+      _libgodot_display_server_embedded_window_get_native_handlePtr
+          .asFunction<int Function(int, int)>();
+
+  int libgodot_display_server_embedded_window_set_title(
+    ffi.Pointer<ffi.Char> p_title_utf8,
+    int p_window_id,
+  ) {
+    return _libgodot_display_server_embedded_window_set_title(
+      p_title_utf8,
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_set_titlePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int)>
+      >('libgodot_display_server_embedded_window_set_title');
+  late final _libgodot_display_server_embedded_window_set_title =
+      _libgodot_display_server_embedded_window_set_titlePtr
+          .asFunction<int Function(ffi.Pointer<ffi.Char>, int)>();
+
+  int libgodot_display_server_embedded_window_get_position(
+    int p_window_id,
+    ffi.Pointer<ffi.Int> r_x,
+    ffi.Pointer<ffi.Int> r_y,
+  ) {
+    return _libgodot_display_server_embedded_window_get_position(
+      p_window_id,
+      r_x,
+      r_y,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_get_positionPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)
+        >
+      >('libgodot_display_server_embedded_window_get_position');
+  late final _libgodot_display_server_embedded_window_get_position =
+      _libgodot_display_server_embedded_window_get_positionPtr
+          .asFunction<
+            int Function(int, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)
+          >();
+
+  int libgodot_display_server_embedded_window_set_position(
+    int p_window_id,
+    int p_x,
+    int p_y,
+  ) {
+    return _libgodot_display_server_embedded_window_set_position(
+      p_window_id,
+      p_x,
+      p_y,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_window_set_positionPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int, ffi.Int)>>(
+        'libgodot_display_server_embedded_window_set_position',
+      );
+  late final _libgodot_display_server_embedded_window_set_position =
+      _libgodot_display_server_embedded_window_set_positionPtr
+          .asFunction<int Function(int, int, int)>();
+
+  int libgodot_display_server_embedded_swap_buffers() {
+    return _libgodot_display_server_embedded_swap_buffers();
+  }
+
+  late final _libgodot_display_server_embedded_swap_buffersPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function()>>(
+        'libgodot_display_server_embedded_swap_buffers',
+      );
+  late final _libgodot_display_server_embedded_swap_buffers =
+      _libgodot_display_server_embedded_swap_buffersPtr
+          .asFunction<int Function()>();
+
+  int libgodot_display_server_embedded_gl_window_make_current(int p_window_id) {
+    return _libgodot_display_server_embedded_gl_window_make_current(
+      p_window_id,
+    );
+  }
+
+  late final _libgodot_display_server_embedded_gl_window_make_currentPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int)>>(
+        'libgodot_display_server_embedded_gl_window_make_current',
+      );
+  late final _libgodot_display_server_embedded_gl_window_make_current =
+      _libgodot_display_server_embedded_gl_window_make_currentPtr
+          .asFunction<int Function(int)>();
 }
 
 typedef __int8_t = ffi.SignedChar;

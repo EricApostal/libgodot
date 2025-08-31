@@ -129,6 +129,9 @@ GodotInstance createGodotInstance({List<String> arguments = const []}) {
     ffi.nullptr, // sync executor userdata
   );
 
+  print("IS AVAIL?");
+  print(libgodotNative.libgodot_display_server_embedded_is_available());
+
   // Free argv contents after creation attempt.
   for (final p in allocatedStrings) {
     pkg_ffi.malloc.free(p);

@@ -29,6 +29,11 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initGodot() async {
     try {
+      // First, initialize the libgodot native library
+      await initializeLibgodot();
+      print('Libgodot native library initialized successfully');
+
+      // Now load the game pack
       const assetLogicalPath = 'assets/game.pck';
       final data = await rootBundle.load(assetLogicalPath);
       final tempFile = File(
