@@ -16,8 +16,8 @@ let package = Package(
         .target(
             name: "libgodot",
             dependencies: [
-                "SwiftGodot",
-                .target(name: "mac_libgodot"),
+
+                .target(name: "mac_libgodot")
             ],
             resources: [
                 // If your plugin requires a privacy manifest, for example if it collects user

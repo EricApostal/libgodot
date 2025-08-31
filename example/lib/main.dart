@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:libgodot/libgodot.dart';
+import 'package:libgodot/godot_instance.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +23,14 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // Create a Godot instance (minimal) on startup.
+    try {
+      final instance = createGodotInstance();
+      print('Godot instance created: valid=${instance.isValid}');
+    } catch (e, st) {
+      print('Failed to create Godot instance: $e\n$st');
+    }
+    // initPlatformState(); // Existing example logic.
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -32,7 +40,8 @@ class _MyAppState extends State<MyApp> {
     // We also handle the message potentially returning null.
     try {
       platformVersion =
-          await _libgodotPlugin.getPlatformVersion() ?? 'Unknown platform version';
+          await _libgodotPlugin.getPlatformVersion() ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -51,12 +60,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+        appBar: AppBar(title: const Text('Plugin example app')),
+        body: Center(child: Text('Running on: $_platformVersion\n')),
       ),
     );
   }

@@ -38,7 +38,7 @@ flutter:
   plugin:
     platforms:
       macos:
-        pluginClass: 
+        pluginClass: LibgodotPlugin
         
 ffigen:
   output: 'generated_bindings.dart'
