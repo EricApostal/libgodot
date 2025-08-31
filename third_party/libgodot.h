@@ -145,6 +145,31 @@ LIBGODOT_API int libgodot_display_server_embedded_window_set_position(int p_wind
 LIBGODOT_API int libgodot_display_server_embedded_swap_buffers();
 LIBGODOT_API int libgodot_display_server_embedded_gl_window_make_current(int p_window_id /*=0*/);
 
+// Register the embedded display server driver (must be called before creating a Godot instance if you plan to use it).
+LIBGODOT_API void libgodot_display_server_embedded_register_embedded_driver();
+
+/**
+ * @name RenderingNativeSurfaceApple bindings
+ * @since 4.4
+ *
+ * Lightweight creation / query / destruction helpers for the Apple specific
+ * RenderingNativeSurface implementation. These wrap the RefCounted object so
+ * that host applications embedding Godot can create a surface backed by a
+ * native CALayer pointer.
+ *
+ * All functions return 0 on success (or a non-null pointer for create) and -1
+ * on failure unless otherwise documented.
+ */
+
+// Create a RenderingNativeSurfaceApple from a layer pointer (e.g. CAMetalLayer* or CAEAGLLayer* cast to uint64_t).
+LIBGODOT_API GDExtensionObjectPtr libgodot_rendering_native_surface_apple_create(uint64_t p_layer);
+
+// Get the layer pointer (as an opaque 64-bit value) from a RenderingNativeSurfaceApple.
+LIBGODOT_API int libgodot_rendering_native_surface_apple_get_layer(GDExtensionObjectPtr p_surface, uint64_t *r_layer);
+
+// Destroy (unreference) a previously created RenderingNativeSurfaceApple.
+LIBGODOT_API int libgodot_rendering_native_surface_apple_destroy(GDExtensionObjectPtr p_surface);
+
 #ifdef __cplusplus
 }
 #endif

@@ -59,8 +59,11 @@ int _gdExtensionInit(
   // Provide the minimal required initialization structure.
   try {
     final init = initPtr.ref;
+    // Request initialization up through the SCENE level so that DisplayServer and
+    // rendering servers are fully initialized for the embedded driver.
+    // CORE (0) was insufficient (DisplayServerEmbedded stayed unavailable).
     init.minimum_initialization_levelAsInt =
-        GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_CORE.value;
+        GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_SCENE.value;
     init.userdata = ffi.nullptr; // No userdata for now.
     // Provide no-op initialize/deinitialize functions (required to be non-null in practice).
     init.initialize = _extensionInitializePtr;
@@ -133,6 +136,12 @@ GodotInstance createGodotInstance({List<String> arguments = const []}) {
 
   print("IS AVAIL?");
   print(libgodotNative.libgodot_display_server_embedded_is_available());
+  // Extra diagnostic: if unavailable, hint to logs.
+  if (libgodotNative.libgodot_display_server_embedded_is_available() == 0) {
+    print(
+      "[godot][dart] DisplayServerEmbedded unavailable immediately after instance creation (expected prior to binding). Will rely on Swift polling.",
+    );
+  }
 
   // Provide Swift side with raw addresses of critical symbols so it can
   // directly call them even if its own dlopen()/dlsym attempts failed.
@@ -276,6 +285,10 @@ Future<void> _maybeRegisterSymbolsWithHost() async {
       'libgodot_display_server_embedded_set_native_surface',
       'libgodot_display_server_embedded_create_native_window',
       'libgodot_display_server_embedded_delete_window',
+      'libgodot_display_server_embedded_register_embedded_driver',
+      'libgodot_rendering_native_surface_apple_create',
+      'libgodot_rendering_native_surface_apple_get_layer',
+      'libgodot_rendering_native_surface_apple_destroy',
     ]) {
       try {
         final ptr = processLib.lookup<ffi.NativeFunction<ffi.Void Function()>>(

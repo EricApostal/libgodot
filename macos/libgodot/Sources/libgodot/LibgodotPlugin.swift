@@ -18,10 +18,18 @@ final class GodotAPI {
   typealias FnWindowSetTitle = @convention(c) (UnsafePointer<CChar>, Int32) -> Int32
   typealias FnGLMakeCurrent = @convention(c) (Int32) -> Int32
   typealias FnSetNativeSurface = @convention(c) (UnsafeMutableRawPointer?) -> Int32
+  typealias FnSetMetalLayer = @convention(c) (UnsafeMutableRawPointer?) -> Int32  // optional helper
   typealias FnCreateNativeWindow = @convention(c) (
     UnsafeMutableRawPointer?, UnsafeMutablePointer<Int32>?
   ) -> Int32
   typealias FnDeleteWindow = @convention(c) (Int32) -> Int32
+  typealias FnRegisterEmbeddedDriver = @convention(c) () -> Void
+  // RenderingNativeSurfaceApple helpers (optional)
+  typealias FnRNSAppleCreate = @convention(c) (UInt64) -> UnsafeMutableRawPointer?
+  typealias FnRNSAppleGetLayer = @convention(c) (
+    UnsafeMutableRawPointer?, UnsafeMutablePointer<UInt64>?
+  ) -> Int32
+  typealias FnRNSAppleDestroy = @convention(c) (UnsafeMutableRawPointer?) -> Int32
 
   static let shared = GodotAPI()
 
@@ -36,8 +44,13 @@ final class GodotAPI {
   private(set) var windowSetTitle: FnWindowSetTitle?
   private(set) var glMakeCurrent: FnGLMakeCurrent?
   private(set) var setNativeSurface: FnSetNativeSurface?
+  private(set) var setMetalLayer: FnSetMetalLayer?
   private(set) var createNativeWindow: FnCreateNativeWindow?
   private(set) var deleteWindow: FnDeleteWindow?
+  private(set) var registerEmbeddedDriver: FnRegisterEmbeddedDriver?
+  private(set) var rnsAppleCreate: FnRNSAppleCreate?
+  private(set) var rnsAppleGetLayer: FnRNSAppleGetLayer?
+  private(set) var rnsAppleDestroy: FnRNSAppleDestroy?
 
   // Attempt to open a plausible set of library names once.
   private init() {
@@ -76,9 +89,20 @@ final class GodotAPI {
       "libgodot_display_server_embedded_gl_window_make_current", as: FnGLMakeCurrent.self)
     setNativeSurface = sym(
       "libgodot_display_server_embedded_set_native_surface", as: FnSetNativeSurface.self)
+    setMetalLayer = sym(
+      "libgodot_display_server_embedded_set_metal_layer", as: FnSetMetalLayer.self)
     createNativeWindow = sym(
       "libgodot_display_server_embedded_create_native_window", as: FnCreateNativeWindow.self)
     deleteWindow = sym("libgodot_display_server_embedded_delete_window", as: FnDeleteWindow.self)
+    registerEmbeddedDriver = sym(
+      "libgodot_display_server_embedded_register_embedded_driver", as: FnRegisterEmbeddedDriver.self
+    )
+    rnsAppleCreate = sym(
+      "libgodot_rendering_native_surface_apple_create", as: FnRNSAppleCreate.self)
+    rnsAppleGetLayer = sym(
+      "libgodot_rendering_native_surface_apple_get_layer", as: FnRNSAppleGetLayer.self)
+    rnsAppleDestroy = sym(
+      "libgodot_rendering_native_surface_apple_destroy", as: FnRNSAppleDestroy.self)
   }
 
   // Allow overriding resolved symbols with raw function pointer addresses
@@ -120,11 +144,26 @@ final class GodotAPI {
     if let a = map["libgodot_display_server_embedded_set_native_surface"] {
       setNativeSurface = cast(a, as: FnSetNativeSurface.self)
     }
+    if let a = map["libgodot_display_server_embedded_set_metal_layer"] {
+      setMetalLayer = cast(a, as: FnSetMetalLayer.self)
+    }
     if let a = map["libgodot_display_server_embedded_create_native_window"] {
       createNativeWindow = cast(a, as: FnCreateNativeWindow.self)
     }
     if let a = map["libgodot_display_server_embedded_delete_window"] {
       deleteWindow = cast(a, as: FnDeleteWindow.self)
+    }
+    if let a = map["libgodot_rendering_native_surface_apple_create"] {
+      rnsAppleCreate = cast(a, as: FnRNSAppleCreate.self)
+    }
+    if let a = map["libgodot_rendering_native_surface_apple_get_layer"] {
+      rnsAppleGetLayer = cast(a, as: FnRNSAppleGetLayer.self)
+    }
+    if let a = map["libgodot_rendering_native_surface_apple_destroy"] {
+      rnsAppleDestroy = cast(a, as: FnRNSAppleDestroy.self)
+    }
+    if let a = map["libgodot_display_server_embedded_register_embedded_driver"] {
+      registerEmbeddedDriver = cast(a, as: FnRegisterEmbeddedDriver.self)
     }
     NSLog(
       "[libgodot][swift] Overrode symbol addresses from Dart; isAvailable now -> \(String(describing: isAvailable?()))"
@@ -140,18 +179,41 @@ private final class GodotRenderLoop {
   private var running = false
   private let api = GodotAPI.shared
   private let queue = DispatchQueue(label: "libgodot.renderloop")
+  private var retryTimer: DispatchSourceTimer?
+  private var retryAttempts = 0
   private init() {}
 
   func startIfNeeded() {
     guard !running else { return }
-    // guard api.isAvailable?() == 1 else {
-    //   // Log raw availability probe result (optional Int32) for diagnostics.
-    //   NSLog("[libgodot][swift] isAvailable probe returned: \(api.isAvailable?() ?? -1)")
-    //   NSLog(
-    //     "[libgodot][swift] DisplayServerEmbedded not yet available; will retry when attaching instance"
-    //   )
-    //   return
-    // }
+    if api.isAvailable?() != 1 {
+      if retryTimer == nil {
+        NSLog(
+          "[libgodot][swift] DisplayServerEmbedded not available yet (\(api.isAvailable?() ?? -1)); polling"
+        )
+        let t = DispatchSource.makeTimerSource(queue: queue)
+        t.schedule(deadline: .now() + .milliseconds(120), repeating: .milliseconds(120))
+        t.setEventHandler { [weak self] in
+          guard let self else { return }
+          if self.api.isAvailable?() == 1 {
+            self.retryTimer?.cancel()
+            self.retryTimer = nil
+            DispatchQueue.main.async { self.startIfNeeded() }
+          } else {
+            self.retryAttempts += 1
+            if self.retryAttempts % 10 == 0 {
+              NSLog(
+                "[libgodot][swift] waiting for DisplayServerEmbedded (attempt=\(self.retryAttempts))"
+              )
+            }
+          }
+        }
+        retryTimer = t
+        t.resume()
+      }
+      return
+    }
+    retryTimer?.cancel()
+    retryTimer = nil
     running = true
     var link: CVDisplayLink?
     CVDisplayLinkCreateWithActiveCGDisplays(&link)
@@ -180,8 +242,10 @@ private final class GodotRenderLoop {
     guard running else { return }
     queue.async { [weak self] in
       guard let self else { return }
-      self.api.processEvents?()
-      _ = self.api.swapBuffers?()
+      if self.api.isAvailable?() == 1 {
+        self.api.processEvents?()
+        _ = self.api.swapBuffers?()
+      }
     }
   }
 }
@@ -195,6 +259,9 @@ final class GodotHostView: NSView {
   private var startedOnce = false
   private var nativeWindowId: Int32 = 0
   private var surfaceBound = false
+  private var bindRetryTimer: DispatchSourceTimer?
+  private var bindFailures = 0
+  private var nativeSurface: UnsafeMutableRawPointer?  // RenderingNativeSurfaceApple*
 
   override var wantsUpdateLayer: Bool { true }
   override var acceptsFirstResponder: Bool { true }
@@ -233,6 +300,7 @@ final class GodotHostView: NSView {
         title.withCString { _ = titleFn($0, 0) }
       }
       bindNativeSurfaceIfNeeded()
+      startBindRetryIfNeeded()
     }
   }
 
@@ -287,26 +355,88 @@ final class GodotHostView: NSView {
 
   private func bindNativeSurfaceIfNeeded() {
     guard !surfaceBound else { return }
-    guard let setSurf = api.setNativeSurface else { return }
+    // Prefer primary set_native_surface; fall back to set_metal_layer helper if present.
     #if canImport(Metal)
       guard let ml = metalLayer else { return }
-      let ptr = Unmanaged.passUnretained(ml).toOpaque()
-      let res = setSurf(ptr)
+      // If the embedded DisplayServer isn't available yet, postpone binding; we'll retry via timer.
+      if api.isAvailable?() != 1 {
+        return
+      }
+      var res: Int32 = -1
+      // Create RenderingNativeSurfaceApple if helper exists and we haven't yet.
+      if nativeSurface == nil, let create = api.rnsAppleCreate {
+        let layerPtr = Unmanaged.passUnretained(ml).toOpaque()
+        let layerOpaque = UInt64(UInt(bitPattern: layerPtr))
+        nativeSurface = create(layerOpaque)
+        if nativeSurface == nil {
+          NSLog("[libgodot][swift] rnsAppleCreate returned nil; will retry")
+        } else {
+          NSLog(
+            "[libgodot][swift] Created RenderingNativeSurfaceApple ptr=\(nativeSurface!) layer=\(layerOpaque)"
+          )
+        }
+      }
+      if let surf = nativeSurface, let setSurf = api.setNativeSurface {
+        res = setSurf(surf)
+      } else if nativeSurface == nil, let setML = api.setMetalLayer {  // legacy raw layer helper
+        let rawPtr = Unmanaged.passUnretained(ml).toOpaque()
+        res = setML(rawPtr)
+      } else if nativeSurface == nil, let setRaw = api.setNativeSurface {  // last resort (likely -1)
+        let rawPtr = Unmanaged.passUnretained(ml).toOpaque()
+        res = setRaw(rawPtr)
+      } else {
+        NSLog("[libgodot][swift] No surface binding path available; will retry")
+        return
+      }
       if res == 0 {
         surfaceBound = true
+        let surfacePtrForWindow = nativeSurface ?? Unmanaged.passUnretained(ml).toOpaque()
         if let createWin = api.createNativeWindow {
           var winId: Int32 = 0
-          let cr = createWin(ptr, &winId)
+          let cr = createWin(surfacePtrForWindow, &winId)
           if cr == 0 { nativeWindowId = winId }
           if let makeCurrent = api.glMakeCurrent { _ = makeCurrent(Int32(nativeWindowId)) }
         }
-        // NSLog(
-        //   "[libgodot][swift] Bound native surface (CAMetalLayer ptr=%p) win=%d", ptr, nativeWindowId
-        // )
+        DispatchQueue.main.async { GodotRenderLoop.shared.startIfNeeded() }
+        NSLog(
+          "[libgodot][swift] Bound native surface (rns=\(String(describing: nativeSurface))) win=\(nativeWindowId); isAvailable=\(api.isAvailable?() ?? -1)"
+        )
+        stopBindRetry()
       } else {
-        // NSLog("[libgodot][swift] set_native_surface failed code=%d", res)
+        NSLog(
+          "[libgodot][swift] set_native_surface failed code=\(res); isAvailable=\(api.isAvailable?() ?? -1) nativeSurface=\(String(describing: nativeSurface)) (will keep retrying)"
+        )
+        bindFailures += 1
+        if bindFailures == 20 {
+          NSLog(
+            "[libgodot][swift][diagnostic] Still failing to bind native surface. Ensure libgodot_rendering_native_surface_apple_create is exported and returns a valid RenderingNativeSurfaceApple Ref."
+          )
+        }
+        if bindFailures > 300 { stopBindRetry() }
       }
     #endif
+  }
+
+  deinit {
+    if let surf = nativeSurface, let destroy = api.rnsAppleDestroy {
+      _ = destroy(surf)
+      NSLog("[libgodot][swift] Destroyed RenderingNativeSurfaceApple")
+    }
+  }
+
+  private func startBindRetryIfNeeded() {
+    guard bindRetryTimer == nil, !surfaceBound else { return }
+    let t = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
+    t.schedule(deadline: .now() + .milliseconds(150), repeating: .milliseconds(150))
+    t.setEventHandler { [weak self] in self?.bindNativeSurfaceIfNeeded() }
+    bindRetryTimer = t
+    t.resume()
+    NSLog("[libgodot][swift] Started native surface bind retry timer")
+  }
+
+  private func stopBindRetry() {
+    bindRetryTimer?.cancel()
+    bindRetryTimer = nil
   }
 }
 
@@ -354,6 +484,7 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
         godotInstancePtr = addr.uint64Value
         // NSLog("[libgodot] Received Godot instance pointer: 0x%llx", godotInstancePtr)
         // Attempt to start render loop now that instance should exist.
+        if api.isAvailable?() != 1 { api.registerEmbeddedDriver?() }
         GodotRenderLoop.shared.startIfNeeded()
         result(true)
       } else {
@@ -366,6 +497,7 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
           if let num = v as? NSNumber { map[k] = num.uint64Value }
         }
         api.overrideSymbols(from: map)
+        if api.isAvailable?() != 1 { api.registerEmbeddedDriver?() }
         // After overriding symbols, try starting render loop again (in case availability now true).
         GodotRenderLoop.shared.startIfNeeded()
         result(true)

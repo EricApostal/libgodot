@@ -670,6 +670,78 @@ class NativeLibrary {
   late final _libgodot_display_server_embedded_gl_window_make_current =
       _libgodot_display_server_embedded_gl_window_make_currentPtr
           .asFunction<int Function(int)>();
+
+  void libgodot_display_server_embedded_register_embedded_driver() {
+    return _libgodot_display_server_embedded_register_embedded_driver();
+  }
+
+  late final _libgodot_display_server_embedded_register_embedded_driverPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>(
+        'libgodot_display_server_embedded_register_embedded_driver',
+      );
+  late final _libgodot_display_server_embedded_register_embedded_driver =
+      _libgodot_display_server_embedded_register_embedded_driverPtr
+          .asFunction<void Function()>();
+
+  /// @name RenderingNativeSurfaceApple bindings
+  /// @since 4.4
+  ///
+  /// Lightweight creation / query / destruction helpers for the Apple specific
+  /// RenderingNativeSurface implementation. These wrap the RefCounted object so
+  /// that host applications embedding Godot can create a surface backed by a
+  /// native CALayer pointer.
+  ///
+  /// All functions return 0 on success (or a non-null pointer for create) and -1
+  /// on failure unless otherwise documented.
+  GDExtensionObjectPtr libgodot_rendering_native_surface_apple_create(
+    int p_layer,
+  ) {
+    return _libgodot_rendering_native_surface_apple_create(p_layer);
+  }
+
+  late final _libgodot_rendering_native_surface_apple_createPtr =
+      _lookup<ffi.NativeFunction<GDExtensionObjectPtr Function(ffi.Uint64)>>(
+        'libgodot_rendering_native_surface_apple_create',
+      );
+  late final _libgodot_rendering_native_surface_apple_create =
+      _libgodot_rendering_native_surface_apple_createPtr
+          .asFunction<GDExtensionObjectPtr Function(int)>();
+
+  int libgodot_rendering_native_surface_apple_get_layer(
+    GDExtensionObjectPtr p_surface,
+    ffi.Pointer<ffi.Uint64> r_layer,
+  ) {
+    return _libgodot_rendering_native_surface_apple_get_layer(
+      p_surface,
+      r_layer,
+    );
+  }
+
+  late final _libgodot_rendering_native_surface_apple_get_layerPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(GDExtensionObjectPtr, ffi.Pointer<ffi.Uint64>)
+        >
+      >('libgodot_rendering_native_surface_apple_get_layer');
+  late final _libgodot_rendering_native_surface_apple_get_layer =
+      _libgodot_rendering_native_surface_apple_get_layerPtr
+          .asFunction<
+            int Function(GDExtensionObjectPtr, ffi.Pointer<ffi.Uint64>)
+          >();
+
+  int libgodot_rendering_native_surface_apple_destroy(
+    GDExtensionObjectPtr p_surface,
+  ) {
+    return _libgodot_rendering_native_surface_apple_destroy(p_surface);
+  }
+
+  late final _libgodot_rendering_native_surface_apple_destroyPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(GDExtensionObjectPtr)>>(
+        'libgodot_rendering_native_surface_apple_destroy',
+      );
+  late final _libgodot_rendering_native_surface_apple_destroy =
+      _libgodot_rendering_native_surface_apple_destroyPtr
+          .asFunction<int Function(GDExtensionObjectPtr)>();
 }
 
 typedef __int8_t = ffi.SignedChar;
