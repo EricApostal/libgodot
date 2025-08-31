@@ -36,3 +36,4 @@ migrate_working_dir/
 macos/build/
 macos/build/libgodot.dylib
 macos/build/libgodot.xcframework.zip
+macos/libgodot/Vendor/libgodot.xcframework/macos-arm64/libgodot.macos.template_debug.dev.arm64.dylib
