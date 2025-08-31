@@ -27,6 +27,23 @@ class GodotInstance {
 // ----- Callback glue (initialization + executors) -----
 
 // Initialization callback invoked by libgodot during instance creation.
+void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {
+  // Placeholder: could register classes or resources based on level.
+}
+
+void _extensionDeinitialize(ffi.Pointer<ffi.Void> userdata, int level) {
+  // Placeholder cleanup.
+}
+
+final _extensionInitializePtr =
+    ffi.Pointer.fromFunction<
+      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.UnsignedInt)
+    >(_extensionInitialize);
+final _extensionDeinitializePtr =
+    ffi.Pointer.fromFunction<
+      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.UnsignedInt)
+    >(_extensionDeinitialize);
+
 int _gdExtensionInit(
   GDExtensionInterfaceGetProcAddress getProcAddress,
   GDExtensionClassLibraryPtr library,
@@ -38,8 +55,9 @@ int _gdExtensionInit(
     init.minimum_initialization_levelAsInt =
         GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_CORE.value;
     init.userdata = ffi.nullptr; // No userdata for now.
-    init.initialize = ffi.nullptr; // No-op initialize.
-    init.deinitialize = ffi.nullptr; // No-op deinitialize.
+    // Provide no-op initialize/deinitialize functions (required to be non-null in practice).
+    init.initialize = _extensionInitializePtr;
+    init.deinitialize = _extensionDeinitializePtr;
     return 1; // true (success)
   } catch (_) {
     return 0; // failure
@@ -83,7 +101,8 @@ final InvokeCallbackFunction$1 _asyncExecutorPtr =
 /// a placeholder program name is inserted. Memory used for the argument array
 /// is freed immediately after the native creation call returns.
 GodotInstance createGodotInstance({List<String> arguments = const []}) {
-  final args = arguments.isEmpty ? <String>['dart_embed'] : List.of(arguments);
+  // Ensure argv[0] is a pseudo executable path; Godot expects it present.
+  final args = <String>['/usr/bin/libgodot_embed'] + arguments;
   final argc = args.length;
 
   // Allocate C array for argv.
@@ -116,4 +135,32 @@ GodotInstance createGodotInstance({List<String> arguments = const []}) {
   }
 
   return GodotInstance._(handle);
+}
+
+/// Convenience builder mirroring Swift GodotApp start logic.
+///
+/// Provides typical arguments:
+///  --main-pack <pckPath>
+///  --rendering-driver <driver>
+///  --rendering-method <method>
+///  --display-driver embedded
+/// Additional [extraArgs] appended after the standard ones.
+GodotInstance createGodotInstanceFromPack({
+  required String pckPath,
+  String renderingDriver = 'metal',
+  String renderingMethod = 'mobile',
+  List<String> extraArgs = const [],
+}) {
+  final args = <String>[
+    '--main-pack',
+    pckPath,
+    '--rendering-driver',
+    renderingDriver,
+    '--rendering-method',
+    renderingMethod,
+    '--display-driver',
+    'embedded',
+    ...extraArgs,
+  ];
+  return createGodotInstance(arguments: args);
 }

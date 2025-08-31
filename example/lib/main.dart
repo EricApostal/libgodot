@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:libgodot/libgodot.dart';
 import 'package:libgodot/godot_instance.dart';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, File, Directory;
 
 void main() {
   runApp(const MyApp());
@@ -24,14 +24,30 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // Create a Godot instance (minimal) on startup.
+    _initGodot();
+  }
+
+  Future<void> _initGodot() async {
     try {
-      final instance = createGodotInstance();
-      print('Godot instance created: valid=${instance.isValid}');
+      const assetLogicalPath = 'assets/game.pck';
+      final data = await rootBundle.load(assetLogicalPath);
+      final tempFile = File(
+        '${Directory.systemTemp.path}/embedded_game_${DateTime.now().microsecondsSinceEpoch}.pck',
+      );
+      await tempFile.writeAsBytes(
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+        flush: true,
+      );
+      if (!await tempFile.exists()) {
+        throw Exception('Temp PCK file not found at ${tempFile.path}');
+      }
+      final instance = createGodotInstanceFromPack(pckPath: tempFile.path);
+      print(
+        'Godot instance created (pack=${tempFile.path}) valid=${instance.isValid}',
+      );
     } catch (e, st) {
-      print('Failed to create Godot instance: $e\n$st');
+      print('Failed to load or start Godot pack: $e\n$st');
     }
-    // initPlatformState(); // Existing example logic.
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
