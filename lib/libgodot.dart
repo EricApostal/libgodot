@@ -18,6 +18,10 @@ class Libgodot {
 
 native.NativeLibrary? _libgodotNative;
 
+// Pointer to instance binding callbacks struct passed to registerGodot.
+ffi.Pointer<GDExtensionInstanceBindingCallbacks>? _bindingCallbacksPtr;
+native.GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
+
 native.NativeLibrary get libgodotNative {
   final lib = _libgodotNative;
   if (lib == null) {
@@ -104,7 +108,11 @@ Future<void> initializeLibgodot() async {
     throw StateError('Failed to create Godot instance (null handle)');
   }
 
-  registerGodot(_extensionInitializePtr.address, _initCallbackPtr.address);
+  // Lazily allocate instance binding callbacks once.
+  _bindingCallbacksPtr ??= _createBindingCallbacks();
+  print("start register");
+  registerGodot(_capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
+  print("end register");
 
   print("SPAWNING INSTANCE!");
   _godotInstance = GodotInstance.withNonNullOwner(handle);
@@ -150,7 +158,6 @@ Future<native.NativeLibrary> _loadLibgodotFromAssets() async {
     DynamicLibrary.open(libDart.path);
     DynamicLibrary.open(libGodotDart.path);
     print("All dynamic libraries attached!");
-
     return native.NativeLibrary(dylib);
   } catch (e) {
     throw StateError('Failed to load libgodot (${libgodotFile.path}): $e');
@@ -178,6 +185,7 @@ int _gdExtensionInit(
   native.GDExtensionClassLibraryPtr library,
   ffi.Pointer<native.GDExtensionInitialization> initPtr,
 ) {
+  _capturedExtensionLibraryPtr = library;
   final init = initPtr.ref;
   init.minimum_initialization_levelAsInt = native
       .GDExtensionInitializationLevel
@@ -219,3 +227,49 @@ final native.InvokeCallbackFunction$1 _asyncExecutorPtr =
     ffi.Pointer.fromFunction<native.InvokeCallbackFunctionFunction>(
       _asyncExecutor,
     );
+
+// ---------------- Instance binding support ----------------
+
+ffi.Pointer<GDExtensionInstanceBindingCallbacks> _createBindingCallbacks() {
+  final createPtr =
+      ffi.Pointer.fromFunction<
+        GDExtensionInstanceBindingCreateCallbackFunction
+      >(_bindingCreate);
+  final freePtr =
+      ffi.Pointer.fromFunction<GDExtensionInstanceBindingFreeCallbackFunction>(
+        _bindingFree,
+      );
+  final refPtr =
+      ffi.Pointer.fromFunction<
+        GDExtensionInstanceBindingReferenceCallbackFunction
+      >(_bindingReference, 1);
+
+  final callbacks = pkg_ffi.calloc<GDExtensionInstanceBindingCallbacks>();
+  callbacks.ref
+    ..create_callback = createPtr
+    ..free_callback = freePtr
+    ..reference_callback = refPtr;
+  return callbacks;
+}
+
+// Top-level instance binding callbacks (must be static for FFI)
+ffi.Pointer<ffi.Void> _bindingCreate(
+  ffi.Pointer<ffi.Void> p_token,
+  ffi.Pointer<ffi.Void> p_instance,
+) {
+  return ffi.nullptr; // no custom binding data
+}
+
+void _bindingFree(
+  ffi.Pointer<ffi.Void> p_token,
+  ffi.Pointer<ffi.Void> p_instance,
+  ffi.Pointer<ffi.Void> p_binding,
+) {}
+
+int _bindingReference(
+  ffi.Pointer<ffi.Void> p_token,
+  ffi.Pointer<ffi.Void> p_binding,
+  int p_reference,
+) {
+  return 1; // allow
+}
