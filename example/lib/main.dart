@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:libgodot/libgodot.dart';
 import 'package:libgodot/godot_instance.dart';
+import 'dart:io' show Platform;
 
 void main() {
   runApp(const MyApp());
@@ -61,8 +62,36 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Plugin example app')),
-        body: Center(child: Text('Running on: $_platformVersion\n')),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Running on: $_platformVersion'),
+            ),
+            if (Platform.isMacOS) const Expanded(child: GodotView()),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+/// Embeds the native Godot NSView on macOS.
+class GodotView extends StatelessWidget {
+  const GodotView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!Platform.isMacOS) {
+      return const Center(child: Text('Godot view only on macOS for now'));
+    }
+    const viewType = 'GodotView';
+    const creationParams = <String, dynamic>{};
+    return AppKitView(
+      viewType: viewType,
+      layoutDirection: TextDirection.ltr,
+      creationParams: creationParams,
+      creationParamsCodec: const StandardMessageCodec(),
     );
   }
 }
