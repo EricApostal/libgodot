@@ -33,29 +33,17 @@ class _MyAppState extends State<MyApp> {
       await initializeLibgodot();
       print('Libgodot native library initialized successfully');
 
-      // Now load the game pack
-      const assetLogicalPath = 'assets/game.pck';
-      final data = await rootBundle.load(assetLogicalPath);
-      final tempFile = File(
-        '${Directory.systemTemp.path}/embedded_game_${DateTime.now().microsecondsSinceEpoch}.pck',
-      );
-      await tempFile.writeAsBytes(
-        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
-        flush: true,
-      );
-      if (!await tempFile.exists()) {
-        throw Exception('Temp PCK file not found at ${tempFile.path}');
-      }
-      final instance = createGodotInstanceFromPack(pckPath: tempFile.path);
-      print(
-        'Godot instance created (pack=${tempFile.path}) valid=${instance.isValid}',
-      );
-      if (instance.isValid) {
-        const channel = MethodChannel('libgodot');
-        await channel.invokeMethod('attachGodotInstance', {
-          'address': instance.address,
-        });
-      }
+      print("GODOT INSTANCE!");
+      print(godotInstance);
+      // print(
+      //   'Godot instance created (pack=${tempFile.path}) valid=${instance.isValid}',
+      // );
+      // if (instance.isValid) {
+      //   const channel = MethodChannel('libgodot');
+      //   await channel.invokeMethod('attachGodotInstance', {
+      //     'address': instance.address,
+      //   });
+      // }
     } catch (e, st) {
       print('Failed to load or start Godot pack: $e\n$st');
     }
@@ -109,16 +97,17 @@ class GodotView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!Platform.isMacOS) {
-      return const Center(child: Text('Godot view only on macOS for now'));
-    }
-    const viewType = 'GodotView';
-    const creationParams = <String, dynamic>{};
-    return AppKitView(
-      viewType: viewType,
-      layoutDirection: TextDirection.ltr,
-      creationParams: creationParams,
-      creationParamsCodec: const StandardMessageCodec(),
-    );
+    return Center(child: Text("bruh"));
+    // if (!Platform.isMacOS) {
+    //   return const Center(child: Text('Godot view only on macOS for now'));
+    // }
+    // const viewType = 'GodotView';
+    // const creationParams = <String, dynamic>{};
+    // return AppKitView(
+    //   viewType: viewType,
+    //   layoutDirection: TextDirection.ltr,
+    //   creationParams: creationParams,
+    //   creationParamsCodec: const StandardMessageCodec(),
+    // );
   }
 }

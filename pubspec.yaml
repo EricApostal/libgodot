@@ -1,6 +1,7 @@
 name: libgodot
 description: "Embed Godot games in your Flutter app"
 version: 0.0.1
+publish_to: none
 homepage:
 
 environment:
@@ -12,6 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
+  godot_dart: 
+    path: packages/godot_dart/src/dart/godot_dart
 
 dev_dependencies:
   flutter_test:

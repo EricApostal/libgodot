@@ -1,9 +1,13 @@
 import 'dart:ffi';
+import 'dart:ffi' as ffi;
+import 'dart:async';
 import 'dart:io' show Platform, File, Directory, Process;
 import 'package:flutter/services.dart';
+import 'package:godot_dart/godot_dart.dart';
+import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:path/path.dart' as path;
 
-import 'generated_bindings.dart';
+import 'generated_bindings.dart' as native;
 import 'libgodot_platform_interface.dart';
 
 /// Public API surface for the libgodot Dart plugin.
@@ -12,13 +16,9 @@ class Libgodot {
       LibgodotPlatform.instance.getPlatformVersion();
 }
 
-/// Lazily loaded native bindings.
-/// Note: This will be null until [initializeLibgodot] is called.
-NativeLibrary? _libgodotNative;
+native.NativeLibrary? _libgodotNative;
 
-/// Public getter for the native library.
-/// Throws if [initializeLibgodot] hasn't been called yet.
-NativeLibrary get libgodotNative {
+native.NativeLibrary get libgodotNative {
   final lib = _libgodotNative;
   if (lib == null) {
     throw StateError(
@@ -28,8 +28,6 @@ NativeLibrary get libgodotNative {
   return lib;
 }
 
-/// Initialize the libgodot native library by extracting it from assets.
-/// This must be called before using any libgodot functionality.
 Future<void> initializeLibgodot() async {
   if (!Platform.isMacOS) {
     throw UnsupportedError(
@@ -38,15 +36,75 @@ Future<void> initializeLibgodot() async {
   }
 
   if (_libgodotNative != null) {
-    return; // Already initialized
+    return;
+  }
+  _libgodotNative = await _loadLibgodotFromAssets();
+
+  String pckPath;
+  String renderingDriver = 'metal';
+  String renderingMethod = 'mobile';
+  List<String> extraArgs = const [];
+  // Now load the game pack
+  const assetLogicalPath = 'assets/game.pck';
+  final data = await rootBundle.load(assetLogicalPath);
+  final tempFile = File(
+    '${Directory.systemTemp.path}/embedded_game_${DateTime.now().microsecondsSinceEpoch}.pck',
+  );
+  await tempFile.writeAsBytes(
+    data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+    flush: true,
+  );
+  if (!await tempFile.exists()) {
+    throw Exception('Temp PCK file not found at ${tempFile.path}');
   }
 
-  _libgodotNative = await _loadLibgodotFromAssets();
+  final args = <String>[
+    '--main-pack',
+    pckPath,
+    '--rendering-driver',
+    renderingDriver,
+    '--rendering-method',
+    renderingMethod,
+    '--display-driver',
+    'embedded',
+    ...extraArgs,
+  ];
+
+  print("getting handle");
+  final handle = _libgodotNative!.libgodot_create_godot_instance(
+    argc,
+    argv,
+    _initCallbackPtr,
+    _asyncExecutorPtr,
+    ffi.nullptr, // async userdata
+    _syncExecutorPtr,
+    ffi.nullptr, // sync userdata
+  );
+  print("got handle");
+
+  // Free argv memory.
+  for (final p in allocatedStrings) {
+    pkg_ffi.malloc.free(p);
+  }
+  pkg_ffi.calloc.free(argv);
+
+  if (handle == ffi.nullptr) {
+    throw StateError('Failed to create Godot instance (null handle)');
+  }
+
+  // Wrap native handle in generated binding object so higher-level API can use it.
+  _godotInstance = GodotInstance.withNonNullOwner(handle);
+
+  // (Optional) Probe availability of embedded display server.
+  final available = _libgodotNative!
+      .libgodot_display_server_embedded_is_available();
+  if (available == 0) {
+    // Not throwing yet; availability may change after further initialization.
+  }
 }
 
 /// Load the libgodot dylib by extracting it from Flutter assets.
-Future<NativeLibrary> _loadLibgodotFromAssets() async {
-  // Get the app's temporary directory where we can write files
+Future<native.NativeLibrary> _loadLibgodotFromAssets() async {
   final tempDir = Directory.systemTemp;
   final dylibName = 'libgodot.macos.template_debug.dev.arm64.dylib';
   final extractedFile = File(path.join(tempDir.path, 'libgodot', dylibName));
@@ -59,18 +117,14 @@ Future<NativeLibrary> _loadLibgodotFromAssets() async {
   bool shouldExtract = true;
 
   if (await extractedFile.exists()) {
-    // For now, always re-extract to ensure we have the latest version
-    // In production, you might want to check modification times or versions
     shouldExtract = true;
   }
 
   if (shouldExtract) {
     try {
-      // Load the dylib from Flutter assets
       final assetData = await rootBundle.load(assetKey);
       final bytes = assetData.buffer.asUint8List();
 
-      // Write to the temporary location
       await extractedFile.writeAsBytes(bytes);
 
       // Make it executable (important!)
@@ -86,13 +140,83 @@ Future<NativeLibrary> _loadLibgodotFromAssets() async {
     }
   }
 
-  // Now load the extracted dylib
   try {
     final dylib = DynamicLibrary.open(extractedFile.path);
-    return NativeLibrary(dylib);
+    return native.NativeLibrary(dylib);
   } catch (e) {
     throw StateError(
       'Failed to load extracted libgodot dylib from ${extractedFile.path}: $e',
     );
   }
 }
+
+// ---------------- Internal embedding helpers (modeled after Swift) ----------------
+
+GodotInstance? _godotInstance;
+GodotInstance? get godotInstance => _godotInstance;
+
+// Extension (lifecycle) callbacks Godot will invoke at levels.
+void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {
+  // Placeholder: register types or resources if needed.
+}
+
+void _extensionDeinitialize(ffi.Pointer<ffi.Void> userdata, int level) {
+  // Placeholder cleanup logic.
+}
+
+final _extensionInitializePtr =
+    ffi.Pointer.fromFunction<
+      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.UnsignedInt)
+    >(_extensionInitialize);
+final _extensionDeinitializePtr =
+    ffi.Pointer.fromFunction<
+      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.UnsignedInt)
+    >(_extensionDeinitialize);
+
+int _gdExtensionInit(
+  native.GDExtensionInterfaceGetProcAddress getProcAddress,
+  native.GDExtensionClassLibraryPtr library,
+  ffi.Pointer<native.GDExtensionInitialization> initPtr,
+) {
+  final init = initPtr.ref;
+  // Match Swift using CORE level; adjust to SCENE if rendering services required earlier.
+  init.minimum_initialization_levelAsInt = native
+      .GDExtensionInitializationLevel
+      .GDEXTENSION_INITIALIZATION_CORE
+      .value;
+  init.userdata = ffi.nullptr;
+  init.initialize = _extensionInitializePtr;
+  init.deinitialize = _extensionDeinitializePtr;
+  return 1; // success
+}
+
+final native.GDExtensionInitializationFunction _initCallbackPtr =
+    ffi.Pointer.fromFunction<native.GDExtensionInitializationFunctionFunction>(
+      _gdExtensionInit,
+      0,
+    );
+
+void _syncExecutor(
+  native.InvokeCallback pCallback,
+  native.CallbackData pCallbackData,
+  native.ExecutorData pExecutorData,
+) {
+  final fn = pCallback.asFunction<native.DartInvokeCallbackFunction>();
+  fn(pCallbackData);
+}
+
+void _asyncExecutor(
+  native.InvokeCallback pCallback,
+  native.CallbackData pCallbackData,
+  native.ExecutorData pExecutorData,
+) {
+  final fn = pCallback.asFunction<native.DartInvokeCallbackFunction>();
+  scheduleMicrotask(() => fn(pCallbackData));
+}
+
+final native.InvokeCallbackFunction$1 _syncExecutorPtr = ffi
+    .Pointer.fromFunction<native.InvokeCallbackFunctionFunction>(_syncExecutor);
+final native.InvokeCallbackFunction$1 _asyncExecutorPtr =
+    ffi.Pointer.fromFunction<native.InvokeCallbackFunctionFunction>(
+      _asyncExecutor,
+    );
