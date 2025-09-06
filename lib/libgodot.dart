@@ -4,10 +4,12 @@ import 'dart:async';
 import 'dart:io' show Platform, File, Directory, Process;
 import 'package:flutter/services.dart';
 import 'package:godot_dart/godot_dart.dart';
+import 'package:godot_dart/godot_dart.dart'
+    as godot_dart; // for direct FFI access
 import 'package:ffi/ffi.dart' as pkg_ffi;
+import 'package:godot_dart/godot_dart.dart' as native;
 import 'package:path/path.dart' as path;
 
-import 'generated_bindings.dart' as native;
 import 'libgodot_platform_interface.dart';
 
 /// Public API surface for the libgodot Dart plugin.
@@ -16,13 +18,13 @@ class Libgodot {
       LibgodotPlatform.instance.getPlatformVersion();
 }
 
-native.NativeLibrary? _libgodotNative;
+GDExtensionFFI? _libgodotNative;
 
 // Pointer to instance binding callbacks struct passed to registerGodot.
 ffi.Pointer<GDExtensionInstanceBindingCallbacks>? _bindingCallbacksPtr;
 native.GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
 
-native.NativeLibrary get libgodotNative {
+native.GDExtensionFFI get libgodotNative {
   final lib = _libgodotNative;
   if (lib == null) {
     throw StateError(
@@ -87,7 +89,7 @@ Future<void> initializeLibgodot() async {
   }
 
   print("getting handle");
-  final handle = _libgodotNative!.libgodot_create_godot_instance(
+  final instance = _libgodotNative!.libgodot_create_godot_instance(
     argc,
     argv,
     _initCallbackPtr,
@@ -104,26 +106,40 @@ Future<void> initializeLibgodot() async {
   }
   pkg_ffi.calloc.free(argv);
 
-  if (handle == ffi.nullptr) {
+  if (instance == ffi.nullptr) {
     throw StateError('Failed to create Godot instance (null handle)');
   }
 
   // Lazily allocate instance binding callbacks once.
   _bindingCallbacksPtr ??= _createBindingCallbacks();
   print("start register");
-  registerGodot(_capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
+
+  final godotDart = DynamicLibrary.process();
+  final ffiInterface = GDExtensionFFI(godotDart);
+
+  // TODO: Assert everything is how we expect.
+  final gdInstance = GodotDart(
+    ffiInterface,
+    _capturedExtensionLibraryPtr!,
+    _bindingCallbacksPtr!,
+  );
+
+  initVariantBindings(ffiInterface);
+  TypeInfo.initTypeMappings();
+
+  GD.initBindings();
+  SignalAwaiter.bind();
+  CallbackAwaiter.bind();
+
+  // registerGodot(_capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
   print("end register");
 
   print("SPAWNING INSTANCE!");
-  _godotInstance = GodotInstance.withNonNullOwner(handle);
+  _godotInstance = GodotInstance.withNonNullOwner(instance);
   print("SPAWNED!");
-
-  final available = _libgodotNative!
-      .libgodot_display_server_embedded_is_available();
-  if (available == 0) {}
 }
 
-Future<native.NativeLibrary> _loadLibgodotFromAssets() async {
+Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
   Future<File> _extractDylib(String assetFileName) async {
     final tempDir = Directory.systemTemp;
     final outFile = File(path.join(tempDir.path, 'libgodot', assetFileName));
@@ -150,15 +166,15 @@ Future<native.NativeLibrary> _loadLibgodotFromAssets() async {
   final libgodotFile = await _extractDylib(
     'libgodot.macos.template_debug.dev.arm64.dylib',
   );
-  final libDart = await _extractDylib('libdart_dll.dylib');
-  final libGodotDart = await _extractDylib('libgodot_dart.dylib');
+  // final libDart = await _extractDylib('libdart_dll.dylib');
+  // final libGodotDart = await _extractDylib('libgodot_dart.dylib');
 
   try {
     final dylib = DynamicLibrary.open(libgodotFile.path);
-    DynamicLibrary.open(libDart.path);
-    DynamicLibrary.open(libGodotDart.path);
+    // DynamicLibrary.open(libDart.path);
+    // DynamicLibrary.open(libGodotDart.path);
     print("All dynamic libraries attached!");
-    return native.NativeLibrary(dylib);
+    return native.GDExtensionFFI(dylib);
   } catch (e) {
     throw StateError('Failed to load libgodot (${libgodotFile.path}): $e');
   }
@@ -187,14 +203,12 @@ int _gdExtensionInit(
 ) {
   _capturedExtensionLibraryPtr = library;
   final init = initPtr.ref;
-  init.minimum_initialization_levelAsInt = native
-      .GDExtensionInitializationLevel
-      .GDEXTENSION_INITIALIZATION_CORE
-      .value;
+  init.minimum_initialization_levelAsInt =
+      native.GDExtensionInitializationLevel.core.value;
   init.userdata = ffi.nullptr;
   init.initialize = _extensionInitializePtr;
   init.deinitialize = _extensionDeinitializePtr;
-  return 1; // success
+  return 1;
 }
 
 final native.GDExtensionInitializationFunction _initCallbackPtr =

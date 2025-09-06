@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
 
       print("GODOT INSTANCE!");
       print(godotInstance);
+      print(godotInstance!.isStarted());
       // print(
       //   'Godot instance created (pack=${tempFile.path}) valid=${instance.isValid}',
       // );
