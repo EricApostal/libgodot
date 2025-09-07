@@ -3,9 +3,9 @@ import 'dart:ffi' as ffi;
 import 'dart:async';
 import 'dart:io' show Platform, File, Directory, Process;
 import 'package:flutter/services.dart';
-import 'package:godot_dart/godot_dart.dart';
 import 'package:godot_dart/godot_dart.dart'
     as godot_dart; // for direct FFI access
+import 'package:godot_dart/godot_dart.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:godot_dart/godot_dart.dart' as native;
 import 'package:path/path.dart' as path;
@@ -118,11 +118,8 @@ Future<void> initializeLibgodot() async {
   final ffiInterface = GDExtensionFFI(godotDart);
 
   // TODO: Assert everything is how we expect.
-  final gdInstance = GodotDart(
-    ffiInterface,
-    _capturedExtensionLibraryPtr!,
-    _bindingCallbacksPtr!,
-  );
+  // Instantiate to ensure side effects (binding registration) if constructor has any.
+  GodotDart(ffiInterface, _capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
 
   initVariantBindings(ffiInterface);
   TypeInfo.initTypeMappings();
@@ -201,6 +198,60 @@ int _gdExtensionInit(
   native.GDExtensionClassLibraryPtr library,
   ffi.Pointer<native.GDExtensionInitialization> initPtr,
 ) {
+  print("RUNNING INIT!");
+  print("address : $getProcAddress");
+
+  // how can I do this here? this is a gdextension.
+  // Resolve and invoke "get_godot_version" using the provided getProcAddress.
+  try {
+    // 1. Convert the proc address pointer into a callable Dart function.
+    final getProcAddressFn = getProcAddress
+        .asFunction<native.GDExtensionInterfaceGetProcAddressFunction>();
+
+    // 2. Prepare the function name as a C string (UTF-8).
+    final nameUtf8 = 'get_godot_version'.toNativeUtf8();
+    // Cast Utf8 -> Char (both are 8-bit, required signature is Pointer<Char>).
+    final rawFuncPtr = getProcAddressFn(nameUtf8.cast<ffi.Char>());
+    // Free the name buffer.
+    pkg_ffi.malloc.free(nameUtf8);
+
+    if (rawFuncPtr == ffi.nullptr) {
+      print('Could not resolve get_godot_version');
+    } else {
+      // 3. Cast the generic void() function pointer to the proper signature.
+      final typedPtr = rawFuncPtr
+          .cast<
+            ffi.NativeFunction<
+              native.GDExtensionInterfaceGetGodotVersionFunction
+            >
+          >();
+      // 4. Convert to a Dart callable.
+      final getGodotVersion = typedPtr
+          .asFunction<native.DartGDExtensionInterfaceGetGodotVersionFunction>();
+      // 5. Allocate the version struct, call, then read fields.
+      final versionPtr = pkg_ffi.calloc<native.GDExtensionGodotVersion>();
+      try {
+        getGodotVersion(versionPtr);
+        final v = versionPtr.ref;
+        String str = '';
+        if (v.string != ffi.nullptr) {
+          str = v.string.cast<pkg_ffi.Utf8>().toDartString();
+        }
+        print('Godot version (struct): ${v.major}.${v.minor}.${v.patch}');
+        if (str.isNotEmpty) {
+          print('Godot version (string): $str');
+        }
+      } finally {
+        pkg_ffi.calloc.free(versionPtr);
+      }
+    }
+  } catch (e, st) {
+    print('Failed calling get_godot_version: $e');
+    print(st);
+  }
+
+  // then proceed with normal initialization
+
   _capturedExtensionLibraryPtr = library;
   final init = initPtr.ref;
   init.minimum_initialization_levelAsInt =
