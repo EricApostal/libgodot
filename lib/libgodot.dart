@@ -7,6 +7,7 @@ import 'package:godot_dart/godot_dart.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:godot_dart/godot_dart.dart' as native;
 import 'package:path/path.dart' as path;
+import 'shim_bindings.dart';
 
 import 'libgodot_platform_interface.dart';
 
@@ -87,14 +88,29 @@ Future<void> initializeLibgodot() async {
   }
 
   print("getting handle");
+  // Load shim symbols from the godot dylib process (already opened above)
+  final processLib = DynamicLibrary.process();
+  final shim = ShimBindings(processLib);
+
+  // Use shim init + queue executors instead of raw Dart callbacks.
+  // Shim init has same C signature as GDExtensionInitializationFunction (returns int).
+  final shimInit = processLib
+      .lookup<
+        ffi.NativeFunction<native.GDExtensionInitializationFunctionFunction>
+      >('godot_dart_shim_init');
+  final shimEnqueue = processLib
+      .lookup<ffi.NativeFunction<native.InvokeCallbackFunction>>(
+        'godot_dart_shim_enqueue',
+      );
+
   final instance = _libgodotNative!.libgodot_create_godot_instance(
     argc,
     argv,
-    _initCallbackPtr,
-    _asyncExecutorPtr,
-    ffi.nullptr, // async userdata
-    _syncExecutorPtr,
-    ffi.nullptr, // sync userdata
+    shimInit.cast(),
+    shimEnqueue.cast(), // async executor shim
+    ffi.nullptr,
+    shimEnqueue.cast(), // sync executor shim (same queue)
+    ffi.nullptr,
   );
   print("got handle");
 
@@ -119,7 +135,23 @@ Future<void> initializeLibgodot() async {
   // Instantiate to ensure side effects (binding registration) if constructor has any.
   GodotDart(ffiInterface, _capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
 
+  print("start init");
+  // Manually invoke extension init now that we are on the Dart mutator thread.
+  final procPtr = shim.getProc();
+  final libPtr = shim.getLib();
+  if (procPtr == ffi.nullptr || libPtr == ffi.nullptr) {
+    throw StateError('Shim did not capture init data');
+  }
+  // Reuse existing logic by calling _gdExtensionInit with a temp struct.
+  final initStruct = pkg_ffi.calloc<native.GDExtensionInitialization>();
+  try {
+    _gdExtensionInit(procPtr.cast(), libPtr.cast(), initStruct);
+  } finally {
+    pkg_ffi.calloc.free(initStruct);
+  }
+
   initVariantBindings(ffiInterface);
+  print("end variant");
   TypeInfo.initTypeMappings();
 
   GD.initBindings();
@@ -132,6 +164,45 @@ Future<void> initializeLibgodot() async {
   print("SPAWNING INSTANCE!");
   _godotInstance = GodotInstance.withNonNullOwner(instance);
   print("SPAWNED!");
+
+  // Start polling loop for queued native callbacks.
+  // Simple polling loop using a self-rescheduling Future to avoid tight loop.
+  void pollCallbacks() {
+    final pollFn = processLib
+        .lookupFunction<
+          ffi.Int32 Function(
+            ffi.Pointer<ffi.Pointer<ffi.Void>>,
+            ffi.Pointer<ffi.Pointer<ffi.Void>>,
+          ),
+          int Function(
+            ffi.Pointer<ffi.Pointer<ffi.Void>>,
+            ffi.Pointer<ffi.Pointer<ffi.Void>>,
+          )
+        >('godot_dart_shim_poll');
+    for (int i = 0; i < 16; i++) {
+      final cbOut = pkg_ffi.calloc<ffi.Pointer<ffi.Void>>();
+      final dataOut = pkg_ffi.calloc<ffi.Pointer<ffi.Void>>();
+      final polled = pollFn(cbOut.cast(), dataOut.cast());
+      if (polled == 0) {
+        pkg_ffi.calloc.free(cbOut);
+        pkg_ffi.calloc.free(dataOut);
+        break;
+      }
+      final invokePtr = cbOut.value
+          .cast<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>();
+      final data = dataOut.value;
+      pkg_ffi.calloc.free(cbOut);
+      pkg_ffi.calloc.free(dataOut);
+      if (invokePtr != ffi.nullptr) {
+        final fn = invokePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+        fn(data);
+      }
+    }
+    // Schedule next poll.
+    scheduleMicrotask(pollCallbacks);
+  }
+
+  scheduleMicrotask(pollCallbacks);
 }
 
 Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
@@ -161,12 +232,15 @@ Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
   final libgodotFile = await _extractDylib(
     'libgodot.macos.template_debug.dev.arm64.dylib',
   );
+
+  final dartShim = await _extractDylib('libgodot_dart_shim.dylib');
+
   // final libDart = await _extractDylib('libdart_dll.dylib');
   // final libGodotDart = await _extractDylib('libgodot_dart.dylib');
 
   try {
     final dylib = DynamicLibrary.open(libgodotFile.path);
-    // DynamicLibrary.open(libDart.path);
+    DynamicLibrary.open(dartShim.path);
     // DynamicLibrary.open(libGodotDart.path);
     print("All dynamic libraries attached!");
     return native.GDExtensionFFI(dylib);
@@ -268,36 +342,12 @@ int _gdExtensionInit(
   return 1;
 }
 
-final native.GDExtensionInitializationFunction _initCallbackPtr =
-    ffi.Pointer.fromFunction<native.GDExtensionInitializationFunctionFunction>(
-      _gdExtensionInit,
-      0,
-    );
-
-void _syncExecutor(
-  native.InvokeCallback pCallback,
-  native.CallbackData pCallbackData,
-  native.ExecutorData pExecutorData,
-) {
-  final fn = pCallback.asFunction<native.DartInvokeCallbackFunction>();
-  fn(pCallbackData);
-}
-
-void _asyncExecutor(
-  native.InvokeCallback pCallback,
-  native.CallbackData pCallbackData,
-  native.ExecutorData pExecutorData,
-) {
-  final fn = pCallback.asFunction<native.DartInvokeCallbackFunction>();
-  scheduleMicrotask(() => fn(pCallbackData));
-}
-
-final native.InvokeCallbackFunction$1 _syncExecutorPtr = ffi
-    .Pointer.fromFunction<native.InvokeCallbackFunctionFunction>(_syncExecutor);
-final native.InvokeCallbackFunction$1 _asyncExecutorPtr =
-    ffi.Pointer.fromFunction<native.InvokeCallbackFunctionFunction>(
-      _asyncExecutor,
-    );
+// Legacy direct init / executors removed in favor of shim queue.
+// Keep placeholders for clarity if referenced elsewhere.
+final native.GDExtensionInitializationFunction _initCallbackPtr = ffi.nullptr
+    .cast();
+final native.InvokeCallbackFunction$1 _syncExecutorPtr = ffi.nullptr.cast();
+final native.InvokeCallbackFunction$1 _asyncExecutorPtr = ffi.nullptr.cast();
 
 // ---------------- Instance binding support ----------------
 
