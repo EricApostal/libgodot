@@ -124,19 +124,8 @@ Future<void> initializeLibgodot() async {
     throw StateError('Failed to create Godot instance (null handle)');
   }
 
-  // Lazily allocate instance binding callbacks once.
-  _bindingCallbacksPtr ??= _createBindingCallbacks();
-  print("start register");
-
-  final godotDart = DynamicLibrary.process();
-  final ffiInterface = GDExtensionFFI(godotDart);
-
-  // TODO: Assert everything is how we expect.
-  // Instantiate to ensure side effects (binding registration) if constructor has any.
-  GodotDart(ffiInterface, _capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
-
   print("start init");
-  // Manually invoke extension init now that we are on the Dart mutator thread.
+  // Manually run extension init BEFORE constructing GodotDart so _capturedExtensionLibraryPtr is set.
   final procPtr = shim.getProc();
   final libPtr = shim.getLib();
   if (procPtr == ffi.nullptr || libPtr == ffi.nullptr) {
@@ -149,6 +138,13 @@ Future<void> initializeLibgodot() async {
   } finally {
     pkg_ffi.calloc.free(initStruct);
   }
+
+  // Now we have _capturedExtensionLibraryPtr set by _gdExtensionInit.
+  _bindingCallbacksPtr ??= _createBindingCallbacks();
+  final godotDart = DynamicLibrary.process();
+  final ffiInterface = GDExtensionFFI(godotDart);
+  GodotDart(ffiInterface, _capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
+  print("extension interface wired");
 
   initVariantBindings(ffiInterface);
   print("end variant");
