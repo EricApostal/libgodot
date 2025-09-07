@@ -3,8 +3,6 @@ import 'dart:ffi' as ffi;
 import 'dart:async';
 import 'dart:io' show Platform, File, Directory, Process;
 import 'package:flutter/services.dart';
-import 'package:godot_dart/godot_dart.dart'
-    as godot_dart; // for direct FFI access
 import 'package:godot_dart/godot_dart.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:godot_dart/godot_dart.dart' as native;
@@ -200,6 +198,14 @@ int _gdExtensionInit(
 ) {
   print("RUNNING INIT!");
   print("address : $getProcAddress");
+
+  // Cache get_proc_address so other modules (e.g. variant bindings) can lazily
+  // resolve additional interface entry points without relying on dynamic symbol exports.
+  try {
+    storeGetProcAddress(getProcAddress);
+  } catch (e) {
+    print('Failed to cache get_proc_address: $e');
+  }
 
   // how can I do this here? this is a gdextension.
   // Resolve and invoke "get_godot_version" using the provided getProcAddress.
