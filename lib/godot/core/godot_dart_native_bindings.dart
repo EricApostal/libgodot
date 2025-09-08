@@ -313,23 +313,24 @@ class GodotDartNativeBindings {
   static final Map<int, SignalCallable> _signalCallables = {};
   static final NativeCallable<GDExtensionCallableCustomCallFunction>
   _signalCallTrampoline =
-      NativeCallable<GDExtensionCallableCustomCallFunction>.isolateGroupShared(
+      NativeCallable<GDExtensionCallableCustomCallFunction>.isolateLocal(
         _SignalCallableCallNative,
       );
   static final NativeCallable<GDExtensionCallableCustomIsValidFunction>
   _signalValidTrampoline =
-      NativeCallable<
-        GDExtensionCallableCustomIsValidFunction
-      >.isolateGroupShared(_SignalCallableIsValidNative, exceptionalReturn: 0);
+      NativeCallable<GDExtensionCallableCustomIsValidFunction>.isolateLocal(
+        _SignalCallableIsValidNative,
+        exceptionalReturn: 0,
+      );
   static final NativeCallable<GDExtensionCallableCustomFreeFunction>
   _signalFreeTrampoline =
-      NativeCallable<GDExtensionCallableCustomFreeFunction>.isolateGroupShared(
+      NativeCallable<GDExtensionCallableCustomFreeFunction>.isolateLocal(
         _SignalCallableFreeNative,
       );
   // Native trampoline pointer (Dart -> native) using NativeCallable.
   static final NativeCallable<GDExtensionClassMethodCallNative>
   _methodCallTrampoline =
-      NativeCallable<GDExtensionClassMethodCallNative>.isolateGroupShared(
+      NativeCallable<GDExtensionClassMethodCallNative>.isolateLocal(
         _MethodCallNative,
       );
   // ignore: unused_field
@@ -503,12 +504,11 @@ void _finalizeVariant(Pointer<Void> variantPtr) {
     _variantDestroy ??= () {
       final libdl = DynamicLibrary.process();
 
-        return libdl
-            .lookup<NativeFunction<GDExtensionInterfaceVariantDestroyFunction>>(
-              'variant_destroy',
-            )
-            .asFunction<DartGDExtensionInterfaceVariantDestroyFunction>();
-
+      return libdl
+          .lookup<NativeFunction<GDExtensionInterfaceVariantDestroyFunction>>(
+            'variant_destroy',
+          )
+          .asFunction<DartGDExtensionInterfaceVariantDestroyFunction>();
     }();
     _memFree ??= () {
       final libdl = DynamicLibrary.process();
@@ -527,6 +527,7 @@ void _finalizeVariant(Pointer<Void> variantPtr) {
 }
 
 void _finalizeBuiltinObject(Pointer<Void> builtinOpaquePtr) {
+  print("FINALIZE BUILTIN");
   if (builtinOpaquePtr == nullptr) return;
   try {
     // Layout: [GDExtensionPtrDestructor][object bytes...]
@@ -584,13 +585,11 @@ void _finalizeExtensionObject(Pointer<Void> extensionObjectPtr) {
 }
 
 final _finalizeVariantTrampoline =
-    NativeCallable<_VoidPtrFnNative>.isolateGroupShared(_finalizeVariant);
+    NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeVariant);
 final _finalizeBuiltinObjectTrampoline =
     NativeCallable<_VoidPtrFnNative>.isolateGroupShared(_finalizeBuiltinObject);
 final _finalizeExtensionObjectTrampoline =
-    NativeCallable<_VoidPtrFnNative>.isolateGroupShared(
-      _finalizeExtensionObject,
-    );
+    NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeExtensionObject);
 
 // FFI typedefs for method call trampoline
 typedef GDExtensionClassMethodCallNative =
