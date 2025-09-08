@@ -11,9 +11,9 @@ class DisplayServerEmbeddedFFI {
   final GDExtensionObjectPtr _instance;
 
   static DisplayServerEmbeddedFFI? get() {
-  final inst = _fetchSingletonViaStatic();
-  if (inst == ffi.nullptr) return null;
-  return DisplayServerEmbeddedFFI._(inst);
+    final inst = _fetchSingletonViaStatic();
+    if (inst == ffi.nullptr) return null;
+    return DisplayServerEmbeddedFFI._(inst);
   }
 
   bool setContentScale(double scale) {
@@ -66,10 +66,10 @@ GDExtensionMethodBindPtr _getMethodBind(String className, String methodName) {
   final cached = _methodBindCache![key];
   if (cached != null) return cached;
 
-  final getMPtr = resolveInterfaceFunction<
-      GDExtensionInterfaceClassdbGetMethodBindFunction>(
-    'classdb_get_method_bind',
-  );
+  final getMPtr =
+      resolveInterfaceFunction<
+        GDExtensionInterfaceClassdbGetMethodBindFunction
+      >('classdb_get_method_bind');
   if (getMPtr == null) return ffi.nullptr;
   final getM = getMPtr
       .asFunction<DartGDExtensionInterfaceClassdbGetMethodBindFunction>();
@@ -87,10 +87,10 @@ GDExtensionMethodBindPtr _getMethodBind(String className, String methodName) {
 GDExtensionObjectPtr _fetchSingletonViaStatic() {
   final mbind = _getMethodBind('DisplayServerEmbedded', 'get_singleton');
   if (mbind == ffi.nullptr) return ffi.nullptr;
-  final objMethodPtr = resolveInterfaceFunction<
-      GDExtensionInterfaceObjectMethodBindPtrcallFunction>(
-    'object_method_bind_ptrcall',
-  );
+  final objMethodPtr =
+      resolveInterfaceFunction<
+        GDExtensionInterfaceObjectMethodBindPtrcallFunction
+      >('object_method_bind_ptrcall');
   if (objMethodPtr == null) return ffi.nullptr;
   final call = objMethodPtr
       .asFunction<DartGDExtensionInterfaceObjectMethodBindPtrcallFunction>();
