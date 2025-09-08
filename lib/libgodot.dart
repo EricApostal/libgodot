@@ -207,13 +207,8 @@ int _gdExtensionInit(
   print("RUNNING INIT!");
   print("address : $getProcAddress");
 
-  // Cache get_proc_address so other modules (e.g. variant bindings) can lazily
-  // resolve additional interface entry points without relying on dynamic symbol exports.
-  try {
-    storeGetProcAddress(getProcAddress);
-  } catch (e) {
-    print('Failed to cache get_proc_address: $e');
-  }
+  print("Caching proc address!");
+  storeGetProcAddress(getProcAddress);
 
   // how can I do this here? this is a gdextension.
   // Resolve and invoke "get_godot_version" using the provided getProcAddress.

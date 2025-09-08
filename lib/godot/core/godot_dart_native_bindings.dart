@@ -313,24 +313,23 @@ class GodotDartNativeBindings {
   static final Map<int, SignalCallable> _signalCallables = {};
   static final NativeCallable<GDExtensionCallableCustomCallFunction>
   _signalCallTrampoline =
-      NativeCallable<GDExtensionCallableCustomCallFunction>.isolateLocal(
+      NativeCallable<GDExtensionCallableCustomCallFunction>.isolateGroupShared(
         _SignalCallableCallNative,
       );
   static final NativeCallable<GDExtensionCallableCustomIsValidFunction>
   _signalValidTrampoline =
-      NativeCallable<GDExtensionCallableCustomIsValidFunction>.isolateLocal(
-        _SignalCallableIsValidNative,
-        exceptionalReturn: 0,
-      );
+      NativeCallable<
+        GDExtensionCallableCustomIsValidFunction
+      >.isolateGroupShared(_SignalCallableIsValidNative, exceptionalReturn: 0);
   static final NativeCallable<GDExtensionCallableCustomFreeFunction>
   _signalFreeTrampoline =
-      NativeCallable<GDExtensionCallableCustomFreeFunction>.isolateLocal(
+      NativeCallable<GDExtensionCallableCustomFreeFunction>.isolateGroupShared(
         _SignalCallableFreeNative,
       );
   // Native trampoline pointer (Dart -> native) using NativeCallable.
   static final NativeCallable<GDExtensionClassMethodCallNative>
   _methodCallTrampoline =
-      NativeCallable<GDExtensionClassMethodCallNative>.isolateLocal(
+      NativeCallable<GDExtensionClassMethodCallNative>.isolateGroupShared(
         _MethodCallNative,
       );
   // ignore: unused_field
@@ -503,39 +502,22 @@ void _finalizeVariant(Pointer<Void> variantPtr) {
   try {
     _variantDestroy ??= () {
       final libdl = DynamicLibrary.process();
-      try {
+
         return libdl
             .lookup<NativeFunction<GDExtensionInterfaceVariantDestroyFunction>>(
               'variant_destroy',
             )
             .asFunction<DartGDExtensionInterfaceVariantDestroyFunction>();
-      } catch (_) {
-        final ptrVar = libdl
-            .lookup<
-              Pointer<
-                NativeFunction<GDExtensionInterfaceVariantDestroyFunction>
-              >
-            >('gdextension_interface_variant_destroy');
-        return ptrVar.value
-            .asFunction<DartGDExtensionInterfaceVariantDestroyFunction>();
-      }
+
     }();
     _memFree ??= () {
       final libdl = DynamicLibrary.process();
-      try {
-        return libdl
-            .lookup<NativeFunction<GDExtensionInterfaceMemFreeFunction>>(
-              'mem_free',
-            )
-            .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
-      } catch (_) {
-        final ptrVar = libdl
-            .lookup<
-              Pointer<NativeFunction<GDExtensionInterfaceMemFreeFunction>>
-            >('gdextension_interface_mem_free');
-        return ptrVar.value
-            .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
-      }
+
+      return libdl
+          .lookup<NativeFunction<GDExtensionInterfaceMemFreeFunction>>(
+            'mem_free',
+          )
+          .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
     }();
     _variantDestroy!(variantPtr.cast());
     _memFree!(variantPtr);
@@ -566,20 +548,12 @@ void _finalizeBuiltinObject(Pointer<Void> builtinOpaquePtr) {
     }
     _memFree ??= () {
       final libdl = DynamicLibrary.process();
-      try {
-        return libdl
-            .lookup<NativeFunction<GDExtensionInterfaceMemFreeFunction>>(
-              'mem_free',
-            )
-            .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
-      } catch (_) {
-        final ptrVar = libdl
-            .lookup<
-              Pointer<NativeFunction<GDExtensionInterfaceMemFreeFunction>>
-            >('gdextension_interface_mem_free');
-        return ptrVar.value
-            .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
-      }
+
+      return libdl
+          .lookup<NativeFunction<GDExtensionInterfaceMemFreeFunction>>(
+            'mem_free',
+          )
+          .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
     }();
     _memFree!(builtinOpaquePtr);
   } catch (_) {}
@@ -610,11 +584,13 @@ void _finalizeExtensionObject(Pointer<Void> extensionObjectPtr) {
 }
 
 final _finalizeVariantTrampoline =
-    NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeVariant);
+    NativeCallable<_VoidPtrFnNative>.isolateGroupShared(_finalizeVariant);
 final _finalizeBuiltinObjectTrampoline =
-    NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeBuiltinObject);
+    NativeCallable<_VoidPtrFnNative>.isolateGroupShared(_finalizeBuiltinObject);
 final _finalizeExtensionObjectTrampoline =
-    NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeExtensionObject);
+    NativeCallable<_VoidPtrFnNative>.isolateGroupShared(
+      _finalizeExtensionObject,
+    );
 
 // FFI typedefs for method call trampoline
 typedef GDExtensionClassMethodCallNative =

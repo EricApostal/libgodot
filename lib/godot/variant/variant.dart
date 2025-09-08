@@ -89,9 +89,8 @@ void initVariantBindings(GDExtensionFFI ffIinterface) {
   // String and String name need their constructors bound before anything else
   // because everything else relies on them being done.
   GDString.initBindingsConstructorDestructor();
-  print('1');
   StringName.initBindingsConstructorDestructor();
-  print('2');
+
   GDString.initBindings();
 
   print('construct end');

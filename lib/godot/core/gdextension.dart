@@ -441,7 +441,12 @@ void storeGetProcAddress(GDExtensionInterfaceGetProcAddress ptr) {
 /// Resolve a raw function address from the Godot GDExtension interface.
 Pointer<ffi.Void> godotResolve(String name) {
   final getter = _getProcAddressFn;
-  if (getter == null) return nullptr;
+  if (getter == null) {
+    throw Exception(
+      'get process address function getter has not been assigned.',
+    );
+  }
+
   final cstr = name.toNativeUtf8();
   try {
     final raw = getter(cstr.cast());

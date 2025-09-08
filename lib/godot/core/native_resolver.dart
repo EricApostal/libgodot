@@ -1,5 +1,5 @@
 import 'dart:ffi';
-import 'package:libgodot/utils.dart';
+import 'package:libgodot/godot/core/gdextension.dart';
 
 import 'gdextension_ffi_bindings.dart';
 
