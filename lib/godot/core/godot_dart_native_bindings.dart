@@ -313,7 +313,7 @@ class GodotDartNativeBindings {
   static final Map<int, SignalCallable> _signalCallables = {};
   static final NativeCallable<GDExtensionCallableCustomCallFunction>
   _signalCallTrampoline =
-      NativeCallable<GDExtensionCallableCustomCallFunction>.isolateLocal(
+      NativeCallable<GDExtensionCallableCustomCallFunction>.listener(
         _SignalCallableCallNative,
       );
   static final NativeCallable<GDExtensionCallableCustomIsValidFunction>
@@ -324,13 +324,13 @@ class GodotDartNativeBindings {
       );
   static final NativeCallable<GDExtensionCallableCustomFreeFunction>
   _signalFreeTrampoline =
-      NativeCallable<GDExtensionCallableCustomFreeFunction>.isolateLocal(
+      NativeCallable<GDExtensionCallableCustomFreeFunction>.listener(
         _SignalCallableFreeNative,
       );
   // Native trampoline pointer (Dart -> native) using NativeCallable.
   static final NativeCallable<GDExtensionClassMethodCallNative>
   _methodCallTrampoline =
-      NativeCallable<GDExtensionClassMethodCallNative>.isolateLocal(
+      NativeCallable<GDExtensionClassMethodCallNative>.listener(
         _MethodCallNative,
       );
   // ignore: unused_field
@@ -585,11 +585,11 @@ void _finalizeExtensionObject(Pointer<Void> extensionObjectPtr) {
 }
 
 final _finalizeVariantTrampoline =
-    NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeVariant);
+    NativeCallable<_VoidPtrFnNative>.listener(_finalizeVariant);
 final _finalizeBuiltinObjectTrampoline =
-    NativeCallable<_VoidPtrFnNative>.isolateGroupShared(_finalizeBuiltinObject);
+    NativeCallable<_VoidPtrFnNative>.listener(_finalizeBuiltinObject);
 final _finalizeExtensionObjectTrampoline =
-    NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeExtensionObject);
+    NativeCallable<_VoidPtrFnNative>.listener(_finalizeExtensionObject);
 
 // FFI typedefs for method call trampoline
 typedef GDExtensionClassMethodCallNative =

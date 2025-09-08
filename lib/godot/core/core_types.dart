@@ -48,11 +48,13 @@ abstract class BuiltinType implements Finalizable {
   ) {
     final fetched = godotResolve('mem_alloc');
 
+    print("start allocating");
     final allocator = fetched
         .cast<NativeFunction<GDExtensionInterfaceMemAllocFunction>>()
         .asFunction<DartGDExtensionInterfaceMemAllocFunction>();
     _opaque = allocator(GodotDart.destructorSize + size).cast();
     _opaque.cast<GDExtensionPtrDestructor>().value = destructor ?? nullptr;
+    print("end allocate");
     return _opaque + GodotDart.destructorSize;
   }
 
