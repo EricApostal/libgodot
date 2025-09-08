@@ -37,3 +37,44 @@ macos/build/
 macos/build/libgodot.dylib
 macos/build/libgodot.xcframework.zip
 macos/libgodot/Vendor/libgodot.xcframework/macos-arm64/libgodot.macos.template_debug.dev.arm64.dylib
+# Godot / engine binary artifacts & game packs
+**/assets/*.dylib
+**/assets/*.pck
+**/assets/*.zip
+**/assets/*.so
+**/assets/*.dll
+**/assets/*.exe
+
+# Vendor xcframework & compiled engine binaries
+macos/libgodot/Vendor/libgodot.xcframework/
+**/libgodot.xcframework/
+**/*.xcframework.zip
+
+# Native build outputs
+native/build/
+**/build/macos/
+**/build/linux/
+**/build/windows/
+**/build/ios/
+**/build/android/
+
+# Flutter example build artifacts & generated dylibs
+example/assets/*.dylib
+example/assets/*.pck
+example/build/
+
+# SwiftPM & Xcode ephemeral
+macos/libgodot/.build/
+macos/libgodot/.swiftpm/
+
+# Caches
+**/*.dill
+**/*.dill.track.dill
+
+# Engine templates
+**/libgodot.macos.template_*.dylib
+
+# General large binary extensions
+*.dylib
+*.pck
+*.xcframework
