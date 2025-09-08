@@ -1,7 +1,7 @@
 import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart' as pkg_ffi;
-import 'package:libgodot/generated_bindings.dart';
+import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
 
 GDExtensionInterfaceGetProcAddressFunction? _getProcAddressFn;
 

@@ -78,3 +78,6 @@ macos/libgodot/.swiftpm/
 *.dylib
 *.pck
 *.xcframework
+
+# TODO: Have a single generator script and generate these all at once
+lib/godot/generated

@@ -3,13 +3,17 @@ import 'dart:ffi' as ffi;
 import 'dart:async';
 import 'dart:io' show Platform, File, Directory, Process;
 import 'package:flutter/services.dart';
-import 'package:ffi/ffi.dart' as pkg_ffi;
-import 'package:libgodot/display_server_embedded.dart';
-import 'package:libgodot/generated_bindings.dart';
-import 'package:libgodot/utils.dart';
-import 'package:path/path.dart' as path;
 
-export 'utils.dart';
+import 'package:ffi/ffi.dart' as pkg_ffi;
+import 'package:libgodot/godot/core/gdextension.dart';
+import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
+import 'package:libgodot/godot/core/type_info.dart';
+import 'package:libgodot/godot/extensions/async_extensions.dart';
+import 'package:libgodot/godot/generated/engine_classes.dart'
+    hide GDExtensionInitializationLevel;
+import 'package:libgodot/godot/generated/utility_functions.dart';
+import 'package:libgodot/godot/variant/variant.dart';
+import 'package:path/path.dart' as path;
 
 import 'libgodot_platform_interface.dart';
 
@@ -35,7 +39,7 @@ GDExtensionFFI get libgodotNative {
   return lib;
 }
 
-Future<GDExtensionObjectPtr?> initializeLibgodot() async {
+Future<void> initializeLibgodot() async {
   if (!Platform.isMacOS) {
     throw UnsupportedError(
       'libgodot native bindings only implemented for macOS yet',
@@ -43,7 +47,7 @@ Future<GDExtensionObjectPtr?> initializeLibgodot() async {
   }
 
   if (_libgodotNative != null) {
-    return null;
+    return;
   }
   _libgodotNative = await _loadLibgodotFromAssets();
 
@@ -90,17 +94,15 @@ Future<GDExtensionObjectPtr?> initializeLibgodot() async {
   }
 
   print("getting handle");
-  final instance = _libgodotNative!
-      .libgodot_create_godot_instance(
-        argc,
-        argv,
-        _initCallbackPtr,
-        _asyncExecutorPtr,
-        ffi.nullptr, // async userdata
-        _syncExecutorPtr,
-        ffi.nullptr, // sync userdata
-      )
-      .cast<GDExtensionObjectPtr>();
+  final instance = _libgodotNative!.libgodot_create_godot_instance(
+    argc,
+    argv,
+    _initCallbackPtr,
+    _asyncExecutorPtr,
+    ffi.nullptr, // async userdata
+    _syncExecutorPtr,
+    ffi.nullptr, // sync userdata
+  );
   print("got handle");
 
   // Free argv memory.
@@ -117,7 +119,27 @@ Future<GDExtensionObjectPtr?> initializeLibgodot() async {
   _bindingCallbacksPtr ??= _createBindingCallbacks();
   print("start register");
 
-  return instance.value;
+  final godotDart = DynamicLibrary.process();
+  final ffiInterface = GDExtensionFFI(godotDart);
+
+  // TODO: Assert everything is how we expect.
+  // Instantiate to ensure side effects (binding registration) if constructor has any.
+  GodotDart(ffiInterface, _capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
+
+  print("start init");
+  initVariantBindings(ffiInterface);
+  TypeInfo.initTypeMappings();
+
+  GD.initBindings();
+  SignalAwaiter.bind();
+  CallbackAwaiter.bind();
+
+  // registerGodot(_capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
+  print("end register");
+
+  print("SPAWNING INSTANCE!");
+  _godotInstance = GodotInstance.withNonNullOwner(instance);
+  print("SPAWNED!");
 }
 
 Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
@@ -147,16 +169,22 @@ Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
   final libgodotFile = await _extractDylib(
     'libgodot.macos.template_debug.dev.arm64.dylib',
   );
+  // final libDart = await _extractDylib('libdart_dll.dylib');
+  // final libGodotDart = await _extractDylib('libgodot_dart.dylib');
 
   try {
     final dylib = DynamicLibrary.open(libgodotFile.path);
-
+    // DynamicLibrary.open(libDart.path);
+    // DynamicLibrary.open(libGodotDart.path);
     print("All dynamic libraries attached!");
     return GDExtensionFFI(dylib);
   } catch (e) {
     throw StateError('Failed to load libgodot (${libgodotFile.path}): $e');
   }
 }
+
+GodotInstance? _godotInstance;
+GodotInstance? get godotInstance => _godotInstance;
 
 void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
 
@@ -179,6 +207,14 @@ int _gdExtensionInit(
   print("RUNNING INIT!");
   print("address : $getProcAddress");
 
+  // Cache get_proc_address so other modules (e.g. variant bindings) can lazily
+  // resolve additional interface entry points without relying on dynamic symbol exports.
+  try {
+    storeGetProcAddress(getProcAddress);
+  } catch (e) {
+    print('Failed to cache get_proc_address: $e');
+  }
+
   // how can I do this here? this is a gdextension.
   // Resolve and invoke "get_godot_version" using the provided getProcAddress.
   try {
@@ -186,18 +222,12 @@ int _gdExtensionInit(
     final getProcAddressFn = getProcAddress
         .asFunction<GDExtensionInterfaceGetProcAddressFunction>();
 
-    storeGetProcAddress(getProcAddress);
-
     // 2. Prepare the function name as a C string (UTF-8).
     final nameUtf8 = 'get_godot_version'.toNativeUtf8();
     // Cast Utf8 -> Char (both are 8-bit, required signature is Pointer<Char>).
     final rawFuncPtr = getProcAddressFn(nameUtf8.cast<ffi.Char>());
     // Free the name buffer.
     pkg_ffi.malloc.free(nameUtf8);
-
-    final server = DisplayServerEmbeddedFFI.get();
-    print('server');
-    print(server);
 
     if (rawFuncPtr == ffi.nullptr) {
       print('Could not resolve get_godot_version');
@@ -272,6 +302,8 @@ final InvokeCallbackFunction$1 _syncExecutorPtr =
     ffi.Pointer.fromFunction<InvokeCallbackFunctionFunction>(_syncExecutor);
 final InvokeCallbackFunction$1 _asyncExecutorPtr =
     ffi.Pointer.fromFunction<InvokeCallbackFunctionFunction>(_asyncExecutor);
+
+// ---------------- Instance binding support ----------------
 
 ffi.Pointer<GDExtensionInstanceBindingCallbacks> _createBindingCallbacks() {
   final createPtr =

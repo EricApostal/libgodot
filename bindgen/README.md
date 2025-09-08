@@ -1,0 +1,1 @@
+Completely ripped from https://github.com/fuzzybinary/godot_dart, but modified to better fit my own use case.

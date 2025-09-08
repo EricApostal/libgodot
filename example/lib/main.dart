@@ -5,7 +5,6 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:libgodot/libgodot.dart';
-import 'package:libgodot/godot_instance.dart';
 import 'dart:io' show Platform;
 
 void main() {
@@ -32,11 +31,10 @@ class _MyAppState extends State<MyApp> {
   Future<void> _initGodot() async {
     try {
       // First, initialize the libgodot native library
-      final instance = await initializeLibgodot();
+      await initializeLibgodot();
       print('Libgodot native library initialized successfully');
 
       print("GODOT INSTANCE!");
-      print(instance);
 
       // final lookup = lib.lookup("get_texture_disabled");
       // print(lookup);

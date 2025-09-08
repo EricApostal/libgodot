@@ -12,6 +12,8 @@ dependencies:
   ffi: ^2.1.4
   flutter:
     sdk: flutter
+  meta: ^1.16.0
+  path: ^1.9.1
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
