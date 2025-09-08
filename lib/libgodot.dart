@@ -3,10 +3,13 @@ import 'dart:ffi' as ffi;
 import 'dart:async';
 import 'dart:io' show Platform, File, Directory, Process;
 import 'package:flutter/services.dart';
-import 'package:godot_dart/godot_dart.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
-import 'package:godot_dart/godot_dart.dart' as native;
+import 'package:libgodot/display_server_embedded.dart';
+import 'package:libgodot/generated_bindings.dart';
+import 'package:libgodot/utils.dart';
 import 'package:path/path.dart' as path;
+
+export 'utils.dart';
 
 import 'libgodot_platform_interface.dart';
 
@@ -20,9 +23,9 @@ GDExtensionFFI? _libgodotNative;
 
 // Pointer to instance binding callbacks struct passed to registerGodot.
 ffi.Pointer<GDExtensionInstanceBindingCallbacks>? _bindingCallbacksPtr;
-native.GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
+GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
 
-native.GDExtensionFFI get libgodotNative {
+GDExtensionFFI get libgodotNative {
   final lib = _libgodotNative;
   if (lib == null) {
     throw StateError(
@@ -32,7 +35,7 @@ native.GDExtensionFFI get libgodotNative {
   return lib;
 }
 
-Future<void> initializeLibgodot() async {
+Future<GDExtensionObjectPtr?> initializeLibgodot() async {
   if (!Platform.isMacOS) {
     throw UnsupportedError(
       'libgodot native bindings only implemented for macOS yet',
@@ -40,7 +43,7 @@ Future<void> initializeLibgodot() async {
   }
 
   if (_libgodotNative != null) {
-    return;
+    return null;
   }
   _libgodotNative = await _loadLibgodotFromAssets();
 
@@ -87,15 +90,17 @@ Future<void> initializeLibgodot() async {
   }
 
   print("getting handle");
-  final instance = _libgodotNative!.libgodot_create_godot_instance(
-    argc,
-    argv,
-    _initCallbackPtr,
-    _asyncExecutorPtr,
-    ffi.nullptr, // async userdata
-    _syncExecutorPtr,
-    ffi.nullptr, // sync userdata
-  );
+  final instance = _libgodotNative!
+      .libgodot_create_godot_instance(
+        argc,
+        argv,
+        _initCallbackPtr,
+        _asyncExecutorPtr,
+        ffi.nullptr, // async userdata
+        _syncExecutorPtr,
+        ffi.nullptr, // sync userdata
+      )
+      .cast<GDExtensionObjectPtr>();
   print("got handle");
 
   // Free argv memory.
@@ -112,27 +117,7 @@ Future<void> initializeLibgodot() async {
   _bindingCallbacksPtr ??= _createBindingCallbacks();
   print("start register");
 
-  final godotDart = DynamicLibrary.process();
-  final ffiInterface = GDExtensionFFI(godotDart);
-
-  // TODO: Assert everything is how we expect.
-  // Instantiate to ensure side effects (binding registration) if constructor has any.
-  GodotDart(ffiInterface, _capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
-
-  print("start init");
-  initVariantBindings(ffiInterface);
-  TypeInfo.initTypeMappings();
-
-  GD.initBindings();
-  SignalAwaiter.bind();
-  CallbackAwaiter.bind();
-
-  // registerGodot(_capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
-  print("end register");
-
-  print("SPAWNING INSTANCE!");
-  _godotInstance = GodotInstance.withNonNullOwner(instance);
-  print("SPAWNED!");
+  return instance.value;
 }
 
 Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
@@ -162,22 +147,16 @@ Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
   final libgodotFile = await _extractDylib(
     'libgodot.macos.template_debug.dev.arm64.dylib',
   );
-  // final libDart = await _extractDylib('libdart_dll.dylib');
-  // final libGodotDart = await _extractDylib('libgodot_dart.dylib');
 
   try {
     final dylib = DynamicLibrary.open(libgodotFile.path);
-    // DynamicLibrary.open(libDart.path);
-    // DynamicLibrary.open(libGodotDart.path);
+
     print("All dynamic libraries attached!");
-    return native.GDExtensionFFI(dylib);
+    return GDExtensionFFI(dylib);
   } catch (e) {
     throw StateError('Failed to load libgodot (${libgodotFile.path}): $e');
   }
 }
-
-GodotInstance? _godotInstance;
-GodotInstance? get godotInstance => _godotInstance;
 
 void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
 
@@ -193,27 +172,21 @@ final _extensionDeinitializePtr =
     >(_extensionDeinitialize);
 
 int _gdExtensionInit(
-  native.GDExtensionInterfaceGetProcAddress getProcAddress,
-  native.GDExtensionClassLibraryPtr library,
-  ffi.Pointer<native.GDExtensionInitialization> initPtr,
+  GDExtensionInterfaceGetProcAddress getProcAddress,
+  GDExtensionClassLibraryPtr library,
+  ffi.Pointer<GDExtensionInitialization> initPtr,
 ) {
   print("RUNNING INIT!");
   print("address : $getProcAddress");
-
-  // Cache get_proc_address so other modules (e.g. variant bindings) can lazily
-  // resolve additional interface entry points without relying on dynamic symbol exports.
-  try {
-    storeGetProcAddress(getProcAddress);
-  } catch (e) {
-    print('Failed to cache get_proc_address: $e');
-  }
 
   // how can I do this here? this is a gdextension.
   // Resolve and invoke "get_godot_version" using the provided getProcAddress.
   try {
     // 1. Convert the proc address pointer into a callable Dart function.
     final getProcAddressFn = getProcAddress
-        .asFunction<native.GDExtensionInterfaceGetProcAddressFunction>();
+        .asFunction<GDExtensionInterfaceGetProcAddressFunction>();
+
+    storeGetProcAddress(getProcAddress);
 
     // 2. Prepare the function name as a C string (UTF-8).
     final nameUtf8 = 'get_godot_version'.toNativeUtf8();
@@ -222,21 +195,23 @@ int _gdExtensionInit(
     // Free the name buffer.
     pkg_ffi.malloc.free(nameUtf8);
 
+    final server = DisplayServerEmbeddedFFI.get();
+    print('server');
+    print(server);
+
     if (rawFuncPtr == ffi.nullptr) {
       print('Could not resolve get_godot_version');
     } else {
       // 3. Cast the generic void() function pointer to the proper signature.
       final typedPtr = rawFuncPtr
           .cast<
-            ffi.NativeFunction<
-              native.GDExtensionInterfaceGetGodotVersionFunction
-            >
+            ffi.NativeFunction<GDExtensionInterfaceGetGodotVersionFunction>
           >();
       // 4. Convert to a Dart callable.
       final getGodotVersion = typedPtr
-          .asFunction<native.DartGDExtensionInterfaceGetGodotVersionFunction>();
+          .asFunction<DartGDExtensionInterfaceGetGodotVersionFunction>();
       // 5. Allocate the version struct, call, then read fields.
-      final versionPtr = pkg_ffi.calloc<native.GDExtensionGodotVersion>();
+      final versionPtr = pkg_ffi.calloc<GDExtensionGodotVersion>();
       try {
         getGodotVersion(versionPtr);
         final v = versionPtr.ref;
@@ -262,45 +237,41 @@ int _gdExtensionInit(
   _capturedExtensionLibraryPtr = library;
   final init = initPtr.ref;
   init.minimum_initialization_levelAsInt =
-      native.GDExtensionInitializationLevel.core.value;
+      GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_CORE.value;
   init.userdata = ffi.nullptr;
   init.initialize = _extensionInitializePtr;
   init.deinitialize = _extensionDeinitializePtr;
   return 1;
 }
 
-final native.GDExtensionInitializationFunction _initCallbackPtr =
-    ffi.Pointer.fromFunction<native.GDExtensionInitializationFunctionFunction>(
+final GDExtensionInitializationFunction _initCallbackPtr =
+    ffi.Pointer.fromFunction<GDExtensionInitializationFunctionFunction>(
       _gdExtensionInit,
       0,
     );
 
 void _syncExecutor(
-  native.InvokeCallback pCallback,
-  native.CallbackData pCallbackData,
-  native.ExecutorData pExecutorData,
+  InvokeCallback pCallback,
+  CallbackData pCallbackData,
+  ExecutorData pExecutorData,
 ) {
-  final fn = pCallback.asFunction<native.DartInvokeCallbackFunction>();
+  final fn = pCallback.asFunction<DartInvokeCallbackFunction>();
   fn(pCallbackData);
 }
 
 void _asyncExecutor(
-  native.InvokeCallback pCallback,
-  native.CallbackData pCallbackData,
-  native.ExecutorData pExecutorData,
+  InvokeCallback pCallback,
+  CallbackData pCallbackData,
+  ExecutorData pExecutorData,
 ) {
-  final fn = pCallback.asFunction<native.DartInvokeCallbackFunction>();
+  final fn = pCallback.asFunction<DartInvokeCallbackFunction>();
   scheduleMicrotask(() => fn(pCallbackData));
 }
 
-final native.InvokeCallbackFunction$1 _syncExecutorPtr = ffi
-    .Pointer.fromFunction<native.InvokeCallbackFunctionFunction>(_syncExecutor);
-final native.InvokeCallbackFunction$1 _asyncExecutorPtr =
-    ffi.Pointer.fromFunction<native.InvokeCallbackFunctionFunction>(
-      _asyncExecutor,
-    );
-
-// ---------------- Instance binding support ----------------
+final InvokeCallbackFunction$1 _syncExecutorPtr =
+    ffi.Pointer.fromFunction<InvokeCallbackFunctionFunction>(_syncExecutor);
+final InvokeCallbackFunction$1 _asyncExecutorPtr =
+    ffi.Pointer.fromFunction<InvokeCallbackFunctionFunction>(_asyncExecutor);
 
 ffi.Pointer<GDExtensionInstanceBindingCallbacks> _createBindingCallbacks() {
   final createPtr =

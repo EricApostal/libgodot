@@ -101,13 +101,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  godot_dart:
-    dependency: transitive
-    description:
-      path: "../packages/godot_dart/src/dart/godot_dart"
-      relative: true
-    source: path
-    version: "0.9.0"
   integration_test:
     dependency: "direct dev"
     description: flutter

@@ -13,8 +13,6 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
-  godot_dart: 
-    path: packages/godot_dart/src/dart/godot_dart
 
 dev_dependencies:
   flutter_test:
@@ -47,9 +45,10 @@ flutter:
         
 ffigen:
   output: 'lib/generated_bindings.dart'
+  name: GDExtensionFFI
   headers:
     entry-points:
-      # - 'third_party/libgodot.h'
+      - 'third_party/libgodot.h'
       - 'third_party/gdextension_interface.h'
 
   # To add assets to your plugin package, add an assets section, like this:

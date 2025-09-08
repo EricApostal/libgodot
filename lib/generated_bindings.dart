@@ -4,6 +4,97 @@
 // ignore_for_file: type=lint
 import 'dart:ffi' as ffi;
 
+class GDExtensionFFI {
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+  _lookup;
+
+  /// The symbols are looked up in [dynamicLibrary].
+  GDExtensionFFI(ffi.DynamicLibrary dynamicLibrary)
+    : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  GDExtensionFFI.fromLookup(
+    ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) lookup,
+  ) : _lookup = lookup;
+
+  /// @name libgodot_create_godot_instance
+  /// @since 4.4
+  ///
+  /// Creates a new Godot instance.
+  ///
+  /// @param p_argc The number of command line arguments.
+  /// @param p_argv The C-style array of command line arguments.
+  /// @param p_init_func GDExtension initialization function of the host application.
+  ///
+  /// @return A pointer to created \ref GodotInstance GDExtension object or nullptr if there was an error.
+  GDExtensionObjectPtr libgodot_create_godot_instance(
+    int p_argc,
+    ffi.Pointer<ffi.Pointer<ffi.Char>> p_argv,
+    GDExtensionInitializationFunction p_init_func,
+    InvokeCallbackFunction$1 p_async_func,
+    ExecutorData p_async_data,
+    InvokeCallbackFunction$1 p_sync_func,
+    ExecutorData p_sync_data,
+  ) {
+    return _libgodot_create_godot_instance(
+      p_argc,
+      p_argv,
+      p_init_func,
+      p_async_func,
+      p_async_data,
+      p_sync_func,
+      p_sync_data,
+    );
+  }
+
+  late final _libgodot_create_godot_instancePtr =
+      _lookup<
+        ffi.NativeFunction<
+          GDExtensionObjectPtr Function(
+            ffi.Int,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>,
+            GDExtensionInitializationFunction,
+            InvokeCallbackFunction$1,
+            ExecutorData,
+            InvokeCallbackFunction$1,
+            ExecutorData,
+          )
+        >
+      >('libgodot_create_godot_instance');
+  late final _libgodot_create_godot_instance =
+      _libgodot_create_godot_instancePtr
+          .asFunction<
+            GDExtensionObjectPtr Function(
+              int,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>,
+              GDExtensionInitializationFunction,
+              InvokeCallbackFunction$1,
+              ExecutorData,
+              InvokeCallbackFunction$1,
+              ExecutorData,
+            )
+          >();
+
+  /// @name libgodot_destroy_godot_instance
+  /// @since 4.4
+  ///
+  /// Destroys an existing Godot instance.
+  ///
+  /// @param p_godot_instance The reference to the GodotInstance object to destroy.
+  void libgodot_destroy_godot_instance(GDExtensionObjectPtr p_godot_instance) {
+    return _libgodot_destroy_godot_instance(p_godot_instance);
+  }
+
+  late final _libgodot_destroy_godot_instancePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(GDExtensionObjectPtr)>>(
+        'libgodot_destroy_godot_instance',
+      );
+  late final _libgodot_destroy_godot_instance =
+      _libgodot_destroy_godot_instancePtr
+          .asFunction<void Function(GDExtensionObjectPtr)>();
+}
+
 typedef __int8_t = ffi.SignedChar;
 typedef Dart__int8_t = int;
 typedef __uint8_t = ffi.UnsignedChar;
@@ -6258,6 +6349,26 @@ typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLen =
         GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction
       >
     >;
+typedef CallbackData = ffi.Pointer<ffi.Void>;
+typedef ExecutorData = ffi.Pointer<ffi.Void>;
+typedef InvokeCallbackFunction = ffi.Void Function(CallbackData p_data);
+typedef DartInvokeCallbackFunction = void Function(CallbackData p_data);
+typedef InvokeCallback =
+    ffi.Pointer<ffi.NativeFunction<InvokeCallbackFunction>>;
+typedef InvokeCallbackFunctionFunction =
+    ffi.Void Function(
+      InvokeCallback p_callback,
+      CallbackData p_callback_data,
+      ExecutorData p_executor_data,
+    );
+typedef DartInvokeCallbackFunctionFunction =
+    void Function(
+      InvokeCallback p_callback,
+      CallbackData p_callback_data,
+      ExecutorData p_executor_data,
+    );
+typedef InvokeCallbackFunction$1 =
+    ffi.Pointer<ffi.NativeFunction<InvokeCallbackFunctionFunction>>;
 
 const int __has_safe_buffers = 1;
 
