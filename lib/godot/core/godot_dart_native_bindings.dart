@@ -1,5 +1,7 @@
 import 'dart:ffi';
+import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
+import 'package:ffi/ffi.dart' as pkg_ffi;
 
 import '../generated/builtins.dart';
 import '../variant/variant.dart';
@@ -19,12 +21,7 @@ class GodotDartNativeBindings {
   // Each Variant / Builtin / ExtensionType stores a Godot-side allocation.
   // The native finalizers expect an FFI function pointer of type
   // void Function(void*). We create a static NativeCallable for each.
-  late final Pointer<NativeFunction<Void Function(Pointer<Void>)>>
-  finalizeVariant = _finalizeVariantTrampoline.nativeFunction;
-  late final Pointer<NativeFunction<Void Function(Pointer<Void>)>>
-  finalizeBuiltinObject = _finalizeBuiltinObjectTrampoline.nativeFunction;
-  late final Pointer<NativeFunction<Void Function(Pointer<Void>)>>
-  finalizeExtensionObject = _finalizeExtensionObjectTrampoline.nativeFunction;
+  // late final Pointer<NativeFunction<VoidnObjectTrampoline.nativeFunction;
 
   // Script instance helpers (no longer provided by native layer). These are
   // stubbed; script instances are not yet purely managed in Dart. Returning
@@ -255,22 +252,12 @@ class GodotDartNativeBindings {
     final buffer = calloc<Char>(bufSize);
     try {
       _stringToUtf8Chars ??= () {
-        final libdl = DynamicLibrary.process();
         try {
-          return libdl
-              .lookup<
-                NativeFunction<GDExtensionInterfaceStringToUtf8CharsFunction>
-              >('string_to_utf8_chars')
-              .asFunction<DartGDExtensionInterfaceStringToUtf8CharsFunction>();
+          return godotResolve('string_to_utf8_chars').cast<NativeFunction<GDExtensionInterfaceStringToUtf8CharsFunction>>()
+            .asFunction<DartGDExtensionInterfaceStringToUtf8CharsFunction>();
         } catch (_) {
-          final ptrVar = libdl
-              .lookup<
-                Pointer<
-                  NativeFunction<GDExtensionInterfaceStringToUtf8CharsFunction>
-                >
-              >('gdextension_interface_string_to_utf8_chars');
-          return ptrVar.value
-              .asFunction<DartGDExtensionInterfaceStringToUtf8CharsFunction>();
+          return godotResolve('gdextension_interface_string_to_utf8_chars').cast<NativeFunction<GDExtensionInterfaceStringToUtf8CharsFunction>>()
+            .asFunction<DartGDExtensionInterfaceStringToUtf8CharsFunction>();
         }
       }();
       final written = _stringToUtf8Chars!(
@@ -496,100 +483,187 @@ void _MethodCallNative(
 // ---------------------------------------------------------------------------
 typedef _VoidPtrFnNative = Void Function(Pointer<Void>);
 
-// Variant finalizer: expects pointer to variant memory previously allocated
-// via gde_mem_alloc and constructed. We call destroy then free.
-void _finalizeVariant(Pointer<Void> variantPtr) {
-  if (variantPtr == nullptr) return;
-  try {
-    _variantDestroy ??= () {
-      final libdl = DynamicLibrary.process();
+// // Variant finalizer: expects pointer to variant memory previously allocated
+// // via gde_mem_alloc and constructed. We call destroy then free.
+// void _finalizeVariant(Pointer<Void> variantPtr) {
+//   if (variantPtr == nullptr) return;
+//   try {
+//     _variantDestroy ??= () {
+//       final libdl = DynamicLibrary.process();
 
-      return libdl
-          .lookup<NativeFunction<GDExtensionInterfaceVariantDestroyFunction>>(
-            'variant_destroy',
-          )
-          .asFunction<DartGDExtensionInterfaceVariantDestroyFunction>();
-    }();
-    _memFree ??= () {
-      final libdl = DynamicLibrary.process();
+//       return libdl
+//           .lookup<NativeFunction<GDExtensionInterfaceVariantDestroyFunction>>(
+//             'variant_destroy',
+//           )
+//           .asFunction<DartGDExtensionInterfaceVariantDestroyFunction>();
+//     }();
+//     _memFree ??= () {
+//       final libdl = DynamicLibrary.process();
 
-      return libdl
-          .lookup<NativeFunction<GDExtensionInterfaceMemFreeFunction>>(
-            'mem_free',
-          )
-          .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
-    }();
-    _variantDestroy!(variantPtr.cast());
-    _memFree!(variantPtr);
-  } catch (_) {
-    // Swallow; finalizers must not throw.
+//       return libdl
+//           .lookup<NativeFunction<GDExtensionInterfaceMemFreeFunction>>(
+//             'mem_free',
+//           )
+//           .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
+//     }();
+//     _variantDestroy!(variantPtr.cast());
+//     _memFree!(variantPtr);
+//   } catch (_) {
+//     // Swallow; finalizers must not throw.
+//   }
+// }
+
+// void _finalizeBuiltinObject(Pointer<Void> builtinOpaquePtr) {
+//   print("FINALIZE BUILTIN");
+//   if (builtinOpaquePtr == nullptr) return;
+//   try {
+//     // Layout: [GDExtensionPtrDestructor][object bytes...]
+//     final destructorPtr = builtinOpaquePtr.cast<GDExtensionPtrDestructor>();
+//     final destructor = destructorPtr.value;
+//     if (destructor != nullptr) {
+//       // Compute region after function pointer.
+//       final objectRegion = builtinOpaquePtr.cast<Uint8>().elementAt(
+//         sizeOf<GDExtensionPtrDestructor>(),
+//       );
+//       // Call user provided destructor on the trailing bytes.
+//       try {
+//         final destructorFn = destructor
+//             .asFunction<void Function(Pointer<Void>)>();
+//         destructorFn(objectRegion.cast());
+//       } catch (_) {
+//         // Ignore errors during user destructor call.
+//       }
+//     }
+//     _memFree ??= () {
+//       final libdl = DynamicLibrary.process();
+
+//       return libdl
+//           .lookup<NativeFunction<GDExtensionInterfaceMemFreeFunction>>(
+//             'mem_free',
+//           )
+//           .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
+//     }();
+//     _memFree!(builtinOpaquePtr);
+//   } catch (_) {}
+// }
+
+// void _finalizeExtensionObject(Pointer<Void> extensionObjectPtr) {
+//   if (extensionObjectPtr == nullptr) return;
+//   try {
+//     _objectDestroy ??= () {
+//       final libdl = DynamicLibrary.process();
+//       try {
+//         return libdl
+//             .lookup<NativeFunction<GDExtensionInterfaceObjectDestroyFunction>>(
+//               'object_destroy',
+//             )
+//             .asFunction<DartGDExtensionInterfaceObjectDestroyFunction>();
+//       } catch (_) {
+//         final ptrVar = libdl
+//             .lookup<
+//               Pointer<NativeFunction<GDExtensionInterfaceObjectDestroyFunction>>
+//             >('gdextension_interface_object_destroy');
+//         return ptrVar.value
+//             .asFunction<DartGDExtensionInterfaceObjectDestroyFunction>();
+//       }
+//     }();
+//     _objectDestroy!(extensionObjectPtr.cast());
+//   } catch (_) {}
+// }
+
+DartGDExtensionInterfaceVariantDestroyFunction? _variantDestroy;
+DartGDExtensionInterfaceMemFreeFunction? _memFree;
+DartGDExtensionInterfaceObjectDestroyFunction? _objectDestroy;
+
+// Call this with the getProcAddress function from the init callback
+void initializeFinalizerFunctions(GDExtensionInterfaceGetProcAddress getProcAddress) {
+  final getProcAddressFn = getProcAddress
+      .asFunction<GDExtensionInterfaceGetProcAddressFunction>();
+  
+  // Get variant_destroy function
+  final variantDestroyName = 'variant_destroy'.toNativeUtf8();
+  final variantDestroyPtr = getProcAddressFn(variantDestroyName.cast<ffi.Char>());
+  pkg_ffi.malloc.free(variantDestroyName);
+  
+  if (variantDestroyPtr != ffi.nullptr) {
+    _variantDestroy = variantDestroyPtr
+        .cast<ffi.NativeFunction<GDExtensionInterfaceVariantDestroyFunction>>()
+        .asFunction<DartGDExtensionInterfaceVariantDestroyFunction>();
+  }
+  
+  // Get mem_free function
+  final memFreeName = 'mem_free'.toNativeUtf8();
+  final memFreePtr = getProcAddressFn(memFreeName.cast<ffi.Char>());
+  pkg_ffi.malloc.free(memFreeName);
+  
+  if (memFreePtr != ffi.nullptr) {
+    _memFree = memFreePtr
+        .cast<ffi.NativeFunction<GDExtensionInterfaceMemFreeFunction>>()
+        .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
+  }
+  
+  // Get object_destroy function
+  final objectDestroyName = 'object_destroy'.toNativeUtf8();
+  final objectDestroyPtr = getProcAddressFn(objectDestroyName.cast<ffi.Char>());
+  pkg_ffi.malloc.free(objectDestroyName);
+  
+  if (objectDestroyPtr != ffi.nullptr) {
+    _objectDestroy = objectDestroyPtr
+        .cast<ffi.NativeFunction<GDExtensionInterfaceObjectDestroyFunction>>()
+        .asFunction<DartGDExtensionInterfaceObjectDestroyFunction>();
   }
 }
 
-void _finalizeBuiltinObject(Pointer<Void> builtinOpaquePtr) {
-  print("FINALIZE BUILTIN");
-  if (builtinOpaquePtr == nullptr) return;
-  try {
-    // Layout: [GDExtensionPtrDestructor][object bytes...]
-    final destructorPtr = builtinOpaquePtr.cast<GDExtensionPtrDestructor>();
-    final destructor = destructorPtr.value;
-    if (destructor != nullptr) {
-      // Compute region after function pointer.
-      final objectRegion = builtinOpaquePtr.cast<Uint8>().elementAt(
-        sizeOf<GDExtensionPtrDestructor>(),
-      );
-      // Call user provided destructor on the trailing bytes.
-      try {
-        final destructorFn = destructor
-            .asFunction<void Function(Pointer<Void>)>();
-        destructorFn(objectRegion.cast());
-      } catch (_) {
-        // Ignore errors during user destructor call.
-      }
-    }
-    _memFree ??= () {
-      final libdl = DynamicLibrary.process();
+// Simplified finalizer functions - these should be VERY simple
+void _finalizeVariant(Pointer<Void> variantPtr) {
+  if (variantPtr == nullptr || _variantDestroy == null || _memFree == null) {
+    return;
+  }
+  
+  // No try-catch, no complex operations, no lazy initialization
+  _variantDestroy!(variantPtr.cast());
+  _memFree!(variantPtr);
+}
 
-      return libdl
-          .lookup<NativeFunction<GDExtensionInterfaceMemFreeFunction>>(
-            'mem_free',
-          )
-          .asFunction<DartGDExtensionInterfaceMemFreeFunction>();
-    }();
-    _memFree!(builtinOpaquePtr);
-  } catch (_) {}
+void _finalizeBuiltinObject(Pointer<Void> builtinOpaquePtr) {
+  // Remove the print statement - no I/O in finalizers
+  if (builtinOpaquePtr == nullptr || _memFree == null) {
+    return;
+  }
+  
+  // Layout: [GDExtensionPtrDestructor][object bytes...]
+  final destructorPtr = builtinOpaquePtr.cast<GDExtensionPtrDestructor>();
+  final destructor = destructorPtr.value;
+  
+  if (destructor != nullptr) {
+    // Compute region after function pointer.
+    final objectRegion = builtinOpaquePtr.cast<Uint8>().elementAt(
+      sizeOf<GDExtensionPtrDestructor>(),
+    );
+    
+    // Call user provided destructor - minimal error handling
+    final destructorFn = destructor.asFunction<void Function(Pointer<Void>)>();
+    destructorFn(objectRegion.cast());
+  }
+  
+  _memFree!(builtinOpaquePtr);
 }
 
 void _finalizeExtensionObject(Pointer<Void> extensionObjectPtr) {
-  if (extensionObjectPtr == nullptr) return;
-  try {
-    _objectDestroy ??= () {
-      final libdl = DynamicLibrary.process();
-      try {
-        return libdl
-            .lookup<NativeFunction<GDExtensionInterfaceObjectDestroyFunction>>(
-              'object_destroy',
-            )
-            .asFunction<DartGDExtensionInterfaceObjectDestroyFunction>();
-      } catch (_) {
-        final ptrVar = libdl
-            .lookup<
-              Pointer<NativeFunction<GDExtensionInterfaceObjectDestroyFunction>>
-            >('gdextension_interface_object_destroy');
-        return ptrVar.value
-            .asFunction<DartGDExtensionInterfaceObjectDestroyFunction>();
-      }
-    }();
-    _objectDestroy!(extensionObjectPtr.cast());
-  } catch (_) {}
+  if (extensionObjectPtr == nullptr || _objectDestroy == null) {
+    return;
+  }
+  
+  // No complex initialization, no try-catch
+  _objectDestroy!(extensionObjectPtr.cast());
 }
 
-final _finalizeVariantTrampoline =
-    NativeCallable<_VoidPtrFnNative>.listener(_finalizeVariant);
-final _finalizeBuiltinObjectTrampoline =
-    NativeCallable<_VoidPtrFnNative>.listener(_finalizeBuiltinObject);
-final _finalizeExtensionObjectTrampoline =
-    NativeCallable<_VoidPtrFnNative>.listener(_finalizeExtensionObject);
+// final _finalizeVariantTrampoline =
+//     NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeVariant);
+// final _finalizeBuiltinObjectTrampoline =
+//     NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeBuiltinObject);
+// final _finalizeExtensionObjectTrampoline =
+//     NativeCallable<_VoidPtrFnNative>.isolateLocal(_finalizeExtensionObject);
 
 // FFI typedefs for method call trampoline
 typedef GDExtensionClassMethodCallNative =
@@ -634,9 +708,9 @@ DartGDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction?
 _classdbRegisterExtensionClassMethod; // ignore: type_annotate_public_apis
 // String / memory / object
 DartGDExtensionInterfaceStringToUtf8CharsFunction? _stringToUtf8Chars;
-DartGDExtensionInterfaceVariantDestroyFunction? _variantDestroy;
-DartGDExtensionInterfaceMemFreeFunction? _memFree;
-DartGDExtensionInterfaceObjectDestroyFunction? _objectDestroy;
+// DartGDExtensionInterfaceVariantDestroyFunction? _variantDestroy;
+// DartGDExtensionInterfaceMemFreeFunction? _memFree;
+// DartGDExtensionInterfaceObjectDestroyFunction? _objectDestroy;
 
 void _SignalCallableCallNative(
   Pointer<Void> userdata,

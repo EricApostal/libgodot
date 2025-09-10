@@ -11,9 +11,9 @@ import 'type_info.dart';
 /// Core interface for types that can convert to Variant (the builtin types)
 abstract class BuiltinType implements Finalizable {
   @internal
-  static final finalizer = NativeFinalizer(
-    gde.dartBindings.finalizeBuiltinObject,
-  );
+  // static final finalizer = NativeFinalizer(
+  //   gde.dartBindings.finalizeBuiltinObject,
+  // );
 
   Pointer<Uint8> _opaque = nullptr;
 
@@ -34,7 +34,7 @@ abstract class BuiltinType implements Finalizable {
 
   BuiltinType(int size, GDExtensionPtrDestructor? destructor) {
     allocateOpaque(size, destructor);
-    finalizer.attach(this, _opaque.cast());
+    // finalizer.attach(this, _opaque.cast());
   }
 
   /// This constructor allows classes that we implement to lazily
@@ -70,9 +70,9 @@ abstract class ExtensionType implements Finalizable {
   // This finalizer is used for objects we own in Dart world, and for
   // RefCounted objects that we own the last reference to. It has Godot
   // delete the object
-  static final _finalizer = NativeFinalizer(
-    gde.dartBindings.finalizeExtensionObject,
-  );
+  // static final _finalizer = NativeFinalizer(
+  //   gde.dartBindings.finalizeExtensionObject,
+  // );
 
   GDExtensionObjectPtr _owner = nullptr;
   GDExtensionObjectPtr get nativePtr => _owner;
@@ -109,7 +109,7 @@ abstract class ExtensionType implements Finalizable {
     // Only attach the finalizer if this isn't RefCounted
     // RefCounted objects are handled by DartGodotInstanceBinding::initialize
     if (this is! RefCounted) {
-      _finalizer.attach(this, _owner, detach: this);
+      // _finalizer.attach(this, _owner, detach: this);
     }
   }
 
@@ -141,7 +141,7 @@ abstract class ExtensionType implements Finalizable {
     // We should be able to call this finalizer even if Dart doesn't own
     // the object. In that case the object shouldn't have been registered
     // to the finalizer and this call won't do anything.
-    _finalizer.detach(this);
+    // _finalizer.detach(this);
     _owner = Pointer.fromAddress(0);
   }
 }

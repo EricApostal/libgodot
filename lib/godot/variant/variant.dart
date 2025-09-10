@@ -205,7 +205,7 @@ GDExtensionTypeFromVariant? getToTypeConstructor(int type) {
 }
 
 class Variant implements Finalizable {
-  static final finalizer = NativeFinalizer(gde.dartBindings.finalizeVariant);
+  // static final finalizer = NativeFinalizer(gde.dartBindings.finalizeVariant);
 
   // TODO: This is supposed to come from the generator, but we
   // may just need to take the max size
@@ -306,7 +306,7 @@ class Variant implements Finalizable {
   }
 
   void _attachFinalizer() {
-    finalizer.attach(this, _opaque.cast());
+    // finalizer.attach(this, _opaque.cast());
   }
 
   void _initFromObject(Object? obj) {
