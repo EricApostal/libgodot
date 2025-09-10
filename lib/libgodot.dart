@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:libgodot/godot/core/gdextension.dart';
 import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
+import 'package:libgodot/godot/core/godot_dart_native_bindings.dart';
 import 'package:libgodot/godot/core/type_info.dart';
 import 'package:libgodot/godot/extensions/async_extensions.dart';
 import 'package:libgodot/godot/generated/engine_classes.dart'
@@ -49,9 +50,9 @@ Future<void> initializeLibgodot() async {
   if (_libgodotNative != null) {
     return;
   }
-  _libgodotNative = await _loadLibgodotFromAssets();
+  _libgodotNative = await _loadLibgodotFromAssets(); 
 
-  String renderingDriver = 'metal';
+  String renderingDriver = 'vulkan';
   String renderingMethod = 'mobile';
   List<String> extraArgs = const [];
   // Now load the game pack
@@ -79,7 +80,7 @@ Future<void> initializeLibgodot() async {
     '--rendering-method',
     renderingMethod,
     '--display-driver',
-    'embedded',
+    'macos',
     ...extraArgs,
   ];
 
@@ -94,7 +95,7 @@ Future<void> initializeLibgodot() async {
   }
 
   print("getting handle");
-  final instance = _libgodotNative!.libgodot_create_godot_instance(
+  final instance = libgodotNative.libgodot_create_godot_instance(
     argc,
     argv,
     _initCallbackPtr,
@@ -131,8 +132,8 @@ Future<void> initializeLibgodot() async {
   TypeInfo.initTypeMappings();
 
   GD.initBindings();
-  SignalAwaiter.bind();
-  CallbackAwaiter.bind();
+  // SignalAwaiter.bind();
+  // CallbackAwaiter.bind();
 
   // registerGodot(_capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
   print("end register");
@@ -142,8 +143,7 @@ Future<void> initializeLibgodot() async {
   print("SPAWNED!");
 }
 
-Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
-  Future<File> _extractDylib(String assetFileName) async {
+Future<File> extractDylib(String assetFileName) async {
     final tempDir = Directory.systemTemp;
     final outFile = File(path.join(tempDir.path, 'libgodot', assetFileName));
     await outFile.parent.create(recursive: true);
@@ -166,7 +166,8 @@ Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
     return outFile;
   }
 
-  final libgodotFile = await _extractDylib(
+Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
+  final libgodotFile = await extractDylib(
     'libgodot.macos.template_debug.dev.arm64.dylib',
   );
   // final libDart = await _extractDylib('libdart_dll.dylib');

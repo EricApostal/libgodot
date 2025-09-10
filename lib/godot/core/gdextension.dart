@@ -374,12 +374,8 @@ class GodotDart {
     int hash,
   ) {
     _classdbGetMethodBind ??= () {
-      final lib = DynamicLibrary.process();
-      return lib
-          .lookup<
-            NativeFunction<GDExtensionInterfaceClassdbGetMethodBindFunction>
-          >('classdb_get_method_bind')
-          .asFunction<DartGDExtensionInterfaceClassdbGetMethodBindFunction>();
+        return godotResolve('classdb_get_method_bind').cast<NativeFunction<GDExtensionInterfaceClassdbGetMethodBindFunction>>()
+            .asFunction<DartGDExtensionInterfaceClassdbGetMethodBindFunction>();
     }();
     return _classdbGetMethodBind!(
       className.nativePtr.cast(),
