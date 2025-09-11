@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:libgodot/godot/core/gdextension.dart';
 import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
-import 'package:libgodot/godot/core/godot_dart_native_bindings.dart';
 import 'package:libgodot/godot/core/type_info.dart';
 import 'package:libgodot/godot/extensions/async_extensions.dart';
 import 'package:libgodot/godot/generated/engine_classes.dart'
@@ -133,28 +132,27 @@ Future<void> initializeLibgodot() async {
   TypeInfo.initTypeMappings();
 
   GD.initBindings();
-  // SignalAwaiter.bind();
-  // CallbackAwaiter.bind();
+  SignalAwaiter.bind();
+  CallbackAwaiter.bind();
 
-  // registerGodot(_capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
-  print("end register");
-
-  print("SPAWNING INSTANCE!");
-  _godotInstance = GodotInstance.withNonNullOwner(instance);
-  print("SPAWNED!");
-  // Request a native CAMetalLayer from the macOS side and pass its pointer to Godot.
   final int? layer = await LibgodotPlatform.instance.createMetalLayer();
   if (layer == null) {
     print('Failed to create CAMetalLayer on native side');
   } else {
     print('Got CAMetalLayer pointer: 0x${layer.toRadixString(16)}');
     final nativeSurface = RenderingNativeSurfaceApple.create(layer);
+    print("surface : $nativeSurface");
+    DisplayServerEmbedded.setNativeSurface(nativeSurface);
     if (nativeSurface == null) {
       print('Failed to create RenderingNativeSurfaceApple');
     } else {
       print('Created RenderingNativeSurfaceApple with layer');
     }
   }
+
+  print("SPAWNING INSTANCE!");
+  _godotInstance = GodotInstance.withNonNullOwner(instance);
+  print("SPAWNED!");
 }
 
 Future<File> extractDylib(String assetFileName) async {

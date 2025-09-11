@@ -29,7 +29,8 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
     case "createMetalLayer":
       // Create a CAMetalLayer and return its pointer address as Int64.
       guard let device = MTLCreateSystemDefaultDevice() else {
-        result(FlutterError(code: "no_device", message: "Failed to create Metal device", details: nil))
+        result(
+          FlutterError(code: "no_device", message: "Failed to create Metal device", details: nil))
         return
       }
 
