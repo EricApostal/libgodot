@@ -14,4 +14,10 @@ class MethodChannelLibgodot extends LibgodotPlatform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  @override
+  Future<int?> createMetalLayer() async {
+    final layer = await methodChannel.invokeMethod<int>('createMetalLayer');
+    return layer;
+  }
 }

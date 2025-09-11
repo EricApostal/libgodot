@@ -26,4 +26,10 @@ abstract class LibgodotPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  /// Creates a native CAMetalLayer on macOS and returns its pointer address.
+  /// On non-macOS platforms, will likely throw or return null depending on implementation.
+  Future<int?> createMetalLayer() {
+    throw UnimplementedError('createMetalLayer() has not been implemented.');
+  }
 }

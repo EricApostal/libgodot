@@ -50,7 +50,7 @@ Future<void> initializeLibgodot() async {
   if (_libgodotNative != null) {
     return;
   }
-  _libgodotNative = await _loadLibgodotFromAssets(); 
+  _libgodotNative = await _loadLibgodotFromAssets();
 
   String renderingDriver = 'vulkan';
   String renderingMethod = 'mobile';
@@ -128,6 +128,7 @@ Future<void> initializeLibgodot() async {
   GodotDart(ffiInterface, _capturedExtensionLibraryPtr!, _bindingCallbacksPtr!);
 
   print("start init");
+
   initVariantBindings(ffiInterface);
   TypeInfo.initTypeMappings();
 
@@ -141,30 +142,43 @@ Future<void> initializeLibgodot() async {
   print("SPAWNING INSTANCE!");
   _godotInstance = GodotInstance.withNonNullOwner(instance);
   print("SPAWNED!");
+  // Request a native CAMetalLayer from the macOS side and pass its pointer to Godot.
+  final int? layer = await LibgodotPlatform.instance.createMetalLayer();
+  if (layer == null) {
+    print('Failed to create CAMetalLayer on native side');
+  } else {
+    print('Got CAMetalLayer pointer: 0x${layer.toRadixString(16)}');
+    final nativeSurface = RenderingNativeSurfaceApple.create(layer);
+    if (nativeSurface == null) {
+      print('Failed to create RenderingNativeSurfaceApple');
+    } else {
+      print('Created RenderingNativeSurfaceApple with layer');
+    }
+  }
 }
 
 Future<File> extractDylib(String assetFileName) async {
-    final tempDir = Directory.systemTemp;
-    final outFile = File(path.join(tempDir.path, 'libgodot', assetFileName));
-    await outFile.parent.create(recursive: true);
+  final tempDir = Directory.systemTemp;
+  final outFile = File(path.join(tempDir.path, 'libgodot', assetFileName));
+  await outFile.parent.create(recursive: true);
 
-    try {
-      final data = await rootBundle.load('assets/$assetFileName');
-      await outFile.writeAsBytes(
-        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
-        flush: true,
-      );
-      final chmod = await Process.run('chmod', ['+x', outFile.path]);
-      if (chmod.exitCode != 0) {
-        throw StateError('chmod failed: ${chmod.stderr}');
-      }
-    } catch (e) {
-      throw StateError(
-        'Failed to extract $assetFileName from assets: $e. Ensure it is listed under flutter.assets in pubspec.yaml',
-      );
+  try {
+    final data = await rootBundle.load('assets/$assetFileName');
+    await outFile.writeAsBytes(
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+      flush: true,
+    );
+    final chmod = await Process.run('chmod', ['+x', outFile.path]);
+    if (chmod.exitCode != 0) {
+      throw StateError('chmod failed: ${chmod.stderr}');
     }
-    return outFile;
+  } catch (e) {
+    throw StateError(
+      'Failed to extract $assetFileName from assets: $e. Ensure it is listed under flutter.assets in pubspec.yaml',
+    );
   }
+  return outFile;
+}
 
 Future<GDExtensionFFI> _loadLibgodotFromAssets() async {
   final libgodotFile = await extractDylib(

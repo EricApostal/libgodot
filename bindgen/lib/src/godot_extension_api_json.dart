@@ -34,52 +34,75 @@ class GodotExtensionApiJson {
 
   String toRawJson() => json.encode(toJson());
 
-  factory GodotExtensionApiJson.fromJson(Map<String, dynamic> json) =>
-      GodotExtensionApiJson(
-        header: Header.fromJson(json['header']),
-        builtinClassSizes: List<BuiltinClassSize>.from(
-            json['builtin_class_sizes']
-                .map((dynamic x) => BuiltinClassSize.fromJson(x))),
-        builtinClassMemberOffsets: List<BuiltinClassMemberOffset>.from(
-            json['builtin_class_member_offsets']
-                .map((dynamic x) => BuiltinClassMemberOffset.fromJson(x))),
-        globalConstants: List<dynamic>.from(
-            json['global_constants'].map<dynamic>((dynamic x) => x)),
-        globalEnums: List<GlobalEnumElement>.from(json['global_enums']
-            .map((dynamic x) => GlobalEnumElement.fromJson(x))),
-        utilityFunctions: List<UtilityFunction>.from(json['utility_functions']
-            .map((dynamic x) => UtilityFunction.fromJson(x))),
-        builtinClasses: List<BuiltinClass>.from(json['builtin_classes']
-            .map((dynamic x) => BuiltinClass.fromJson(x))),
-        classes: List<GodotExtensionApiJsonClass>.from(json['classes']
-            .map((dynamic x) => GodotExtensionApiJsonClass.fromJson(x))),
-        singletons: List<Singleton>.from(
-            json['singletons'].map((dynamic x) => Singleton.fromJson(x))),
-        nativeStructures: List<NativeStructure>.from(json['native_structures']
-            .map((dynamic x) => NativeStructure.fromJson(x))),
-      );
+  factory GodotExtensionApiJson.fromJson(
+    Map<String, dynamic> json,
+  ) => GodotExtensionApiJson(
+    header: Header.fromJson(json['header']),
+    builtinClassSizes: List<BuiltinClassSize>.from(
+      json['builtin_class_sizes'].map(
+        (dynamic x) => BuiltinClassSize.fromJson(x),
+      ),
+    ),
+    builtinClassMemberOffsets: List<BuiltinClassMemberOffset>.from(
+      json['builtin_class_member_offsets'].map(
+        (dynamic x) => BuiltinClassMemberOffset.fromJson(x),
+      ),
+    ),
+    globalConstants: List<dynamic>.from(
+      json['global_constants'].map<dynamic>((dynamic x) => x),
+    ),
+    globalEnums: List<GlobalEnumElement>.from(
+      json['global_enums'].map((dynamic x) => GlobalEnumElement.fromJson(x)),
+    ),
+    utilityFunctions: List<UtilityFunction>.from(
+      json['utility_functions'].map((dynamic x) => UtilityFunction.fromJson(x)),
+    ),
+    builtinClasses: List<BuiltinClass>.from(
+      json['builtin_classes'].map((dynamic x) => BuiltinClass.fromJson(x)),
+    ),
+    classes: List<GodotExtensionApiJsonClass>.from(
+      json['classes'].map(
+        (dynamic x) => GodotExtensionApiJsonClass.fromJson(x),
+      ),
+    ),
+    singletons: List<Singleton>.from(
+      json['singletons'].map((dynamic x) => Singleton.fromJson(x)),
+    ),
+    nativeStructures: List<NativeStructure>.from(
+      json['native_structures'].map((dynamic x) => NativeStructure.fromJson(x)),
+    ),
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'header': header.toJson(),
-        'builtin_class_sizes': List<dynamic>.from(
-            builtinClassSizes.map<dynamic>((dynamic x) => x.toJson())),
-        'builtin_class_member_offsets': List<dynamic>.from(
-            builtinClassMemberOffsets.map<dynamic>((dynamic x) => x.toJson())),
-        'global_constants':
-            List<dynamic>.from(globalConstants.map<dynamic>((dynamic x) => x)),
-        'global_enums': List<dynamic>.from(
-            globalEnums.map<dynamic>((dynamic x) => x.toJson())),
-        'utility_functions': List<dynamic>.from(
-            utilityFunctions.map<dynamic>((dynamic x) => x.toJson())),
-        'builtin_classes': List<dynamic>.from(
-            builtinClasses.map<dynamic>((dynamic x) => x.toJson())),
-        'classes':
-            List<dynamic>.from(classes.map<dynamic>((dynamic x) => x.toJson())),
-        'singletons': List<dynamic>.from(
-            singletons.map<dynamic>((dynamic x) => x.toJson())),
-        'native_structures': List<dynamic>.from(
-            nativeStructures.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'header': header.toJson(),
+    'builtin_class_sizes': List<dynamic>.from(
+      builtinClassSizes.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'builtin_class_member_offsets': List<dynamic>.from(
+      builtinClassMemberOffsets.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'global_constants': List<dynamic>.from(
+      globalConstants.map<dynamic>((dynamic x) => x),
+    ),
+    'global_enums': List<dynamic>.from(
+      globalEnums.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'utility_functions': List<dynamic>.from(
+      utilityFunctions.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'builtin_classes': List<dynamic>.from(
+      builtinClasses.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'classes': List<dynamic>.from(
+      classes.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'singletons': List<dynamic>.from(
+      singletons.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'native_structures': List<dynamic>.from(
+      nativeStructures.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+  };
 }
 
 class BuiltinClassMemberOffset {
@@ -99,22 +122,23 @@ class BuiltinClassMemberOffset {
   factory BuiltinClassMemberOffset.fromJson(Map<String, dynamic> json) =>
       BuiltinClassMemberOffset(
         buildConfiguration: json['build_configuration'],
-        classes: List<BuiltinClassMemberOffsetClass>.from(json['classes']
-            .map((dynamic x) => BuiltinClassMemberOffsetClass.fromJson(x))),
+        classes: List<BuiltinClassMemberOffsetClass>.from(
+          json['classes'].map(
+            (dynamic x) => BuiltinClassMemberOffsetClass.fromJson(x),
+          ),
+        ),
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'build_configuration': buildConfiguration,
-        'classes':
-            List<dynamic>.from(classes.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'build_configuration': buildConfiguration,
+    'classes': List<dynamic>.from(
+      classes.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+  };
 }
 
 class BuiltinClassMemberOffsetClass {
-  BuiltinClassMemberOffsetClass({
-    required this.name,
-    required this.members,
-  });
+  BuiltinClassMemberOffsetClass({required this.name, required this.members});
 
   TypeEnum name;
   List<Member> members;
@@ -128,22 +152,20 @@ class BuiltinClassMemberOffsetClass {
       BuiltinClassMemberOffsetClass(
         name: typeEnumValues.map[json['name']]!,
         members: List<Member>.from(
-            json['members'].map((dynamic x) => Member.fromJson(x))),
+          json['members'].map((dynamic x) => Member.fromJson(x)),
+        ),
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': typeEnumValues.reverse[name],
-        'members':
-            List<dynamic>.from(members.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': typeEnumValues.reverse[name],
+    'members': List<dynamic>.from(
+      members.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+  };
 }
 
 class Member {
-  Member({
-    required this.member,
-    required this.offset,
-    required this.meta,
-  });
+  Member({required this.member, required this.offset, required this.meta});
 
   String member;
   int offset;
@@ -154,16 +176,16 @@ class Member {
   String toRawJson() => json.encode(toJson());
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
-        member: json['member'],
-        offset: json['offset'],
-        meta: memberMetaValues.map[json['meta']]!,
-      );
+    member: json['member'],
+    offset: json['offset'],
+    meta: memberMetaValues.map[json['meta']]!,
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'member': member,
-        'offset': offset,
-        'meta': memberMetaValues.reverse[meta],
-      };
+    'member': member,
+    'offset': offset,
+    'meta': memberMetaValues.reverse[meta],
+  };
 }
 
 enum MemberMeta {
@@ -174,7 +196,7 @@ enum MemberMeta {
   vector3,
   basis,
   vector4,
-  double
+  double,
 }
 
 final memberMetaValues = EnumValues({
@@ -185,7 +207,7 @@ final memberMetaValues = EnumValues({
   'Vector2': MemberMeta.vector2,
   'Vector2i': MemberMeta.vector2I,
   'Vector3': MemberMeta.vector3,
-  'Vector4': MemberMeta.vector4
+  'Vector4': MemberMeta.vector4,
 });
 
 enum TypeEnum {
@@ -205,7 +227,7 @@ enum TypeEnum {
   color,
   rect2,
   rect2I,
-  aabb
+  aabb,
 }
 
 final typeEnumValues = EnumValues({
@@ -225,14 +247,11 @@ final typeEnumValues = EnumValues({
   'Vector3': TypeEnum.vector3,
   'Vector3i': TypeEnum.vector3I,
   'Vector4': TypeEnum.vector4,
-  'Vector4i': TypeEnum.vector4I
+  'Vector4i': TypeEnum.vector4I,
 });
 
 class BuiltinClassSize {
-  BuiltinClassSize({
-    required this.buildConfiguration,
-    required this.sizes,
-  });
+  BuiltinClassSize({required this.buildConfiguration, required this.sizes});
 
   String buildConfiguration;
   List<Size> sizes;
@@ -245,22 +264,19 @@ class BuiltinClassSize {
   factory BuiltinClassSize.fromJson(Map<String, dynamic> json) =>
       BuiltinClassSize(
         buildConfiguration: json['build_configuration'],
-        sizes:
-            List<Size>.from(json['sizes'].map((dynamic x) => Size.fromJson(x))),
+        sizes: List<Size>.from(
+          json['sizes'].map((dynamic x) => Size.fromJson(x)),
+        ),
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'build_configuration': buildConfiguration,
-        'sizes':
-            List<dynamic>.from(sizes.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'build_configuration': buildConfiguration,
+    'sizes': List<dynamic>.from(sizes.map<dynamic>((dynamic x) => x.toJson())),
+  };
 }
 
 class Size {
-  Size({
-    required this.name,
-    required this.size,
-  });
+  Size({required this.name, required this.size});
 
   String name;
   int size;
@@ -269,15 +285,13 @@ class Size {
 
   String toRawJson() => json.encode(toJson());
 
-  factory Size.fromJson(Map<String, dynamic> json) => Size(
-        name: json['name'],
-        size: json['size'],
-      );
+  factory Size.fromJson(Map<String, dynamic> json) =>
+      Size(name: json['name'], size: json['size']);
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'size': size,
-      };
+    'name': name,
+    'size': size,
+  };
 }
 
 class BuiltinClass {
@@ -311,66 +325,68 @@ class BuiltinClass {
   String toRawJson() => json.encode(toJson());
 
   factory BuiltinClass.fromJson(Map<String, dynamic> json) => BuiltinClass(
-        name: json['name'],
-        isKeyed: json['is_keyed'],
-        operators: List<Operator>.from(
-            json['operators'].map((dynamic x) => Operator.fromJson(x))),
-        constructors: List<Constructor>.from(
-            json['constructors'].map((dynamic x) => Constructor.fromJson(x))),
-        hasDestructor: json['has_destructor'],
-        indexingReturnType: json['indexing_return_type'],
-        methods: json['methods'] == null
-            ? []
-            : List<BuiltinClassMethod>.from(json['methods']!
-                .map((dynamic x) => BuiltinClassMethod.fromJson(x))),
-        members: json['members'] == null
-            ? []
-            : List<Singleton>.from(
-                json['members']!.map((dynamic x) => Singleton.fromJson(x))),
-        constants: json['constants'] == null
-            ? []
-            : List<Constant>.from(
-                json['constants']!.map((dynamic x) => Constant.fromJson(x))),
-        enums: json['enums'] == null
-            ? []
-            : List<BuiltinClassEnum>.from(json['enums']!
-                .map((dynamic x) => BuiltinClassEnum.fromJson(x))),
-      );
+    name: json['name'],
+    isKeyed: json['is_keyed'],
+    operators: List<Operator>.from(
+      json['operators'].map((dynamic x) => Operator.fromJson(x)),
+    ),
+    constructors: List<Constructor>.from(
+      json['constructors'].map((dynamic x) => Constructor.fromJson(x)),
+    ),
+    hasDestructor: json['has_destructor'],
+    indexingReturnType: json['indexing_return_type'],
+    methods: json['methods'] == null
+        ? []
+        : List<BuiltinClassMethod>.from(
+            json['methods']!.map((dynamic x) => BuiltinClassMethod.fromJson(x)),
+          ),
+    members: json['members'] == null
+        ? []
+        : List<Singleton>.from(
+            json['members']!.map((dynamic x) => Singleton.fromJson(x)),
+          ),
+    constants: json['constants'] == null
+        ? []
+        : List<Constant>.from(
+            json['constants']!.map((dynamic x) => Constant.fromJson(x)),
+          ),
+    enums: json['enums'] == null
+        ? []
+        : List<BuiltinClassEnum>.from(
+            json['enums']!.map((dynamic x) => BuiltinClassEnum.fromJson(x)),
+          ),
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'is_keyed': isKeyed,
-        'operators': List<dynamic>.from(
-            operators.map<dynamic>((dynamic x) => x.toJson())),
-        'constructors': List<dynamic>.from(
-            constructors.map<dynamic>((dynamic x) => x.toJson())),
-        'has_destructor': hasDestructor,
-        'indexing_return_type': indexingReturnType,
-        'methods': methods == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                methods!.map<dynamic>((dynamic x) => x.toJson())),
-        'members': members == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                members!.map<dynamic>((dynamic x) => x.toJson())),
-        'constants': constants == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                constants!.map<dynamic>((dynamic x) => x.toJson())),
-        'enums': enums == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                enums!.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': name,
+    'is_keyed': isKeyed,
+    'operators': List<dynamic>.from(
+      operators.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'constructors': List<dynamic>.from(
+      constructors.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+    'has_destructor': hasDestructor,
+    'indexing_return_type': indexingReturnType,
+    'methods': methods == null
+        ? <dynamic>[]
+        : List<dynamic>.from(methods!.map<dynamic>((dynamic x) => x.toJson())),
+    'members': members == null
+        ? <dynamic>[]
+        : List<dynamic>.from(members!.map<dynamic>((dynamic x) => x.toJson())),
+    'constants': constants == null
+        ? <dynamic>[]
+        : List<dynamic>.from(
+            constants!.map<dynamic>((dynamic x) => x.toJson()),
+          ),
+    'enums': enums == null
+        ? <dynamic>[]
+        : List<dynamic>.from(enums!.map<dynamic>((dynamic x) => x.toJson())),
+  };
 }
 
 class Constant {
-  Constant({
-    required this.name,
-    required this.type,
-    required this.value,
-  });
+  Constant({required this.name, required this.type, required this.value});
 
   String name;
   TypeEnum type;
@@ -382,23 +398,20 @@ class Constant {
   String toRawJson() => json.encode(toJson());
 
   factory Constant.fromJson(Map<String, dynamic> json) => Constant(
-        name: json['name'],
-        type: typeEnumValues.map[json['type']]!,
-        value: json['value'],
-      );
+    name: json['name'],
+    type: typeEnumValues.map[json['type']]!,
+    value: json['value'],
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'type': typeEnumValues.reverse[type],
-        'value': value,
-      };
+    'name': name,
+    'type': typeEnumValues.reverse[type],
+    'value': value,
+  };
 }
 
 class Constructor {
-  Constructor({
-    required this.index,
-    this.arguments,
-  });
+  Constructor({required this.index, this.arguments});
 
   int index;
   List<Singleton>? arguments;
@@ -409,27 +422,26 @@ class Constructor {
   String toRawJson() => json.encode(toJson());
 
   factory Constructor.fromJson(Map<String, dynamic> json) => Constructor(
-        index: json['index'],
-        arguments: json['arguments'] == null
-            ? []
-            : List<Singleton>.from(
-                json['arguments']!.map((dynamic x) => Singleton.fromJson(x))),
-      );
+    index: json['index'],
+    arguments: json['arguments'] == null
+        ? []
+        : List<Singleton>.from(
+            json['arguments']!.map((dynamic x) => Singleton.fromJson(x)),
+          ),
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'index': index,
-        'arguments': arguments == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                arguments!.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'index': index,
+    'arguments': arguments == null
+        ? <dynamic>[]
+        : List<dynamic>.from(
+            arguments!.map<dynamic>((dynamic x) => x.toJson()),
+          ),
+  };
 }
 
 class Singleton {
-  Singleton({
-    required this.name,
-    required this.type,
-  });
+  Singleton({required this.name, required this.type});
 
   String name;
   String type;
@@ -439,22 +451,17 @@ class Singleton {
 
   String toRawJson() => json.encode(toJson());
 
-  factory Singleton.fromJson(Map<String, dynamic> json) => Singleton(
-        name: json['name'],
-        type: json['type'],
-      );
+  factory Singleton.fromJson(Map<String, dynamic> json) =>
+      Singleton(name: json['name'], type: json['type']);
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'type': type,
-      };
+    'name': name,
+    'type': type,
+  };
 }
 
 class BuiltinClassEnum {
-  BuiltinClassEnum({
-    required this.name,
-    required this.values,
-  });
+  BuiltinClassEnum({required this.name, required this.values});
 
   String name;
   List<Value> values;
@@ -468,21 +475,20 @@ class BuiltinClassEnum {
       BuiltinClassEnum(
         name: json['name'],
         values: List<Value>.from(
-            json['values'].map((dynamic x) => Value.fromJson(x))),
+          json['values'].map((dynamic x) => Value.fromJson(x)),
+        ),
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'values':
-            List<dynamic>.from(values.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': name,
+    'values': List<dynamic>.from(
+      values.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+  };
 }
 
 class Value {
-  Value({
-    required this.name,
-    required this.value,
-  });
+  Value({required this.name, required this.value});
 
   String name;
   int value;
@@ -491,15 +497,13 @@ class Value {
 
   String toRawJson() => json.encode(toJson());
 
-  factory Value.fromJson(Map<String, dynamic> json) => Value(
-        name: json['name'],
-        value: json['value'],
-      );
+  factory Value.fromJson(Map<String, dynamic> json) =>
+      Value(name: json['name'], value: json['value']);
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'value': value,
-      };
+    'name': name,
+    'value': value,
+  };
 }
 
 class BuiltinClassMethod {
@@ -537,21 +541,23 @@ class BuiltinClassMethod {
         arguments: json['arguments'] == null
             ? []
             : List<Argument>.from(
-                json['arguments']!.map((dynamic x) => Argument.fromJson(x))),
+                json['arguments']!.map((dynamic x) => Argument.fromJson(x)),
+              ),
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'return_type': returnType,
-        'is_vararg': isVararg,
-        'is_const': isConst,
-        'is_static': isStatic,
-        'hash': hash,
-        'arguments': arguments == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                arguments!.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': name,
+    'return_type': returnType,
+    'is_vararg': isVararg,
+    'is_const': isConst,
+    'is_static': isStatic,
+    'hash': hash,
+    'arguments': arguments == null
+        ? <dynamic>[]
+        : List<dynamic>.from(
+            arguments!.map<dynamic>((dynamic x) => x.toJson()),
+          ),
+  };
 }
 
 class Argument {
@@ -573,18 +579,18 @@ class Argument {
   String toRawJson() => json.encode(toJson());
 
   factory Argument.fromJson(Map<String, dynamic> json) => Argument(
-        name: json['name'],
-        type: json['type'],
-        defaultValue: json['default_value'],
-        meta: argumentMetaValues.map[json['meta']],
-      );
+    name: json['name'],
+    type: json['type'],
+    defaultValue: json['default_value'],
+    meta: argumentMetaValues.map[json['meta']],
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'type': type,
-        'default_value': defaultValue,
-        'meta': argumentMetaValues.reverse[meta],
-      };
+    'name': name,
+    'type': type,
+    'default_value': defaultValue,
+    'meta': argumentMetaValues.reverse[meta],
+  };
 }
 
 enum ArgumentMeta {
@@ -597,7 +603,7 @@ enum ArgumentMeta {
   uint16,
   uint64,
   int8,
-  int16
+  int16,
 }
 
 final argumentMetaValues = EnumValues({
@@ -610,15 +616,11 @@ final argumentMetaValues = EnumValues({
   'uint16': ArgumentMeta.uint16,
   'uint32': ArgumentMeta.uint32,
   'uint64': ArgumentMeta.uint64,
-  'uint8': ArgumentMeta.uint8
+  'uint8': ArgumentMeta.uint8,
 });
 
 class Operator {
-  Operator({
-    required this.name,
-    this.rightType,
-    required this.returnType,
-  });
+  Operator({required this.name, this.rightType, required this.returnType});
 
   OperatorName name;
   String? rightType;
@@ -630,16 +632,16 @@ class Operator {
   String toRawJson() => json.encode(toJson());
 
   factory Operator.fromJson(Map<String, dynamic> json) => Operator(
-        name: operatorNameValues.map[json['name']]!,
-        rightType: json['right_type'],
-        returnType: json['return_type'],
-      );
+    name: operatorNameValues.map[json['name']]!,
+    rightType: json['right_type'],
+    returnType: json['return_type'],
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': operatorNameValues.reverse[name],
-        'right_type': rightType,
-        'return_type': returnType,
-      };
+    'name': operatorNameValues.reverse[name],
+    'right_type': rightType,
+    'return_type': returnType,
+  };
 }
 
 enum OperatorName {
@@ -667,7 +669,7 @@ enum OperatorName {
   braggadocious,
   the1,
   the2,
-  the3
+  the3,
 }
 
 final operatorNameValues = EnumValues({
@@ -695,7 +697,7 @@ final operatorNameValues = EnumValues({
   '|': OperatorName.the2,
   '^': OperatorName.the3,
   'unary-': OperatorName.unary,
-  'xor': OperatorName.xor
+  'xor': OperatorName.xor,
 });
 
 class GodotExtensionApiJsonClass {
@@ -728,68 +730,76 @@ class GodotExtensionApiJsonClass {
 
   String toRawJson() => json.encode(toJson());
 
-  factory GodotExtensionApiJsonClass.fromJson(Map<String, dynamic> json) =>
-      GodotExtensionApiJsonClass(
-        name: json['name'],
-        isRefcounted: json['is_refcounted'],
-        isInstantiable: json['is_instantiable'],
-        inherits: json['inherits'],
-        apiType: apiTypeValues.map[json['api_type']]!,
-        enums: json['enums'] == null
-            ? []
-            : List<GlobalEnumElement>.from(json['enums']!
-                .map((dynamic x) => GlobalEnumElement.fromJson(x))),
-        methods: json['methods'] == null
-            ? []
-            : List<ClassMethod>.from(
-                json['methods']!.map((dynamic x) => ClassMethod.fromJson(x))),
-        properties: json['properties'] == null
-            ? []
-            : List<Property>.from(
-                json['properties']!.map((dynamic x) => Property.fromJson(x))),
-        signals: json['signals'] == null
-            ? []
-            : List<Signal>.from(
-                json['signals']!.map((dynamic x) => Signal.fromJson(x))),
-        constants: json['constants'] == null
-            ? []
-            : List<Value>.from(
-                json['constants']!.map((dynamic x) => Value.fromJson(x))),
-      );
+  factory GodotExtensionApiJsonClass.fromJson(Map<String, dynamic> json) {
+    // print(json['name']);
+    return GodotExtensionApiJsonClass(
+      name: json['name'],
+      isRefcounted: json['is_refcounted'],
+      isInstantiable: json['is_instantiable'],
+      inherits: json['inherits'],
+      apiType: apiTypeValues.map[json['api_type']]!,
+      enums: json['enums'] == null
+          ? []
+          : List<GlobalEnumElement>.from(
+              json['enums']!.map((dynamic x) => GlobalEnumElement.fromJson(x)),
+            ),
+      methods: json['methods'] == null
+          ? []
+          : List<ClassMethod>.from(
+              json['methods']!.map((dynamic x) => ClassMethod.fromJson(x)),
+            ),
+      properties: json['properties'] == null
+          ? []
+          : List<Property>.from(
+              json['properties']!.map((dynamic x) => Property.fromJson(x)),
+            ),
+      signals: json['signals'] == null
+          ? []
+          : List<Signal>.from(
+              json['signals']!.map((dynamic x) => Signal.fromJson(x)),
+            ),
+      constants: json['constants'] == null
+          ? []
+          : List<Value>.from(
+              json['constants']!.map((dynamic x) => Value.fromJson(x)),
+            ),
+    );
+  }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'is_refcounted': isRefcounted,
-        'is_instantiable': isInstantiable,
-        'inherits': inherits,
-        'api_type': apiTypeValues.reverse[apiType],
-        'enums': enums == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                enums!.map<dynamic>((dynamic x) => x.toJson())),
-        'methods': methods == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                methods!.map<dynamic>((dynamic x) => x.toJson())),
-        'properties': properties == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                properties!.map<dynamic>((dynamic x) => x.toJson())),
-        'signals': signals == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                signals!.map<dynamic>((dynamic x) => x.toJson())),
-        'constants': constants == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                constants!.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': name,
+    'is_refcounted': isRefcounted,
+    'is_instantiable': isInstantiable,
+    'inherits': inherits,
+    'api_type': apiTypeValues.reverse[apiType],
+    'enums': enums == null
+        ? <dynamic>[]
+        : List<dynamic>.from(enums!.map<dynamic>((dynamic x) => x.toJson())),
+    'methods': methods == null
+        ? <dynamic>[]
+        : List<dynamic>.from(methods!.map<dynamic>((dynamic x) => x.toJson())),
+    'properties': properties == null
+        ? <dynamic>[]
+        : List<dynamic>.from(
+            properties!.map<dynamic>((dynamic x) => x.toJson()),
+          ),
+    'signals': signals == null
+        ? <dynamic>[]
+        : List<dynamic>.from(signals!.map<dynamic>((dynamic x) => x.toJson())),
+    'constants': constants == null
+        ? <dynamic>[]
+        : List<dynamic>.from(
+            constants!.map<dynamic>((dynamic x) => x.toJson()),
+          ),
+  };
 }
 
 enum ApiType { core, editor }
 
-final apiTypeValues =
-    EnumValues({'core': ApiType.core, 'editor': ApiType.editor});
+final apiTypeValues = EnumValues({
+  'core': ApiType.core,
+  'editor': ApiType.editor,
+});
 
 class GlobalEnumElement {
   GlobalEnumElement({
@@ -812,15 +822,17 @@ class GlobalEnumElement {
         name: json['name'],
         isBitfield: json['is_bitfield'],
         values: List<Value>.from(
-            json['values'].map((dynamic x) => Value.fromJson(x))),
+          json['values'].map((dynamic x) => Value.fromJson(x)),
+        ),
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'is_bitfield': isBitfield,
-        'values':
-            List<dynamic>.from(values.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': name,
+    'is_bitfield': isBitfield,
+    'values': List<dynamic>.from(
+      values.map<dynamic>((dynamic x) => x.toJson()),
+    ),
+  };
 }
 
 class ClassMethod {
@@ -850,41 +862,40 @@ class ClassMethod {
   String toRawJson() => json.encode(toJson());
 
   factory ClassMethod.fromJson(Map<String, dynamic> json) => ClassMethod(
-        name: json['name'],
-        isConst: json['is_const'],
-        isVararg: json['is_vararg'],
-        isStatic: json['is_static'],
-        isVirtual: json['is_virtual'],
-        hash: json['hash'],
-        returnValue: json['return_value'] == null
-            ? null
-            : ReturnValue.fromJson(json['return_value']),
-        arguments: json['arguments'] == null
-            ? []
-            : List<Argument>.from(
-                json['arguments']!.map((dynamic x) => Argument.fromJson(x))),
-      );
+    name: json['name'],
+    isConst: json['is_const'],
+    isVararg: json['is_vararg'],
+    isStatic: json['is_static'],
+    isVirtual: json['is_virtual'],
+    hash: json['hash'],
+    returnValue: json['return_value'] == null
+        ? null
+        : ReturnValue.fromJson(json['return_value']),
+    arguments: json['arguments'] == null
+        ? []
+        : List<Argument>.from(
+            json['arguments']!.map((dynamic x) => Argument.fromJson(x)),
+          ),
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'is_const': isConst,
-        'is_vararg': isVararg,
-        'is_static': isStatic,
-        'is_virtual': isVirtual,
-        'hash': hash,
-        'return_value': returnValue?.toJson(),
-        'arguments': arguments == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                arguments!.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': name,
+    'is_const': isConst,
+    'is_vararg': isVararg,
+    'is_static': isStatic,
+    'is_virtual': isVirtual,
+    'hash': hash,
+    'return_value': returnValue?.toJson(),
+    'arguments': arguments == null
+        ? <dynamic>[]
+        : List<dynamic>.from(
+            arguments!.map<dynamic>((dynamic x) => x.toJson()),
+          ),
+  };
 }
 
 class ReturnValue {
-  ReturnValue({
-    required this.type,
-    this.meta,
-  });
+  ReturnValue({required this.type, this.meta});
 
   String type;
   ArgumentMeta? meta;
@@ -895,14 +906,14 @@ class ReturnValue {
   String toRawJson() => json.encode(toJson());
 
   factory ReturnValue.fromJson(Map<String, dynamic> json) => ReturnValue(
-        type: json['type'],
-        meta: argumentMetaValues.map[json['meta']],
-      );
+    type: json['type'],
+    meta: argumentMetaValues.map[json['meta']],
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'type': type,
-        'meta': argumentMetaValues.reverse[meta],
-      };
+    'type': type,
+    'meta': argumentMetaValues.reverse[meta],
+  };
 }
 
 class Property {
@@ -926,27 +937,24 @@ class Property {
   String toRawJson() => json.encode(toJson());
 
   factory Property.fromJson(Map<String, dynamic> json) => Property(
-        type: json['type'],
-        name: json['name'],
-        setter: json['setter'],
-        getter: json['getter'],
-        index: json['index'],
-      );
+    type: json['type'],
+    name: json['name'],
+    setter: json['setter'],
+    getter: json['getter'],
+    index: json['index'],
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'type': type,
-        'name': name,
-        'setter': setter,
-        'getter': getter,
-        'index': index,
-      };
+    'type': type,
+    'name': name,
+    'setter': setter,
+    'getter': getter,
+    'index': index,
+  };
 }
 
 class Signal {
-  Signal({
-    required this.name,
-    this.arguments,
-  });
+  Signal({required this.name, this.arguments});
 
   String name;
   List<Singleton>? arguments;
@@ -956,20 +964,22 @@ class Signal {
   String toRawJson() => json.encode(toJson());
 
   factory Signal.fromJson(Map<String, dynamic> json) => Signal(
-        name: json['name'],
-        arguments: json['arguments'] == null
-            ? []
-            : List<Singleton>.from(
-                json['arguments']!.map((dynamic x) => Singleton.fromJson(x))),
-      );
+    name: json['name'],
+    arguments: json['arguments'] == null
+        ? []
+        : List<Singleton>.from(
+            json['arguments']!.map((dynamic x) => Singleton.fromJson(x)),
+          ),
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'arguments': arguments == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                arguments!.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': name,
+    'arguments': arguments == null
+        ? <dynamic>[]
+        : List<dynamic>.from(
+            arguments!.map<dynamic>((dynamic x) => x.toJson()),
+          ),
+  };
 }
 
 class Header {
@@ -994,29 +1004,26 @@ class Header {
   String toRawJson() => json.encode(toJson());
 
   factory Header.fromJson(Map<String, dynamic> json) => Header(
-        versionMajor: json['version_major'],
-        versionMinor: json['version_minor'],
-        versionPatch: json['version_patch'],
-        versionStatus: json['version_status'],
-        versionBuild: json['version_build'],
-        versionFullName: json['version_full_name'],
-      );
+    versionMajor: json['version_major'],
+    versionMinor: json['version_minor'],
+    versionPatch: json['version_patch'],
+    versionStatus: json['version_status'],
+    versionBuild: json['version_build'],
+    versionFullName: json['version_full_name'],
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'version_major': versionMajor,
-        'version_minor': versionMinor,
-        'version_patch': versionPatch,
-        'version_status': versionStatus,
-        'version_build': versionBuild,
-        'version_full_name': versionFullName,
-      };
+    'version_major': versionMajor,
+    'version_minor': versionMinor,
+    'version_patch': versionPatch,
+    'version_status': versionStatus,
+    'version_build': versionBuild,
+    'version_full_name': versionFullName,
+  };
 }
 
 class NativeStructure {
-  NativeStructure({
-    required this.name,
-    required this.format,
-  });
+  NativeStructure({required this.name, required this.format});
 
   String name;
   String format;
@@ -1027,15 +1034,12 @@ class NativeStructure {
   String toRawJson() => json.encode(toJson());
 
   factory NativeStructure.fromJson(Map<String, dynamic> json) =>
-      NativeStructure(
-        name: json['name'],
-        format: json['format'],
-      );
+      NativeStructure(name: json['name'], format: json['format']);
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'format': format,
-      };
+    'name': name,
+    'format': format,
+  };
 }
 
 class UtilityFunction {
@@ -1070,20 +1074,22 @@ class UtilityFunction {
         arguments: json['arguments'] == null
             ? []
             : List<Singleton>.from(
-                json['arguments']!.map((dynamic x) => Singleton.fromJson(x))),
+                json['arguments']!.map((dynamic x) => Singleton.fromJson(x)),
+              ),
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'return_type': returnTypeValues.reverse[returnType],
-        'category': categoryValues.reverse[category],
-        'is_vararg': isVararg,
-        'hash': hash,
-        'arguments': arguments == null
-            ? <dynamic>[]
-            : List<dynamic>.from(
-                arguments!.map<dynamic>((dynamic x) => x.toJson())),
-      };
+    'name': name,
+    'return_type': returnTypeValues.reverse[returnType],
+    'category': categoryValues.reverse[category],
+    'is_vararg': isVararg,
+    'hash': hash,
+    'arguments': arguments == null
+        ? <dynamic>[]
+        : List<dynamic>.from(
+            arguments!.map<dynamic>((dynamic x) => x.toJson()),
+          ),
+  };
 }
 
 enum Category { math, random, general }
@@ -1091,7 +1097,7 @@ enum Category { math, random, general }
 final categoryValues = EnumValues({
   'general': Category.general,
   'math': Category.math,
-  'random': Category.random
+  'random': Category.random,
 });
 
 enum ReturnType {
@@ -1103,7 +1109,7 @@ enum ReturnType {
   string,
   packedByteArray,
   object,
-  rid
+  rid,
 }
 
 final returnTypeValues = EnumValues({
@@ -1115,7 +1121,7 @@ final returnTypeValues = EnumValues({
   'PackedInt64Array': ReturnType.packedInt64Array,
   'RID': ReturnType.rid,
   'String': ReturnType.string,
-  'Variant': ReturnType.variant
+  'Variant': ReturnType.variant,
 });
 
 class EnumValues<T> {
