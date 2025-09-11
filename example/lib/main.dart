@@ -36,18 +36,11 @@ class _MyAppState extends State<MyApp> {
 
       print("GODOT INSTANCE!");
 
-      // final lookup = lib.lookup("get_texture_disabled");
-      // print(lookup);
+      if (godotInstance == null) {
+        throw Exception("libgodot failed to initialize");
+      }
 
-      // print(
-      //   'Godot instance created (pack=${tempFile.path}) valid=${instance.isValid}',
-      // );
-      // if (instance.isValid) {
-      //   const channel = MethodChannel('libgodot');
-      //   await channel.invokeMethod('attachGodotInstance', {
-      //     'address': instance.address,
-      //   });
-      // }
+      godotInstance!.start();
     } catch (e, st) {
       print('Failed to load or start Godot pack: $e\n$st');
     }

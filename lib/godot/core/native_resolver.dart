@@ -5,12 +5,8 @@ import 'gdextension_ffi_bindings.dart';
 
 DartGDExtensionInterfaceObjectMethodBindPtrcallFunction
 getObjectMethodBindPtrcall() {
-  final lib = DynamicLibrary.process();
-  return lib
-      .lookup<
-        NativeFunction<GDExtensionInterfaceObjectMethodBindPtrcallFunction>
-      >('object_method_bind_ptrcall')
-      .asFunction<DartGDExtensionInterfaceObjectMethodBindPtrcallFunction>();
+  return godotResolve('object_method_bind_ptrcall').cast<NativeFunction<GDExtensionInterfaceObjectMethodBindPtrcallFunction>>()
+            .asFunction<DartGDExtensionInterfaceObjectMethodBindPtrcallFunction>();
 }
 
 GDExtensionInterfaceRefGetObjectFunction getRefGetObject() {
