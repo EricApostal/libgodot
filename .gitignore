@@ -39,7 +39,6 @@ macos/build/libgodot.xcframework.zip
 macos/libgodot/Vendor/libgodot.xcframework/macos-arm64/libgodot.macos.template_debug.dev.arm64.dylib
 # Godot / engine binary artifacts & game packs
 **/assets/*.dylib
-**/assets/*.pck
 **/assets/*.zip
 **/assets/*.so
 **/assets/*.dll
@@ -60,7 +59,6 @@ native/build/
 
 # Flutter example build artifacts & generated dylibs
 example/assets/*.dylib
-example/assets/*.pck
 example/build/
 
 # SwiftPM & Xcode ephemeral
@@ -76,7 +74,6 @@ macos/libgodot/.swiftpm/
 
 # General large binary extensions
 *.dylib
-*.pck
 *.xcframework
 
 # TODO: Have a single generator script and generate these all at once
