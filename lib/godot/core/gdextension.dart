@@ -358,11 +358,11 @@ class GodotDart {
   // ---------- ClassDB / global ----------
   GDExtensionObjectPtr globalGetSingleton(StringName name) {
     _globalGetSingleton ??= () {
-      final lib = DynamicLibrary.process();
-      return lib
-          .lookup<
+      final fetched = godotResolve('global_get_singleton');
+      return fetched
+          .cast<
             NativeFunction<GDExtensionInterfaceGlobalGetSingletonFunction>
-          >('global_get_singleton')
+          >()
           .asFunction<GDExtensionInterfaceGlobalGetSingletonFunction>();
     }();
     return _globalGetSingleton!(name.nativePtr.cast());
@@ -374,8 +374,11 @@ class GodotDart {
     int hash,
   ) {
     _classdbGetMethodBind ??= () {
-        return godotResolve('classdb_get_method_bind').cast<NativeFunction<GDExtensionInterfaceClassdbGetMethodBindFunction>>()
-            .asFunction<DartGDExtensionInterfaceClassdbGetMethodBindFunction>();
+      return godotResolve('classdb_get_method_bind')
+          .cast<
+            NativeFunction<GDExtensionInterfaceClassdbGetMethodBindFunction>
+          >()
+          .asFunction<DartGDExtensionInterfaceClassdbGetMethodBindFunction>();
     }();
     return _classdbGetMethodBind!(
       className.nativePtr.cast(),

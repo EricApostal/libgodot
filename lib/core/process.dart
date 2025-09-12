@@ -139,7 +139,7 @@ class LibGodotProcess {
 
     logger.info("Loaded the resource pack from file: ${resourcePack.path}");
 
-    String renderingDriver = 'vulkan';
+    String renderingDriver = 'metal';
     String renderingMethod = 'mobile';
 
     List<String> extraArgs = const [];
@@ -195,10 +195,6 @@ class LibGodotProcess {
       _bindingCallbacksPtr!,
     );
 
-    final layer = await LibGodotRenderer.createMetalLayer();
-    final caLayer = RenderingNativeSurfaceApple.create(layer!);
-    print("Got native layer: $caLayer");
-
     logger.info("Initializing godot_dart bindings");
 
     initVariantBindings(ffiInterface);
@@ -209,8 +205,11 @@ class LibGodotProcess {
     // CallbackAwaiter.bind();
 
     final godotInstance = GodotInstance.withNonNullOwner(instance);
+    final layer = await LibGodotRenderer.createMetalLayer();
+    print("Got metal layer: $layer");
 
-    DisplayServerEmbedded.setNativeSurface(caLayer);
+    final caLayer = RenderingNativeSurfaceApple.create(layer!);
+    print("Got native layer: $caLayer");
 
     logger.info("Sending native call to start godot instance");
     // We might want to do something else with that? Maybe return it?
