@@ -11,7 +11,8 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
   private var renderingLayer: CAMetalLayer?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "libgodot", binaryMessenger: registrar.messenger)
+    let channel = FlutterMethodChannel(
+      name: "libgodot-native-bridge", binaryMessenger: registrar.messenger)
     let instance = LibgodotPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
 
@@ -21,11 +22,6 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
-    case "getPlatformVersion":
-      result("macOS " + ProcessInfo.processInfo.operatingSystemVersionString)
-    case "attachGodotInstance":
-      NSLog("lowkey attaching rn!!")
-      result(nil)
     case "createMetalLayer":
       // Create a CAMetalLayer and return its pointer address as Int64.
       guard let device = MTLCreateSystemDefaultDevice() else {
@@ -34,12 +30,12 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
         return
       }
 
-      let layer = CAMetalLayer()
+      let layer: CAMetalLayer = CAMetalLayer()
       layer.device = device
       layer.pixelFormat = .bgra8Unorm
       layer.framebufferOnly = false
-      // Provide a minimal drawable size to avoid zero-sized layer issues.
-      layer.drawableSize = CGSize(width: 1, height: 1)
+
+      layer.drawableSize = CGSize(width: 100, height: 100)
 
       // Retain the layer so it stays alive while Dart holds the pointer.
       self.renderingLayer = layer

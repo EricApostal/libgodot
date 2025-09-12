@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
+import 'package:libgodot/core/render.dart';
 import 'package:libgodot/godot/core/gdextension.dart';
 import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
 import 'package:libgodot/godot/core/type_info.dart';
@@ -152,7 +153,7 @@ class LibGodotProcess {
       '--rendering-method',
       renderingMethod,
       '--display-driver',
-      'macos',
+      'embedded',
       ...extraArgs,
     ];
 
@@ -194,16 +195,22 @@ class LibGodotProcess {
       _bindingCallbacksPtr!,
     );
 
+    final layer = await LibGodotRenderer.createMetalLayer();
+    final caLayer = RenderingNativeSurfaceApple.create(layer!);
+    print("Got native layer: $caLayer");
+
     logger.info("Initializing godot_dart bindings");
 
     initVariantBindings(ffiInterface);
     TypeInfo.initTypeMappings();
 
     GD.initBindings();
-    SignalAwaiter.bind();
-    CallbackAwaiter.bind();
+    // SignalAwaiter.bind();
+    // CallbackAwaiter.bind();
 
     final godotInstance = GodotInstance.withNonNullOwner(instance);
+
+    DisplayServerEmbedded.setNativeSurface(caLayer);
 
     logger.info("Sending native call to start godot instance");
     // We might want to do something else with that? Maybe return it?
