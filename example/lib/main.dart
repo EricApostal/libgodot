@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'dart:io' show Platform;
 
-import 'package:libgodot/core/libgodot.dart';
 import 'package:libgodot/libgodot.dart';
 
 void main() {
@@ -58,16 +57,5 @@ class GodotView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: Text("bruh"));
-    // if (!Platform.isMacOS) {
-    //   return const Center(child: Text('Godot view only on macOS for now'));
-    // }
-    // const viewType = 'GodotView';
-    // const creationParams = <String, dynamic>{};
-    // return AppKitView(
-    //   viewType: viewType,
-    //   layoutDirection: TextDirection.ltr,
-    //   creationParams: creationParams,
-    //   creationParamsCodec: const StandardMessageCodec(),
-    // );
   }
 }
