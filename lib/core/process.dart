@@ -14,6 +14,7 @@ import 'package:libgodot/godot/generated/engine_classes.dart'
     hide GDExtensionInitializationLevel;
 import 'package:libgodot/godot/generated/utility_functions.dart';
 import 'package:libgodot/godot/variant/variant.dart';
+import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
 ffi.Pointer<GDExtensionInstanceBindingCallbacks>? _bindingCallbacksPtr;
@@ -123,11 +124,19 @@ int _gdExtensionInit(
 }
 
 class LibGodotProcess {
+  static Logger get logger => Logger("LibGodotProcess");
+
   static Future<GodotInstance> start({
     required XFile resourcePack,
     required GDExtensionFFI interface,
   }) async {
+    final logger = LibGodotProcess.logger;
+
+    logger.info("Starting the LibGodot process");
+
     final ensuredResourcePack = await _getXFile(resourcePack);
+
+    logger.info("Loaded the resource pack from file: ${resourcePack.path}");
 
     String renderingDriver = 'vulkan';
     String renderingMethod = 'mobile';
@@ -157,6 +166,8 @@ class LibGodotProcess {
       argv[i] = s.cast();
     }
 
+    logger.info("Creating the godot instance");
+
     final instance = interface.libgodot_create_godot_instance(
       argc,
       argv,
@@ -183,6 +194,8 @@ class LibGodotProcess {
       _bindingCallbacksPtr!,
     );
 
+    logger.info("Initializing godot_dart bindings");
+
     initVariantBindings(ffiInterface);
     TypeInfo.initTypeMappings();
 
@@ -191,7 +204,12 @@ class LibGodotProcess {
     CallbackAwaiter.bind();
 
     final godotInstance = GodotInstance.withNonNullOwner(instance);
-    godotInstance.start();
+
+    logger.info("Sending native call to start godot instance");
+    // We might want to do something else with that? Maybe return it?
+    final status = godotInstance.start();
+
+    logger.info("Godot instance started with status = $status");
 
     return godotInstance;
   }

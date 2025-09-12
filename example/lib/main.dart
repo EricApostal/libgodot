@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
     final file = XFile.fromData(assetData);
 
     libGodot = LibGodot(resourcePack: file);
+
     libGodot.start();
   }
 
