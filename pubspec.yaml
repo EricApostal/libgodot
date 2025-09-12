@@ -9,12 +9,16 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
+  cross_file: ^0.3.4+2
   ffi: ^2.1.4
   flutter:
     sdk: flutter
   meta: ^1.16.0
   path: ^1.9.1
+  path_provider: ^2.1.5
   plugin_platform_interface: ^2.0.2
+  universal_platform: ^1.1.0
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:

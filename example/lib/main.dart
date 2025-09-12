@@ -1,11 +1,11 @@
-import 'dart:ffi' as ffi;
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-import 'package:libgodot/libgodot.dart';
 import 'dart:io' show Platform;
+
+import 'package:libgodot/core/libgodot.dart';
+import 'package:libgodot/libgodot.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,9 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _libgodotPlugin = Libgodot();
-
+  late final LibGodot libGodot;
   @override
   void initState() {
     super.initState();
@@ -29,66 +27,30 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initGodot() async {
-    try {
-      // First, initialize the libgodot native library
-      await initializeLibgodot();
-      print('Libgodot native library initialized successfully');
+    LibGodot.ensureInitialized();
+    final assetData = (await rootBundle.load(
+      "assets/game.pck",
+    )).buffer.asUint8List();
 
-      print("GODOT INSTANCE!");
+    final file = XFile.fromData(assetData);
 
-      if (godotInstance == null) {
-        throw Exception("libgodot failed to initialize");
-      }
-
-      godotInstance!.start();
-    } catch (e, st) {
-      print('Failed to load or start Godot pack: $e\n$st');
-    }
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _libgodotPlugin.getPlatformVersion() ??
-          'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    libGodot = LibGodot(resourcePack: file);
+    libGodot.start();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Plugin example app')),
+        appBar: AppBar(title: const Text('LibGodot example app')),
         body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Running on: $_platformVersion'),
-            ),
-            if (Platform.isMacOS) const Expanded(child: GodotView()),
-          ],
+          children: [if (Platform.isMacOS) const Expanded(child: GodotView())],
         ),
       ),
     );
   }
 }
 
-/// Embeds the native Godot NSView on macOS.
 class GodotView extends StatelessWidget {
   const GodotView({super.key});
 
