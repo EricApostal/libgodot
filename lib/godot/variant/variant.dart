@@ -85,7 +85,6 @@ void initVariantBindings(GDExtensionFFI ffIinterface) {
     },
   );
 
-  print('construct start');
   // String and String name need their constructors bound before anything else
   // because everything else relies on them being done.
   GDString.initBindingsConstructorDestructor();
@@ -93,14 +92,10 @@ void initVariantBindings(GDExtensionFFI ffIinterface) {
 
   GDString.initBindings();
 
-  print('construct end');
-
   StringName.initBindings();
-  print('did init string bindings');
   _dartBuiltinConstructors[StringName.sTypeInfo.variantType.value] =
       StringName.fromVariantPtr;
 
-  print('generating le vector bindings');
   // Generate this?
   Vector2.initBindings();
   _dartBuiltinConstructors[Vector2.sTypeInfo.variantType.value] =
@@ -115,7 +110,6 @@ void initVariantBindings(GDExtensionFFI ffIinterface) {
   Vector4.initBindings();
   _dartBuiltinConstructors[Vector4.sTypeInfo.variantType.value] =
       Vector4.fromVariantPtr;
-  print('some genned');
   Vector4i.initBindings();
   _dartBuiltinConstructors[Vector4i.sTypeInfo.variantType.value] =
       Vector4i.fromVariantPtr;
@@ -153,7 +147,6 @@ void initVariantBindings(GDExtensionFFI ffIinterface) {
   _dartBuiltinConstructors[NodePath.sTypeInfo.variantType.value] =
       NodePath.fromVariantPtr;
   RID.initBindings();
-  print('1');
   _dartBuiltinConstructors[RID.sTypeInfo.variantType.value] =
       RID.fromVariantPtr;
   Callable.initBindings();
@@ -195,8 +188,6 @@ void initVariantBindings(GDExtensionFFI ffIinterface) {
   PackedColorArray.initBindings();
   _dartBuiltinConstructors[PackedColorArray.sTypeInfo.variantType.value] =
       PackedColorArray.fromVariantPtr;
-
-  print('all genned');
 }
 
 @internal

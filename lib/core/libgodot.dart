@@ -2,6 +2,7 @@ import 'package:cross_file/cross_file.dart';
 import 'package:libgodot/core/native.dart';
 import 'package:libgodot/core/process.dart';
 import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
+import 'package:libgodot/utils/logging.dart';
 import 'package:logging/logging.dart';
 import 'package:universal_platform/universal_platform.dart';
 
@@ -21,7 +22,7 @@ class LibGodot {
   /// Must be called before interacting with it in any way
   static void ensureInitialized() {
     if (_isInitialized) return;
-    Logger.root.level = Level.ALL;
+    setupLogging();
     logger.info("yo");
 
     if (!UniversalPlatform.isMacOS) {
