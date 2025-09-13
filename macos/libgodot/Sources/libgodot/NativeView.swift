@@ -1,8 +1,10 @@
 import Cocoa
 import FlutterMacOS
+import QuartzCore
 
 class NativeViewFactory: NSObject, FlutterPlatformViewFactory {
     private var messenger: FlutterBinaryMessenger
+    weak var lastView: NativeView?
 
     init(messenger: FlutterBinaryMessenger) {
         self.messenger = messenger
@@ -13,10 +15,12 @@ class NativeViewFactory: NSObject, FlutterPlatformViewFactory {
         withViewIdentifier viewId: Int64,
         arguments args: Any?
     ) -> NSView {
-        return NativeView(
+        let view = NativeView(
             viewIdentifier: viewId,
             arguments: args,
             binaryMessenger: messenger)
+        self.lastView = view
+        return view
     }
 
     /// Implementing this method is only necessary when
@@ -34,10 +38,13 @@ class NativeView: NSView {
         binaryMessenger messenger: FlutterBinaryMessenger?
     ) {
         super.init(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-        wantsLayer = true
-        layer?.backgroundColor = NSColor.systemBlue.cgColor
-        // macOS views can be created here
-        createNativeView(view: self)
+        self.wantsLayer = true
+        if !(self.layer is CAMetalLayer) {
+            let metalLayer = CAMetalLayer()
+            metalLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 1.0
+            self.layer = metalLayer
+        }
+        addPlaceholderOverlay()
     }
 
     required init?(coder nsCoder: NSCoder) {
@@ -45,15 +52,26 @@ class NativeView: NSView {
     }
 
     func createNativeView(view _view: NSView) {
-        let nativeLabel = NSTextField()
-        nativeLabel.frame = CGRect(x: 0, y: 0, width: 180, height: 48.0)
-        nativeLabel.stringValue = "Native text from macOS"
-        nativeLabel.textColor = NSColor.black
-        nativeLabel.font = NSFont.systemFont(ofSize: 14)
-        nativeLabel.isBezeled = false
-        nativeLabel.focusRingType = .none
-        nativeLabel.isEditable = true
-        nativeLabel.sizeToFit()
-        _view.addSubview(nativeLabel)
+    }
+
+    private func addPlaceholderOverlay() {
+        let label = NSTextField(labelWithString: "Rendering surface")
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = NSColor.white
+        label.alignment = .center
+        label.font = NSFont.systemFont(ofSize: 14, weight: .medium)
+        label.alphaValue = 0.85
+
+        let shadow = NSShadow()
+        shadow.shadowColor = NSColor.black.withAlphaComponent(0.6)
+        shadow.shadowBlurRadius = 3
+        shadow.shadowOffset = NSSize(width: 0, height: -1)
+        label.shadow = shadow
+
+        addSubview(label)
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
     }
 }

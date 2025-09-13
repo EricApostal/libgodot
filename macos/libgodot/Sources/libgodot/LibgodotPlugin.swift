@@ -4,8 +4,7 @@ import Metal
 import QuartzCore
 
 public class LibgodotPlugin: NSObject, FlutterPlugin {
-  private var renderingLayer: CAMetalLayer?
-  private var frameObserver: NSObjectProtocol?
+  private var nativeViewFactory: NativeViewFactory?
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(
@@ -16,6 +15,7 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
     registrar.addMethodCallDelegate(instance, channel: channel)
 
     let factory = NativeViewFactory(messenger: registrar.messenger)
+    instance.nativeViewFactory = factory
     registrar.register(factory, withId: "libgodot/metal_view")
   }
 
@@ -34,80 +34,58 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
 
   private func createAttachedMetalLayer(result: @escaping FlutterResult) {
     DispatchQueue.main.async {
-      guard let window = NSApp.windows.first(where: { $0.isKeyWindow }) ?? NSApp.windows.first,
-        let hostView = window.contentView
-      else {
+      guard let nativeView = self.nativeViewFactory?.lastView else {
         result(
           FlutterError(
-            code: "no_window",
-            message: "Could not find Flutter host window/contentView",
+            code: "no_native_view",
+            message:
+              "No NativeView has been created yet. Ensure the platform view is instantiated before requesting a CAMetalLayer.",
             details: nil))
         return
       }
 
-      hostView.wantsLayer = true
-      if hostView.layer == nil {
-        hostView.layer = CALayer()
+      if !(nativeView.layer is CAMetalLayer) {
+        nativeView.wantsLayer = true
+        let metalLayer = CAMetalLayer()
+        let scale =
+          nativeView.window?.backingScaleFactor
+          ?? nativeView.window?.screen?.backingScaleFactor
+          ?? NSScreen.main?.backingScaleFactor
+          ?? 1.0
+        metalLayer.contentsScale = scale
+        nativeView.layer = metalLayer
+      } else if let metalLayer = nativeView.layer as? CAMetalLayer {
+        let scale =
+          nativeView.window?.backingScaleFactor
+          ?? nativeView.window?.screen?.backingScaleFactor
+          ?? NSScreen.main?.backingScaleFactor
+          ?? metalLayer.contentsScale
+        metalLayer.contentsScale = scale
       }
 
-      let layer = CAMetalLayer()
-      layer.frame = hostView.bounds
-      layer.contentsScale = window.backingScaleFactor
-      layer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
-
-      hostView.layer?.addSublayer(layer)
-
-      self.renderingLayer = layer
-
-      hostView.postsFrameChangedNotifications = true
-      self.frameObserver = NotificationCenter.default.addObserver(
-        forName: NSView.frameDidChangeNotification,
-        object: hostView,
-        queue: .main
-      ) { [weak self, weak hostView, weak window] _ in
-        guard let self, let hostView = hostView, let window = window else { return }
-        self.renderingLayer?.frame = hostView.bounds
-        self.renderingLayer?.contentsScale = window.backingScaleFactor
+      guard let layer = nativeView.layer as? CAMetalLayer else {
+        result(
+          FlutterError(
+            code: "no_metal_layer",
+            message: "Failed to create or retrieve CAMetalLayer from NativeView.",
+            details: nil))
+        return
       }
 
       let ptr = UInt(bitPattern: Unmanaged.passUnretained(layer).toOpaque())
       let signed = Int64(bitPattern: UInt64(ptr))
-      NSLog("SIGNED INTEGER SWIFT START")
-      NSLog(String(signed))
-      NSLog("END")
-
-      /*
-        The problem is somewhere with initializing it with `RenderingNativeSurfaceApple.create`.
-        It takes this as a param.
-      
-        I am thinking of importing SwiftGodotKit and test it directly. This particular binding
-        is actually really weird. Here is some the code for that:
-        ```
-        	// TODO: Remove workaround when SwiftGodot starts to support const void * arguments.
-          static Ref<RenderingNativeSurfaceApple> create_api(/* GDExtensionConstPtr<const void> */ uint64_t p_layer);
-      
-          static Ref<RenderingNativeSurfaceApple> create(void *p_layer);
-        ````
-      
-        Passing the int should be fine I think? Unless the bind gen is wrong and it's somehow right on swiftgodotkit?
-      
-        This is annoying to debug because all it does is just return null. No errors, nothing, just null. Thus why
-        SwiftGodotKit testing would be helpful.
-      */
       result(signed)
     }
   }
 
   private func destroyMetalLayer(result: @escaping FlutterResult) {
     DispatchQueue.main.async {
-      if let obs = self.frameObserver {
-        NotificationCenter.default.removeObserver(obs)
-        self.frameObserver = nil
+      if let nativeView = self.nativeViewFactory?.lastView,
+        nativeView.layer is CAMetalLayer
+      {
+        nativeView.layer = nil
       }
-      if let layer = self.renderingLayer {
-        layer.removeFromSuperlayer()
-        self.renderingLayer = nil
-      }
+      result(nil)
     }
   }
 }
