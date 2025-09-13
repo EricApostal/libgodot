@@ -56,6 +56,17 @@ class GodotView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("bruh"));
+    if (!Platform.isMacOS) {
+      return const Center(
+        child: Text('GodotView is only implemented for macOS in this example'),
+      );
+    }
+
+    const viewType = 'libgodot/metal_view';
+    return AppKitView(
+      viewType: viewType,
+      layoutDirection: TextDirection.ltr,
+      creationParamsCodec: const StandardMessageCodec(),
+    );
   }
 }

@@ -14,6 +14,9 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
     )
     let instance = LibgodotPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
+
+    let factory = NativeViewFactory(messenger: registrar.messenger)
+    registrar.register(factory, withId: "libgodot/metal_view")
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
