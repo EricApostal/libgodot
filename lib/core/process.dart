@@ -8,11 +8,13 @@ import 'package:cross_file/cross_file.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:godot_dart/godot_dart.dart';
 import 'package:libgodot/core/render.dart';
+import 'package:libgodot/core/native.dart';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
 ffi.Pointer<GDExtensionInstanceBindingCallbacks>? _bindingCallbacksPtr;
 GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
+GDExtensionInterfaceGetProcAddress? _capturedGetProcAddress;
 
 void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
 
@@ -108,6 +110,7 @@ int _gdExtensionInit(
   // storeGetProcAddress(getProcAddress);
 
   _capturedExtensionLibraryPtr = library;
+  _capturedGetProcAddress = getProcAddress;
   final init = initPtr.ref;
 
   init.minimum_initialization_level = GDExtensionInitializationLevel.core.value;
@@ -119,6 +122,8 @@ int _gdExtensionInit(
 
 class LibGodotProcess {
   static Logger get logger => Logger("LibGodotProcess");
+
+  static GodotInstance? _currentInstance;
 
   static Future<GodotInstance> start({
     required XFile resourcePack,
@@ -182,6 +187,24 @@ class LibGodotProcess {
     final godotDart = ffi.DynamicLibrary.process();
     final ffiInterface = GDExtensionFFI(godotDart);
 
+    // Initialize the embedded Godot Dart extension
+    logger.info("Initializing embedded Godot Dart extension");
+    if (_capturedGetProcAddress == null ||
+        _capturedExtensionLibraryPtr == null) {
+      logger.severe("Missing required extension initialization data");
+      throw Exception("Extension initialization data not captured");
+    }
+
+    final embeddedInitSuccess = NativeBridge.initializeEmbedded(
+      _capturedGetProcAddress!,
+      _capturedExtensionLibraryPtr!,
+    );
+
+    if (!embeddedInitSuccess) {
+      logger.severe("Failed to initialize embedded Godot Dart extension");
+      throw Exception("Failed to initialize embedded Godot Dart extension");
+    }
+
     GodotDart(
       ffiInterface,
       _capturedExtensionLibraryPtr!,
@@ -201,7 +224,21 @@ class LibGodotProcess {
     SignalAwaiter.bind();
     CallbackAwaiter.bind();
 
+    // Initialize the Dart runtime bindings
+    logger.info("Initializing Dart runtime bindings");
+    final runtimeInitSuccess = NativeBridge.initializeRuntime();
+
+    if (!runtimeInitSuccess) {
+      logger.warning(
+        "Failed to initialize Dart runtime bindings - continuing without them",
+      );
+    } else {
+      logger.info("Successfully initialized Dart runtime bindings");
+    }
+
     final godotInstance = GodotInstance.withNonNullOwner(instance);
+    _currentInstance = godotInstance;
+
     final layer = await LibGodotRenderer.createMetalLayer();
     print("Got metal layer: $layer");
 
@@ -215,6 +252,32 @@ class LibGodotProcess {
     logger.info("Godot instance started with status = $status");
 
     return godotInstance;
+  }
+
+  /// Shutdown the LibGodot process and cleanup resources
+  static void shutdown() {
+    final logger = LibGodotProcess.logger;
+
+    logger.info("Shutting down LibGodot process");
+
+    // Shutdown the Dart runtime bindings
+    try {
+      NativeBridge.shutdownRuntime();
+      logger.info("Successfully shutdown Dart runtime bindings");
+    } catch (e) {
+      logger.warning("Error shutting down Dart runtime bindings: $e");
+    }
+
+    // Shutdown the embedded extension
+    try {
+      NativeBridge.shutdownEmbedded();
+      logger.info("Successfully shutdown embedded Godot Dart extension");
+    } catch (e) {
+      logger.warning("Error shutting down embedded extension: $e");
+    }
+
+    _currentInstance = null;
+    logger.info("LibGodot process shutdown complete");
   }
 
   static Future<XFile> _getXFile(XFile resourcePack) async {

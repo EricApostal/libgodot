@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(title: const Text('LibGodot example app')),
         body: Column(
-          children: [if (Platform.isMacOS) const Expanded(child: GodotView())],
+          children: [if (Platform.isMacOS) const Expanded(child: Text("hi"))],
         ),
       ),
     );
