@@ -6,15 +6,8 @@ import 'dart:io';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
+import 'package:godot_dart/godot_dart.dart';
 import 'package:libgodot/core/render.dart';
-import 'package:libgodot/godot/core/gdextension.dart';
-import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
-import 'package:libgodot/godot/core/type_info.dart';
-import 'package:libgodot/godot/extensions/async_extensions.dart';
-import 'package:libgodot/godot/generated/engine_classes.dart'
-    hide GDExtensionInitializationLevel;
-import 'package:libgodot/godot/generated/utility_functions.dart';
-import 'package:libgodot/godot/variant/variant.dart';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
@@ -24,15 +17,15 @@ GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
 void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
 
 void _extensionDeinitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
-
+// Pointer<NativeFunction<Void Function(Pointer<Void>, Int32)>>
 final _extensionInitializePtr =
     ffi.Pointer.fromFunction<
-      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.UnsignedInt)
+      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Int32)
     >(_extensionInitialize);
 
 final _extensionDeinitializePtr =
     ffi.Pointer.fromFunction<
-      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.UnsignedInt)
+      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Int32)
     >(_extensionDeinitialize);
 
 ffi.Pointer<ffi.Void> _bindingCreate(
@@ -80,9 +73,9 @@ void _asyncExecutor(
   scheduleMicrotask(() => fn(pCallbackData));
 }
 
-final InvokeCallbackFunction$1 _syncExecutorPtr =
+final InvokeCallbackFunction _syncExecutorPtr =
     ffi.Pointer.fromFunction<InvokeCallbackFunctionFunction>(_syncExecutor);
-final InvokeCallbackFunction$1 _asyncExecutorPtr =
+final InvokeCallbackFunction _asyncExecutorPtr =
     ffi.Pointer.fromFunction<InvokeCallbackFunctionFunction>(_asyncExecutor);
 
 ffi.Pointer<GDExtensionInstanceBindingCallbacks> _createBindingCallbacks() {
@@ -112,12 +105,12 @@ int _gdExtensionInit(
   GDExtensionClassLibraryPtr library,
   ffi.Pointer<GDExtensionInitialization> initPtr,
 ) {
-  storeGetProcAddress(getProcAddress);
+  // storeGetProcAddress(getProcAddress);
 
   _capturedExtensionLibraryPtr = library;
   final init = initPtr.ref;
-  init.minimum_initialization_levelAsInt =
-      GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_CORE.value;
+
+  init.minimum_initialization_level = GDExtensionInitializationLevel.core.value;
   init.userdata = ffi.nullptr;
   init.initialize = _extensionInitializePtr;
   init.deinitialize = _extensionDeinitializePtr;
