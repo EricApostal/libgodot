@@ -191,11 +191,15 @@ class LibGodotProcess {
     logger.info("Initializing godot_dart bindings");
 
     initVariantBindings(ffiInterface);
+
+    logger.info("Initialized Variant Bindings");
     TypeInfo.initTypeMappings();
 
+    logger.info("Initialized Type Mappings");
+
     GD.initBindings();
-    // SignalAwaiter.bind();
-    // CallbackAwaiter.bind();
+    SignalAwaiter.bind();
+    CallbackAwaiter.bind();
 
     final godotInstance = GodotInstance.withNonNullOwner(instance);
     final layer = await LibGodotRenderer.createMetalLayer();
