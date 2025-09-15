@@ -220,9 +220,15 @@ class LibGodotProcess {
 
     logger.info("Initialized Type Mappings");
 
+    // TODO: These are all kinda borked because of the init order
+    // re-enable
+    // there's also a string alloc thing I should go back in my
+    // commit history to re-enable, because it failed becasue of the
+    // @pragma resolution failing. I implemented it manually but once
+    // we init we can just use it from the gde library
     GD.initBindings();
-    SignalAwaiter.bind();
-    CallbackAwaiter.bind();
+    // SignalAwaiter.bind();
+    // CallbackAwaiter.bind();
 
     // Initialize the Dart runtime bindings
     logger.info("Initializing Dart runtime bindings");
