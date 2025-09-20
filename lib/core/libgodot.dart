@@ -34,7 +34,7 @@ class LibGodot {
         'libgodot native bindings only implemented for macOS yet',
       );
     }
-
+    print("lOADING LIBGODOT");
     _interface = NativeBridge.loadLibGodot();
     _isInitialized = true;
   }

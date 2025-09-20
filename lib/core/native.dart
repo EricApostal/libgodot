@@ -25,6 +25,9 @@ typedef GodotDartInitializeRuntimeDart = bool Function();
 typedef GodotDartShutdownRuntimeNative = ffi.Void Function();
 typedef GodotDartShutdownRuntimeDart = void Function();
 
+typedef InitDartApiDlNative = IntPtr Function(Pointer<Void>);
+typedef InitDartApiDl = int Function(Pointer<Void>);
+
 class NativeBridge {
   static final methodChannel = MethodChannel("libgodot-native-bridge");
 
@@ -37,6 +40,14 @@ class NativeBridge {
   static GDExtensionFFI loadLibGodot() {
     _godotDartLib = DynamicLibrary.open("libgodot_dart.dylib");
     final dylib = DynamicLibrary.open("libgodot.dylib");
+    final init = _godotDartLib
+        .lookup<ffi.NativeFunction<ffi.IntPtr Function(ffi.Pointer<ffi.Void>)>>(
+          'init_dart_api_dl',
+        );
+    final initFunc = init.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
+
+    final success = initFunc(ffi.NativeApi.initializeApiDLData);
+    print("got val = $success");
 
     // Load the embedded initialization functions
     _embeddedInit = _godotDartLib
