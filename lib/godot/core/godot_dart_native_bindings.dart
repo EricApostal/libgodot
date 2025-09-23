@@ -269,11 +269,32 @@ class GodotDartNativeBindings {
     }
   }
 
-  // Returns the previously registered Dart wrapper for a Godot object pointer, or null if unknown.
   Object? gdObjectToDartObject(GDExtensionObjectPtr object) {
-    final addr = object.address;
-    if (addr == 0) return null;
-    return _objectCache[addr];
+    // TODO: This needs to actually be implemented
+    /*
+    Aight so this is where we get that leaf call bullshit
+    BUT, here's the idea. Flutter rust bridge for this, then
+    do a callback. We could do a dart DL callback, but if we just
+    use FRB then it'll handle the internal shit for us.]
+    */
+
+    final getInstanceBinding = godotResolve('object_get_instance_binding')
+        .cast<
+          NativeFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>
+        >()
+        .asFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>();
+
+    final instanceBindingPointer = getInstanceBinding(
+      object,
+      gde.extensionToken,
+      gde.engineBindingCallbacks,
+    );
+
+    print("GOT BINDING!");
+
+    final addr = object.cast();
+    print("ADDR = $addr");
+    return instanceBindingPointer;
   }
 
   // Look up the TypeInfo for a Dart Type, returning a nullable value.
