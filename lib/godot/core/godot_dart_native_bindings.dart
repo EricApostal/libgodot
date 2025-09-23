@@ -297,7 +297,9 @@ class GodotDartNativeBindings {
 
     final addr = object.cast();
     print("ADDR = $addr");
-    return instanceBindingPointer;
+    final resolved = _objectCache[object.address];
+    print("resolved: $resolved");
+    return resolved;
   }
 
   // Look up the TypeInfo for a Dart Type, returning a nullable value.

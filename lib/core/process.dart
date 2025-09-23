@@ -31,6 +31,38 @@ const GDEXTENSION_VARIANT_SIZE = 24;
 ffi.Pointer<GDExtensionInstanceBindingCallbacks>? _bindingCallbacksPtr;
 GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
 
+/// Helper function to create a Dart wrapper for a given Godot class
+Object? _createDartWrapperForClass(
+  String className,
+  GDExtensionObjectPtr nativePtr,
+) {
+  try {
+    // The binding system doesn't actually need typed objects!
+    // It just needs something that can be registered and retrieved
+    // Your existing gdObjectToDartObject() can handle type conversion later
+
+    // For now, create a simple wrapper that the binding system can track
+    // When you actually USE the object later (via gdObjectToDartObject),
+    // THAT's when you create the proper typed object using your full type system
+
+    return _SimpleGodotWrapper(className, nativePtr);
+  } catch (e) {
+    print("Error creating wrapper for $className: $e");
+    return _SimpleGodotWrapper(className, nativePtr);
+  }
+}
+
+/// Simple wrapper class for Godot objects until proper type resolution is implemented
+class _SimpleGodotWrapper {
+  final String className;
+  final GDExtensionObjectPtr nativePtr;
+
+  _SimpleGodotWrapper(this.className, this.nativePtr);
+
+  @override
+  String toString() => 'GodotWrapper($className, ${nativePtr.address})';
+}
+
 void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
 
 void _extensionDeinitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
@@ -69,6 +101,7 @@ ffi.Pointer<ffi.Void> _bindingCreate(
       // no idea why this has to be copied manually
 
       // maybe I just make a helper
+      // TODO: I think I can just convert to a string name from a pointer
       final stringName = StringName();
       final srcPtr = classNamePtr.cast<ffi.Uint8>();
       final destPtr = stringName.nativePtr.cast<ffi.Uint8>();
@@ -80,6 +113,25 @@ ffi.Pointer<ffi.Void> _bindingCreate(
       final className = gdString.toDartString();
 
       print("Class name: $className");
+
+      // We don't want to construct a NEW object, we want to wrap the EXISTING one
+      // that Godot is passing to us in p_instance
+      // final nativeObjectPtr = p_instance.cast<GDExtensionObjectPtr>().value;
+
+      // Create a Dart wrapper for the existing native object
+      // For now, we'll try to use the type resolver to get the proper Dart type
+      final dartObject = _createDartWrapperForClass(className, p_instance);
+
+      if (dartObject != null) {
+        // Register the Dart wrapper with the binding system
+        gde.dartBindings.registerDartWrapper(dartObject, p_instance);
+        print("Registered wrapper for $className");
+
+        // Return a persistent handle to the Dart object
+        return gde.dartBindings.toPersistentHandle(dartObject);
+      } else {
+        print("Could not create Dart wrapper for class: $className");
+      }
     } else {
       print("Failed to get class name, success = $success");
     }
