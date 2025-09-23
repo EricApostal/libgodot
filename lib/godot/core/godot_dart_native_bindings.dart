@@ -281,19 +281,32 @@ class GodotDartNativeBindings {
     Might be tripping, I don't think this is where that is an issue (but I think it's still an issue)
     */
 
-    final getInstanceBinding = godotResolve('object_get_instance_binding')
-        .cast<
-          NativeFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>
-        >()
-        .asFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>();
+    // final getInstanceBinding = godotResolve('object_get_instance_binding')
+    //     .cast<
+    //       NativeFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>
+    //     >()
+    //     .asFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>();
 
-    final instanceBindingPointer = getInstanceBinding(
-      object,
-      gde.extensionToken,
-      gde.engineBindingCallbacks,
-    );
+    // final instanceBindingPointer = getInstanceBinding(
+    //   object,
+    //   gde.extensionToken,
+    //   gde.engineBindingCallbacks,
+    // );
 
     print("GOT BINDING!");
+
+/*
+
+okay it's super fucked but I think I figured it out fr this time
+the cpp version reflectively calls `withNonNullOwner` and fucky wuckily resolves
+the name of the class via a string. Technically, we might still be able to do that
+
+I think I can prove enough by simply returning this as an object. If that works, then I
+can maybe first use reflection (weird in release), or I could add it as a type registry (probs required)
+*/
+
+    final sumBullshit = RenderingNativeSurfaceApple.withNonNullOwner(object);
+    print("sum bullshit = $sumBullshit");
 
     final addr = object.cast();
     print("ADDR = $addr");

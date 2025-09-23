@@ -114,12 +114,6 @@ ffi.Pointer<ffi.Void> _bindingCreate(
 
       print("Class name: $className");
 
-      // We don't want to construct a NEW object, we want to wrap the EXISTING one
-      // that Godot is passing to us in p_instance
-      // final nativeObjectPtr = p_instance.cast<GDExtensionObjectPtr>().value;
-
-      // Create a Dart wrapper for the existing native object
-      // For now, we'll try to use the type resolver to get the proper Dart type
       final dartObject = _createDartWrapperForClass(className, p_instance);
 
       if (dartObject != null) {
@@ -313,6 +307,8 @@ class LibGodotProcess {
 
     final caLayer = RenderingNativeSurfaceApple.create(layer!);
     print("Got native layer: $caLayer");
+
+    DisplayServerEmbedded.setNativeSurface(caLayer);
 
     logger.info("Sending native call to start godot instance");
     // We might want to do something else with that? Maybe return it?
