@@ -2,21 +2,31 @@
 
 import 'dart:async';
 import 'dart:ffi' as ffi;
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
+import 'package:ffi/ffi.dart';
 import 'package:libgodot/core/render.dart';
 import 'package:libgodot/godot/core/gdextension.dart';
 import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
 import 'package:libgodot/godot/core/type_info.dart';
-import 'package:libgodot/godot/extensions/async_extensions.dart';
+import 'package:libgodot/godot/generated/builtins.dart';
 import 'package:libgodot/godot/generated/engine_classes.dart'
     hide GDExtensionInitializationLevel;
 import 'package:libgodot/godot/generated/utility_functions.dart';
 import 'package:libgodot/godot/variant/variant.dart';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
+
+// ignore: constant_identifier_names
+const GDE_VARIANT_TYPE_STRING_NAME = 2;
+const GDE_VARIANT_TYPE_STRING = 4;
+
+const GDEXTENSION_STRING_NAME_SIZE = 8;
+const GDEXTENSION_STRING_SIZE = 8;
+const GDEXTENSION_VARIANT_SIZE = 24;
 
 ffi.Pointer<GDExtensionInstanceBindingCallbacks>? _bindingCallbacksPtr;
 GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
@@ -39,6 +49,47 @@ ffi.Pointer<ffi.Void> _bindingCreate(
   ffi.Pointer<ffi.Void> p_token,
   ffi.Pointer<ffi.Void> p_instance,
 ) {
+  try {
+    print("binding create");
+    print(p_token);
+    print(p_instance);
+    print(gde.dartBindings);
+
+    final classNamePtr = calloc.allocate<Uint8>(GDEXTENSION_STRING_NAME_SIZE);
+    final GDExtensionUninitializedStringNamePtr uninitializedStringName =
+        classNamePtr.cast<ffi.Void>();
+
+    final getClassName = godotResolve('object_get_class_name')
+        .cast<NativeFunction<GDExtensionInterfaceObjectGetClassNameFunction>>()
+        .asFunction<DartGDExtensionInterfaceObjectGetClassNameFunction>();
+    final success = getClassName(p_instance, p_token, uninitializedStringName);
+
+    if (success == 1) {
+      // courtesy of claude sonnet 4
+      // no idea why this has to be copied manually
+
+      // maybe I just make a helper
+      final stringName = StringName();
+      final srcPtr = classNamePtr.cast<ffi.Uint8>();
+      final destPtr = stringName.nativePtr.cast<ffi.Uint8>();
+      for (int i = 0; i < GDEXTENSION_STRING_NAME_SIZE; i++) {
+        destPtr[i] = srcPtr[i];
+      }
+
+      final gdString = GDString.fromStringName(stringName);
+      final className = gdString.toDartString();
+
+      print("Class name: $className");
+    } else {
+      print("Failed to get class name, success = $success");
+    }
+
+    calloc.free(classNamePtr);
+  } catch (e, st) {
+    print(e);
+    print(st);
+  }
+
   return ffi.nullptr;
 }
 

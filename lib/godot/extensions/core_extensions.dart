@@ -28,11 +28,9 @@ extension TNode on Node {
 
 extension StringExtensions on String {
   static String fromGodotStringPtr(GDExtensionTypePtr ptr) {
-    final lib = DynamicLibrary.process();
+    final lib = godotResolve('string_to_utf16_chars');
     final stringToUtf8Chars = lib
-        .lookup<NativeFunction<GDExtensionInterfaceStringToUtf16CharsFunction>>(
-          'string_to_utf16_chars',
-        )
+        .cast<NativeFunction<GDExtensionInterfaceStringToUtf16CharsFunction>>()
         .asFunction<DartGDExtensionInterfaceStringToUtf16CharsFunction>();
 
     return using((arena) {

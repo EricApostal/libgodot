@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
+import 'package:libgodot/godot/generated/engine_classes.dart';
 
 import '../generated/builtins.dart';
 import '../variant/variant.dart';
@@ -49,7 +50,7 @@ class GodotDartNativeBindings {
     bool isRef,
     bool isGodotType,
   ) {
-    // Minimal: just register for reverse lookup.
+    print("tying dart to native");
     registerDartWrapper(obj, nativePtr);
   }
 
@@ -275,7 +276,9 @@ class GodotDartNativeBindings {
     Aight so this is where we get that leaf call bullshit
     BUT, here's the idea. Flutter rust bridge for this, then
     do a callback. We could do a dart DL callback, but if we just
-    use FRB then it'll handle the internal shit for us.]
+    use FRB then it'll handle the internal shit for us.
+
+    Might be tripping, I don't think this is where that is an issue (but I think it's still an issue)
     */
 
     final getInstanceBinding = godotResolve('object_get_instance_binding')

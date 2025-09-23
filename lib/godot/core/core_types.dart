@@ -14,7 +14,6 @@ abstract class BuiltinType implements Finalizable {
   // static final finalizer = NativeFinalizer(
   //   gde.dartBindings.finalizeBuiltinObject,
   // );
-
   Pointer<Uint8> _opaque = nullptr;
 
   TypeInfo get typeInfo;
@@ -115,19 +114,15 @@ abstract class ExtensionType implements Finalizable {
   /// Tie the Dart object to the native object.
   @protected
   void _tieDartToNative() {
-    // Script instance should take care of this. Should we assert that the
-    // object has a script instance?
-    if (typeInfo.scriptInfo == null) {
-      bool isGodotType =
-          typeInfo.nativeTypeName.toDartString() ==
-          typeInfo.className.toDartString();
-      gde.dartBindings.tieDartToNative(
-        this,
-        _owner,
-        this is RefCounted,
-        isGodotType,
-      );
-    }
+    bool isGodotType =
+        typeInfo.nativeTypeName.toDartString() ==
+        typeInfo.className.toDartString();
+    gde.dartBindings.tieDartToNative(
+      this,
+      _owner,
+      this is RefCounted,
+      isGodotType,
+    );
   }
 
   @internal
