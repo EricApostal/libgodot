@@ -15,6 +15,8 @@ import 'gdextension.dart';
 
 typedef ScriptResolver = Type? Function(String scriptPath);
 
+int count = 0;
+
 class GodotDartNativeBindings {
   // ---------------------------------------------------------------------------
   // Pure Dart replacements for former C++ exported functions.
@@ -303,16 +305,37 @@ the name of the class via a string. Technically, we might still be able to do th
 
 I think I can prove enough by simply returning this as an object. If that works, then I
 can maybe first use reflection (weird in release), or I could add it as a type registry (probs required)
+
+We need a registration cache as well I think maybe. Idk how it works with multiple obs of the same type though.
+
+It's super super important to realize that, while we do need it to be conceptually reflective, it is indeed
+type aware. If you try to cast a pointer of the wrong type, it's very aware that it's the wrong type, and
+even does know the native dart time. That is very, very useful to know.
 */
 
-    final sumBullshit = RenderingNativeSurfaceApple.withNonNullOwner(object);
-    print("sum bullshit = $sumBullshit");
+    // final sumBullshit = RenderingNativeSurfaceApple.withNonNullOwner(object);
+    // print("sum bullshit = $sumBullshit");
 
-    final addr = object.cast();
-    print("ADDR = $addr");
-    final resolved = _objectCache[object.address];
-    print("resolved: $resolved");
-    return resolved;
+    // final addr = object.cast();
+    // print("ADDR = $addr");
+    // final resolved = _objectCache[object.address];
+    // print("resolved: $resolved");
+    // return sumBullshit;
+
+    // I know how terrible this is but I just need to get embedding working then I'll do reflection
+    if (count == 0) {
+      print("0 count, returning surface");
+      count++;
+      return RenderingNativeSurfaceApple.withNonNullOwner(object);
+    } else if (count == 1) {
+      count++;
+      print("count is 1, getting le singleton");
+      return DisplayServerEmbedded.withNonNullOwner(object);
+    } else {
+      count++;
+      print("outside of scope");
+    }
+    
   }
 
   // Look up the TypeInfo for a Dart Type, returning a nullable value.

@@ -301,20 +301,25 @@ class LibGodotProcess {
     // SignalAwaiter.bind();
     // CallbackAwaiter.bind();
 
+
     final godotInstance = GodotInstance.withNonNullOwner(instance);
-    final layer = await LibGodotRenderer.createMetalLayer();
-    print("Got metal layer: $layer");
 
-    final caLayer = RenderingNativeSurfaceApple.create(layer!);
-    print("Got native layer: $caLayer");
-
-    DisplayServerEmbedded.setNativeSurface(caLayer);
 
     logger.info("Sending native call to start godot instance");
     // We might want to do something else with that? Maybe return it?
     final status = godotInstance.start();
 
     logger.info("Godot instance started with status = $status");
+
+        final layer = await LibGodotRenderer.createMetalLayer();
+    print("Got metal layer: $layer");
+
+    final caLayer = RenderingNativeSurfaceApple.create(layer!);
+    print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
+
+    DisplayServerEmbedded.setNativeSurface(caLayer);
+    print(DisplayServer.singleton.isDarkMode());
+
 
     return godotInstance;
   }
