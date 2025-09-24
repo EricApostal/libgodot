@@ -237,9 +237,8 @@ class LibGodotProcess {
     logger.info("Loaded the resource pack from file: ${resourcePack.path}");
 
     String renderingDriver = 'metal';
-    String renderingMethod = 'mobile';
+    String renderingMethod = 'forward_plus';
 
-    List<String> extraArgs = const [];
 
     List<String> args = [
       '/usr/bin/libgodot_embed',
@@ -251,7 +250,7 @@ class LibGodotProcess {
       renderingMethod,
       '--display-driver',
       'embedded',
-      ...extraArgs,
+      '--verbose',
     ];
 
     final argc = args.length;
@@ -307,18 +306,22 @@ class LibGodotProcess {
 
     logger.info("Sending native call to start godot instance");
     // We might want to do something else with that? Maybe return it?
-    final status = godotInstance.start();
 
-    logger.info("Godot instance started with status = $status");
 
         final layer = await LibGodotRenderer.createMetalLayer();
     print("Got metal layer: $layer");
 
     final caLayer = RenderingNativeSurfaceApple.create(layer!);
     print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
-
+    // thoughts - I am using libgodot from miguel, which is I think a bit different
     DisplayServerEmbedded.setNativeSurface(caLayer);
-    print(DisplayServer.singleton.isDarkMode());
+    // final singleton = DisplayServerEmbedded.getSingleton();
+    // singleton!.getName();
+    // print(DisplayServer.singleton.isDarkMode());
+
+    final status = godotInstance.start();
+
+    logger.info("Godot instance started with status = $status");
 
 
     return godotInstance;

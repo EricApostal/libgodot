@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef LIBGODOT_H
-#define LIBGODOT_H
+#pragma once
 
 #include "gdextension_interface.h"
 
@@ -42,16 +41,11 @@ extern "C" {
 #define LIBGODOT_API __declspec(dllexport)
 #elif defined(__GNUC__) || defined(__clang__)
 #define LIBGODOT_API __attribute__((visibility("default")))
-#endif // if defined(_MSC_VER)
-
-typedef void *CallbackData;
-typedef void *ExecutorData;
-typedef void (*InvokeCallback)(CallbackData p_data);
-typedef void (*InvokeCallbackFunction)(InvokeCallback p_callback, CallbackData p_callback_data, ExecutorData p_executor_data);
+#endif
 
 /**
  * @name libgodot_create_godot_instance
- * @since 4.4
+ * @since 4.6
  *
  * Creates a new Godot instance.
  *
@@ -61,11 +55,11 @@ typedef void (*InvokeCallbackFunction)(InvokeCallback p_callback, CallbackData p
  *
  * @return A pointer to created \ref GodotInstance GDExtension object or nullptr if there was an error.
  */
-LIBGODOT_API GDExtensionObjectPtr libgodot_create_godot_instance(int p_argc, char *p_argv[], GDExtensionInitializationFunction p_init_func, InvokeCallbackFunction p_async_func, ExecutorData p_async_data, InvokeCallbackFunction p_sync_func, ExecutorData p_sync_data);
+LIBGODOT_API GDExtensionObjectPtr libgodot_create_godot_instance(int p_argc, char *p_argv[], GDExtensionInitializationFunction p_init_func);
 
 /**
  * @name libgodot_destroy_godot_instance
- * @since 4.4
+ * @since 4.6
  *
  * Destroys an existing Godot instance.
  *
@@ -77,5 +71,3 @@ LIBGODOT_API void libgodot_destroy_godot_instance(GDExtensionObjectPtr p_godot_i
 #ifdef __cplusplus
 }
 #endif
-
-#endif // LIBGODOT_H
