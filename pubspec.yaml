@@ -51,7 +51,7 @@ flutter:
         pluginClass: LibgodotPlugin
         
 ffigen:
-  output: 'lib/generated_bindings.dart'
+  output: 'lib/godot/core/gdextension_ffi_bindings.dart'
   name: GDExtensionFFI
   headers:
     entry-points:

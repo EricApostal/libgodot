@@ -2,7 +2,7 @@
 Embedding Godot in Flutter
 
 ## Getting Started
-Uses LibGodot to embed Godot 4.4 as a library in Flutter.
+Uses LibGodot to embed Godot 4.6 as a library in Flutter.
 
 ### Progress
 

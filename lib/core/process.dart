@@ -267,7 +267,7 @@ class LibGodotProcess {
 
     final instance = interface.libgodot_create_godot_instance(
       argc,
-      argv,
+      args
       _initCallbackPtr,
       _asyncExecutorPtr,
       ffi.nullptr,

@@ -7,11 +7,11 @@ import 'dart:ffi' as ffi;
 class GDExtensionFFI {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-      _lookup;
+  _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
   GDExtensionFFI(ffi.DynamicLibrary dynamicLibrary)
-      : _lookup = dynamicLibrary.lookup;
+    : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
   GDExtensionFFI.fromLookup(
@@ -19,7 +19,7 @@ class GDExtensionFFI {
   ) : _lookup = lookup;
 
   /// @name libgodot_create_godot_instance
-  /// @since 4.4
+  /// @since 4.6
   ///
   /// Creates a new Godot instance.
   ///
@@ -32,47 +32,32 @@ class GDExtensionFFI {
     int p_argc,
     ffi.Pointer<ffi.Pointer<ffi.Char>> p_argv,
     GDExtensionInitializationFunction p_init_func,
-    InvokeCallbackFunction$1 p_async_func,
-    ExecutorData p_async_data,
-    InvokeCallbackFunction$1 p_sync_func,
-    ExecutorData p_sync_data,
   ) {
-    return _libgodot_create_godot_instance(
-      p_argc,
-      p_argv,
-      p_init_func,
-      p_async_func,
-      p_async_data,
-      p_sync_func,
-      p_sync_data,
-    );
+    return _libgodot_create_godot_instance(p_argc, p_argv, p_init_func);
   }
 
-  late final _libgodot_create_godot_instancePtr = _lookup<
-      ffi.NativeFunction<
+  late final _libgodot_create_godot_instancePtr =
+      _lookup<
+        ffi.NativeFunction<
           GDExtensionObjectPtr Function(
             ffi.Int,
             ffi.Pointer<ffi.Pointer<ffi.Char>>,
             GDExtensionInitializationFunction,
-            InvokeCallbackFunction$1,
-            ExecutorData,
-            InvokeCallbackFunction$1,
-            ExecutorData,
-          )>>('libgodot_create_godot_instance');
+          )
+        >
+      >('libgodot_create_godot_instance');
   late final _libgodot_create_godot_instance =
-      _libgodot_create_godot_instancePtr.asFunction<
-          GDExtensionObjectPtr Function(
-            int,
-            ffi.Pointer<ffi.Pointer<ffi.Char>>,
-            GDExtensionInitializationFunction,
-            InvokeCallbackFunction$1,
-            ExecutorData,
-            InvokeCallbackFunction$1,
-            ExecutorData,
-          )>();
+      _libgodot_create_godot_instancePtr
+          .asFunction<
+            GDExtensionObjectPtr Function(
+              int,
+              ffi.Pointer<ffi.Pointer<ffi.Char>>,
+              GDExtensionInitializationFunction,
+            )
+          >();
 
   /// @name libgodot_destroy_godot_instance
-  /// @since 4.4
+  /// @since 4.6
   ///
   /// Destroys an existing Godot instance.
   ///
@@ -83,8 +68,8 @@ class GDExtensionFFI {
 
   late final _libgodot_destroy_godot_instancePtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(GDExtensionObjectPtr)>>(
-    'libgodot_destroy_godot_instance',
-  );
+        'libgodot_destroy_godot_instance',
+      );
   late final _libgodot_destroy_godot_instance =
       _libgodot_destroy_godot_instancePtr
           .asFunction<void Function(GDExtensionObjectPtr)>();
@@ -162,9 +147,10 @@ typedef __darwin_uid_t = __uint32_t;
 typedef __darwin_useconds_t = __uint32_t;
 
 final class __darwin_pthread_handler_rec extends ffi.Struct {
-  external ffi
-      .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
-      __routine;
+  external ffi.Pointer<
+    ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>
+  >
+  __routine;
 
   external ffi.Pointer<ffi.Void> __arg;
 
@@ -373,50 +359,50 @@ enum GDExtensionVariantType {
   const GDExtensionVariantType(this.value);
 
   static GDExtensionVariantType fromValue(int value) => switch (value) {
-        0 => GDEXTENSION_VARIANT_TYPE_NIL,
-        1 => GDEXTENSION_VARIANT_TYPE_BOOL,
-        2 => GDEXTENSION_VARIANT_TYPE_INT,
-        3 => GDEXTENSION_VARIANT_TYPE_FLOAT,
-        4 => GDEXTENSION_VARIANT_TYPE_STRING,
-        5 => GDEXTENSION_VARIANT_TYPE_VECTOR2,
-        6 => GDEXTENSION_VARIANT_TYPE_VECTOR2I,
-        7 => GDEXTENSION_VARIANT_TYPE_RECT2,
-        8 => GDEXTENSION_VARIANT_TYPE_RECT2I,
-        9 => GDEXTENSION_VARIANT_TYPE_VECTOR3,
-        10 => GDEXTENSION_VARIANT_TYPE_VECTOR3I,
-        11 => GDEXTENSION_VARIANT_TYPE_TRANSFORM2D,
-        12 => GDEXTENSION_VARIANT_TYPE_VECTOR4,
-        13 => GDEXTENSION_VARIANT_TYPE_VECTOR4I,
-        14 => GDEXTENSION_VARIANT_TYPE_PLANE,
-        15 => GDEXTENSION_VARIANT_TYPE_QUATERNION,
-        16 => GDEXTENSION_VARIANT_TYPE_AABB,
-        17 => GDEXTENSION_VARIANT_TYPE_BASIS,
-        18 => GDEXTENSION_VARIANT_TYPE_TRANSFORM3D,
-        19 => GDEXTENSION_VARIANT_TYPE_PROJECTION,
-        20 => GDEXTENSION_VARIANT_TYPE_COLOR,
-        21 => GDEXTENSION_VARIANT_TYPE_STRING_NAME,
-        22 => GDEXTENSION_VARIANT_TYPE_NODE_PATH,
-        23 => GDEXTENSION_VARIANT_TYPE_RID,
-        24 => GDEXTENSION_VARIANT_TYPE_OBJECT,
-        25 => GDEXTENSION_VARIANT_TYPE_CALLABLE,
-        26 => GDEXTENSION_VARIANT_TYPE_SIGNAL,
-        27 => GDEXTENSION_VARIANT_TYPE_DICTIONARY,
-        28 => GDEXTENSION_VARIANT_TYPE_ARRAY,
-        29 => GDEXTENSION_VARIANT_TYPE_PACKED_BYTE_ARRAY,
-        30 => GDEXTENSION_VARIANT_TYPE_PACKED_INT32_ARRAY,
-        31 => GDEXTENSION_VARIANT_TYPE_PACKED_INT64_ARRAY,
-        32 => GDEXTENSION_VARIANT_TYPE_PACKED_FLOAT32_ARRAY,
-        33 => GDEXTENSION_VARIANT_TYPE_PACKED_FLOAT64_ARRAY,
-        34 => GDEXTENSION_VARIANT_TYPE_PACKED_STRING_ARRAY,
-        35 => GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR2_ARRAY,
-        36 => GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR3_ARRAY,
-        37 => GDEXTENSION_VARIANT_TYPE_PACKED_COLOR_ARRAY,
-        38 => GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR4_ARRAY,
-        39 => GDEXTENSION_VARIANT_TYPE_VARIANT_MAX,
-        _ => throw ArgumentError(
-            'Unknown value for GDExtensionVariantType: $value',
-          ),
-      };
+    0 => GDEXTENSION_VARIANT_TYPE_NIL,
+    1 => GDEXTENSION_VARIANT_TYPE_BOOL,
+    2 => GDEXTENSION_VARIANT_TYPE_INT,
+    3 => GDEXTENSION_VARIANT_TYPE_FLOAT,
+    4 => GDEXTENSION_VARIANT_TYPE_STRING,
+    5 => GDEXTENSION_VARIANT_TYPE_VECTOR2,
+    6 => GDEXTENSION_VARIANT_TYPE_VECTOR2I,
+    7 => GDEXTENSION_VARIANT_TYPE_RECT2,
+    8 => GDEXTENSION_VARIANT_TYPE_RECT2I,
+    9 => GDEXTENSION_VARIANT_TYPE_VECTOR3,
+    10 => GDEXTENSION_VARIANT_TYPE_VECTOR3I,
+    11 => GDEXTENSION_VARIANT_TYPE_TRANSFORM2D,
+    12 => GDEXTENSION_VARIANT_TYPE_VECTOR4,
+    13 => GDEXTENSION_VARIANT_TYPE_VECTOR4I,
+    14 => GDEXTENSION_VARIANT_TYPE_PLANE,
+    15 => GDEXTENSION_VARIANT_TYPE_QUATERNION,
+    16 => GDEXTENSION_VARIANT_TYPE_AABB,
+    17 => GDEXTENSION_VARIANT_TYPE_BASIS,
+    18 => GDEXTENSION_VARIANT_TYPE_TRANSFORM3D,
+    19 => GDEXTENSION_VARIANT_TYPE_PROJECTION,
+    20 => GDEXTENSION_VARIANT_TYPE_COLOR,
+    21 => GDEXTENSION_VARIANT_TYPE_STRING_NAME,
+    22 => GDEXTENSION_VARIANT_TYPE_NODE_PATH,
+    23 => GDEXTENSION_VARIANT_TYPE_RID,
+    24 => GDEXTENSION_VARIANT_TYPE_OBJECT,
+    25 => GDEXTENSION_VARIANT_TYPE_CALLABLE,
+    26 => GDEXTENSION_VARIANT_TYPE_SIGNAL,
+    27 => GDEXTENSION_VARIANT_TYPE_DICTIONARY,
+    28 => GDEXTENSION_VARIANT_TYPE_ARRAY,
+    29 => GDEXTENSION_VARIANT_TYPE_PACKED_BYTE_ARRAY,
+    30 => GDEXTENSION_VARIANT_TYPE_PACKED_INT32_ARRAY,
+    31 => GDEXTENSION_VARIANT_TYPE_PACKED_INT64_ARRAY,
+    32 => GDEXTENSION_VARIANT_TYPE_PACKED_FLOAT32_ARRAY,
+    33 => GDEXTENSION_VARIANT_TYPE_PACKED_FLOAT64_ARRAY,
+    34 => GDEXTENSION_VARIANT_TYPE_PACKED_STRING_ARRAY,
+    35 => GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR2_ARRAY,
+    36 => GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR3_ARRAY,
+    37 => GDEXTENSION_VARIANT_TYPE_PACKED_COLOR_ARRAY,
+    38 => GDEXTENSION_VARIANT_TYPE_PACKED_VECTOR4_ARRAY,
+    39 => GDEXTENSION_VARIANT_TYPE_VARIANT_MAX,
+    _ => throw ArgumentError(
+      'Unknown value for GDExtensionVariantType: $value',
+    ),
+  };
 }
 
 enum GDExtensionVariantOperator {
@@ -451,36 +437,36 @@ enum GDExtensionVariantOperator {
   const GDExtensionVariantOperator(this.value);
 
   static GDExtensionVariantOperator fromValue(int value) => switch (value) {
-        0 => GDEXTENSION_VARIANT_OP_EQUAL,
-        1 => GDEXTENSION_VARIANT_OP_NOT_EQUAL,
-        2 => GDEXTENSION_VARIANT_OP_LESS,
-        3 => GDEXTENSION_VARIANT_OP_LESS_EQUAL,
-        4 => GDEXTENSION_VARIANT_OP_GREATER,
-        5 => GDEXTENSION_VARIANT_OP_GREATER_EQUAL,
-        6 => GDEXTENSION_VARIANT_OP_ADD,
-        7 => GDEXTENSION_VARIANT_OP_SUBTRACT,
-        8 => GDEXTENSION_VARIANT_OP_MULTIPLY,
-        9 => GDEXTENSION_VARIANT_OP_DIVIDE,
-        10 => GDEXTENSION_VARIANT_OP_NEGATE,
-        11 => GDEXTENSION_VARIANT_OP_POSITIVE,
-        12 => GDEXTENSION_VARIANT_OP_MODULE,
-        13 => GDEXTENSION_VARIANT_OP_POWER,
-        14 => GDEXTENSION_VARIANT_OP_SHIFT_LEFT,
-        15 => GDEXTENSION_VARIANT_OP_SHIFT_RIGHT,
-        16 => GDEXTENSION_VARIANT_OP_BIT_AND,
-        17 => GDEXTENSION_VARIANT_OP_BIT_OR,
-        18 => GDEXTENSION_VARIANT_OP_BIT_XOR,
-        19 => GDEXTENSION_VARIANT_OP_BIT_NEGATE,
-        20 => GDEXTENSION_VARIANT_OP_AND,
-        21 => GDEXTENSION_VARIANT_OP_OR,
-        22 => GDEXTENSION_VARIANT_OP_XOR,
-        23 => GDEXTENSION_VARIANT_OP_NOT,
-        24 => GDEXTENSION_VARIANT_OP_IN,
-        25 => GDEXTENSION_VARIANT_OP_MAX,
-        _ => throw ArgumentError(
-            'Unknown value for GDExtensionVariantOperator: $value',
-          ),
-      };
+    0 => GDEXTENSION_VARIANT_OP_EQUAL,
+    1 => GDEXTENSION_VARIANT_OP_NOT_EQUAL,
+    2 => GDEXTENSION_VARIANT_OP_LESS,
+    3 => GDEXTENSION_VARIANT_OP_LESS_EQUAL,
+    4 => GDEXTENSION_VARIANT_OP_GREATER,
+    5 => GDEXTENSION_VARIANT_OP_GREATER_EQUAL,
+    6 => GDEXTENSION_VARIANT_OP_ADD,
+    7 => GDEXTENSION_VARIANT_OP_SUBTRACT,
+    8 => GDEXTENSION_VARIANT_OP_MULTIPLY,
+    9 => GDEXTENSION_VARIANT_OP_DIVIDE,
+    10 => GDEXTENSION_VARIANT_OP_NEGATE,
+    11 => GDEXTENSION_VARIANT_OP_POSITIVE,
+    12 => GDEXTENSION_VARIANT_OP_MODULE,
+    13 => GDEXTENSION_VARIANT_OP_POWER,
+    14 => GDEXTENSION_VARIANT_OP_SHIFT_LEFT,
+    15 => GDEXTENSION_VARIANT_OP_SHIFT_RIGHT,
+    16 => GDEXTENSION_VARIANT_OP_BIT_AND,
+    17 => GDEXTENSION_VARIANT_OP_BIT_OR,
+    18 => GDEXTENSION_VARIANT_OP_BIT_XOR,
+    19 => GDEXTENSION_VARIANT_OP_BIT_NEGATE,
+    20 => GDEXTENSION_VARIANT_OP_AND,
+    21 => GDEXTENSION_VARIANT_OP_OR,
+    22 => GDEXTENSION_VARIANT_OP_XOR,
+    23 => GDEXTENSION_VARIANT_OP_NOT,
+    24 => GDEXTENSION_VARIANT_OP_IN,
+    25 => GDEXTENSION_VARIANT_OP_MAX,
+    _ => throw ArgumentError(
+      'Unknown value for GDExtensionVariantOperator: $value',
+    ),
+  };
 }
 
 typedef GDExtensionVariantPtr = ffi.Pointer<ffi.Void>;
@@ -521,17 +507,17 @@ enum GDExtensionCallErrorType {
   const GDExtensionCallErrorType(this.value);
 
   static GDExtensionCallErrorType fromValue(int value) => switch (value) {
-        0 => GDEXTENSION_CALL_OK,
-        1 => GDEXTENSION_CALL_ERROR_INVALID_METHOD,
-        2 => GDEXTENSION_CALL_ERROR_INVALID_ARGUMENT,
-        3 => GDEXTENSION_CALL_ERROR_TOO_MANY_ARGUMENTS,
-        4 => GDEXTENSION_CALL_ERROR_TOO_FEW_ARGUMENTS,
-        5 => GDEXTENSION_CALL_ERROR_INSTANCE_IS_NULL,
-        6 => GDEXTENSION_CALL_ERROR_METHOD_NOT_CONST,
-        _ => throw ArgumentError(
-            'Unknown value for GDExtensionCallErrorType: $value',
-          ),
-      };
+    0 => GDEXTENSION_CALL_OK,
+    1 => GDEXTENSION_CALL_ERROR_INVALID_METHOD,
+    2 => GDEXTENSION_CALL_ERROR_INVALID_ARGUMENT,
+    3 => GDEXTENSION_CALL_ERROR_TOO_MANY_ARGUMENTS,
+    4 => GDEXTENSION_CALL_ERROR_TOO_FEW_ARGUMENTS,
+    5 => GDEXTENSION_CALL_ERROR_INSTANCE_IS_NULL,
+    6 => GDEXTENSION_CALL_ERROR_METHOD_NOT_CONST,
+    _ => throw ArgumentError(
+      'Unknown value for GDExtensionCallErrorType: $value',
+    ),
+  };
 }
 
 final class GDExtensionCallError extends ffi.Struct {
@@ -548,186 +534,220 @@ final class GDExtensionCallError extends ffi.Struct {
   external int expected;
 }
 
-typedef GDExtensionVariantFromTypeConstructorFuncFunction = ffi.Void Function(
-    GDExtensionUninitializedVariantPtr, GDExtensionTypePtr);
-typedef DartGDExtensionVariantFromTypeConstructorFuncFunction = void Function(
-    GDExtensionUninitializedVariantPtr, GDExtensionTypePtr);
-typedef GDExtensionVariantFromTypeConstructorFunc = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionVariantFromTypeConstructorFuncFunction>>;
-typedef GDExtensionTypeFromVariantConstructorFuncFunction = ffi.Void Function(
-    GDExtensionUninitializedTypePtr, GDExtensionVariantPtr);
-typedef DartGDExtensionTypeFromVariantConstructorFuncFunction = void Function(
-    GDExtensionUninitializedTypePtr, GDExtensionVariantPtr);
-typedef GDExtensionTypeFromVariantConstructorFunc = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionTypeFromVariantConstructorFuncFunction>>;
-typedef GDExtensionVariantGetInternalPtrFuncFunction = ffi.Pointer<ffi.Void>
-    Function(GDExtensionVariantPtr);
-typedef GDExtensionVariantGetInternalPtrFunc = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionVariantGetInternalPtrFuncFunction>>;
-typedef GDExtensionPtrOperatorEvaluatorFunction = ffi.Void Function(
-  GDExtensionConstTypePtr p_left,
-  GDExtensionConstTypePtr p_right,
-  GDExtensionTypePtr r_result,
-);
-typedef DartGDExtensionPtrOperatorEvaluatorFunction = void Function(
-  GDExtensionConstTypePtr p_left,
-  GDExtensionConstTypePtr p_right,
-  GDExtensionTypePtr r_result,
-);
-typedef GDExtensionPtrOperatorEvaluator
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrOperatorEvaluatorFunction>>;
-typedef GDExtensionPtrBuiltInMethodFunction = ffi.Void Function(
-  GDExtensionTypePtr p_base,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_return,
-  ffi.Int p_argument_count,
-);
-typedef DartGDExtensionPtrBuiltInMethodFunction = void Function(
-  GDExtensionTypePtr p_base,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_return,
-  int p_argument_count,
-);
-typedef GDExtensionPtrBuiltInMethod
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrBuiltInMethodFunction>>;
-typedef GDExtensionPtrConstructorFunction = ffi.Void Function(
-  GDExtensionUninitializedTypePtr p_base,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-);
-typedef DartGDExtensionPtrConstructorFunction = void Function(
-  GDExtensionUninitializedTypePtr p_base,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-);
-typedef GDExtensionPtrConstructor
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrConstructorFunction>>;
-typedef GDExtensionPtrDestructorFunction = ffi.Void Function(
-    GDExtensionTypePtr p_base);
-typedef DartGDExtensionPtrDestructorFunction = void Function(
-    GDExtensionTypePtr p_base);
-typedef GDExtensionPtrDestructor
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrDestructorFunction>>;
-typedef GDExtensionPtrSetterFunction = ffi.Void Function(
-  GDExtensionTypePtr p_base,
-  GDExtensionConstTypePtr p_value,
-);
-typedef DartGDExtensionPtrSetterFunction = void Function(
-    GDExtensionTypePtr p_base, GDExtensionConstTypePtr p_value);
-typedef GDExtensionPtrSetter
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrSetterFunction>>;
-typedef GDExtensionPtrGetterFunction = ffi.Void Function(
-  GDExtensionConstTypePtr p_base,
-  GDExtensionTypePtr r_value,
-);
-typedef DartGDExtensionPtrGetterFunction = void Function(
-    GDExtensionConstTypePtr p_base, GDExtensionTypePtr r_value);
-typedef GDExtensionPtrGetter
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrGetterFunction>>;
-typedef GDExtensionPtrIndexedSetterFunction = ffi.Void Function(
-  GDExtensionTypePtr p_base,
-  GDExtensionInt p_index,
-  GDExtensionConstTypePtr p_value,
-);
-typedef DartGDExtensionPtrIndexedSetterFunction = void Function(
-  GDExtensionTypePtr p_base,
-  DartGDExtensionInt p_index,
-  GDExtensionConstTypePtr p_value,
-);
-typedef GDExtensionPtrIndexedSetter
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrIndexedSetterFunction>>;
-typedef GDExtensionPtrIndexedGetterFunction = ffi.Void Function(
-  GDExtensionConstTypePtr p_base,
-  GDExtensionInt p_index,
-  GDExtensionTypePtr r_value,
-);
-typedef DartGDExtensionPtrIndexedGetterFunction = void Function(
-  GDExtensionConstTypePtr p_base,
-  DartGDExtensionInt p_index,
-  GDExtensionTypePtr r_value,
-);
-typedef GDExtensionPtrIndexedGetter
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrIndexedGetterFunction>>;
-typedef GDExtensionPtrKeyedSetterFunction = ffi.Void Function(
-  GDExtensionTypePtr p_base,
-  GDExtensionConstTypePtr p_key,
-  GDExtensionConstTypePtr p_value,
-);
-typedef DartGDExtensionPtrKeyedSetterFunction = void Function(
-  GDExtensionTypePtr p_base,
-  GDExtensionConstTypePtr p_key,
-  GDExtensionConstTypePtr p_value,
-);
-typedef GDExtensionPtrKeyedSetter
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrKeyedSetterFunction>>;
-typedef GDExtensionPtrKeyedGetterFunction = ffi.Void Function(
-  GDExtensionConstTypePtr p_base,
-  GDExtensionConstTypePtr p_key,
-  GDExtensionTypePtr r_value,
-);
-typedef DartGDExtensionPtrKeyedGetterFunction = void Function(
-  GDExtensionConstTypePtr p_base,
-  GDExtensionConstTypePtr p_key,
-  GDExtensionTypePtr r_value,
-);
-typedef GDExtensionPtrKeyedGetter
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrKeyedGetterFunction>>;
-typedef GDExtensionPtrKeyedCheckerFunction = ffi.Uint32 Function(
-  GDExtensionConstVariantPtr p_base,
-  GDExtensionConstVariantPtr p_key,
-);
-typedef DartGDExtensionPtrKeyedCheckerFunction = int Function(
-  GDExtensionConstVariantPtr p_base,
-  GDExtensionConstVariantPtr p_key,
-);
-typedef GDExtensionPtrKeyedChecker
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrKeyedCheckerFunction>>;
-typedef GDExtensionPtrUtilityFunctionFunction = ffi.Void Function(
-  GDExtensionTypePtr r_return,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  ffi.Int p_argument_count,
-);
-typedef DartGDExtensionPtrUtilityFunctionFunction = void Function(
-  GDExtensionTypePtr r_return,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  int p_argument_count,
-);
-typedef GDExtensionPtrUtilityFunction
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionPtrUtilityFunctionFunction>>;
+typedef GDExtensionVariantFromTypeConstructorFuncFunction =
+    ffi.Void Function(GDExtensionUninitializedVariantPtr, GDExtensionTypePtr);
+typedef DartGDExtensionVariantFromTypeConstructorFuncFunction =
+    void Function(GDExtensionUninitializedVariantPtr, GDExtensionTypePtr);
+typedef GDExtensionVariantFromTypeConstructorFunc =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionVariantFromTypeConstructorFuncFunction>
+    >;
+typedef GDExtensionTypeFromVariantConstructorFuncFunction =
+    ffi.Void Function(GDExtensionUninitializedTypePtr, GDExtensionVariantPtr);
+typedef DartGDExtensionTypeFromVariantConstructorFuncFunction =
+    void Function(GDExtensionUninitializedTypePtr, GDExtensionVariantPtr);
+typedef GDExtensionTypeFromVariantConstructorFunc =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionTypeFromVariantConstructorFuncFunction>
+    >;
+typedef GDExtensionVariantGetInternalPtrFuncFunction =
+    ffi.Pointer<ffi.Void> Function(GDExtensionVariantPtr);
+typedef GDExtensionVariantGetInternalPtrFunc =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionVariantGetInternalPtrFuncFunction>
+    >;
+typedef GDExtensionPtrOperatorEvaluatorFunction =
+    ffi.Void Function(
+      GDExtensionConstTypePtr p_left,
+      GDExtensionConstTypePtr p_right,
+      GDExtensionTypePtr r_result,
+    );
+typedef DartGDExtensionPtrOperatorEvaluatorFunction =
+    void Function(
+      GDExtensionConstTypePtr p_left,
+      GDExtensionConstTypePtr p_right,
+      GDExtensionTypePtr r_result,
+    );
+typedef GDExtensionPtrOperatorEvaluator =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrOperatorEvaluatorFunction>>;
+typedef GDExtensionPtrBuiltInMethodFunction =
+    ffi.Void Function(
+      GDExtensionTypePtr p_base,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_return,
+      ffi.Int p_argument_count,
+    );
+typedef DartGDExtensionPtrBuiltInMethodFunction =
+    void Function(
+      GDExtensionTypePtr p_base,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_return,
+      int p_argument_count,
+    );
+typedef GDExtensionPtrBuiltInMethod =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrBuiltInMethodFunction>>;
+typedef GDExtensionPtrConstructorFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedTypePtr p_base,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+    );
+typedef DartGDExtensionPtrConstructorFunction =
+    void Function(
+      GDExtensionUninitializedTypePtr p_base,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+    );
+typedef GDExtensionPtrConstructor =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrConstructorFunction>>;
+typedef GDExtensionPtrDestructorFunction =
+    ffi.Void Function(GDExtensionTypePtr p_base);
+typedef DartGDExtensionPtrDestructorFunction =
+    void Function(GDExtensionTypePtr p_base);
+typedef GDExtensionPtrDestructor =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrDestructorFunction>>;
+typedef GDExtensionPtrSetterFunction =
+    ffi.Void Function(
+      GDExtensionTypePtr p_base,
+      GDExtensionConstTypePtr p_value,
+    );
+typedef DartGDExtensionPtrSetterFunction =
+    void Function(GDExtensionTypePtr p_base, GDExtensionConstTypePtr p_value);
+typedef GDExtensionPtrSetter =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrSetterFunction>>;
+typedef GDExtensionPtrGetterFunction =
+    ffi.Void Function(
+      GDExtensionConstTypePtr p_base,
+      GDExtensionTypePtr r_value,
+    );
+typedef DartGDExtensionPtrGetterFunction =
+    void Function(GDExtensionConstTypePtr p_base, GDExtensionTypePtr r_value);
+typedef GDExtensionPtrGetter =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrGetterFunction>>;
+typedef GDExtensionPtrIndexedSetterFunction =
+    ffi.Void Function(
+      GDExtensionTypePtr p_base,
+      GDExtensionInt p_index,
+      GDExtensionConstTypePtr p_value,
+    );
+typedef DartGDExtensionPtrIndexedSetterFunction =
+    void Function(
+      GDExtensionTypePtr p_base,
+      DartGDExtensionInt p_index,
+      GDExtensionConstTypePtr p_value,
+    );
+typedef GDExtensionPtrIndexedSetter =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrIndexedSetterFunction>>;
+typedef GDExtensionPtrIndexedGetterFunction =
+    ffi.Void Function(
+      GDExtensionConstTypePtr p_base,
+      GDExtensionInt p_index,
+      GDExtensionTypePtr r_value,
+    );
+typedef DartGDExtensionPtrIndexedGetterFunction =
+    void Function(
+      GDExtensionConstTypePtr p_base,
+      DartGDExtensionInt p_index,
+      GDExtensionTypePtr r_value,
+    );
+typedef GDExtensionPtrIndexedGetter =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrIndexedGetterFunction>>;
+typedef GDExtensionPtrKeyedSetterFunction =
+    ffi.Void Function(
+      GDExtensionTypePtr p_base,
+      GDExtensionConstTypePtr p_key,
+      GDExtensionConstTypePtr p_value,
+    );
+typedef DartGDExtensionPtrKeyedSetterFunction =
+    void Function(
+      GDExtensionTypePtr p_base,
+      GDExtensionConstTypePtr p_key,
+      GDExtensionConstTypePtr p_value,
+    );
+typedef GDExtensionPtrKeyedSetter =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrKeyedSetterFunction>>;
+typedef GDExtensionPtrKeyedGetterFunction =
+    ffi.Void Function(
+      GDExtensionConstTypePtr p_base,
+      GDExtensionConstTypePtr p_key,
+      GDExtensionTypePtr r_value,
+    );
+typedef DartGDExtensionPtrKeyedGetterFunction =
+    void Function(
+      GDExtensionConstTypePtr p_base,
+      GDExtensionConstTypePtr p_key,
+      GDExtensionTypePtr r_value,
+    );
+typedef GDExtensionPtrKeyedGetter =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrKeyedGetterFunction>>;
+typedef GDExtensionPtrKeyedCheckerFunction =
+    ffi.Uint32 Function(
+      GDExtensionConstVariantPtr p_base,
+      GDExtensionConstVariantPtr p_key,
+    );
+typedef DartGDExtensionPtrKeyedCheckerFunction =
+    int Function(
+      GDExtensionConstVariantPtr p_base,
+      GDExtensionConstVariantPtr p_key,
+    );
+typedef GDExtensionPtrKeyedChecker =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrKeyedCheckerFunction>>;
+typedef GDExtensionPtrUtilityFunctionFunction =
+    ffi.Void Function(
+      GDExtensionTypePtr r_return,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      ffi.Int p_argument_count,
+    );
+typedef DartGDExtensionPtrUtilityFunctionFunction =
+    void Function(
+      GDExtensionTypePtr r_return,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      int p_argument_count,
+    );
+typedef GDExtensionPtrUtilityFunction =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionPtrUtilityFunctionFunction>>;
 typedef GDExtensionClassConstructorFunction = GDExtensionObjectPtr Function();
-typedef GDExtensionClassConstructor
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassConstructorFunction>>;
-typedef GDExtensionInstanceBindingCreateCallbackFunction = ffi.Pointer<ffi.Void>
-    Function(
-  ffi.Pointer<ffi.Void> p_token,
-  ffi.Pointer<ffi.Void> p_instance,
-);
-typedef GDExtensionInstanceBindingCreateCallback = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInstanceBindingCreateCallbackFunction>>;
-typedef GDExtensionInstanceBindingFreeCallbackFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Void> p_token,
-  ffi.Pointer<ffi.Void> p_instance,
-  ffi.Pointer<ffi.Void> p_binding,
-);
-typedef DartGDExtensionInstanceBindingFreeCallbackFunction = void Function(
-  ffi.Pointer<ffi.Void> p_token,
-  ffi.Pointer<ffi.Void> p_instance,
-  ffi.Pointer<ffi.Void> p_binding,
-);
-typedef GDExtensionInstanceBindingFreeCallback = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInstanceBindingFreeCallbackFunction>>;
-typedef GDExtensionInstanceBindingReferenceCallbackFunction = GDExtensionBool
-    Function(
-  ffi.Pointer<ffi.Void> p_token,
-  ffi.Pointer<ffi.Void> p_binding,
-  GDExtensionBool p_reference,
-);
-typedef DartGDExtensionInstanceBindingReferenceCallbackFunction
-    = DartGDExtensionBool Function(
-  ffi.Pointer<ffi.Void> p_token,
-  ffi.Pointer<ffi.Void> p_binding,
-  DartGDExtensionBool p_reference,
-);
-typedef GDExtensionInstanceBindingReferenceCallback = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInstanceBindingReferenceCallbackFunction>>;
+typedef GDExtensionClassConstructor =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassConstructorFunction>>;
+typedef GDExtensionInstanceBindingCreateCallbackFunction =
+    ffi.Pointer<ffi.Void> Function(
+      ffi.Pointer<ffi.Void> p_token,
+      ffi.Pointer<ffi.Void> p_instance,
+    );
+typedef GDExtensionInstanceBindingCreateCallback =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInstanceBindingCreateCallbackFunction>
+    >;
+typedef GDExtensionInstanceBindingFreeCallbackFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> p_token,
+      ffi.Pointer<ffi.Void> p_instance,
+      ffi.Pointer<ffi.Void> p_binding,
+    );
+typedef DartGDExtensionInstanceBindingFreeCallbackFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> p_token,
+      ffi.Pointer<ffi.Void> p_instance,
+      ffi.Pointer<ffi.Void> p_binding,
+    );
+typedef GDExtensionInstanceBindingFreeCallback =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInstanceBindingFreeCallbackFunction>
+    >;
+typedef GDExtensionInstanceBindingReferenceCallbackFunction =
+    GDExtensionBool Function(
+      ffi.Pointer<ffi.Void> p_token,
+      ffi.Pointer<ffi.Void> p_binding,
+      GDExtensionBool p_reference,
+    );
+typedef DartGDExtensionInstanceBindingReferenceCallbackFunction =
+    DartGDExtensionBool Function(
+      ffi.Pointer<ffi.Void> p_token,
+      ffi.Pointer<ffi.Void> p_binding,
+      DartGDExtensionBool p_reference,
+    );
+typedef GDExtensionInstanceBindingReferenceCallback =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInstanceBindingReferenceCallbackFunction>
+    >;
 
 final class GDExtensionInstanceBindingCallbacks extends ffi.Struct {
   external GDExtensionInstanceBindingCreateCallback create_callback;
@@ -738,36 +758,40 @@ final class GDExtensionInstanceBindingCallbacks extends ffi.Struct {
 }
 
 typedef GDExtensionClassInstancePtr = ffi.Pointer<ffi.Void>;
-typedef GDExtensionClassSetFunction = GDExtensionBool Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionConstVariantPtr p_value,
-);
-typedef DartGDExtensionClassSetFunction = DartGDExtensionBool Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionConstVariantPtr p_value,
-);
-typedef GDExtensionClassSet
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassSetFunction>>;
-typedef GDExtensionClassGetFunction = GDExtensionBool Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionVariantPtr r_ret,
-);
-typedef DartGDExtensionClassGetFunction = DartGDExtensionBool Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionVariantPtr r_ret,
-);
-typedef GDExtensionClassGet
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetFunction>>;
-typedef GDExtensionClassGetRIDFunction = ffi.Uint64 Function(
-    GDExtensionClassInstancePtr p_instance);
-typedef DartGDExtensionClassGetRIDFunction = int Function(
-    GDExtensionClassInstancePtr p_instance);
-typedef GDExtensionClassGetRID
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetRIDFunction>>;
+typedef GDExtensionClassSetFunction =
+    GDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionConstVariantPtr p_value,
+    );
+typedef DartGDExtensionClassSetFunction =
+    DartGDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionConstVariantPtr p_value,
+    );
+typedef GDExtensionClassSet =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassSetFunction>>;
+typedef GDExtensionClassGetFunction =
+    GDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionVariantPtr r_ret,
+    );
+typedef DartGDExtensionClassGetFunction =
+    DartGDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionVariantPtr r_ret,
+    );
+typedef GDExtensionClassGet =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetFunction>>;
+typedef GDExtensionClassGetRIDFunction =
+    ffi.Uint64 Function(GDExtensionClassInstancePtr p_instance);
+typedef DartGDExtensionClassGetRIDFunction =
+    int Function(GDExtensionClassInstancePtr p_instance);
+typedef GDExtensionClassGetRID =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetRIDFunction>>;
 
 final class GDExtensionPropertyInfo extends ffi.Struct {
   @ffi.UnsignedInt()
@@ -811,214 +835,236 @@ final class GDExtensionMethodInfo extends ffi.Struct {
   external ffi.Pointer<GDExtensionVariantPtr> default_arguments;
 }
 
-typedef GDExtensionClassGetPropertyListFunction
-    = ffi.Pointer<GDExtensionPropertyInfo> Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<ffi.Uint32> r_count,
-);
-typedef GDExtensionClassGetPropertyList
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetPropertyListFunction>>;
-typedef GDExtensionClassFreePropertyListFunction = ffi.Void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_list,
-);
-typedef DartGDExtensionClassFreePropertyListFunction = void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_list,
-);
-typedef GDExtensionClassFreePropertyList
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassFreePropertyListFunction>>;
-typedef GDExtensionClassFreePropertyList2Function = ffi.Void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_list,
-  ffi.Uint32 p_count,
-);
-typedef DartGDExtensionClassFreePropertyList2Function = void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_list,
-  int p_count,
-);
-typedef GDExtensionClassFreePropertyList2 = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionClassFreePropertyList2Function>>;
-typedef GDExtensionClassPropertyCanRevertFunction = GDExtensionBool Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-);
-typedef DartGDExtensionClassPropertyCanRevertFunction = DartGDExtensionBool
-    Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-);
-typedef GDExtensionClassPropertyCanRevert = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionClassPropertyCanRevertFunction>>;
-typedef GDExtensionClassPropertyGetRevertFunction = GDExtensionBool Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionVariantPtr r_ret,
-);
-typedef DartGDExtensionClassPropertyGetRevertFunction = DartGDExtensionBool
-    Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionVariantPtr r_ret,
-);
-typedef GDExtensionClassPropertyGetRevert = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionClassPropertyGetRevertFunction>>;
-typedef GDExtensionClassValidatePropertyFunction = GDExtensionBool Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_property,
-);
-typedef DartGDExtensionClassValidatePropertyFunction = DartGDExtensionBool
-    Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_property,
-);
-typedef GDExtensionClassValidateProperty
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassValidatePropertyFunction>>;
-typedef GDExtensionClassNotificationFunction = ffi.Void Function(
-    GDExtensionClassInstancePtr p_instance, ffi.Int32 p_what);
-typedef DartGDExtensionClassNotificationFunction = void Function(
-    GDExtensionClassInstancePtr p_instance, int p_what);
-typedef GDExtensionClassNotification
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassNotificationFunction>>;
-typedef GDExtensionClassNotification2Function = ffi.Void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Int32 p_what,
-  GDExtensionBool p_reversed,
-);
-typedef DartGDExtensionClassNotification2Function = void Function(
-  GDExtensionClassInstancePtr p_instance,
-  int p_what,
-  DartGDExtensionBool p_reversed,
-);
-typedef GDExtensionClassNotification2
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassNotification2Function>>;
-typedef GDExtensionClassToStringFunction = ffi.Void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-  GDExtensionStringPtr p_out,
-);
-typedef DartGDExtensionClassToStringFunction = void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-  GDExtensionStringPtr p_out,
-);
-typedef GDExtensionClassToString
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassToStringFunction>>;
-typedef GDExtensionClassReferenceFunction = ffi.Void Function(
-    GDExtensionClassInstancePtr p_instance);
-typedef DartGDExtensionClassReferenceFunction = void Function(
-    GDExtensionClassInstancePtr p_instance);
-typedef GDExtensionClassReference
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassReferenceFunction>>;
-typedef GDExtensionClassUnreferenceFunction = ffi.Void Function(
-    GDExtensionClassInstancePtr p_instance);
-typedef DartGDExtensionClassUnreferenceFunction = void Function(
-    GDExtensionClassInstancePtr p_instance);
-typedef GDExtensionClassUnreference
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassUnreferenceFunction>>;
-typedef GDExtensionClassCallVirtualFunction = ffi.Void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_ret,
-);
-typedef DartGDExtensionClassCallVirtualFunction = void Function(
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_ret,
-);
-typedef GDExtensionClassCallVirtual
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassCallVirtualFunction>>;
-typedef GDExtensionClassCreateInstanceFunction = GDExtensionObjectPtr Function(
-    ffi.Pointer<ffi.Void> p_class_userdata);
-typedef GDExtensionClassCreateInstance
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassCreateInstanceFunction>>;
-typedef GDExtensionClassCreateInstance2Function = GDExtensionObjectPtr Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionBool p_notify_postinitialize,
-);
-typedef DartGDExtensionClassCreateInstance2Function = GDExtensionObjectPtr
-    Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  DartGDExtensionBool p_notify_postinitialize,
-);
-typedef GDExtensionClassCreateInstance2
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassCreateInstance2Function>>;
-typedef GDExtensionClassFreeInstanceFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionClassInstancePtr p_instance,
-);
-typedef DartGDExtensionClassFreeInstanceFunction = void Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionClassInstancePtr p_instance,
-);
-typedef GDExtensionClassFreeInstance
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassFreeInstanceFunction>>;
-typedef GDExtensionClassRecreateInstanceFunction = GDExtensionClassInstancePtr
-    Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionObjectPtr p_object,
-);
-typedef GDExtensionClassRecreateInstance
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassRecreateInstanceFunction>>;
-typedef GDExtensionClassGetVirtualFunction = GDExtensionClassCallVirtual
-    Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionConstStringNamePtr p_name,
-);
-typedef GDExtensionClassGetVirtual
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetVirtualFunction>>;
-typedef GDExtensionClassGetVirtual2Function = GDExtensionClassCallVirtual
-    Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionConstStringNamePtr p_name,
-  ffi.Uint32 p_hash,
-);
-typedef DartGDExtensionClassGetVirtual2Function = GDExtensionClassCallVirtual
-    Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionConstStringNamePtr p_name,
-  int p_hash,
-);
-typedef GDExtensionClassGetVirtual2
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetVirtual2Function>>;
-typedef GDExtensionClassGetVirtualCallDataFunction = ffi.Pointer<ffi.Void>
-    Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionConstStringNamePtr p_name,
-);
-typedef GDExtensionClassGetVirtualCallData = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionClassGetVirtualCallDataFunction>>;
-typedef GDExtensionClassGetVirtualCallData2Function = ffi.Pointer<ffi.Void>
-    Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionConstStringNamePtr p_name,
-  ffi.Uint32 p_hash,
-);
-typedef DartGDExtensionClassGetVirtualCallData2Function = ffi.Pointer<ffi.Void>
-    Function(
-  ffi.Pointer<ffi.Void> p_class_userdata,
-  GDExtensionConstStringNamePtr p_name,
-  int p_hash,
-);
-typedef GDExtensionClassGetVirtualCallData2 = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionClassGetVirtualCallData2Function>>;
-typedef GDExtensionClassCallVirtualWithDataFunction = ffi.Void Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  ffi.Pointer<ffi.Void> p_virtual_call_userdata,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_ret,
-);
-typedef DartGDExtensionClassCallVirtualWithDataFunction = void Function(
-  GDExtensionClassInstancePtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  ffi.Pointer<ffi.Void> p_virtual_call_userdata,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_ret,
-);
-typedef GDExtensionClassCallVirtualWithData = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionClassCallVirtualWithDataFunction>>;
+typedef GDExtensionClassGetPropertyListFunction =
+    ffi.Pointer<GDExtensionPropertyInfo> Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<ffi.Uint32> r_count,
+    );
+typedef GDExtensionClassGetPropertyList =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetPropertyListFunction>>;
+typedef GDExtensionClassFreePropertyListFunction =
+    ffi.Void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_list,
+    );
+typedef DartGDExtensionClassFreePropertyListFunction =
+    void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_list,
+    );
+typedef GDExtensionClassFreePropertyList =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassFreePropertyListFunction>>;
+typedef GDExtensionClassFreePropertyList2Function =
+    ffi.Void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_list,
+      ffi.Uint32 p_count,
+    );
+typedef DartGDExtensionClassFreePropertyList2Function =
+    void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_list,
+      int p_count,
+    );
+typedef GDExtensionClassFreePropertyList2 =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassFreePropertyList2Function>>;
+typedef GDExtensionClassPropertyCanRevertFunction =
+    GDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+    );
+typedef DartGDExtensionClassPropertyCanRevertFunction =
+    DartGDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+    );
+typedef GDExtensionClassPropertyCanRevert =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassPropertyCanRevertFunction>>;
+typedef GDExtensionClassPropertyGetRevertFunction =
+    GDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionVariantPtr r_ret,
+    );
+typedef DartGDExtensionClassPropertyGetRevertFunction =
+    DartGDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionVariantPtr r_ret,
+    );
+typedef GDExtensionClassPropertyGetRevert =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassPropertyGetRevertFunction>>;
+typedef GDExtensionClassValidatePropertyFunction =
+    GDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_property,
+    );
+typedef DartGDExtensionClassValidatePropertyFunction =
+    DartGDExtensionBool Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_property,
+    );
+typedef GDExtensionClassValidateProperty =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassValidatePropertyFunction>>;
+typedef GDExtensionClassNotificationFunction =
+    ffi.Void Function(GDExtensionClassInstancePtr p_instance, ffi.Int32 p_what);
+typedef DartGDExtensionClassNotificationFunction =
+    void Function(GDExtensionClassInstancePtr p_instance, int p_what);
+typedef GDExtensionClassNotification =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassNotificationFunction>>;
+typedef GDExtensionClassNotification2Function =
+    ffi.Void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Int32 p_what,
+      GDExtensionBool p_reversed,
+    );
+typedef DartGDExtensionClassNotification2Function =
+    void Function(
+      GDExtensionClassInstancePtr p_instance,
+      int p_what,
+      DartGDExtensionBool p_reversed,
+    );
+typedef GDExtensionClassNotification2 =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassNotification2Function>>;
+typedef GDExtensionClassToStringFunction =
+    ffi.Void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+      GDExtensionStringPtr p_out,
+    );
+typedef DartGDExtensionClassToStringFunction =
+    void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+      GDExtensionStringPtr p_out,
+    );
+typedef GDExtensionClassToString =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassToStringFunction>>;
+typedef GDExtensionClassReferenceFunction =
+    ffi.Void Function(GDExtensionClassInstancePtr p_instance);
+typedef DartGDExtensionClassReferenceFunction =
+    void Function(GDExtensionClassInstancePtr p_instance);
+typedef GDExtensionClassReference =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassReferenceFunction>>;
+typedef GDExtensionClassUnreferenceFunction =
+    ffi.Void Function(GDExtensionClassInstancePtr p_instance);
+typedef DartGDExtensionClassUnreferenceFunction =
+    void Function(GDExtensionClassInstancePtr p_instance);
+typedef GDExtensionClassUnreference =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassUnreferenceFunction>>;
+typedef GDExtensionClassCallVirtualFunction =
+    ffi.Void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_ret,
+    );
+typedef DartGDExtensionClassCallVirtualFunction =
+    void Function(
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_ret,
+    );
+typedef GDExtensionClassCallVirtual =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassCallVirtualFunction>>;
+typedef GDExtensionClassCreateInstanceFunction =
+    GDExtensionObjectPtr Function(ffi.Pointer<ffi.Void> p_class_userdata);
+typedef GDExtensionClassCreateInstance =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassCreateInstanceFunction>>;
+typedef GDExtensionClassCreateInstance2Function =
+    GDExtensionObjectPtr Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionBool p_notify_postinitialize,
+    );
+typedef DartGDExtensionClassCreateInstance2Function =
+    GDExtensionObjectPtr Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      DartGDExtensionBool p_notify_postinitialize,
+    );
+typedef GDExtensionClassCreateInstance2 =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassCreateInstance2Function>>;
+typedef GDExtensionClassFreeInstanceFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionClassInstancePtr p_instance,
+    );
+typedef DartGDExtensionClassFreeInstanceFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionClassInstancePtr p_instance,
+    );
+typedef GDExtensionClassFreeInstance =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassFreeInstanceFunction>>;
+typedef GDExtensionClassRecreateInstanceFunction =
+    GDExtensionClassInstancePtr Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionObjectPtr p_object,
+    );
+typedef GDExtensionClassRecreateInstance =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassRecreateInstanceFunction>>;
+typedef GDExtensionClassGetVirtualFunction =
+    GDExtensionClassCallVirtual Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionConstStringNamePtr p_name,
+    );
+typedef GDExtensionClassGetVirtual =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetVirtualFunction>>;
+typedef GDExtensionClassGetVirtual2Function =
+    GDExtensionClassCallVirtual Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionConstStringNamePtr p_name,
+      ffi.Uint32 p_hash,
+    );
+typedef DartGDExtensionClassGetVirtual2Function =
+    GDExtensionClassCallVirtual Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionConstStringNamePtr p_name,
+      int p_hash,
+    );
+typedef GDExtensionClassGetVirtual2 =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetVirtual2Function>>;
+typedef GDExtensionClassGetVirtualCallDataFunction =
+    ffi.Pointer<ffi.Void> Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionConstStringNamePtr p_name,
+    );
+typedef GDExtensionClassGetVirtualCallData =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassGetVirtualCallDataFunction>>;
+typedef GDExtensionClassGetVirtualCallData2Function =
+    ffi.Pointer<ffi.Void> Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionConstStringNamePtr p_name,
+      ffi.Uint32 p_hash,
+    );
+typedef DartGDExtensionClassGetVirtualCallData2Function =
+    ffi.Pointer<ffi.Void> Function(
+      ffi.Pointer<ffi.Void> p_class_userdata,
+      GDExtensionConstStringNamePtr p_name,
+      int p_hash,
+    );
+typedef GDExtensionClassGetVirtualCallData2 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionClassGetVirtualCallData2Function>
+    >;
+typedef GDExtensionClassCallVirtualWithDataFunction =
+    ffi.Void Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      ffi.Pointer<ffi.Void> p_virtual_call_userdata,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_ret,
+    );
+typedef DartGDExtensionClassCallVirtualWithDataFunction =
+    void Function(
+      GDExtensionClassInstancePtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      ffi.Pointer<ffi.Void> p_virtual_call_userdata,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_ret,
+    );
+typedef GDExtensionClassCallVirtualWithData =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionClassCallVirtualWithDataFunction>
+    >;
 
 final class GDExtensionClassCreationInfo extends ffi.Struct {
   @GDExtensionBool()
@@ -1211,7 +1257,16 @@ final class GDExtensionClassCreationInfo4 extends ffi.Struct {
   external ffi.Pointer<ffi.Void> class_userdata;
 }
 
+typedef GDExtensionClassCreationInfo5 = GDExtensionClassCreationInfo4;
 typedef GDExtensionClassLibraryPtr = ffi.Pointer<ffi.Void>;
+typedef GDExtensionEditorGetClassesUsedCallbackFunction =
+    ffi.Void Function(GDExtensionTypePtr p_packed_string_array);
+typedef DartGDExtensionEditorGetClassesUsedCallbackFunction =
+    void Function(GDExtensionTypePtr p_packed_string_array);
+typedef GDExtensionEditorGetClassesUsedCallback =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionEditorGetClassesUsedCallbackFunction>
+    >;
 
 enum GDExtensionClassMethodFlags {
   GDEXTENSION_METHOD_FLAG_NORMAL(1),
@@ -1228,16 +1283,16 @@ enum GDExtensionClassMethodFlags {
   const GDExtensionClassMethodFlags(this.value);
 
   static GDExtensionClassMethodFlags fromValue(int value) => switch (value) {
-        1 => GDEXTENSION_METHOD_FLAG_NORMAL,
-        2 => GDEXTENSION_METHOD_FLAG_EDITOR,
-        4 => GDEXTENSION_METHOD_FLAG_CONST,
-        8 => GDEXTENSION_METHOD_FLAG_VIRTUAL,
-        16 => GDEXTENSION_METHOD_FLAG_VARARG,
-        32 => GDEXTENSION_METHOD_FLAG_STATIC,
-        _ => throw ArgumentError(
-            'Unknown value for GDExtensionClassMethodFlags: $value',
-          ),
-      };
+    1 => GDEXTENSION_METHOD_FLAG_NORMAL,
+    2 => GDEXTENSION_METHOD_FLAG_EDITOR,
+    4 => GDEXTENSION_METHOD_FLAG_CONST,
+    8 => GDEXTENSION_METHOD_FLAG_VIRTUAL,
+    16 => GDEXTENSION_METHOD_FLAG_VARARG,
+    32 => GDEXTENSION_METHOD_FLAG_STATIC,
+    _ => throw ArgumentError(
+      'Unknown value for GDExtensionClassMethodFlags: $value',
+    ),
+  };
 
   @override
   String toString() {
@@ -1281,57 +1336,65 @@ enum GDExtensionClassMethodArgumentMetadata {
         11 => GDEXTENSION_METHOD_ARGUMENT_METADATA_INT_IS_CHAR16,
         12 => GDEXTENSION_METHOD_ARGUMENT_METADATA_INT_IS_CHAR32,
         _ => throw ArgumentError(
-            'Unknown value for GDExtensionClassMethodArgumentMetadata: $value',
-          ),
+          'Unknown value for GDExtensionClassMethodArgumentMetadata: $value',
+        ),
       };
 }
 
-typedef GDExtensionClassMethodCallFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Void> method_userdata,
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionInt p_argument_count,
-  GDExtensionVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef DartGDExtensionClassMethodCallFunction = void Function(
-  ffi.Pointer<ffi.Void> method_userdata,
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  DartGDExtensionInt p_argument_count,
-  GDExtensionVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef GDExtensionClassMethodCall
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassMethodCallFunction>>;
-typedef GDExtensionClassMethodValidatedCallFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Void> method_userdata,
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionVariantPtr r_return,
-);
-typedef DartGDExtensionClassMethodValidatedCallFunction = void Function(
-  ffi.Pointer<ffi.Void> method_userdata,
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionVariantPtr r_return,
-);
-typedef GDExtensionClassMethodValidatedCall = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionClassMethodValidatedCallFunction>>;
-typedef GDExtensionClassMethodPtrCallFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Void> method_userdata,
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_ret,
-);
-typedef DartGDExtensionClassMethodPtrCallFunction = void Function(
-  ffi.Pointer<ffi.Void> method_userdata,
-  GDExtensionClassInstancePtr p_instance,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_ret,
-);
-typedef GDExtensionClassMethodPtrCall
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionClassMethodPtrCallFunction>>;
+typedef GDExtensionClassMethodCallFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> method_userdata,
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionInt p_argument_count,
+      GDExtensionVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef DartGDExtensionClassMethodCallFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> method_userdata,
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      DartGDExtensionInt p_argument_count,
+      GDExtensionVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef GDExtensionClassMethodCall =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassMethodCallFunction>>;
+typedef GDExtensionClassMethodValidatedCallFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> method_userdata,
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionVariantPtr r_return,
+    );
+typedef DartGDExtensionClassMethodValidatedCallFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> method_userdata,
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionVariantPtr r_return,
+    );
+typedef GDExtensionClassMethodValidatedCall =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionClassMethodValidatedCallFunction>
+    >;
+typedef GDExtensionClassMethodPtrCallFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> method_userdata,
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_ret,
+    );
+typedef DartGDExtensionClassMethodPtrCallFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> method_userdata,
+      GDExtensionClassInstancePtr p_instance,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_ret,
+    );
+typedef GDExtensionClassMethodPtrCall =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionClassMethodPtrCallFunction>>;
 
 final class GDExtensionClassMethodInfo extends ffi.Struct {
   external GDExtensionStringNamePtr name;
@@ -1395,86 +1458,94 @@ final class GDExtensionClassVirtualMethodInfo extends ffi.Struct {
   external ffi.Pointer<ffi.UnsignedInt> arguments_metadata;
 }
 
-typedef GDExtensionCallableCustomCallFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Void> callable_userdata,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionInt p_argument_count,
-  GDExtensionVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef DartGDExtensionCallableCustomCallFunction = void Function(
-  ffi.Pointer<ffi.Void> callable_userdata,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  DartGDExtensionInt p_argument_count,
-  GDExtensionVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef GDExtensionCallableCustomCall
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomCallFunction>>;
-typedef GDExtensionCallableCustomIsValidFunction = GDExtensionBool Function(
-    ffi.Pointer<ffi.Void> callable_userdata);
-typedef DartGDExtensionCallableCustomIsValidFunction = DartGDExtensionBool
-    Function(ffi.Pointer<ffi.Void> callable_userdata);
-typedef GDExtensionCallableCustomIsValid
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomIsValidFunction>>;
-typedef GDExtensionCallableCustomFreeFunction = ffi.Void Function(
-    ffi.Pointer<ffi.Void> callable_userdata);
-typedef DartGDExtensionCallableCustomFreeFunction = void Function(
-    ffi.Pointer<ffi.Void> callable_userdata);
-typedef GDExtensionCallableCustomFree
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomFreeFunction>>;
-typedef GDExtensionCallableCustomHashFunction = ffi.Uint32 Function(
-    ffi.Pointer<ffi.Void> callable_userdata);
-typedef DartGDExtensionCallableCustomHashFunction = int Function(
-    ffi.Pointer<ffi.Void> callable_userdata);
-typedef GDExtensionCallableCustomHash
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomHashFunction>>;
-typedef GDExtensionCallableCustomEqualFunction = GDExtensionBool Function(
-  ffi.Pointer<ffi.Void> callable_userdata_a,
-  ffi.Pointer<ffi.Void> callable_userdata_b,
-);
-typedef DartGDExtensionCallableCustomEqualFunction = DartGDExtensionBool
-    Function(
-  ffi.Pointer<ffi.Void> callable_userdata_a,
-  ffi.Pointer<ffi.Void> callable_userdata_b,
-);
-typedef GDExtensionCallableCustomEqual
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomEqualFunction>>;
-typedef GDExtensionCallableCustomLessThanFunction = GDExtensionBool Function(
-  ffi.Pointer<ffi.Void> callable_userdata_a,
-  ffi.Pointer<ffi.Void> callable_userdata_b,
-);
-typedef DartGDExtensionCallableCustomLessThanFunction = DartGDExtensionBool
-    Function(
-  ffi.Pointer<ffi.Void> callable_userdata_a,
-  ffi.Pointer<ffi.Void> callable_userdata_b,
-);
-typedef GDExtensionCallableCustomLessThan = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionCallableCustomLessThanFunction>>;
-typedef GDExtensionCallableCustomToStringFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Void> callable_userdata,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-  GDExtensionStringPtr r_out,
-);
-typedef DartGDExtensionCallableCustomToStringFunction = void Function(
-  ffi.Pointer<ffi.Void> callable_userdata,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-  GDExtensionStringPtr r_out,
-);
-typedef GDExtensionCallableCustomToString = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionCallableCustomToStringFunction>>;
-typedef GDExtensionCallableCustomGetArgumentCountFunction = GDExtensionInt
-    Function(
-  ffi.Pointer<ffi.Void> callable_userdata,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-);
-typedef DartGDExtensionCallableCustomGetArgumentCountFunction
-    = DartGDExtensionInt Function(
-  ffi.Pointer<ffi.Void> callable_userdata,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-);
-typedef GDExtensionCallableCustomGetArgumentCount = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionCallableCustomGetArgumentCountFunction>>;
+typedef GDExtensionCallableCustomCallFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> callable_userdata,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionInt p_argument_count,
+      GDExtensionVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef DartGDExtensionCallableCustomCallFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> callable_userdata,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      DartGDExtensionInt p_argument_count,
+      GDExtensionVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef GDExtensionCallableCustomCall =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomCallFunction>>;
+typedef GDExtensionCallableCustomIsValidFunction =
+    GDExtensionBool Function(ffi.Pointer<ffi.Void> callable_userdata);
+typedef DartGDExtensionCallableCustomIsValidFunction =
+    DartGDExtensionBool Function(ffi.Pointer<ffi.Void> callable_userdata);
+typedef GDExtensionCallableCustomIsValid =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomIsValidFunction>>;
+typedef GDExtensionCallableCustomFreeFunction =
+    ffi.Void Function(ffi.Pointer<ffi.Void> callable_userdata);
+typedef DartGDExtensionCallableCustomFreeFunction =
+    void Function(ffi.Pointer<ffi.Void> callable_userdata);
+typedef GDExtensionCallableCustomFree =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomFreeFunction>>;
+typedef GDExtensionCallableCustomHashFunction =
+    ffi.Uint32 Function(ffi.Pointer<ffi.Void> callable_userdata);
+typedef DartGDExtensionCallableCustomHashFunction =
+    int Function(ffi.Pointer<ffi.Void> callable_userdata);
+typedef GDExtensionCallableCustomHash =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomHashFunction>>;
+typedef GDExtensionCallableCustomEqualFunction =
+    GDExtensionBool Function(
+      ffi.Pointer<ffi.Void> callable_userdata_a,
+      ffi.Pointer<ffi.Void> callable_userdata_b,
+    );
+typedef DartGDExtensionCallableCustomEqualFunction =
+    DartGDExtensionBool Function(
+      ffi.Pointer<ffi.Void> callable_userdata_a,
+      ffi.Pointer<ffi.Void> callable_userdata_b,
+    );
+typedef GDExtensionCallableCustomEqual =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomEqualFunction>>;
+typedef GDExtensionCallableCustomLessThanFunction =
+    GDExtensionBool Function(
+      ffi.Pointer<ffi.Void> callable_userdata_a,
+      ffi.Pointer<ffi.Void> callable_userdata_b,
+    );
+typedef DartGDExtensionCallableCustomLessThanFunction =
+    DartGDExtensionBool Function(
+      ffi.Pointer<ffi.Void> callable_userdata_a,
+      ffi.Pointer<ffi.Void> callable_userdata_b,
+    );
+typedef GDExtensionCallableCustomLessThan =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomLessThanFunction>>;
+typedef GDExtensionCallableCustomToStringFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> callable_userdata,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+      GDExtensionStringPtr r_out,
+    );
+typedef DartGDExtensionCallableCustomToStringFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> callable_userdata,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+      GDExtensionStringPtr r_out,
+    );
+typedef GDExtensionCallableCustomToString =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionCallableCustomToStringFunction>>;
+typedef GDExtensionCallableCustomGetArgumentCountFunction =
+    GDExtensionInt Function(
+      ffi.Pointer<ffi.Void> callable_userdata,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+    );
+typedef DartGDExtensionCallableCustomGetArgumentCountFunction =
+    DartGDExtensionInt Function(
+      ffi.Pointer<ffi.Void> callable_userdata,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+    );
+typedef GDExtensionCallableCustomGetArgumentCount =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionCallableCustomGetArgumentCountFunction>
+    >;
 
 final class GDExtensionCallableCustomInfo extends ffi.Struct {
   external ffi.Pointer<ffi.Void> callable_userdata;
@@ -1525,291 +1596,356 @@ final class GDExtensionCallableCustomInfo2 extends ffi.Struct {
 }
 
 typedef GDExtensionScriptInstanceDataPtr = ffi.Pointer<ffi.Void>;
-typedef GDExtensionScriptInstanceSetFunction = GDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionConstVariantPtr p_value,
-);
-typedef DartGDExtensionScriptInstanceSetFunction = DartGDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionConstVariantPtr p_value,
-);
-typedef GDExtensionScriptInstanceSet
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceSetFunction>>;
-typedef GDExtensionScriptInstanceGetFunction = GDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionVariantPtr r_ret,
-);
-typedef DartGDExtensionScriptInstanceGetFunction = DartGDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionVariantPtr r_ret,
-);
-typedef GDExtensionScriptInstanceGet
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceGetFunction>>;
-typedef GDExtensionScriptInstanceGetPropertyListFunction
-    = ffi.Pointer<GDExtensionPropertyInfo> Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<ffi.Uint32> r_count,
-);
-typedef GDExtensionScriptInstanceGetPropertyList = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceGetPropertyListFunction>>;
-typedef GDExtensionScriptInstanceFreePropertyListFunction = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_list,
-);
-typedef DartGDExtensionScriptInstanceFreePropertyListFunction = void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_list,
-);
-typedef GDExtensionScriptInstanceFreePropertyList = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceFreePropertyListFunction>>;
-typedef GDExtensionScriptInstanceFreePropertyList2Function = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_list,
-  ffi.Uint32 p_count,
-);
-typedef DartGDExtensionScriptInstanceFreePropertyList2Function = void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_list,
-  int p_count,
-);
-typedef GDExtensionScriptInstanceFreePropertyList2 = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceFreePropertyList2Function>>;
-typedef GDExtensionScriptInstanceGetClassCategoryFunction = GDExtensionBool
-    Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_class_category,
-);
-typedef DartGDExtensionScriptInstanceGetClassCategoryFunction
-    = DartGDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_class_category,
-);
-typedef GDExtensionScriptInstanceGetClassCategory = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceGetClassCategoryFunction>>;
-typedef GDExtensionScriptInstanceGetPropertyTypeFunction = ffi.UnsignedInt
-    Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-);
-typedef DartGDExtensionScriptInstanceGetPropertyTypeFunction
-    = GDExtensionVariantType Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-);
-typedef GDExtensionScriptInstanceGetPropertyType = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceGetPropertyTypeFunction>>;
-typedef GDExtensionScriptInstanceValidatePropertyFunction = GDExtensionBool
-    Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_property,
-);
-typedef DartGDExtensionScriptInstanceValidatePropertyFunction
-    = DartGDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionPropertyInfo> p_property,
-);
-typedef GDExtensionScriptInstanceValidateProperty = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceValidatePropertyFunction>>;
-typedef GDExtensionScriptInstancePropertyCanRevertFunction = GDExtensionBool
-    Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-);
-typedef DartGDExtensionScriptInstancePropertyCanRevertFunction
-    = DartGDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-);
-typedef GDExtensionScriptInstancePropertyCanRevert = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstancePropertyCanRevertFunction>>;
-typedef GDExtensionScriptInstancePropertyGetRevertFunction = GDExtensionBool
-    Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionVariantPtr r_ret,
-);
-typedef DartGDExtensionScriptInstancePropertyGetRevertFunction
-    = DartGDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionVariantPtr r_ret,
-);
-typedef GDExtensionScriptInstancePropertyGetRevert = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstancePropertyGetRevertFunction>>;
-typedef GDExtensionScriptInstanceGetOwnerFunction = GDExtensionObjectPtr
-    Function(GDExtensionScriptInstanceDataPtr p_instance);
-typedef GDExtensionScriptInstanceGetOwner = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionScriptInstanceGetOwnerFunction>>;
-typedef GDExtensionScriptInstancePropertyStateAddFunction = ffi.Void Function(
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<ffi.Void> p_userdata,
-);
-typedef DartGDExtensionScriptInstancePropertyStateAddFunction = void Function(
-  GDExtensionConstStringNamePtr p_name,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<ffi.Void> p_userdata,
-);
-typedef GDExtensionScriptInstancePropertyStateAdd = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstancePropertyStateAddFunction>>;
-typedef GDExtensionScriptInstanceGetPropertyStateFunction = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionScriptInstancePropertyStateAdd p_add_func,
-  ffi.Pointer<ffi.Void> p_userdata,
-);
-typedef DartGDExtensionScriptInstanceGetPropertyStateFunction = void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionScriptInstancePropertyStateAdd p_add_func,
-  ffi.Pointer<ffi.Void> p_userdata,
-);
-typedef GDExtensionScriptInstanceGetPropertyState = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceGetPropertyStateFunction>>;
-typedef GDExtensionScriptInstanceGetMethodListFunction
-    = ffi.Pointer<GDExtensionMethodInfo> Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<ffi.Uint32> r_count,
-);
-typedef GDExtensionScriptInstanceGetMethodList = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceGetMethodListFunction>>;
-typedef GDExtensionScriptInstanceFreeMethodListFunction = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionMethodInfo> p_list,
-);
-typedef DartGDExtensionScriptInstanceFreeMethodListFunction = void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionMethodInfo> p_list,
-);
-typedef GDExtensionScriptInstanceFreeMethodList = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceFreeMethodListFunction>>;
-typedef GDExtensionScriptInstanceFreeMethodList2Function = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionMethodInfo> p_list,
-  ffi.Uint32 p_count,
-);
-typedef DartGDExtensionScriptInstanceFreeMethodList2Function = void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionMethodInfo> p_list,
-  int p_count,
-);
-typedef GDExtensionScriptInstanceFreeMethodList2 = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceFreeMethodList2Function>>;
-typedef GDExtensionScriptInstanceHasMethodFunction = GDExtensionBool Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-);
-typedef DartGDExtensionScriptInstanceHasMethodFunction = DartGDExtensionBool
-    Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-);
-typedef GDExtensionScriptInstanceHasMethod = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionScriptInstanceHasMethodFunction>>;
-typedef GDExtensionScriptInstanceGetMethodArgumentCountFunction = GDExtensionInt
-    Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-);
-typedef DartGDExtensionScriptInstanceGetMethodArgumentCountFunction
-    = DartGDExtensionInt Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  GDExtensionConstStringNamePtr p_name,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-);
-typedef GDExtensionScriptInstanceGetMethodArgumentCount = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionScriptInstanceGetMethodArgumentCountFunction>>;
-typedef GDExtensionScriptInstanceCallFunction = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_self,
-  GDExtensionConstStringNamePtr p_method,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionInt p_argument_count,
-  GDExtensionVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef DartGDExtensionScriptInstanceCallFunction = void Function(
-  GDExtensionScriptInstanceDataPtr p_self,
-  GDExtensionConstStringNamePtr p_method,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  DartGDExtensionInt p_argument_count,
-  GDExtensionVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef GDExtensionScriptInstanceCall
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceCallFunction>>;
-typedef GDExtensionScriptInstanceNotificationFunction = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Int32 p_what,
-);
-typedef DartGDExtensionScriptInstanceNotificationFunction = void Function(
-    GDExtensionScriptInstanceDataPtr p_instance, int p_what);
-typedef GDExtensionScriptInstanceNotification = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionScriptInstanceNotificationFunction>>;
-typedef GDExtensionScriptInstanceNotification2Function = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Int32 p_what,
-  GDExtensionBool p_reversed,
-);
-typedef DartGDExtensionScriptInstanceNotification2Function = void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  int p_what,
-  DartGDExtensionBool p_reversed,
-);
-typedef GDExtensionScriptInstanceNotification2 = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceNotification2Function>>;
-typedef GDExtensionScriptInstanceToStringFunction = ffi.Void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-  GDExtensionStringPtr r_out,
-);
-typedef DartGDExtensionScriptInstanceToStringFunction = void Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-  ffi.Pointer<GDExtensionBool> r_is_valid,
-  GDExtensionStringPtr r_out,
-);
-typedef GDExtensionScriptInstanceToString = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionScriptInstanceToStringFunction>>;
-typedef GDExtensionScriptInstanceRefCountIncrementedFunction = ffi.Void
-    Function(GDExtensionScriptInstanceDataPtr p_instance);
-typedef DartGDExtensionScriptInstanceRefCountIncrementedFunction = void
-    Function(GDExtensionScriptInstanceDataPtr p_instance);
-typedef GDExtensionScriptInstanceRefCountIncremented = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceRefCountIncrementedFunction>>;
-typedef GDExtensionScriptInstanceRefCountDecrementedFunction = GDExtensionBool
-    Function(GDExtensionScriptInstanceDataPtr p_instance);
-typedef DartGDExtensionScriptInstanceRefCountDecrementedFunction
-    = DartGDExtensionBool Function(GDExtensionScriptInstanceDataPtr p_instance);
-typedef GDExtensionScriptInstanceRefCountDecremented = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceRefCountDecrementedFunction>>;
-typedef GDExtensionScriptInstanceGetScriptFunction = GDExtensionObjectPtr
-    Function(GDExtensionScriptInstanceDataPtr p_instance);
-typedef GDExtensionScriptInstanceGetScript = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionScriptInstanceGetScriptFunction>>;
-typedef GDExtensionScriptInstanceIsPlaceholderFunction = GDExtensionBool
-    Function(GDExtensionScriptInstanceDataPtr p_instance);
-typedef DartGDExtensionScriptInstanceIsPlaceholderFunction = DartGDExtensionBool
-    Function(GDExtensionScriptInstanceDataPtr p_instance);
-typedef GDExtensionScriptInstanceIsPlaceholder = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionScriptInstanceIsPlaceholderFunction>>;
+typedef GDExtensionScriptInstanceSetFunction =
+    GDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionConstVariantPtr p_value,
+    );
+typedef DartGDExtensionScriptInstanceSetFunction =
+    DartGDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionConstVariantPtr p_value,
+    );
+typedef GDExtensionScriptInstanceSet =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceSetFunction>>;
+typedef GDExtensionScriptInstanceGetFunction =
+    GDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionVariantPtr r_ret,
+    );
+typedef DartGDExtensionScriptInstanceGetFunction =
+    DartGDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionVariantPtr r_ret,
+    );
+typedef GDExtensionScriptInstanceGet =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceGetFunction>>;
+typedef GDExtensionScriptInstanceGetPropertyListFunction =
+    ffi.Pointer<GDExtensionPropertyInfo> Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<ffi.Uint32> r_count,
+    );
+typedef GDExtensionScriptInstanceGetPropertyList =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceGetPropertyListFunction>
+    >;
+typedef GDExtensionScriptInstanceFreePropertyListFunction =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_list,
+    );
+typedef DartGDExtensionScriptInstanceFreePropertyListFunction =
+    void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_list,
+    );
+typedef GDExtensionScriptInstanceFreePropertyList =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceFreePropertyListFunction>
+    >;
+typedef GDExtensionScriptInstanceFreePropertyList2Function =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_list,
+      ffi.Uint32 p_count,
+    );
+typedef DartGDExtensionScriptInstanceFreePropertyList2Function =
+    void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_list,
+      int p_count,
+    );
+typedef GDExtensionScriptInstanceFreePropertyList2 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceFreePropertyList2Function>
+    >;
+typedef GDExtensionScriptInstanceGetClassCategoryFunction =
+    GDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_class_category,
+    );
+typedef DartGDExtensionScriptInstanceGetClassCategoryFunction =
+    DartGDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_class_category,
+    );
+typedef GDExtensionScriptInstanceGetClassCategory =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceGetClassCategoryFunction>
+    >;
+typedef GDExtensionScriptInstanceGetPropertyTypeFunction =
+    ffi.UnsignedInt Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+    );
+typedef DartGDExtensionScriptInstanceGetPropertyTypeFunction =
+    GDExtensionVariantType Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+    );
+typedef GDExtensionScriptInstanceGetPropertyType =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceGetPropertyTypeFunction>
+    >;
+typedef GDExtensionScriptInstanceValidatePropertyFunction =
+    GDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_property,
+    );
+typedef DartGDExtensionScriptInstanceValidatePropertyFunction =
+    DartGDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionPropertyInfo> p_property,
+    );
+typedef GDExtensionScriptInstanceValidateProperty =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceValidatePropertyFunction>
+    >;
+typedef GDExtensionScriptInstancePropertyCanRevertFunction =
+    GDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+    );
+typedef DartGDExtensionScriptInstancePropertyCanRevertFunction =
+    DartGDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+    );
+typedef GDExtensionScriptInstancePropertyCanRevert =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstancePropertyCanRevertFunction>
+    >;
+typedef GDExtensionScriptInstancePropertyGetRevertFunction =
+    GDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionVariantPtr r_ret,
+    );
+typedef DartGDExtensionScriptInstancePropertyGetRevertFunction =
+    DartGDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionVariantPtr r_ret,
+    );
+typedef GDExtensionScriptInstancePropertyGetRevert =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstancePropertyGetRevertFunction>
+    >;
+typedef GDExtensionScriptInstanceGetOwnerFunction =
+    GDExtensionObjectPtr Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef GDExtensionScriptInstanceGetOwner =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceGetOwnerFunction>>;
+typedef GDExtensionScriptInstancePropertyStateAddFunction =
+    ffi.Void Function(
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<ffi.Void> p_userdata,
+    );
+typedef DartGDExtensionScriptInstancePropertyStateAddFunction =
+    void Function(
+      GDExtensionConstStringNamePtr p_name,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<ffi.Void> p_userdata,
+    );
+typedef GDExtensionScriptInstancePropertyStateAdd =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstancePropertyStateAddFunction>
+    >;
+typedef GDExtensionScriptInstanceGetPropertyStateFunction =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionScriptInstancePropertyStateAdd p_add_func,
+      ffi.Pointer<ffi.Void> p_userdata,
+    );
+typedef DartGDExtensionScriptInstanceGetPropertyStateFunction =
+    void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionScriptInstancePropertyStateAdd p_add_func,
+      ffi.Pointer<ffi.Void> p_userdata,
+    );
+typedef GDExtensionScriptInstanceGetPropertyState =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceGetPropertyStateFunction>
+    >;
+typedef GDExtensionScriptInstanceGetMethodListFunction =
+    ffi.Pointer<GDExtensionMethodInfo> Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<ffi.Uint32> r_count,
+    );
+typedef GDExtensionScriptInstanceGetMethodList =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceGetMethodListFunction>
+    >;
+typedef GDExtensionScriptInstanceFreeMethodListFunction =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionMethodInfo> p_list,
+    );
+typedef DartGDExtensionScriptInstanceFreeMethodListFunction =
+    void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionMethodInfo> p_list,
+    );
+typedef GDExtensionScriptInstanceFreeMethodList =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceFreeMethodListFunction>
+    >;
+typedef GDExtensionScriptInstanceFreeMethodList2Function =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionMethodInfo> p_list,
+      ffi.Uint32 p_count,
+    );
+typedef DartGDExtensionScriptInstanceFreeMethodList2Function =
+    void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionMethodInfo> p_list,
+      int p_count,
+    );
+typedef GDExtensionScriptInstanceFreeMethodList2 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceFreeMethodList2Function>
+    >;
+typedef GDExtensionScriptInstanceHasMethodFunction =
+    GDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+    );
+typedef DartGDExtensionScriptInstanceHasMethodFunction =
+    DartGDExtensionBool Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+    );
+typedef GDExtensionScriptInstanceHasMethod =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceHasMethodFunction>>;
+typedef GDExtensionScriptInstanceGetMethodArgumentCountFunction =
+    GDExtensionInt Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+    );
+typedef DartGDExtensionScriptInstanceGetMethodArgumentCountFunction =
+    DartGDExtensionInt Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      GDExtensionConstStringNamePtr p_name,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+    );
+typedef GDExtensionScriptInstanceGetMethodArgumentCount =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionScriptInstanceGetMethodArgumentCountFunction
+      >
+    >;
+typedef GDExtensionScriptInstanceCallFunction =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_self,
+      GDExtensionConstStringNamePtr p_method,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionInt p_argument_count,
+      GDExtensionVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef DartGDExtensionScriptInstanceCallFunction =
+    void Function(
+      GDExtensionScriptInstanceDataPtr p_self,
+      GDExtensionConstStringNamePtr p_method,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      DartGDExtensionInt p_argument_count,
+      GDExtensionVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef GDExtensionScriptInstanceCall =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceCallFunction>>;
+typedef GDExtensionScriptInstanceNotificationFunction =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Int32 p_what,
+    );
+typedef DartGDExtensionScriptInstanceNotificationFunction =
+    void Function(GDExtensionScriptInstanceDataPtr p_instance, int p_what);
+typedef GDExtensionScriptInstanceNotification =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceNotificationFunction>
+    >;
+typedef GDExtensionScriptInstanceNotification2Function =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Int32 p_what,
+      GDExtensionBool p_reversed,
+    );
+typedef DartGDExtensionScriptInstanceNotification2Function =
+    void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      int p_what,
+      DartGDExtensionBool p_reversed,
+    );
+typedef GDExtensionScriptInstanceNotification2 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceNotification2Function>
+    >;
+typedef GDExtensionScriptInstanceToStringFunction =
+    ffi.Void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+      GDExtensionStringPtr r_out,
+    );
+typedef DartGDExtensionScriptInstanceToStringFunction =
+    void Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+      ffi.Pointer<GDExtensionBool> r_is_valid,
+      GDExtensionStringPtr r_out,
+    );
+typedef GDExtensionScriptInstanceToString =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceToStringFunction>>;
+typedef GDExtensionScriptInstanceRefCountIncrementedFunction =
+    ffi.Void Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef DartGDExtensionScriptInstanceRefCountIncrementedFunction =
+    void Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef GDExtensionScriptInstanceRefCountIncremented =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceRefCountIncrementedFunction>
+    >;
+typedef GDExtensionScriptInstanceRefCountDecrementedFunction =
+    GDExtensionBool Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef DartGDExtensionScriptInstanceRefCountDecrementedFunction =
+    DartGDExtensionBool Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef GDExtensionScriptInstanceRefCountDecremented =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceRefCountDecrementedFunction>
+    >;
+typedef GDExtensionScriptInstanceGetScriptFunction =
+    GDExtensionObjectPtr Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef GDExtensionScriptInstanceGetScript =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceGetScriptFunction>>;
+typedef GDExtensionScriptInstanceIsPlaceholderFunction =
+    GDExtensionBool Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef DartGDExtensionScriptInstanceIsPlaceholderFunction =
+    DartGDExtensionBool Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef GDExtensionScriptInstanceIsPlaceholder =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceIsPlaceholderFunction>
+    >;
 typedef GDExtensionScriptLanguagePtr = ffi.Pointer<ffi.Void>;
-typedef GDExtensionScriptInstanceGetLanguageFunction
-    = GDExtensionScriptLanguagePtr Function(
-  GDExtensionScriptInstanceDataPtr p_instance,
-);
-typedef GDExtensionScriptInstanceGetLanguage = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionScriptInstanceGetLanguageFunction>>;
-typedef GDExtensionScriptInstanceFreeFunction = ffi.Void Function(
-    GDExtensionScriptInstanceDataPtr p_instance);
-typedef DartGDExtensionScriptInstanceFreeFunction = void Function(
-    GDExtensionScriptInstanceDataPtr p_instance);
-typedef GDExtensionScriptInstanceFree
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceFreeFunction>>;
+typedef GDExtensionScriptInstanceGetLanguageFunction =
+    GDExtensionScriptLanguagePtr Function(
+      GDExtensionScriptInstanceDataPtr p_instance,
+    );
+typedef GDExtensionScriptInstanceGetLanguage =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionScriptInstanceGetLanguageFunction>
+    >;
+typedef GDExtensionScriptInstanceFreeFunction =
+    ffi.Void Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef DartGDExtensionScriptInstanceFreeFunction =
+    void Function(GDExtensionScriptInstanceDataPtr p_instance);
+typedef GDExtensionScriptInstanceFree =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionScriptInstanceFreeFunction>>;
 typedef GDExtensionScriptInstancePtr = ffi.Pointer<ffi.Void>;
 
 final class GDExtensionScriptInstanceInfo extends ffi.Struct {
@@ -1844,10 +1980,10 @@ final class GDExtensionScriptInstanceInfo extends ffi.Struct {
   external GDExtensionScriptInstanceToString to_string_func;
 
   external GDExtensionScriptInstanceRefCountIncremented
-      refcount_incremented_func;
+  refcount_incremented_func;
 
   external GDExtensionScriptInstanceRefCountDecremented
-      refcount_decremented_func;
+  refcount_decremented_func;
 
   external GDExtensionScriptInstanceGetScript get_script_func;
 
@@ -1898,10 +2034,10 @@ final class GDExtensionScriptInstanceInfo2 extends ffi.Struct {
   external GDExtensionScriptInstanceToString to_string_func;
 
   external GDExtensionScriptInstanceRefCountIncremented
-      refcount_incremented_func;
+  refcount_incremented_func;
 
   external GDExtensionScriptInstanceRefCountDecremented
-      refcount_decremented_func;
+  refcount_decremented_func;
 
   external GDExtensionScriptInstanceGetScript get_script_func;
 
@@ -1946,7 +2082,7 @@ final class GDExtensionScriptInstanceInfo3 extends ffi.Struct {
   external GDExtensionScriptInstanceHasMethod has_method_func;
 
   external GDExtensionScriptInstanceGetMethodArgumentCount
-      get_method_argument_count_func;
+  get_method_argument_count_func;
 
   external GDExtensionScriptInstanceCall call_func;
 
@@ -1955,10 +2091,10 @@ final class GDExtensionScriptInstanceInfo3 extends ffi.Struct {
   external GDExtensionScriptInstanceToString to_string_func;
 
   external GDExtensionScriptInstanceRefCountIncremented
-      refcount_incremented_func;
+  refcount_incremented_func;
 
   external GDExtensionScriptInstanceRefCountDecremented
-      refcount_decremented_func;
+  refcount_decremented_func;
 
   external GDExtensionScriptInstanceGetScript get_script_func;
 
@@ -1973,6 +2109,21 @@ final class GDExtensionScriptInstanceInfo3 extends ffi.Struct {
   external GDExtensionScriptInstanceFree free_func;
 }
 
+typedef GDExtensionWorkerThreadPoolGroupTaskFunction =
+    ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32);
+typedef DartGDExtensionWorkerThreadPoolGroupTaskFunction =
+    void Function(ffi.Pointer<ffi.Void>, int);
+typedef GDExtensionWorkerThreadPoolGroupTask =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionWorkerThreadPoolGroupTaskFunction>
+    >;
+typedef GDExtensionWorkerThreadPoolTaskFunction =
+    ffi.Void Function(ffi.Pointer<ffi.Void>);
+typedef DartGDExtensionWorkerThreadPoolTaskFunction =
+    void Function(ffi.Pointer<ffi.Void>);
+typedef GDExtensionWorkerThreadPoolTask =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionWorkerThreadPoolTaskFunction>>;
+
 enum GDExtensionInitializationLevel {
   GDEXTENSION_INITIALIZATION_CORE(0),
   GDEXTENSION_INITIALIZATION_SERVERS(1),
@@ -1984,16 +2135,41 @@ enum GDExtensionInitializationLevel {
   const GDExtensionInitializationLevel(this.value);
 
   static GDExtensionInitializationLevel fromValue(int value) => switch (value) {
-        0 => GDEXTENSION_INITIALIZATION_CORE,
-        1 => GDEXTENSION_INITIALIZATION_SERVERS,
-        2 => GDEXTENSION_INITIALIZATION_SCENE,
-        3 => GDEXTENSION_INITIALIZATION_EDITOR,
-        4 => GDEXTENSION_MAX_INITIALIZATION_LEVEL,
-        _ => throw ArgumentError(
-            'Unknown value for GDExtensionInitializationLevel: $value',
-          ),
-      };
+    0 => GDEXTENSION_INITIALIZATION_CORE,
+    1 => GDEXTENSION_INITIALIZATION_SERVERS,
+    2 => GDEXTENSION_INITIALIZATION_SCENE,
+    3 => GDEXTENSION_INITIALIZATION_EDITOR,
+    4 => GDEXTENSION_MAX_INITIALIZATION_LEVEL,
+    _ => throw ArgumentError(
+      'Unknown value for GDExtensionInitializationLevel: $value',
+    ),
+  };
 }
+
+typedef GDExtensionInitializeCallbackFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> p_userdata,
+      ffi.UnsignedInt p_level,
+    );
+typedef DartGDExtensionInitializeCallbackFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> p_userdata,
+      GDExtensionInitializationLevel p_level,
+    );
+typedef GDExtensionInitializeCallback =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInitializeCallbackFunction>>;
+typedef GDExtensionDeinitializeCallbackFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Void> p_userdata,
+      ffi.UnsignedInt p_level,
+    );
+typedef DartGDExtensionDeinitializeCallbackFunction =
+    void Function(
+      ffi.Pointer<ffi.Void> p_userdata,
+      GDExtensionInitializationLevel p_level,
+    );
+typedef GDExtensionDeinitializeCallback =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionDeinitializeCallbackFunction>>;
 
 final class GDExtensionInitialization extends ffi.Struct {
   @ffi.UnsignedInt()
@@ -2006,42 +2182,35 @@ final class GDExtensionInitialization extends ffi.Struct {
 
   external ffi.Pointer<ffi.Void> userdata;
 
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<ffi.Void> userdata, ffi.UnsignedInt p_level)>>
-      initialize;
+  external GDExtensionInitializeCallback initialize;
 
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<ffi.Void> userdata, ffi.UnsignedInt p_level)>>
-      deinitialize;
+  external GDExtensionDeinitializeCallback deinitialize;
 }
 
 typedef GDExtensionInterfaceFunctionPtrFunction = ffi.Void Function();
 typedef DartGDExtensionInterfaceFunctionPtrFunction = void Function();
-typedef GDExtensionInterfaceFunctionPtr
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceFunctionPtrFunction>>;
-typedef GDExtensionInterfaceGetProcAddressFunction
-    = GDExtensionInterfaceFunctionPtr Function(
-  ffi.Pointer<ffi.Char> p_function_name,
-);
-typedef GDExtensionInterfaceGetProcAddress = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceGetProcAddressFunction>>;
-typedef GDExtensionInitializationFunctionFunction = GDExtensionBool Function(
-  GDExtensionInterfaceGetProcAddress p_get_proc_address,
-  GDExtensionClassLibraryPtr p_library,
-  ffi.Pointer<GDExtensionInitialization> r_initialization,
-);
-typedef DartGDExtensionInitializationFunctionFunction = DartGDExtensionBool
-    Function(
-  GDExtensionInterfaceGetProcAddress p_get_proc_address,
-  GDExtensionClassLibraryPtr p_library,
-  ffi.Pointer<GDExtensionInitialization> r_initialization,
-);
-typedef GDExtensionInitializationFunction = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInitializationFunctionFunction>>;
+typedef GDExtensionInterfaceFunctionPtr =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceFunctionPtrFunction>>;
+typedef GDExtensionInterfaceGetProcAddressFunction =
+    GDExtensionInterfaceFunctionPtr Function(
+      ffi.Pointer<ffi.Char> p_function_name,
+    );
+typedef GDExtensionInterfaceGetProcAddress =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceGetProcAddressFunction>>;
+typedef GDExtensionInitializationFunctionFunction =
+    GDExtensionBool Function(
+      GDExtensionInterfaceGetProcAddress p_get_proc_address,
+      GDExtensionClassLibraryPtr p_library,
+      ffi.Pointer<GDExtensionInitialization> r_initialization,
+    );
+typedef DartGDExtensionInitializationFunctionFunction =
+    DartGDExtensionBool Function(
+      GDExtensionInterfaceGetProcAddress p_get_proc_address,
+      GDExtensionClassLibraryPtr p_library,
+      ffi.Pointer<GDExtensionInitialization> r_initialization,
+    );
+typedef GDExtensionInitializationFunction =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInitializationFunctionFunction>>;
 
 final class GDExtensionGodotVersion extends ffi.Struct {
   @ffi.Uint32()
@@ -2056,23 +2225,89 @@ final class GDExtensionGodotVersion extends ffi.Struct {
   external ffi.Pointer<ffi.Char> string;
 }
 
-typedef GDExtensionInterfaceGetGodotVersionFunction = ffi.Void Function(
-    ffi.Pointer<GDExtensionGodotVersion> r_godot_version);
-typedef DartGDExtensionInterfaceGetGodotVersionFunction = void Function(
-    ffi.Pointer<GDExtensionGodotVersion> r_godot_version);
+final class GDExtensionGodotVersion2 extends ffi.Struct {
+  @ffi.Uint32()
+  external int major;
+
+  @ffi.Uint32()
+  external int minor;
+
+  @ffi.Uint32()
+  external int patch;
+
+  @ffi.Uint32()
+  external int hex;
+
+  external ffi.Pointer<ffi.Char> status;
+
+  external ffi.Pointer<ffi.Char> build;
+
+  external ffi.Pointer<ffi.Char> hash;
+
+  @ffi.Uint64()
+  external int timestamp;
+
+  external ffi.Pointer<ffi.Char> string;
+}
+
+typedef GDExtensionMainLoopStartupCallbackFunction = ffi.Void Function();
+typedef DartGDExtensionMainLoopStartupCallbackFunction = void Function();
+typedef GDExtensionMainLoopStartupCallback =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionMainLoopStartupCallbackFunction>>;
+typedef GDExtensionMainLoopShutdownCallbackFunction = ffi.Void Function();
+typedef DartGDExtensionMainLoopShutdownCallbackFunction = void Function();
+typedef GDExtensionMainLoopShutdownCallback =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionMainLoopShutdownCallbackFunction>
+    >;
+typedef GDExtensionMainLoopFrameCallbackFunction = ffi.Void Function();
+typedef DartGDExtensionMainLoopFrameCallbackFunction = void Function();
+typedef GDExtensionMainLoopFrameCallback =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionMainLoopFrameCallbackFunction>>;
+
+final class GDExtensionMainLoopCallbacks extends ffi.Struct {
+  external GDExtensionMainLoopStartupCallback startup_func;
+
+  external GDExtensionMainLoopShutdownCallback shutdown_func;
+
+  external GDExtensionMainLoopFrameCallback frame_func;
+}
+
+typedef GDExtensionInterfaceGetGodotVersionFunction =
+    ffi.Void Function(ffi.Pointer<GDExtensionGodotVersion> r_godot_version);
+typedef DartGDExtensionInterfaceGetGodotVersionFunction =
+    void Function(ffi.Pointer<GDExtensionGodotVersion> r_godot_version);
 
 /// @name get_godot_version
 /// @since 4.1
+/// @deprecated in Godot 4.5. Use `get_godot_version2` instead.
 ///
 /// Gets the Godot version that the GDExtension was loaded into.
 ///
 /// @param r_godot_version A pointer to the structure to write the version information into.
-typedef GDExtensionInterfaceGetGodotVersion = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceGetGodotVersionFunction>>;
-typedef GDExtensionInterfaceMemAllocFunction = ffi.Pointer<ffi.Void> Function(
-    ffi.Size p_bytes);
-typedef DartGDExtensionInterfaceMemAllocFunction = ffi.Pointer<ffi.Void>
-    Function(int p_bytes);
+typedef GDExtensionInterfaceGetGodotVersion =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceGetGodotVersionFunction>
+    >;
+typedef GDExtensionInterfaceGetGodotVersion2Function =
+    ffi.Void Function(ffi.Pointer<GDExtensionGodotVersion2> r_godot_version);
+typedef DartGDExtensionInterfaceGetGodotVersion2Function =
+    void Function(ffi.Pointer<GDExtensionGodotVersion2> r_godot_version);
+
+/// @name get_godot_version2
+/// @since 4.5
+///
+/// Gets the Godot version that the GDExtension was loaded into.
+///
+/// @param r_godot_version A pointer to the structure to write the version information into.
+typedef GDExtensionInterfaceGetGodotVersion2 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceGetGodotVersion2Function>
+    >;
+typedef GDExtensionInterfaceMemAllocFunction =
+    ffi.Pointer<ffi.Void> Function(ffi.Size p_bytes);
+typedef DartGDExtensionInterfaceMemAllocFunction =
+    ffi.Pointer<ffi.Void> Function(int p_bytes);
 
 /// @name mem_alloc
 /// @since 4.1
@@ -2082,14 +2317,15 @@ typedef DartGDExtensionInterfaceMemAllocFunction = ffi.Pointer<ffi.Void>
 /// @param p_bytes The amount of memory to allocate in bytes.
 ///
 /// @return A pointer to the allocated memory, or NULL if unsuccessful.
-typedef GDExtensionInterfaceMemAlloc
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceMemAllocFunction>>;
-typedef GDExtensionInterfaceMemReallocFunction = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> p_ptr,
-  ffi.Size p_bytes,
-);
-typedef DartGDExtensionInterfaceMemReallocFunction = ffi.Pointer<ffi.Void>
-    Function(ffi.Pointer<ffi.Void> p_ptr, int p_bytes);
+typedef GDExtensionInterfaceMemAlloc =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceMemAllocFunction>>;
+typedef GDExtensionInterfaceMemReallocFunction =
+    ffi.Pointer<ffi.Void> Function(
+      ffi.Pointer<ffi.Void> p_ptr,
+      ffi.Size p_bytes,
+    );
+typedef DartGDExtensionInterfaceMemReallocFunction =
+    ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void> p_ptr, int p_bytes);
 
 /// @name mem_realloc
 /// @since 4.1
@@ -2100,12 +2336,12 @@ typedef DartGDExtensionInterfaceMemReallocFunction = ffi.Pointer<ffi.Void>
 /// @param p_bytes The number of bytes to resize the memory block to.
 ///
 /// @return A pointer to the allocated memory, or NULL if unsuccessful.
-typedef GDExtensionInterfaceMemRealloc
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceMemReallocFunction>>;
-typedef GDExtensionInterfaceMemFreeFunction = ffi.Void Function(
-    ffi.Pointer<ffi.Void> p_ptr);
-typedef DartGDExtensionInterfaceMemFreeFunction = void Function(
-    ffi.Pointer<ffi.Void> p_ptr);
+typedef GDExtensionInterfaceMemRealloc =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceMemReallocFunction>>;
+typedef GDExtensionInterfaceMemFreeFunction =
+    ffi.Void Function(ffi.Pointer<ffi.Void> p_ptr);
+typedef DartGDExtensionInterfaceMemFreeFunction =
+    void Function(ffi.Pointer<ffi.Void> p_ptr);
 
 /// @name mem_free
 /// @since 4.1
@@ -2113,22 +2349,24 @@ typedef DartGDExtensionInterfaceMemFreeFunction = void Function(
 /// Frees memory.
 ///
 /// @param p_ptr A pointer to the previously allocated memory.
-typedef GDExtensionInterfaceMemFree
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceMemFreeFunction>>;
-typedef GDExtensionInterfacePrintErrorFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  ffi.Int32 p_line,
-  GDExtensionBool p_editor_notify,
-);
-typedef DartGDExtensionInterfacePrintErrorFunction = void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  int p_line,
-  DartGDExtensionBool p_editor_notify,
-);
+typedef GDExtensionInterfaceMemFree =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceMemFreeFunction>>;
+typedef GDExtensionInterfacePrintErrorFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      ffi.Int32 p_line,
+      GDExtensionBool p_editor_notify,
+    );
+typedef DartGDExtensionInterfacePrintErrorFunction =
+    void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      int p_line,
+      DartGDExtensionBool p_editor_notify,
+    );
 
 /// @name print_error
 /// @since 4.1
@@ -2140,24 +2378,26 @@ typedef DartGDExtensionInterfacePrintErrorFunction = void Function(
 /// @param p_file The file where the error occurred.
 /// @param p_line The line where the error occurred.
 /// @param p_editor_notify Whether or not to notify the editor.
-typedef GDExtensionInterfacePrintError
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfacePrintErrorFunction>>;
-typedef GDExtensionInterfacePrintErrorWithMessageFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_message,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  ffi.Int32 p_line,
-  GDExtensionBool p_editor_notify,
-);
-typedef DartGDExtensionInterfacePrintErrorWithMessageFunction = void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_message,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  int p_line,
-  DartGDExtensionBool p_editor_notify,
-);
+typedef GDExtensionInterfacePrintError =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfacePrintErrorFunction>>;
+typedef GDExtensionInterfacePrintErrorWithMessageFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_message,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      ffi.Int32 p_line,
+      GDExtensionBool p_editor_notify,
+    );
+typedef DartGDExtensionInterfacePrintErrorWithMessageFunction =
+    void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_message,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      int p_line,
+      DartGDExtensionBool p_editor_notify,
+    );
 
 /// @name print_error_with_message
 /// @since 4.1
@@ -2170,22 +2410,26 @@ typedef DartGDExtensionInterfacePrintErrorWithMessageFunction = void Function(
 /// @param p_file The file where the error occurred.
 /// @param p_line The line where the error occurred.
 /// @param p_editor_notify Whether or not to notify the editor.
-typedef GDExtensionInterfacePrintErrorWithMessage = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfacePrintErrorWithMessageFunction>>;
-typedef GDExtensionInterfacePrintWarningFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  ffi.Int32 p_line,
-  GDExtensionBool p_editor_notify,
-);
-typedef DartGDExtensionInterfacePrintWarningFunction = void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  int p_line,
-  DartGDExtensionBool p_editor_notify,
-);
+typedef GDExtensionInterfacePrintErrorWithMessage =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfacePrintErrorWithMessageFunction>
+    >;
+typedef GDExtensionInterfacePrintWarningFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      ffi.Int32 p_line,
+      GDExtensionBool p_editor_notify,
+    );
+typedef DartGDExtensionInterfacePrintWarningFunction =
+    void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      int p_line,
+      DartGDExtensionBool p_editor_notify,
+    );
 
 /// @name print_warning
 /// @since 4.1
@@ -2197,24 +2441,26 @@ typedef DartGDExtensionInterfacePrintWarningFunction = void Function(
 /// @param p_file The file where the warning occurred.
 /// @param p_line The line where the warning occurred.
 /// @param p_editor_notify Whether or not to notify the editor.
-typedef GDExtensionInterfacePrintWarning
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfacePrintWarningFunction>>;
-typedef GDExtensionInterfacePrintWarningWithMessageFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_message,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  ffi.Int32 p_line,
-  GDExtensionBool p_editor_notify,
-);
-typedef DartGDExtensionInterfacePrintWarningWithMessageFunction = void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_message,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  int p_line,
-  DartGDExtensionBool p_editor_notify,
-);
+typedef GDExtensionInterfacePrintWarning =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfacePrintWarningFunction>>;
+typedef GDExtensionInterfacePrintWarningWithMessageFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_message,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      ffi.Int32 p_line,
+      GDExtensionBool p_editor_notify,
+    );
+typedef DartGDExtensionInterfacePrintWarningWithMessageFunction =
+    void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_message,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      int p_line,
+      DartGDExtensionBool p_editor_notify,
+    );
 
 /// @name print_warning_with_message
 /// @since 4.1
@@ -2227,22 +2473,26 @@ typedef DartGDExtensionInterfacePrintWarningWithMessageFunction = void Function(
 /// @param p_file The file where the warning occurred.
 /// @param p_line The line where the warning occurred.
 /// @param p_editor_notify Whether or not to notify the editor.
-typedef GDExtensionInterfacePrintWarningWithMessage = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfacePrintWarningWithMessageFunction>>;
-typedef GDExtensionInterfacePrintScriptErrorFunction = ffi.Void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  ffi.Int32 p_line,
-  GDExtensionBool p_editor_notify,
-);
-typedef DartGDExtensionInterfacePrintScriptErrorFunction = void Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  int p_line,
-  DartGDExtensionBool p_editor_notify,
-);
+typedef GDExtensionInterfacePrintWarningWithMessage =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfacePrintWarningWithMessageFunction>
+    >;
+typedef GDExtensionInterfacePrintScriptErrorFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      ffi.Int32 p_line,
+      GDExtensionBool p_editor_notify,
+    );
+typedef DartGDExtensionInterfacePrintScriptErrorFunction =
+    void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      int p_line,
+      DartGDExtensionBool p_editor_notify,
+    );
 
 /// @name print_script_error
 /// @since 4.1
@@ -2254,26 +2504,28 @@ typedef DartGDExtensionInterfacePrintScriptErrorFunction = void Function(
 /// @param p_file The file where the error occurred.
 /// @param p_line The line where the error occurred.
 /// @param p_editor_notify Whether or not to notify the editor.
-typedef GDExtensionInterfacePrintScriptError = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfacePrintScriptErrorFunction>>;
-typedef GDExtensionInterfacePrintScriptErrorWithMessageFunction = ffi.Void
-    Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_message,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  ffi.Int32 p_line,
-  GDExtensionBool p_editor_notify,
-);
-typedef DartGDExtensionInterfacePrintScriptErrorWithMessageFunction = void
-    Function(
-  ffi.Pointer<ffi.Char> p_description,
-  ffi.Pointer<ffi.Char> p_message,
-  ffi.Pointer<ffi.Char> p_function,
-  ffi.Pointer<ffi.Char> p_file,
-  int p_line,
-  DartGDExtensionBool p_editor_notify,
-);
+typedef GDExtensionInterfacePrintScriptError =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfacePrintScriptErrorFunction>
+    >;
+typedef GDExtensionInterfacePrintScriptErrorWithMessageFunction =
+    ffi.Void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_message,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      ffi.Int32 p_line,
+      GDExtensionBool p_editor_notify,
+    );
+typedef DartGDExtensionInterfacePrintScriptErrorWithMessageFunction =
+    void Function(
+      ffi.Pointer<ffi.Char> p_description,
+      ffi.Pointer<ffi.Char> p_message,
+      ffi.Pointer<ffi.Char> p_function,
+      ffi.Pointer<ffi.Char> p_file,
+      int p_line,
+      DartGDExtensionBool p_editor_notify,
+    );
 
 /// @name print_script_error_with_message
 /// @since 4.1
@@ -2286,13 +2538,16 @@ typedef DartGDExtensionInterfacePrintScriptErrorWithMessageFunction = void
 /// @param p_file The file where the error occurred.
 /// @param p_line The line where the error occurred.
 /// @param p_editor_notify Whether or not to notify the editor.
-typedef GDExtensionInterfacePrintScriptErrorWithMessage = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfacePrintScriptErrorWithMessageFunction>>;
-typedef GDExtensionInterfaceGetNativeStructSizeFunction = ffi.Uint64 Function(
-    GDExtensionConstStringNamePtr p_name);
-typedef DartGDExtensionInterfaceGetNativeStructSizeFunction = int Function(
-    GDExtensionConstStringNamePtr p_name);
+typedef GDExtensionInterfacePrintScriptErrorWithMessage =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePrintScriptErrorWithMessageFunction
+      >
+    >;
+typedef GDExtensionInterfaceGetNativeStructSizeFunction =
+    ffi.Uint64 Function(GDExtensionConstStringNamePtr p_name);
+typedef DartGDExtensionInterfaceGetNativeStructSizeFunction =
+    int Function(GDExtensionConstStringNamePtr p_name);
 
 /// @name get_native_struct_size
 /// @since 4.1
@@ -2302,16 +2557,20 @@ typedef DartGDExtensionInterfaceGetNativeStructSizeFunction = int Function(
 /// @param p_name A pointer to a StringName identifying the struct name.
 ///
 /// @return The size in bytes.
-typedef GDExtensionInterfaceGetNativeStructSize = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceGetNativeStructSizeFunction>>;
-typedef GDExtensionInterfaceVariantNewCopyFunction = ffi.Void Function(
-  GDExtensionUninitializedVariantPtr r_dest,
-  GDExtensionConstVariantPtr p_src,
-);
-typedef DartGDExtensionInterfaceVariantNewCopyFunction = void Function(
-  GDExtensionUninitializedVariantPtr r_dest,
-  GDExtensionConstVariantPtr p_src,
-);
+typedef GDExtensionInterfaceGetNativeStructSize =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceGetNativeStructSizeFunction>
+    >;
+typedef GDExtensionInterfaceVariantNewCopyFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedVariantPtr r_dest,
+      GDExtensionConstVariantPtr p_src,
+    );
+typedef DartGDExtensionInterfaceVariantNewCopyFunction =
+    void Function(
+      GDExtensionUninitializedVariantPtr r_dest,
+      GDExtensionConstVariantPtr p_src,
+    );
 
 /// @name variant_new_copy
 /// @since 4.1
@@ -2320,12 +2579,12 @@ typedef DartGDExtensionInterfaceVariantNewCopyFunction = void Function(
 ///
 /// @param r_dest A pointer to the destination Variant.
 /// @param p_src A pointer to the source Variant.
-typedef GDExtensionInterfaceVariantNewCopy = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantNewCopyFunction>>;
-typedef GDExtensionInterfaceVariantNewNilFunction = ffi.Void Function(
-    GDExtensionUninitializedVariantPtr r_dest);
-typedef DartGDExtensionInterfaceVariantNewNilFunction = void Function(
-    GDExtensionUninitializedVariantPtr r_dest);
+typedef GDExtensionInterfaceVariantNewCopy =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantNewCopyFunction>>;
+typedef GDExtensionInterfaceVariantNewNilFunction =
+    ffi.Void Function(GDExtensionUninitializedVariantPtr r_dest);
+typedef DartGDExtensionInterfaceVariantNewNilFunction =
+    void Function(GDExtensionUninitializedVariantPtr r_dest);
 
 /// @name variant_new_nil
 /// @since 4.1
@@ -2333,12 +2592,12 @@ typedef DartGDExtensionInterfaceVariantNewNilFunction = void Function(
 /// Creates a new Variant containing nil.
 ///
 /// @param r_dest A pointer to the destination Variant.
-typedef GDExtensionInterfaceVariantNewNil = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantNewNilFunction>>;
-typedef GDExtensionInterfaceVariantDestroyFunction = ffi.Void Function(
-    GDExtensionVariantPtr p_self);
-typedef DartGDExtensionInterfaceVariantDestroyFunction = void Function(
-    GDExtensionVariantPtr p_self);
+typedef GDExtensionInterfaceVariantNewNil =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantNewNilFunction>>;
+typedef GDExtensionInterfaceVariantDestroyFunction =
+    ffi.Void Function(GDExtensionVariantPtr p_self);
+typedef DartGDExtensionInterfaceVariantDestroyFunction =
+    void Function(GDExtensionVariantPtr p_self);
 
 /// @name variant_destroy
 /// @since 4.1
@@ -2346,24 +2605,26 @@ typedef DartGDExtensionInterfaceVariantDestroyFunction = void Function(
 /// Destroys a Variant.
 ///
 /// @param p_self A pointer to the Variant to destroy.
-typedef GDExtensionInterfaceVariantDestroy = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantDestroyFunction>>;
-typedef GDExtensionInterfaceVariantCallFunction = ffi.Void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionConstStringNamePtr p_method,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionInt p_argument_count,
-  GDExtensionUninitializedVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef DartGDExtensionInterfaceVariantCallFunction = void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionConstStringNamePtr p_method,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  DartGDExtensionInt p_argument_count,
-  GDExtensionUninitializedVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
+typedef GDExtensionInterfaceVariantDestroy =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantDestroyFunction>>;
+typedef GDExtensionInterfaceVariantCallFunction =
+    ffi.Void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionConstStringNamePtr p_method,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionInt p_argument_count,
+      GDExtensionUninitializedVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef DartGDExtensionInterfaceVariantCallFunction =
+    void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionConstStringNamePtr p_method,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      DartGDExtensionInt p_argument_count,
+      GDExtensionUninitializedVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
 
 /// @name variant_call
 /// @since 4.1
@@ -2378,31 +2639,33 @@ typedef DartGDExtensionInterfaceVariantCallFunction = void Function(
 /// @param r_error A pointer the structure which will hold error information.
 ///
 /// @see Variant::callp()
-typedef GDExtensionInterfaceVariantCall
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantCallFunction>>;
-typedef GDExtensionInterfaceVariantCallStaticFunction = ffi.Void Function(
-  ffi.UnsignedInt p_type,
-  GDExtensionConstStringNamePtr p_method,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionInt p_argument_count,
-  GDExtensionUninitializedVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef DartGDExtensionInterfaceVariantCallStaticFunction = void Function(
-  GDExtensionVariantType p_type,
-  GDExtensionConstStringNamePtr p_method,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  DartGDExtensionInt p_argument_count,
-  GDExtensionUninitializedVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
+typedef GDExtensionInterfaceVariantCall =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantCallFunction>>;
+typedef GDExtensionInterfaceVariantCallStaticFunction =
+    ffi.Void Function(
+      ffi.UnsignedInt p_type,
+      GDExtensionConstStringNamePtr p_method,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionInt p_argument_count,
+      GDExtensionUninitializedVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef DartGDExtensionInterfaceVariantCallStaticFunction =
+    void Function(
+      GDExtensionVariantType p_type,
+      GDExtensionConstStringNamePtr p_method,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      DartGDExtensionInt p_argument_count,
+      GDExtensionUninitializedVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
 
 /// @name variant_call_static
 /// @since 4.1
 ///
 /// Calls a static method on a Variant.
 ///
-/// @param p_self A pointer to the Variant.
+/// @param p_type The variant type.
 /// @param p_method A pointer to a StringName identifying the method.
 /// @param p_args A pointer to a C array of Variant.
 /// @param p_argument_count The number of arguments.
@@ -2410,22 +2673,26 @@ typedef DartGDExtensionInterfaceVariantCallStaticFunction = void Function(
 /// @param r_error A pointer the structure which will be updated with error information.
 ///
 /// @see Variant::call_static()
-typedef GDExtensionInterfaceVariantCallStatic = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantCallStaticFunction>>;
-typedef GDExtensionInterfaceVariantEvaluateFunction = ffi.Void Function(
-  ffi.UnsignedInt p_op,
-  GDExtensionConstVariantPtr p_a,
-  GDExtensionConstVariantPtr p_b,
-  GDExtensionUninitializedVariantPtr r_return,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantEvaluateFunction = void Function(
-  GDExtensionVariantOperator p_op,
-  GDExtensionConstVariantPtr p_a,
-  GDExtensionConstVariantPtr p_b,
-  GDExtensionUninitializedVariantPtr r_return,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantCallStatic =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantCallStaticFunction>
+    >;
+typedef GDExtensionInterfaceVariantEvaluateFunction =
+    ffi.Void Function(
+      ffi.UnsignedInt p_op,
+      GDExtensionConstVariantPtr p_a,
+      GDExtensionConstVariantPtr p_b,
+      GDExtensionUninitializedVariantPtr r_return,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantEvaluateFunction =
+    void Function(
+      GDExtensionVariantOperator p_op,
+      GDExtensionConstVariantPtr p_a,
+      GDExtensionConstVariantPtr p_b,
+      GDExtensionUninitializedVariantPtr r_return,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_evaluate
 /// @since 4.1
@@ -2439,20 +2706,24 @@ typedef DartGDExtensionInterfaceVariantEvaluateFunction = void Function(
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
 ///
 /// @see Variant::evaluate()
-typedef GDExtensionInterfaceVariantEvaluate = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantEvaluateFunction>>;
-typedef GDExtensionInterfaceVariantSetFunction = ffi.Void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantSetFunction = void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantEvaluate =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantEvaluateFunction>
+    >;
+typedef GDExtensionInterfaceVariantSetFunction =
+    ffi.Void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantSetFunction =
+    void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_set
 /// @since 4.1
@@ -2465,20 +2736,22 @@ typedef DartGDExtensionInterfaceVariantSetFunction = void Function(
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
 ///
 /// @see Variant::set()
-typedef GDExtensionInterfaceVariantSet
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantSetFunction>>;
-typedef GDExtensionInterfaceVariantSetNamedFunction = ffi.Void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionConstStringNamePtr p_key,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantSetNamedFunction = void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionConstStringNamePtr p_key,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantSet =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantSetFunction>>;
+typedef GDExtensionInterfaceVariantSetNamedFunction =
+    ffi.Void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionConstStringNamePtr p_key,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantSetNamedFunction =
+    void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionConstStringNamePtr p_key,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_set_named
 /// @since 4.1
@@ -2491,20 +2764,24 @@ typedef DartGDExtensionInterfaceVariantSetNamedFunction = void Function(
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
 ///
 /// @see Variant::set_named()
-typedef GDExtensionInterfaceVariantSetNamed = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantSetNamedFunction>>;
-typedef GDExtensionInterfaceVariantSetKeyedFunction = ffi.Void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantSetKeyedFunction = void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantSetNamed =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantSetNamedFunction>
+    >;
+typedef GDExtensionInterfaceVariantSetKeyedFunction =
+    ffi.Void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantSetKeyedFunction =
+    void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_set_keyed
 /// @since 4.1
@@ -2517,22 +2794,26 @@ typedef DartGDExtensionInterfaceVariantSetKeyedFunction = void Function(
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
 ///
 /// @see Variant::set_keyed()
-typedef GDExtensionInterfaceVariantSetKeyed = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantSetKeyedFunction>>;
-typedef GDExtensionInterfaceVariantSetIndexedFunction = ffi.Void Function(
-  GDExtensionVariantPtr p_self,
-  GDExtensionInt p_index,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<GDExtensionBool> r_valid,
-  ffi.Pointer<GDExtensionBool> r_oob,
-);
-typedef DartGDExtensionInterfaceVariantSetIndexedFunction = void Function(
-  GDExtensionVariantPtr p_self,
-  DartGDExtensionInt p_index,
-  GDExtensionConstVariantPtr p_value,
-  ffi.Pointer<GDExtensionBool> r_valid,
-  ffi.Pointer<GDExtensionBool> r_oob,
-);
+typedef GDExtensionInterfaceVariantSetKeyed =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantSetKeyedFunction>
+    >;
+typedef GDExtensionInterfaceVariantSetIndexedFunction =
+    ffi.Void Function(
+      GDExtensionVariantPtr p_self,
+      GDExtensionInt p_index,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<GDExtensionBool> r_valid,
+      ffi.Pointer<GDExtensionBool> r_oob,
+    );
+typedef DartGDExtensionInterfaceVariantSetIndexedFunction =
+    void Function(
+      GDExtensionVariantPtr p_self,
+      DartGDExtensionInt p_index,
+      GDExtensionConstVariantPtr p_value,
+      ffi.Pointer<GDExtensionBool> r_valid,
+      ffi.Pointer<GDExtensionBool> r_oob,
+    );
 
 /// @name variant_set_indexed
 /// @since 4.1
@@ -2544,20 +2825,24 @@ typedef DartGDExtensionInterfaceVariantSetIndexedFunction = void Function(
 /// @param p_value A pointer to a Variant representing the value.
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
 /// @param r_oob A pointer to a boolean which will be set to true if the index is out of bounds.
-typedef GDExtensionInterfaceVariantSetIndexed = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantSetIndexedFunction>>;
-typedef GDExtensionInterfaceVariantGetFunction = ffi.Void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantGetFunction = void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantSetIndexed =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantSetIndexedFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetFunction =
+    ffi.Void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantGetFunction =
+    void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_get
 /// @since 4.1
@@ -2568,20 +2853,22 @@ typedef DartGDExtensionInterfaceVariantGetFunction = void Function(
 /// @param p_key A pointer to a Variant representing the key.
 /// @param r_ret A pointer to a Variant which will be assigned the value.
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
-typedef GDExtensionInterfaceVariantGet
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantGetFunction>>;
-typedef GDExtensionInterfaceVariantGetNamedFunction = ffi.Void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstStringNamePtr p_key,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantGetNamedFunction = void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstStringNamePtr p_key,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantGet =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantGetFunction>>;
+typedef GDExtensionInterfaceVariantGetNamedFunction =
+    ffi.Void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstStringNamePtr p_key,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantGetNamedFunction =
+    void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstStringNamePtr p_key,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_get_named
 /// @since 4.1
@@ -2592,20 +2879,24 @@ typedef DartGDExtensionInterfaceVariantGetNamedFunction = void Function(
 /// @param p_key A pointer to a StringName representing the key.
 /// @param r_ret A pointer to a Variant which will be assigned the value.
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
-typedef GDExtensionInterfaceVariantGetNamed = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantGetNamedFunction>>;
-typedef GDExtensionInterfaceVariantGetKeyedFunction = ffi.Void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantGetKeyedFunction = void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantGetNamed =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetNamedFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetKeyedFunction =
+    ffi.Void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantGetKeyedFunction =
+    void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_get_keyed
 /// @since 4.1
@@ -2616,22 +2907,26 @@ typedef DartGDExtensionInterfaceVariantGetKeyedFunction = void Function(
 /// @param p_key A pointer to a Variant representing the key.
 /// @param r_ret A pointer to a Variant which will be assigned the value.
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
-typedef GDExtensionInterfaceVariantGetKeyed = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantGetKeyedFunction>>;
-typedef GDExtensionInterfaceVariantGetIndexedFunction = ffi.Void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionInt p_index,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-  ffi.Pointer<GDExtensionBool> r_oob,
-);
-typedef DartGDExtensionInterfaceVariantGetIndexedFunction = void Function(
-  GDExtensionConstVariantPtr p_self,
-  DartGDExtensionInt p_index,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-  ffi.Pointer<GDExtensionBool> r_oob,
-);
+typedef GDExtensionInterfaceVariantGetKeyed =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetKeyedFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetIndexedFunction =
+    ffi.Void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionInt p_index,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+      ffi.Pointer<GDExtensionBool> r_oob,
+    );
+typedef DartGDExtensionInterfaceVariantGetIndexedFunction =
+    void Function(
+      GDExtensionConstVariantPtr p_self,
+      DartGDExtensionInt p_index,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+      ffi.Pointer<GDExtensionBool> r_oob,
+    );
 
 /// @name variant_get_indexed
 /// @since 4.1
@@ -2643,19 +2938,22 @@ typedef DartGDExtensionInterfaceVariantGetIndexedFunction = void Function(
 /// @param r_ret A pointer to a Variant which will be assigned the value.
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
 /// @param r_oob A pointer to a boolean which will be set to true if the index is out of bounds.
-typedef GDExtensionInterfaceVariantGetIndexed = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantGetIndexedFunction>>;
-typedef GDExtensionInterfaceVariantIterInitFunction = GDExtensionBool Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionUninitializedVariantPtr r_iter,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantIterInitFunction = DartGDExtensionBool
-    Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionUninitializedVariantPtr r_iter,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantGetIndexed =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetIndexedFunction>
+    >;
+typedef GDExtensionInterfaceVariantIterInitFunction =
+    GDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionUninitializedVariantPtr r_iter,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantIterInitFunction =
+    DartGDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionUninitializedVariantPtr r_iter,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_iter_init
 /// @since 4.1
@@ -2669,19 +2967,22 @@ typedef DartGDExtensionInterfaceVariantIterInitFunction = DartGDExtensionBool
 /// @return true if the operation is valid; otherwise false.
 ///
 /// @see Variant::iter_init()
-typedef GDExtensionInterfaceVariantIterInit = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantIterInitFunction>>;
-typedef GDExtensionInterfaceVariantIterNextFunction = GDExtensionBool Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionVariantPtr r_iter,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantIterNextFunction = DartGDExtensionBool
-    Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionVariantPtr r_iter,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantIterInit =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantIterInitFunction>
+    >;
+typedef GDExtensionInterfaceVariantIterNextFunction =
+    GDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionVariantPtr r_iter,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantIterNextFunction =
+    DartGDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionVariantPtr r_iter,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_iter_next
 /// @since 4.1
@@ -2695,20 +2996,24 @@ typedef DartGDExtensionInterfaceVariantIterNextFunction = DartGDExtensionBool
 /// @return true if the operation is valid; otherwise false.
 ///
 /// @see Variant::iter_next()
-typedef GDExtensionInterfaceVariantIterNext = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantIterNextFunction>>;
-typedef GDExtensionInterfaceVariantIterGetFunction = ffi.Void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionVariantPtr r_iter,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantIterGetFunction = void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionVariantPtr r_iter,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+typedef GDExtensionInterfaceVariantIterNext =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantIterNextFunction>
+    >;
+typedef GDExtensionInterfaceVariantIterGetFunction =
+    ffi.Void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionVariantPtr r_iter,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantIterGetFunction =
+    void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionVariantPtr r_iter,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_iter_get
 /// @since 4.1
@@ -2721,12 +3026,12 @@ typedef DartGDExtensionInterfaceVariantIterGetFunction = void Function(
 /// @param r_valid A pointer to a boolean which will be set to false if the operation is invalid.
 ///
 /// @see Variant::iter_get()
-typedef GDExtensionInterfaceVariantIterGet = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantIterGetFunction>>;
-typedef GDExtensionInterfaceVariantHashFunction = GDExtensionInt Function(
-    GDExtensionConstVariantPtr p_self);
-typedef DartGDExtensionInterfaceVariantHashFunction = DartGDExtensionInt
-    Function(GDExtensionConstVariantPtr p_self);
+typedef GDExtensionInterfaceVariantIterGet =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantIterGetFunction>>;
+typedef GDExtensionInterfaceVariantHashFunction =
+    GDExtensionInt Function(GDExtensionConstVariantPtr p_self);
+typedef DartGDExtensionInterfaceVariantHashFunction =
+    DartGDExtensionInt Function(GDExtensionConstVariantPtr p_self);
 
 /// @name variant_hash
 /// @since 4.1
@@ -2738,18 +3043,18 @@ typedef DartGDExtensionInterfaceVariantHashFunction = DartGDExtensionInt
 /// @return The hash value.
 ///
 /// @see Variant::hash()
-typedef GDExtensionInterfaceVariantHash
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantHashFunction>>;
-typedef GDExtensionInterfaceVariantRecursiveHashFunction = GDExtensionInt
-    Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionInt p_recursion_count,
-);
-typedef DartGDExtensionInterfaceVariantRecursiveHashFunction
-    = DartGDExtensionInt Function(
-  GDExtensionConstVariantPtr p_self,
-  DartGDExtensionInt p_recursion_count,
-);
+typedef GDExtensionInterfaceVariantHash =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantHashFunction>>;
+typedef GDExtensionInterfaceVariantRecursiveHashFunction =
+    GDExtensionInt Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionInt p_recursion_count,
+    );
+typedef DartGDExtensionInterfaceVariantRecursiveHashFunction =
+    DartGDExtensionInt Function(
+      GDExtensionConstVariantPtr p_self,
+      DartGDExtensionInt p_recursion_count,
+    );
 
 /// @name variant_recursive_hash
 /// @since 4.1
@@ -2762,18 +3067,20 @@ typedef DartGDExtensionInterfaceVariantRecursiveHashFunction
 /// @return The hash value.
 ///
 /// @see Variant::recursive_hash()
-typedef GDExtensionInterfaceVariantRecursiveHash = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantRecursiveHashFunction>>;
-typedef GDExtensionInterfaceVariantHashCompareFunction = GDExtensionBool
-    Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstVariantPtr p_other,
-);
-typedef DartGDExtensionInterfaceVariantHashCompareFunction = DartGDExtensionBool
-    Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstVariantPtr p_other,
-);
+typedef GDExtensionInterfaceVariantRecursiveHash =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantRecursiveHashFunction>
+    >;
+typedef GDExtensionInterfaceVariantHashCompareFunction =
+    GDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstVariantPtr p_other,
+    );
+typedef DartGDExtensionInterfaceVariantHashCompareFunction =
+    DartGDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstVariantPtr p_other,
+    );
 
 /// @name variant_hash_compare
 /// @since 4.1
@@ -2786,12 +3093,14 @@ typedef DartGDExtensionInterfaceVariantHashCompareFunction = DartGDExtensionBool
 /// @return The hash value.
 ///
 /// @see Variant::hash_compare()
-typedef GDExtensionInterfaceVariantHashCompare = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantHashCompareFunction>>;
-typedef GDExtensionInterfaceVariantBooleanizeFunction = GDExtensionBool
-    Function(GDExtensionConstVariantPtr p_self);
-typedef DartGDExtensionInterfaceVariantBooleanizeFunction = DartGDExtensionBool
-    Function(GDExtensionConstVariantPtr p_self);
+typedef GDExtensionInterfaceVariantHashCompare =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantHashCompareFunction>
+    >;
+typedef GDExtensionInterfaceVariantBooleanizeFunction =
+    GDExtensionBool Function(GDExtensionConstVariantPtr p_self);
+typedef DartGDExtensionInterfaceVariantBooleanizeFunction =
+    DartGDExtensionBool Function(GDExtensionConstVariantPtr p_self);
 
 /// @name variant_booleanize
 /// @since 4.1
@@ -2801,18 +3110,22 @@ typedef DartGDExtensionInterfaceVariantBooleanizeFunction = DartGDExtensionBool
 /// @param p_self A pointer to the Variant.
 ///
 /// @return The boolean value of the Variant.
-typedef GDExtensionInterfaceVariantBooleanize = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantBooleanizeFunction>>;
-typedef GDExtensionInterfaceVariantDuplicateFunction = ffi.Void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionVariantPtr r_ret,
-  GDExtensionBool p_deep,
-);
-typedef DartGDExtensionInterfaceVariantDuplicateFunction = void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionVariantPtr r_ret,
-  DartGDExtensionBool p_deep,
-);
+typedef GDExtensionInterfaceVariantBooleanize =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantBooleanizeFunction>
+    >;
+typedef GDExtensionInterfaceVariantDuplicateFunction =
+    ffi.Void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionVariantPtr r_ret,
+      GDExtensionBool p_deep,
+    );
+typedef DartGDExtensionInterfaceVariantDuplicateFunction =
+    void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionVariantPtr r_ret,
+      DartGDExtensionBool p_deep,
+    );
 
 /// @name variant_duplicate
 /// @since 4.1
@@ -2822,16 +3135,20 @@ typedef DartGDExtensionInterfaceVariantDuplicateFunction = void Function(
 /// @param p_self A pointer to the Variant.
 /// @param r_ret A pointer to a Variant to store the duplicated value.
 /// @param p_deep Whether or not to duplicate deeply (when supported by the Variant type).
-typedef GDExtensionInterfaceVariantDuplicate = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantDuplicateFunction>>;
-typedef GDExtensionInterfaceVariantStringifyFunction = ffi.Void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionStringPtr r_ret,
-);
-typedef DartGDExtensionInterfaceVariantStringifyFunction = void Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionStringPtr r_ret,
-);
+typedef GDExtensionInterfaceVariantDuplicate =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantDuplicateFunction>
+    >;
+typedef GDExtensionInterfaceVariantStringifyFunction =
+    ffi.Void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionStringPtr r_ret,
+    );
+typedef DartGDExtensionInterfaceVariantStringifyFunction =
+    void Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionStringPtr r_ret,
+    );
 
 /// @name variant_stringify
 /// @since 4.1
@@ -2840,12 +3157,14 @@ typedef DartGDExtensionInterfaceVariantStringifyFunction = void Function(
 ///
 /// @param p_self A pointer to the Variant.
 /// @param r_ret A pointer to a String to store the resulting value.
-typedef GDExtensionInterfaceVariantStringify = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantStringifyFunction>>;
-typedef GDExtensionInterfaceVariantGetTypeFunction = ffi.UnsignedInt Function(
-    GDExtensionConstVariantPtr p_self);
-typedef DartGDExtensionInterfaceVariantGetTypeFunction = GDExtensionVariantType
-    Function(GDExtensionConstVariantPtr p_self);
+typedef GDExtensionInterfaceVariantStringify =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantStringifyFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetTypeFunction =
+    ffi.UnsignedInt Function(GDExtensionConstVariantPtr p_self);
+typedef DartGDExtensionInterfaceVariantGetTypeFunction =
+    GDExtensionVariantType Function(GDExtensionConstVariantPtr p_self);
 
 /// @name variant_get_type
 /// @since 4.1
@@ -2855,17 +3174,18 @@ typedef DartGDExtensionInterfaceVariantGetTypeFunction = GDExtensionVariantType
 /// @param p_self A pointer to the Variant.
 ///
 /// @return The variant type.
-typedef GDExtensionInterfaceVariantGetType = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantGetTypeFunction>>;
-typedef GDExtensionInterfaceVariantHasMethodFunction = GDExtensionBool Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstStringNamePtr p_method,
-);
-typedef DartGDExtensionInterfaceVariantHasMethodFunction = DartGDExtensionBool
-    Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstStringNamePtr p_method,
-);
+typedef GDExtensionInterfaceVariantGetType =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantGetTypeFunction>>;
+typedef GDExtensionInterfaceVariantHasMethodFunction =
+    GDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstStringNamePtr p_method,
+    );
+typedef DartGDExtensionInterfaceVariantHasMethodFunction =
+    DartGDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstStringNamePtr p_method,
+    );
 
 /// @name variant_has_method
 /// @since 4.1
@@ -2875,18 +3195,21 @@ typedef DartGDExtensionInterfaceVariantHasMethodFunction = DartGDExtensionBool
 /// @param p_self A pointer to the Variant.
 /// @param p_method A pointer to a StringName with the method name.
 ///
-/// @return
-typedef GDExtensionInterfaceVariantHasMethod = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantHasMethodFunction>>;
-typedef GDExtensionInterfaceVariantHasMemberFunction = GDExtensionBool Function(
-  ffi.UnsignedInt p_type,
-  GDExtensionConstStringNamePtr p_member,
-);
-typedef DartGDExtensionInterfaceVariantHasMemberFunction = DartGDExtensionBool
-    Function(
-  GDExtensionVariantType p_type,
-  GDExtensionConstStringNamePtr p_member,
-);
+/// @return true if the variant has the given method; otherwise false.
+typedef GDExtensionInterfaceVariantHasMethod =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantHasMethodFunction>
+    >;
+typedef GDExtensionInterfaceVariantHasMemberFunction =
+    GDExtensionBool Function(
+      ffi.UnsignedInt p_type,
+      GDExtensionConstStringNamePtr p_member,
+    );
+typedef DartGDExtensionInterfaceVariantHasMemberFunction =
+    DartGDExtensionBool Function(
+      GDExtensionVariantType p_type,
+      GDExtensionConstStringNamePtr p_member,
+    );
 
 /// @name variant_has_member
 /// @since 4.1
@@ -2896,20 +3219,23 @@ typedef DartGDExtensionInterfaceVariantHasMemberFunction = DartGDExtensionBool
 /// @param p_type The Variant type.
 /// @param p_member A pointer to a StringName with the member name.
 ///
-/// @return
-typedef GDExtensionInterfaceVariantHasMember = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantHasMemberFunction>>;
-typedef GDExtensionInterfaceVariantHasKeyFunction = GDExtensionBool Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
-typedef DartGDExtensionInterfaceVariantHasKeyFunction = DartGDExtensionBool
-    Function(
-  GDExtensionConstVariantPtr p_self,
-  GDExtensionConstVariantPtr p_key,
-  ffi.Pointer<GDExtensionBool> r_valid,
-);
+/// @return true if the variant has the given method; otherwise false.
+typedef GDExtensionInterfaceVariantHasMember =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantHasMemberFunction>
+    >;
+typedef GDExtensionInterfaceVariantHasKeyFunction =
+    GDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
+typedef DartGDExtensionInterfaceVariantHasKeyFunction =
+    DartGDExtensionBool Function(
+      GDExtensionConstVariantPtr p_self,
+      GDExtensionConstVariantPtr p_key,
+      ffi.Pointer<GDExtensionBool> r_valid,
+    );
 
 /// @name variant_has_key
 /// @since 4.1
@@ -2921,12 +3247,12 @@ typedef DartGDExtensionInterfaceVariantHasKeyFunction = DartGDExtensionBool
 /// @param r_valid A pointer to a boolean which will be set to false if the key doesn't exist.
 ///
 /// @return true if the key exists; otherwise false.
-typedef GDExtensionInterfaceVariantHasKey = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantHasKeyFunction>>;
-typedef GDExtensionInterfaceVariantGetObjectInstanceIdFunction
-    = GDObjectInstanceID Function(GDExtensionConstVariantPtr p_self);
-typedef DartGDExtensionInterfaceVariantGetObjectInstanceIdFunction
-    = DartGDObjectInstanceID Function(GDExtensionConstVariantPtr p_self);
+typedef GDExtensionInterfaceVariantHasKey =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantHasKeyFunction>>;
+typedef GDExtensionInterfaceVariantGetObjectInstanceIdFunction =
+    GDObjectInstanceID Function(GDExtensionConstVariantPtr p_self);
+typedef DartGDExtensionInterfaceVariantGetObjectInstanceIdFunction =
+    DartGDObjectInstanceID Function(GDExtensionConstVariantPtr p_self);
 
 /// @name variant_get_object_instance_id
 /// @since 4.4
@@ -2939,16 +3265,20 @@ typedef DartGDExtensionInterfaceVariantGetObjectInstanceIdFunction
 /// @param p_self A pointer to the Variant.
 ///
 /// @return The instance ID for the contained object.
-typedef GDExtensionInterfaceVariantGetObjectInstanceId = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetObjectInstanceIdFunction>>;
-typedef GDExtensionInterfaceVariantGetTypeNameFunction = ffi.Void Function(
-  ffi.UnsignedInt p_type,
-  GDExtensionUninitializedStringPtr r_name,
-);
-typedef DartGDExtensionInterfaceVariantGetTypeNameFunction = void Function(
-  GDExtensionVariantType p_type,
-  GDExtensionUninitializedStringPtr r_name,
-);
+typedef GDExtensionInterfaceVariantGetObjectInstanceId =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetObjectInstanceIdFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetTypeNameFunction =
+    ffi.Void Function(
+      ffi.UnsignedInt p_type,
+      GDExtensionUninitializedStringPtr r_name,
+    );
+typedef DartGDExtensionInterfaceVariantGetTypeNameFunction =
+    void Function(
+      GDExtensionVariantType p_type,
+      GDExtensionUninitializedStringPtr r_name,
+    );
 
 /// @name variant_get_type_name
 /// @since 4.1
@@ -2957,15 +3287,17 @@ typedef DartGDExtensionInterfaceVariantGetTypeNameFunction = void Function(
 ///
 /// @param p_type The Variant type.
 /// @param r_name A pointer to a String to store the Variant type name.
-typedef GDExtensionInterfaceVariantGetTypeName = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetTypeNameFunction>>;
-typedef GDExtensionInterfaceVariantCanConvertFunction = GDExtensionBool
-    Function(ffi.UnsignedInt p_from, ffi.UnsignedInt p_to);
-typedef DartGDExtensionInterfaceVariantCanConvertFunction = DartGDExtensionBool
-    Function(
-  GDExtensionVariantType p_from,
-  GDExtensionVariantType p_to,
-);
+typedef GDExtensionInterfaceVariantGetTypeName =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetTypeNameFunction>
+    >;
+typedef GDExtensionInterfaceVariantCanConvertFunction =
+    GDExtensionBool Function(ffi.UnsignedInt p_from, ffi.UnsignedInt p_to);
+typedef DartGDExtensionInterfaceVariantCanConvertFunction =
+    DartGDExtensionBool Function(
+      GDExtensionVariantType p_from,
+      GDExtensionVariantType p_to,
+    );
 
 /// @name variant_can_convert
 /// @since 4.1
@@ -2976,15 +3308,17 @@ typedef DartGDExtensionInterfaceVariantCanConvertFunction = DartGDExtensionBool
 /// @param p_to The Variant type to convert to.
 ///
 /// @return true if the conversion is possible; otherwise false.
-typedef GDExtensionInterfaceVariantCanConvert = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantCanConvertFunction>>;
-typedef GDExtensionInterfaceVariantCanConvertStrictFunction = GDExtensionBool
-    Function(ffi.UnsignedInt p_from, ffi.UnsignedInt p_to);
-typedef DartGDExtensionInterfaceVariantCanConvertStrictFunction
-    = DartGDExtensionBool Function(
-  GDExtensionVariantType p_from,
-  GDExtensionVariantType p_to,
-);
+typedef GDExtensionInterfaceVariantCanConvert =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantCanConvertFunction>
+    >;
+typedef GDExtensionInterfaceVariantCanConvertStrictFunction =
+    GDExtensionBool Function(ffi.UnsignedInt p_from, ffi.UnsignedInt p_to);
+typedef DartGDExtensionInterfaceVariantCanConvertStrictFunction =
+    DartGDExtensionBool Function(
+      GDExtensionVariantType p_from,
+      GDExtensionVariantType p_to,
+    );
 
 /// @name variant_can_convert_strict
 /// @since 4.1
@@ -2995,15 +3329,16 @@ typedef DartGDExtensionInterfaceVariantCanConvertStrictFunction
 /// @param p_to The Variant type to convert to.
 ///
 /// @return true if the conversion is possible; otherwise false.
-typedef GDExtensionInterfaceVariantCanConvertStrict = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantCanConvertStrictFunction>>;
-typedef GDExtensionInterfaceGetVariantFromTypeConstructorFunction
-    = GDExtensionVariantFromTypeConstructorFunc Function(
-        ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceGetVariantFromTypeConstructorFunction
-    = GDExtensionVariantFromTypeConstructorFunc Function(
-  GDExtensionVariantType p_type,
-);
+typedef GDExtensionInterfaceVariantCanConvertStrict =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantCanConvertStrictFunction>
+    >;
+typedef GDExtensionInterfaceGetVariantFromTypeConstructorFunction =
+    GDExtensionVariantFromTypeConstructorFunc Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceGetVariantFromTypeConstructorFunction =
+    GDExtensionVariantFromTypeConstructorFunc Function(
+      GDExtensionVariantType p_type,
+    );
 
 /// @name get_variant_from_type_constructor
 /// @since 4.1
@@ -3013,16 +3348,18 @@ typedef DartGDExtensionInterfaceGetVariantFromTypeConstructorFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a function that can create a Variant of the given type from a raw value.
-typedef GDExtensionInterfaceGetVariantFromTypeConstructor = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceGetVariantFromTypeConstructorFunction>>;
-typedef GDExtensionInterfaceGetVariantToTypeConstructorFunction
-    = GDExtensionTypeFromVariantConstructorFunc Function(
-        ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceGetVariantToTypeConstructorFunction
-    = GDExtensionTypeFromVariantConstructorFunc Function(
-  GDExtensionVariantType p_type,
-);
+typedef GDExtensionInterfaceGetVariantFromTypeConstructor =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceGetVariantFromTypeConstructorFunction
+      >
+    >;
+typedef GDExtensionInterfaceGetVariantToTypeConstructorFunction =
+    GDExtensionTypeFromVariantConstructorFunc Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceGetVariantToTypeConstructorFunction =
+    GDExtensionTypeFromVariantConstructorFunc Function(
+      GDExtensionVariantType p_type,
+    );
 
 /// @name get_variant_to_type_constructor
 /// @since 4.1
@@ -3032,15 +3369,18 @@ typedef DartGDExtensionInterfaceGetVariantToTypeConstructorFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a function that can get the raw value from a Variant of the given type.
-typedef GDExtensionInterfaceGetVariantToTypeConstructor = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceGetVariantToTypeConstructorFunction>>;
-typedef GDExtensionInterfaceGetVariantGetInternalPtrFuncFunction
-    = GDExtensionVariantGetInternalPtrFunc Function(ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceGetVariantGetInternalPtrFuncFunction
-    = GDExtensionVariantGetInternalPtrFunc Function(
-  GDExtensionVariantType p_type,
-);
+typedef GDExtensionInterfaceGetVariantToTypeConstructor =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceGetVariantToTypeConstructorFunction
+      >
+    >;
+typedef GDExtensionInterfaceGetVariantGetInternalPtrFuncFunction =
+    GDExtensionVariantGetInternalPtrFunc Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceGetVariantGetInternalPtrFuncFunction =
+    GDExtensionVariantGetInternalPtrFunc Function(
+      GDExtensionVariantType p_type,
+    );
 
 /// @name variant_get_ptr_internal_getter
 /// @since 4.4
@@ -3055,21 +3395,24 @@ typedef DartGDExtensionInterfaceGetVariantGetInternalPtrFuncFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a type-specific function that returns a pointer to the internal value of a variant. Check the implementation of this function (gdextension_variant_get_ptr_internal_getter) for pointee type info of each variant type.
-typedef GDExtensionInterfaceGetVariantGetInternalPtrFunc = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceGetVariantGetInternalPtrFuncFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrOperatorEvaluatorFunction
-    = GDExtensionPtrOperatorEvaluator Function(
-  ffi.UnsignedInt p_operator,
-  ffi.UnsignedInt p_type_a,
-  ffi.UnsignedInt p_type_b,
-);
-typedef DartGDExtensionInterfaceVariantGetPtrOperatorEvaluatorFunction
-    = GDExtensionPtrOperatorEvaluator Function(
-  GDExtensionVariantOperator p_operator,
-  GDExtensionVariantType p_type_a,
-  GDExtensionVariantType p_type_b,
-);
+typedef GDExtensionInterfaceGetVariantGetInternalPtrFunc =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceGetVariantGetInternalPtrFuncFunction
+      >
+    >;
+typedef GDExtensionInterfaceVariantGetPtrOperatorEvaluatorFunction =
+    GDExtensionPtrOperatorEvaluator Function(
+      ffi.UnsignedInt p_operator,
+      ffi.UnsignedInt p_type_a,
+      ffi.UnsignedInt p_type_b,
+    );
+typedef DartGDExtensionInterfaceVariantGetPtrOperatorEvaluatorFunction =
+    GDExtensionPtrOperatorEvaluator Function(
+      GDExtensionVariantOperator p_operator,
+      GDExtensionVariantType p_type_a,
+      GDExtensionVariantType p_type_b,
+    );
 
 /// @name variant_get_ptr_operator_evaluator
 /// @since 4.1
@@ -3081,21 +3424,24 @@ typedef DartGDExtensionInterfaceVariantGetPtrOperatorEvaluatorFunction
 /// @param p_type_b The type of the second Variant.
 ///
 /// @return A pointer to a function that can evaluate the given Variant operator on the given Variant types.
-typedef GDExtensionInterfaceVariantGetPtrOperatorEvaluator = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceVariantGetPtrOperatorEvaluatorFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrBuiltinMethodFunction
-    = GDExtensionPtrBuiltInMethod Function(
-  ffi.UnsignedInt p_type,
-  GDExtensionConstStringNamePtr p_method,
-  GDExtensionInt p_hash,
-);
-typedef DartGDExtensionInterfaceVariantGetPtrBuiltinMethodFunction
-    = GDExtensionPtrBuiltInMethod Function(
-  GDExtensionVariantType p_type,
-  GDExtensionConstStringNamePtr p_method,
-  DartGDExtensionInt p_hash,
-);
+typedef GDExtensionInterfaceVariantGetPtrOperatorEvaluator =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceVariantGetPtrOperatorEvaluatorFunction
+      >
+    >;
+typedef GDExtensionInterfaceVariantGetPtrBuiltinMethodFunction =
+    GDExtensionPtrBuiltInMethod Function(
+      ffi.UnsignedInt p_type,
+      GDExtensionConstStringNamePtr p_method,
+      GDExtensionInt p_hash,
+    );
+typedef DartGDExtensionInterfaceVariantGetPtrBuiltinMethodFunction =
+    GDExtensionPtrBuiltInMethod Function(
+      GDExtensionVariantType p_type,
+      GDExtensionConstStringNamePtr p_method,
+      DartGDExtensionInt p_hash,
+    );
 
 /// @name variant_get_ptr_builtin_method
 /// @since 4.1
@@ -3107,18 +3453,20 @@ typedef DartGDExtensionInterfaceVariantGetPtrBuiltinMethodFunction
 /// @param p_hash A hash representing the method signature.
 ///
 /// @return A pointer to a function that can call a builtin method on a type of Variant.
-typedef GDExtensionInterfaceVariantGetPtrBuiltinMethod = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrBuiltinMethodFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrConstructorFunction
-    = GDExtensionPtrConstructor Function(
-  ffi.UnsignedInt p_type,
-  ffi.Int32 p_constructor,
-);
-typedef DartGDExtensionInterfaceVariantGetPtrConstructorFunction
-    = GDExtensionPtrConstructor Function(
-  GDExtensionVariantType p_type,
-  int p_constructor,
-);
+typedef GDExtensionInterfaceVariantGetPtrBuiltinMethod =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrBuiltinMethodFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrConstructorFunction =
+    GDExtensionPtrConstructor Function(
+      ffi.UnsignedInt p_type,
+      ffi.Int32 p_constructor,
+    );
+typedef DartGDExtensionInterfaceVariantGetPtrConstructorFunction =
+    GDExtensionPtrConstructor Function(
+      GDExtensionVariantType p_type,
+      int p_constructor,
+    );
 
 /// @name variant_get_ptr_constructor
 /// @since 4.1
@@ -3129,12 +3477,14 @@ typedef DartGDExtensionInterfaceVariantGetPtrConstructorFunction
 /// @param p_constructor The index of the constructor.
 ///
 /// @return A pointer to a function that can call one of the constructors for a type of Variant.
-typedef GDExtensionInterfaceVariantGetPtrConstructor = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrConstructorFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrDestructorFunction
-    = GDExtensionPtrDestructor Function(ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceVariantGetPtrDestructorFunction
-    = GDExtensionPtrDestructor Function(GDExtensionVariantType p_type);
+typedef GDExtensionInterfaceVariantGetPtrConstructor =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrConstructorFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrDestructorFunction =
+    GDExtensionPtrDestructor Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceVariantGetPtrDestructorFunction =
+    GDExtensionPtrDestructor Function(GDExtensionVariantType p_type);
 
 /// @name variant_get_ptr_destructor
 /// @since 4.1
@@ -3144,22 +3494,26 @@ typedef DartGDExtensionInterfaceVariantGetPtrDestructorFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a function than can call the destructor for a type of Variant.
-typedef GDExtensionInterfaceVariantGetPtrDestructor = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrDestructorFunction>>;
-typedef GDExtensionInterfaceVariantConstructFunction = ffi.Void Function(
-  ffi.UnsignedInt p_type,
-  GDExtensionUninitializedVariantPtr r_base,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  ffi.Int32 p_argument_count,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef DartGDExtensionInterfaceVariantConstructFunction = void Function(
-  GDExtensionVariantType p_type,
-  GDExtensionUninitializedVariantPtr r_base,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  int p_argument_count,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
+typedef GDExtensionInterfaceVariantGetPtrDestructor =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrDestructorFunction>
+    >;
+typedef GDExtensionInterfaceVariantConstructFunction =
+    ffi.Void Function(
+      ffi.UnsignedInt p_type,
+      GDExtensionUninitializedVariantPtr r_base,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      ffi.Int32 p_argument_count,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef DartGDExtensionInterfaceVariantConstructFunction =
+    void Function(
+      GDExtensionVariantType p_type,
+      GDExtensionUninitializedVariantPtr r_base,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      int p_argument_count,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
 
 /// @name variant_construct
 /// @since 4.1
@@ -3167,22 +3521,24 @@ typedef DartGDExtensionInterfaceVariantConstructFunction = void Function(
 /// Constructs a Variant of the given type, using the first constructor that matches the given arguments.
 ///
 /// @param p_type The Variant type.
-/// @param p_base A pointer to a Variant to store the constructed value.
+/// @param r_base A pointer to a Variant to store the constructed value.
 /// @param p_args A pointer to a C array of Variant pointers representing the arguments for the constructor.
 /// @param p_argument_count The number of arguments to pass to the constructor.
 /// @param r_error A pointer the structure which will be updated with error information.
-typedef GDExtensionInterfaceVariantConstruct = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceVariantConstructFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrSetterFunction = GDExtensionPtrSetter
-    Function(
-  ffi.UnsignedInt p_type,
-  GDExtensionConstStringNamePtr p_member,
-);
-typedef DartGDExtensionInterfaceVariantGetPtrSetterFunction
-    = GDExtensionPtrSetter Function(
-  GDExtensionVariantType p_type,
-  GDExtensionConstStringNamePtr p_member,
-);
+typedef GDExtensionInterfaceVariantConstruct =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantConstructFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrSetterFunction =
+    GDExtensionPtrSetter Function(
+      ffi.UnsignedInt p_type,
+      GDExtensionConstStringNamePtr p_member,
+    );
+typedef DartGDExtensionInterfaceVariantGetPtrSetterFunction =
+    GDExtensionPtrSetter Function(
+      GDExtensionVariantType p_type,
+      GDExtensionConstStringNamePtr p_member,
+    );
 
 /// @name variant_get_ptr_setter
 /// @since 4.1
@@ -3193,18 +3549,20 @@ typedef DartGDExtensionInterfaceVariantGetPtrSetterFunction
 /// @param p_member A pointer to a StringName with the member name.
 ///
 /// @return A pointer to a function that can call a member's setter on the given Variant type.
-typedef GDExtensionInterfaceVariantGetPtrSetter = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrSetterFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrGetterFunction = GDExtensionPtrGetter
-    Function(
-  ffi.UnsignedInt p_type,
-  GDExtensionConstStringNamePtr p_member,
-);
-typedef DartGDExtensionInterfaceVariantGetPtrGetterFunction
-    = GDExtensionPtrGetter Function(
-  GDExtensionVariantType p_type,
-  GDExtensionConstStringNamePtr p_member,
-);
+typedef GDExtensionInterfaceVariantGetPtrSetter =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrSetterFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrGetterFunction =
+    GDExtensionPtrGetter Function(
+      ffi.UnsignedInt p_type,
+      GDExtensionConstStringNamePtr p_member,
+    );
+typedef DartGDExtensionInterfaceVariantGetPtrGetterFunction =
+    GDExtensionPtrGetter Function(
+      GDExtensionVariantType p_type,
+      GDExtensionConstStringNamePtr p_member,
+    );
 
 /// @name variant_get_ptr_getter
 /// @since 4.1
@@ -3215,12 +3573,14 @@ typedef DartGDExtensionInterfaceVariantGetPtrGetterFunction
 /// @param p_member A pointer to a StringName with the member name.
 ///
 /// @return A pointer to a function that can call a member's getter on the given Variant type.
-typedef GDExtensionInterfaceVariantGetPtrGetter = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrGetterFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrIndexedSetterFunction
-    = GDExtensionPtrIndexedSetter Function(ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceVariantGetPtrIndexedSetterFunction
-    = GDExtensionPtrIndexedSetter Function(GDExtensionVariantType p_type);
+typedef GDExtensionInterfaceVariantGetPtrGetter =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrGetterFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrIndexedSetterFunction =
+    GDExtensionPtrIndexedSetter Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceVariantGetPtrIndexedSetterFunction =
+    GDExtensionPtrIndexedSetter Function(GDExtensionVariantType p_type);
 
 /// @name variant_get_ptr_indexed_setter
 /// @since 4.1
@@ -3230,12 +3590,14 @@ typedef DartGDExtensionInterfaceVariantGetPtrIndexedSetterFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a function that can set an index on the given Variant type.
-typedef GDExtensionInterfaceVariantGetPtrIndexedSetter = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrIndexedSetterFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrIndexedGetterFunction
-    = GDExtensionPtrIndexedGetter Function(ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceVariantGetPtrIndexedGetterFunction
-    = GDExtensionPtrIndexedGetter Function(GDExtensionVariantType p_type);
+typedef GDExtensionInterfaceVariantGetPtrIndexedSetter =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrIndexedSetterFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrIndexedGetterFunction =
+    GDExtensionPtrIndexedGetter Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceVariantGetPtrIndexedGetterFunction =
+    GDExtensionPtrIndexedGetter Function(GDExtensionVariantType p_type);
 
 /// @name variant_get_ptr_indexed_getter
 /// @since 4.1
@@ -3245,12 +3607,14 @@ typedef DartGDExtensionInterfaceVariantGetPtrIndexedGetterFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a function that can get an index on the given Variant type.
-typedef GDExtensionInterfaceVariantGetPtrIndexedGetter = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrIndexedGetterFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrKeyedSetterFunction
-    = GDExtensionPtrKeyedSetter Function(ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceVariantGetPtrKeyedSetterFunction
-    = GDExtensionPtrKeyedSetter Function(GDExtensionVariantType p_type);
+typedef GDExtensionInterfaceVariantGetPtrIndexedGetter =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrIndexedGetterFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrKeyedSetterFunction =
+    GDExtensionPtrKeyedSetter Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceVariantGetPtrKeyedSetterFunction =
+    GDExtensionPtrKeyedSetter Function(GDExtensionVariantType p_type);
 
 /// @name variant_get_ptr_keyed_setter
 /// @since 4.1
@@ -3260,12 +3624,14 @@ typedef DartGDExtensionInterfaceVariantGetPtrKeyedSetterFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a function that can set a key on the given Variant type.
-typedef GDExtensionInterfaceVariantGetPtrKeyedSetter = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrKeyedSetterFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrKeyedGetterFunction
-    = GDExtensionPtrKeyedGetter Function(ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceVariantGetPtrKeyedGetterFunction
-    = GDExtensionPtrKeyedGetter Function(GDExtensionVariantType p_type);
+typedef GDExtensionInterfaceVariantGetPtrKeyedSetter =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrKeyedSetterFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrKeyedGetterFunction =
+    GDExtensionPtrKeyedGetter Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceVariantGetPtrKeyedGetterFunction =
+    GDExtensionPtrKeyedGetter Function(GDExtensionVariantType p_type);
 
 /// @name variant_get_ptr_keyed_getter
 /// @since 4.1
@@ -3275,12 +3641,14 @@ typedef DartGDExtensionInterfaceVariantGetPtrKeyedGetterFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a function that can get a key on the given Variant type.
-typedef GDExtensionInterfaceVariantGetPtrKeyedGetter = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrKeyedGetterFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrKeyedCheckerFunction
-    = GDExtensionPtrKeyedChecker Function(ffi.UnsignedInt p_type);
-typedef DartGDExtensionInterfaceVariantGetPtrKeyedCheckerFunction
-    = GDExtensionPtrKeyedChecker Function(GDExtensionVariantType p_type);
+typedef GDExtensionInterfaceVariantGetPtrKeyedGetter =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrKeyedGetterFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrKeyedCheckerFunction =
+    GDExtensionPtrKeyedChecker Function(ffi.UnsignedInt p_type);
+typedef DartGDExtensionInterfaceVariantGetPtrKeyedCheckerFunction =
+    GDExtensionPtrKeyedChecker Function(GDExtensionVariantType p_type);
 
 /// @name variant_get_ptr_keyed_checker
 /// @since 4.1
@@ -3290,18 +3658,22 @@ typedef DartGDExtensionInterfaceVariantGetPtrKeyedCheckerFunction
 /// @param p_type The Variant type.
 ///
 /// @return A pointer to a function that can check a key on the given Variant type.
-typedef GDExtensionInterfaceVariantGetPtrKeyedChecker = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrKeyedCheckerFunction>>;
-typedef GDExtensionInterfaceVariantGetConstantValueFunction = ffi.Void Function(
-  ffi.UnsignedInt p_type,
-  GDExtensionConstStringNamePtr p_constant,
-  GDExtensionUninitializedVariantPtr r_ret,
-);
-typedef DartGDExtensionInterfaceVariantGetConstantValueFunction = void Function(
-  GDExtensionVariantType p_type,
-  GDExtensionConstStringNamePtr p_constant,
-  GDExtensionUninitializedVariantPtr r_ret,
-);
+typedef GDExtensionInterfaceVariantGetPtrKeyedChecker =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetPtrKeyedCheckerFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetConstantValueFunction =
+    ffi.Void Function(
+      ffi.UnsignedInt p_type,
+      GDExtensionConstStringNamePtr p_constant,
+      GDExtensionUninitializedVariantPtr r_ret,
+    );
+typedef DartGDExtensionInterfaceVariantGetConstantValueFunction =
+    void Function(
+      GDExtensionVariantType p_type,
+      GDExtensionConstStringNamePtr p_constant,
+      GDExtensionUninitializedVariantPtr r_ret,
+    );
 
 /// @name variant_get_constant_value
 /// @since 4.1
@@ -3311,18 +3683,20 @@ typedef DartGDExtensionInterfaceVariantGetConstantValueFunction = void Function(
 /// @param p_type The Variant type.
 /// @param p_constant A pointer to a StringName with the constant name.
 /// @param r_ret A pointer to a Variant to store the value.
-typedef GDExtensionInterfaceVariantGetConstantValue = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceVariantGetConstantValueFunction>>;
-typedef GDExtensionInterfaceVariantGetPtrUtilityFunctionFunction
-    = GDExtensionPtrUtilityFunction Function(
-  GDExtensionConstStringNamePtr p_function,
-  GDExtensionInt p_hash,
-);
-typedef DartGDExtensionInterfaceVariantGetPtrUtilityFunctionFunction
-    = GDExtensionPtrUtilityFunction Function(
-  GDExtensionConstStringNamePtr p_function,
-  DartGDExtensionInt p_hash,
-);
+typedef GDExtensionInterfaceVariantGetConstantValue =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceVariantGetConstantValueFunction>
+    >;
+typedef GDExtensionInterfaceVariantGetPtrUtilityFunctionFunction =
+    GDExtensionPtrUtilityFunction Function(
+      GDExtensionConstStringNamePtr p_function,
+      GDExtensionInt p_hash,
+    );
+typedef DartGDExtensionInterfaceVariantGetPtrUtilityFunctionFunction =
+    GDExtensionPtrUtilityFunction Function(
+      GDExtensionConstStringNamePtr p_function,
+      DartGDExtensionInt p_hash,
+    );
 
 /// @name variant_get_ptr_utility_function
 /// @since 4.1
@@ -3333,19 +3707,22 @@ typedef DartGDExtensionInterfaceVariantGetPtrUtilityFunctionFunction
 /// @param p_hash A hash representing the function signature.
 ///
 /// @return A pointer to a function that can call a Variant utility function.
-typedef GDExtensionInterfaceVariantGetPtrUtilityFunction = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceVariantGetPtrUtilityFunctionFunction>>;
-typedef GDExtensionInterfaceStringNewWithLatin1CharsFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-);
-typedef DartGDExtensionInterfaceStringNewWithLatin1CharsFunction = void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-);
+typedef GDExtensionInterfaceVariantGetPtrUtilityFunction =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceVariantGetPtrUtilityFunctionFunction
+      >
+    >;
+typedef GDExtensionInterfaceStringNewWithLatin1CharsFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+    );
+typedef DartGDExtensionInterfaceStringNewWithLatin1CharsFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+    );
 
 /// @name string_new_with_latin1_chars
 /// @since 4.1
@@ -3354,16 +3731,20 @@ typedef DartGDExtensionInterfaceStringNewWithLatin1CharsFunction = void
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a Latin-1 encoded C string (null terminated).
-typedef GDExtensionInterfaceStringNewWithLatin1Chars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringNewWithLatin1CharsFunction>>;
-typedef GDExtensionInterfaceStringNewWithUtf8CharsFunction = ffi.Void Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-);
-typedef DartGDExtensionInterfaceStringNewWithUtf8CharsFunction = void Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-);
+typedef GDExtensionInterfaceStringNewWithLatin1Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringNewWithLatin1CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringNewWithUtf8CharsFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+    );
+typedef DartGDExtensionInterfaceStringNewWithUtf8CharsFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+    );
 
 /// @name string_new_with_utf8_chars
 /// @since 4.1
@@ -3372,16 +3753,20 @@ typedef DartGDExtensionInterfaceStringNewWithUtf8CharsFunction = void Function(
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-8 encoded C string (null terminated).
-typedef GDExtensionInterfaceStringNewWithUtf8Chars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringNewWithUtf8CharsFunction>>;
-typedef GDExtensionInterfaceStringNewWithUtf16CharsFunction = ffi.Void Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char16_t> p_contents,
-);
-typedef DartGDExtensionInterfaceStringNewWithUtf16CharsFunction = void Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char16_t> p_contents,
-);
+typedef GDExtensionInterfaceStringNewWithUtf8Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringNewWithUtf8CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringNewWithUtf16CharsFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char16_t> p_contents,
+    );
+typedef DartGDExtensionInterfaceStringNewWithUtf16CharsFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char16_t> p_contents,
+    );
 
 /// @name string_new_with_utf16_chars
 /// @since 4.1
@@ -3390,16 +3775,20 @@ typedef DartGDExtensionInterfaceStringNewWithUtf16CharsFunction = void Function(
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-16 encoded C string (null terminated).
-typedef GDExtensionInterfaceStringNewWithUtf16Chars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringNewWithUtf16CharsFunction>>;
-typedef GDExtensionInterfaceStringNewWithUtf32CharsFunction = ffi.Void Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char32_t> p_contents,
-);
-typedef DartGDExtensionInterfaceStringNewWithUtf32CharsFunction = void Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char32_t> p_contents,
-);
+typedef GDExtensionInterfaceStringNewWithUtf16Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringNewWithUtf16CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringNewWithUtf32CharsFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char32_t> p_contents,
+    );
+typedef DartGDExtensionInterfaceStringNewWithUtf32CharsFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char32_t> p_contents,
+    );
 
 /// @name string_new_with_utf32_chars
 /// @since 4.1
@@ -3408,16 +3797,20 @@ typedef DartGDExtensionInterfaceStringNewWithUtf32CharsFunction = void Function(
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-32 encoded C string (null terminated).
-typedef GDExtensionInterfaceStringNewWithUtf32Chars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringNewWithUtf32CharsFunction>>;
-typedef GDExtensionInterfaceStringNewWithWideCharsFunction = ffi.Void Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.WChar> p_contents,
-);
-typedef DartGDExtensionInterfaceStringNewWithWideCharsFunction = void Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.WChar> p_contents,
-);
+typedef GDExtensionInterfaceStringNewWithUtf32Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringNewWithUtf32CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringNewWithWideCharsFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.WChar> p_contents,
+    );
+typedef DartGDExtensionInterfaceStringNewWithWideCharsFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.WChar> p_contents,
+    );
 
 /// @name string_new_with_wide_chars
 /// @since 4.1
@@ -3426,20 +3819,22 @@ typedef DartGDExtensionInterfaceStringNewWithWideCharsFunction = void Function(
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a wide C string (null terminated).
-typedef GDExtensionInterfaceStringNewWithWideChars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringNewWithWideCharsFunction>>;
-typedef GDExtensionInterfaceStringNewWithLatin1CharsAndLenFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  GDExtensionInt p_size,
-);
-typedef DartGDExtensionInterfaceStringNewWithLatin1CharsAndLenFunction = void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  DartGDExtensionInt p_size,
-);
+typedef GDExtensionInterfaceStringNewWithWideChars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringNewWithWideCharsFunction>
+    >;
+typedef GDExtensionInterfaceStringNewWithLatin1CharsAndLenFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      GDExtensionInt p_size,
+    );
+typedef DartGDExtensionInterfaceStringNewWithLatin1CharsAndLenFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      DartGDExtensionInt p_size,
+    );
 
 /// @name string_new_with_latin1_chars_and_len
 /// @since 4.1
@@ -3449,21 +3844,24 @@ typedef DartGDExtensionInterfaceStringNewWithLatin1CharsAndLenFunction = void
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a Latin-1 encoded C string.
 /// @param p_size The number of characters (= number of bytes).
-typedef GDExtensionInterfaceStringNewWithLatin1CharsAndLen = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceStringNewWithLatin1CharsAndLenFunction>>;
-typedef GDExtensionInterfaceStringNewWithUtf8CharsAndLenFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  GDExtensionInt p_size,
-);
-typedef DartGDExtensionInterfaceStringNewWithUtf8CharsAndLenFunction = void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  DartGDExtensionInt p_size,
-);
+typedef GDExtensionInterfaceStringNewWithLatin1CharsAndLen =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNewWithLatin1CharsAndLenFunction
+      >
+    >;
+typedef GDExtensionInterfaceStringNewWithUtf8CharsAndLenFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      GDExtensionInt p_size,
+    );
+typedef DartGDExtensionInterfaceStringNewWithUtf8CharsAndLenFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      DartGDExtensionInt p_size,
+    );
 
 /// @name string_new_with_utf8_chars_and_len
 /// @since 4.1
@@ -3474,21 +3872,24 @@ typedef DartGDExtensionInterfaceStringNewWithUtf8CharsAndLenFunction = void
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-8 encoded C string.
 /// @param p_size The number of bytes (not code units).
-typedef GDExtensionInterfaceStringNewWithUtf8CharsAndLen = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceStringNewWithUtf8CharsAndLenFunction>>;
-typedef GDExtensionInterfaceStringNewWithUtf8CharsAndLen2Function
-    = GDExtensionInt Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  GDExtensionInt p_size,
-);
-typedef DartGDExtensionInterfaceStringNewWithUtf8CharsAndLen2Function
-    = DartGDExtensionInt Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  DartGDExtensionInt p_size,
-);
+typedef GDExtensionInterfaceStringNewWithUtf8CharsAndLen =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNewWithUtf8CharsAndLenFunction
+      >
+    >;
+typedef GDExtensionInterfaceStringNewWithUtf8CharsAndLen2Function =
+    GDExtensionInt Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      GDExtensionInt p_size,
+    );
+typedef DartGDExtensionInterfaceStringNewWithUtf8CharsAndLen2Function =
+    DartGDExtensionInt Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      DartGDExtensionInt p_size,
+    );
 
 /// @name string_new_with_utf8_chars_and_len2
 /// @since 4.3
@@ -3500,21 +3901,24 @@ typedef DartGDExtensionInterfaceStringNewWithUtf8CharsAndLen2Function
 /// @param p_size The number of bytes (not code units).
 ///
 /// @return Error code signifying if the operation successful.
-typedef GDExtensionInterfaceStringNewWithUtf8CharsAndLen2 = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceStringNewWithUtf8CharsAndLen2Function>>;
-typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLenFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char16_t> p_contents,
-  GDExtensionInt p_char_count,
-);
-typedef DartGDExtensionInterfaceStringNewWithUtf16CharsAndLenFunction = void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char16_t> p_contents,
-  DartGDExtensionInt p_char_count,
-);
+typedef GDExtensionInterfaceStringNewWithUtf8CharsAndLen2 =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNewWithUtf8CharsAndLen2Function
+      >
+    >;
+typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLenFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char16_t> p_contents,
+      GDExtensionInt p_char_count,
+    );
+typedef DartGDExtensionInterfaceStringNewWithUtf16CharsAndLenFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char16_t> p_contents,
+      DartGDExtensionInt p_char_count,
+    );
 
 /// @name string_new_with_utf16_chars_and_len
 /// @since 4.1
@@ -3524,24 +3928,27 @@ typedef DartGDExtensionInterfaceStringNewWithUtf16CharsAndLenFunction = void
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-16 encoded C string.
-/// @param p_size The number of characters (not bytes).
-typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLen = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceStringNewWithUtf16CharsAndLenFunction>>;
-typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLen2Function
-    = GDExtensionInt Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char16_t> p_contents,
-  GDExtensionInt p_char_count,
-  GDExtensionBool p_default_little_endian,
-);
-typedef DartGDExtensionInterfaceStringNewWithUtf16CharsAndLen2Function
-    = DartGDExtensionInt Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char16_t> p_contents,
-  DartGDExtensionInt p_char_count,
-  DartGDExtensionBool p_default_little_endian,
-);
+/// @param p_char_count The number of characters (not bytes).
+typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLen =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNewWithUtf16CharsAndLenFunction
+      >
+    >;
+typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLen2Function =
+    GDExtensionInt Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char16_t> p_contents,
+      GDExtensionInt p_char_count,
+      GDExtensionBool p_default_little_endian,
+    );
+typedef DartGDExtensionInterfaceStringNewWithUtf16CharsAndLen2Function =
+    DartGDExtensionInt Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char16_t> p_contents,
+      DartGDExtensionInt p_char_count,
+      DartGDExtensionBool p_default_little_endian,
+    );
 
 /// @name string_new_with_utf16_chars_and_len2
 /// @since 4.3
@@ -3550,25 +3957,28 @@ typedef DartGDExtensionInterfaceStringNewWithUtf16CharsAndLen2Function
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-16 encoded C string.
-/// @param p_size The number of characters (not bytes).
+/// @param p_char_count The number of characters (not bytes).
 /// @param p_default_little_endian If true, UTF-16 use little endian.
 ///
 /// @return Error code signifying if the operation successful.
-typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLen2 = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceStringNewWithUtf16CharsAndLen2Function>>;
-typedef GDExtensionInterfaceStringNewWithUtf32CharsAndLenFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char32_t> p_contents,
-  GDExtensionInt p_char_count,
-);
-typedef DartGDExtensionInterfaceStringNewWithUtf32CharsAndLenFunction = void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<char32_t> p_contents,
-  DartGDExtensionInt p_char_count,
-);
+typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLen2 =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNewWithUtf16CharsAndLen2Function
+      >
+    >;
+typedef GDExtensionInterfaceStringNewWithUtf32CharsAndLenFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char32_t> p_contents,
+      GDExtensionInt p_char_count,
+    );
+typedef DartGDExtensionInterfaceStringNewWithUtf32CharsAndLenFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<char32_t> p_contents,
+      DartGDExtensionInt p_char_count,
+    );
 
 /// @name string_new_with_utf32_chars_and_len
 /// @since 4.1
@@ -3577,22 +3987,25 @@ typedef DartGDExtensionInterfaceStringNewWithUtf32CharsAndLenFunction = void
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-32 encoded C string.
-/// @param p_size The number of characters (not bytes).
-typedef GDExtensionInterfaceStringNewWithUtf32CharsAndLen = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceStringNewWithUtf32CharsAndLenFunction>>;
-typedef GDExtensionInterfaceStringNewWithWideCharsAndLenFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.WChar> p_contents,
-  GDExtensionInt p_char_count,
-);
-typedef DartGDExtensionInterfaceStringNewWithWideCharsAndLenFunction = void
-    Function(
-  GDExtensionUninitializedStringPtr r_dest,
-  ffi.Pointer<ffi.WChar> p_contents,
-  DartGDExtensionInt p_char_count,
-);
+/// @param p_char_count The number of characters (not bytes).
+typedef GDExtensionInterfaceStringNewWithUtf32CharsAndLen =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNewWithUtf32CharsAndLenFunction
+      >
+    >;
+typedef GDExtensionInterfaceStringNewWithWideCharsAndLenFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.WChar> p_contents,
+      GDExtensionInt p_char_count,
+    );
+typedef DartGDExtensionInterfaceStringNewWithWideCharsAndLenFunction =
+    void Function(
+      GDExtensionUninitializedStringPtr r_dest,
+      ffi.Pointer<ffi.WChar> p_contents,
+      DartGDExtensionInt p_char_count,
+    );
 
 /// @name string_new_with_wide_chars_and_len
 /// @since 4.1
@@ -3601,22 +4014,25 @@ typedef DartGDExtensionInterfaceStringNewWithWideCharsAndLenFunction = void
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a wide C string.
-/// @param p_size The number of characters (not bytes).
-typedef GDExtensionInterfaceStringNewWithWideCharsAndLen = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceStringNewWithWideCharsAndLenFunction>>;
-typedef GDExtensionInterfaceStringToLatin1CharsFunction = GDExtensionInt
-    Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<ffi.Char> r_text,
-  GDExtensionInt p_max_write_length,
-);
-typedef DartGDExtensionInterfaceStringToLatin1CharsFunction = DartGDExtensionInt
-    Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<ffi.Char> r_text,
-  DartGDExtensionInt p_max_write_length,
-);
+/// @param p_char_count The number of characters (not bytes).
+typedef GDExtensionInterfaceStringNewWithWideCharsAndLen =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNewWithWideCharsAndLenFunction
+      >
+    >;
+typedef GDExtensionInterfaceStringToLatin1CharsFunction =
+    GDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<ffi.Char> r_text,
+      GDExtensionInt p_max_write_length,
+    );
+typedef DartGDExtensionInterfaceStringToLatin1CharsFunction =
+    DartGDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<ffi.Char> r_text,
+      DartGDExtensionInt p_max_write_length,
+    );
 
 /// @name string_to_latin1_chars
 /// @since 4.1
@@ -3630,19 +4046,22 @@ typedef DartGDExtensionInterfaceStringToLatin1CharsFunction = DartGDExtensionInt
 /// @param p_max_write_length The maximum number of characters that can be written to r_text. It has no affect on the return value.
 ///
 /// @return The resulting encoded string length in characters (not bytes), not including a null terminator.
-typedef GDExtensionInterfaceStringToLatin1Chars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringToLatin1CharsFunction>>;
-typedef GDExtensionInterfaceStringToUtf8CharsFunction = GDExtensionInt Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<ffi.Char> r_text,
-  GDExtensionInt p_max_write_length,
-);
-typedef DartGDExtensionInterfaceStringToUtf8CharsFunction = DartGDExtensionInt
-    Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<ffi.Char> r_text,
-  DartGDExtensionInt p_max_write_length,
-);
+typedef GDExtensionInterfaceStringToLatin1Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringToLatin1CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringToUtf8CharsFunction =
+    GDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<ffi.Char> r_text,
+      GDExtensionInt p_max_write_length,
+    );
+typedef DartGDExtensionInterfaceStringToUtf8CharsFunction =
+    DartGDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<ffi.Char> r_text,
+      DartGDExtensionInt p_max_write_length,
+    );
 
 /// @name string_to_utf8_chars
 /// @since 4.1
@@ -3656,20 +4075,22 @@ typedef DartGDExtensionInterfaceStringToUtf8CharsFunction = DartGDExtensionInt
 /// @param p_max_write_length The maximum number of characters that can be written to r_text. It has no affect on the return value.
 ///
 /// @return The resulting encoded string length in characters (not bytes), not including a null terminator.
-typedef GDExtensionInterfaceStringToUtf8Chars = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceStringToUtf8CharsFunction>>;
-typedef GDExtensionInterfaceStringToUtf16CharsFunction = GDExtensionInt
-    Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<char16_t> r_text,
-  GDExtensionInt p_max_write_length,
-);
-typedef DartGDExtensionInterfaceStringToUtf16CharsFunction = DartGDExtensionInt
-    Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<char16_t> r_text,
-  DartGDExtensionInt p_max_write_length,
-);
+typedef GDExtensionInterfaceStringToUtf8Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringToUtf8CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringToUtf16CharsFunction =
+    GDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<char16_t> r_text,
+      GDExtensionInt p_max_write_length,
+    );
+typedef DartGDExtensionInterfaceStringToUtf16CharsFunction =
+    DartGDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<char16_t> r_text,
+      DartGDExtensionInt p_max_write_length,
+    );
 
 /// @name string_to_utf16_chars
 /// @since 4.1
@@ -3683,20 +4104,22 @@ typedef DartGDExtensionInterfaceStringToUtf16CharsFunction = DartGDExtensionInt
 /// @param p_max_write_length The maximum number of characters that can be written to r_text. It has no affect on the return value.
 ///
 /// @return The resulting encoded string length in characters (not bytes), not including a null terminator.
-typedef GDExtensionInterfaceStringToUtf16Chars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringToUtf16CharsFunction>>;
-typedef GDExtensionInterfaceStringToUtf32CharsFunction = GDExtensionInt
-    Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<char32_t> r_text,
-  GDExtensionInt p_max_write_length,
-);
-typedef DartGDExtensionInterfaceStringToUtf32CharsFunction = DartGDExtensionInt
-    Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<char32_t> r_text,
-  DartGDExtensionInt p_max_write_length,
-);
+typedef GDExtensionInterfaceStringToUtf16Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringToUtf16CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringToUtf32CharsFunction =
+    GDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<char32_t> r_text,
+      GDExtensionInt p_max_write_length,
+    );
+typedef DartGDExtensionInterfaceStringToUtf32CharsFunction =
+    DartGDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<char32_t> r_text,
+      DartGDExtensionInt p_max_write_length,
+    );
 
 /// @name string_to_utf32_chars
 /// @since 4.1
@@ -3710,19 +4133,22 @@ typedef DartGDExtensionInterfaceStringToUtf32CharsFunction = DartGDExtensionInt
 /// @param p_max_write_length The maximum number of characters that can be written to r_text. It has no affect on the return value.
 ///
 /// @return The resulting encoded string length in characters (not bytes), not including a null terminator.
-typedef GDExtensionInterfaceStringToUtf32Chars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringToUtf32CharsFunction>>;
-typedef GDExtensionInterfaceStringToWideCharsFunction = GDExtensionInt Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<ffi.WChar> r_text,
-  GDExtensionInt p_max_write_length,
-);
-typedef DartGDExtensionInterfaceStringToWideCharsFunction = DartGDExtensionInt
-    Function(
-  GDExtensionConstStringPtr p_self,
-  ffi.Pointer<ffi.WChar> r_text,
-  DartGDExtensionInt p_max_write_length,
-);
+typedef GDExtensionInterfaceStringToUtf32Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringToUtf32CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringToWideCharsFunction =
+    GDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<ffi.WChar> r_text,
+      GDExtensionInt p_max_write_length,
+    );
+typedef DartGDExtensionInterfaceStringToWideCharsFunction =
+    DartGDExtensionInt Function(
+      GDExtensionConstStringPtr p_self,
+      ffi.Pointer<ffi.WChar> r_text,
+      DartGDExtensionInt p_max_write_length,
+    );
 
 /// @name string_to_wide_chars
 /// @since 4.1
@@ -3736,18 +4162,20 @@ typedef DartGDExtensionInterfaceStringToWideCharsFunction = DartGDExtensionInt
 /// @param p_max_write_length The maximum number of characters that can be written to r_text. It has no affect on the return value.
 ///
 /// @return The resulting encoded string length in characters (not bytes), not including a null terminator.
-typedef GDExtensionInterfaceStringToWideChars = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceStringToWideCharsFunction>>;
-typedef GDExtensionInterfaceStringOperatorIndexFunction = ffi.Pointer<char32_t>
-    Function(
-  GDExtensionStringPtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfaceStringOperatorIndexFunction
-    = ffi.Pointer<char32_t> Function(
-  GDExtensionStringPtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfaceStringToWideChars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringToWideCharsFunction>
+    >;
+typedef GDExtensionInterfaceStringOperatorIndexFunction =
+    ffi.Pointer<char32_t> Function(
+      GDExtensionStringPtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfaceStringOperatorIndexFunction =
+    ffi.Pointer<char32_t> Function(
+      GDExtensionStringPtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name string_operator_index
 /// @since 4.1
@@ -3758,18 +4186,20 @@ typedef DartGDExtensionInterfaceStringOperatorIndexFunction
 /// @param p_index The index.
 ///
 /// @return A pointer to the requested character.
-typedef GDExtensionInterfaceStringOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringOperatorIndexFunction>>;
-typedef GDExtensionInterfaceStringOperatorIndexConstFunction
-    = ffi.Pointer<char32_t> Function(
-  GDExtensionConstStringPtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfaceStringOperatorIndexConstFunction
-    = ffi.Pointer<char32_t> Function(
-  GDExtensionConstStringPtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfaceStringOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringOperatorIndexFunction>
+    >;
+typedef GDExtensionInterfaceStringOperatorIndexConstFunction =
+    ffi.Pointer<char32_t> Function(
+      GDExtensionConstStringPtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfaceStringOperatorIndexConstFunction =
+    ffi.Pointer<char32_t> Function(
+      GDExtensionConstStringPtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name string_operator_index_const
 /// @since 4.1
@@ -3780,15 +4210,17 @@ typedef DartGDExtensionInterfaceStringOperatorIndexConstFunction
 /// @param p_index The index.
 ///
 /// @return A const pointer to the requested character.
-typedef GDExtensionInterfaceStringOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringOperatorIndexConstFunction>>;
-typedef GDExtensionInterfaceStringOperatorPlusEqStringFunction = ffi.Void
-    Function(
-  GDExtensionStringPtr p_self,
-  GDExtensionConstStringPtr p_b,
-);
-typedef DartGDExtensionInterfaceStringOperatorPlusEqStringFunction = void
-    Function(GDExtensionStringPtr p_self, GDExtensionConstStringPtr p_b);
+typedef GDExtensionInterfaceStringOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringOperatorIndexConstFunction>
+    >;
+typedef GDExtensionInterfaceStringOperatorPlusEqStringFunction =
+    ffi.Void Function(
+      GDExtensionStringPtr p_self,
+      GDExtensionConstStringPtr p_b,
+    );
+typedef DartGDExtensionInterfaceStringOperatorPlusEqStringFunction =
+    void Function(GDExtensionStringPtr p_self, GDExtensionConstStringPtr p_b);
 
 /// @name string_operator_plus_eq_string
 /// @since 4.1
@@ -3797,12 +4229,14 @@ typedef DartGDExtensionInterfaceStringOperatorPlusEqStringFunction = void
 ///
 /// @param p_self A pointer to the String.
 /// @param p_b A pointer to the other String to append.
-typedef GDExtensionInterfaceStringOperatorPlusEqString = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqStringFunction>>;
-typedef GDExtensionInterfaceStringOperatorPlusEqCharFunction = ffi.Void
-    Function(GDExtensionStringPtr p_self, char32_t p_b);
-typedef DartGDExtensionInterfaceStringOperatorPlusEqCharFunction = void
-    Function(GDExtensionStringPtr p_self, Dartchar32_t p_b);
+typedef GDExtensionInterfaceStringOperatorPlusEqString =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqStringFunction>
+    >;
+typedef GDExtensionInterfaceStringOperatorPlusEqCharFunction =
+    ffi.Void Function(GDExtensionStringPtr p_self, char32_t p_b);
+typedef DartGDExtensionInterfaceStringOperatorPlusEqCharFunction =
+    void Function(GDExtensionStringPtr p_self, Dartchar32_t p_b);
 
 /// @name string_operator_plus_eq_char
 /// @since 4.1
@@ -3811,12 +4245,14 @@ typedef DartGDExtensionInterfaceStringOperatorPlusEqCharFunction = void
 ///
 /// @param p_self A pointer to the String.
 /// @param p_b A pointer to the character to append.
-typedef GDExtensionInterfaceStringOperatorPlusEqChar = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqCharFunction>>;
-typedef GDExtensionInterfaceStringOperatorPlusEqCstrFunction = ffi.Void
-    Function(GDExtensionStringPtr p_self, ffi.Pointer<ffi.Char> p_b);
-typedef DartGDExtensionInterfaceStringOperatorPlusEqCstrFunction = void
-    Function(GDExtensionStringPtr p_self, ffi.Pointer<ffi.Char> p_b);
+typedef GDExtensionInterfaceStringOperatorPlusEqChar =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqCharFunction>
+    >;
+typedef GDExtensionInterfaceStringOperatorPlusEqCstrFunction =
+    ffi.Void Function(GDExtensionStringPtr p_self, ffi.Pointer<ffi.Char> p_b);
+typedef DartGDExtensionInterfaceStringOperatorPlusEqCstrFunction =
+    void Function(GDExtensionStringPtr p_self, ffi.Pointer<ffi.Char> p_b);
 
 /// @name string_operator_plus_eq_cstr
 /// @since 4.1
@@ -3825,12 +4261,14 @@ typedef DartGDExtensionInterfaceStringOperatorPlusEqCstrFunction = void
 ///
 /// @param p_self A pointer to the String.
 /// @param p_b A pointer to a Latin-1 encoded C string (null terminated).
-typedef GDExtensionInterfaceStringOperatorPlusEqCstr = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqCstrFunction>>;
-typedef GDExtensionInterfaceStringOperatorPlusEqWcstrFunction = ffi.Void
-    Function(GDExtensionStringPtr p_self, ffi.Pointer<ffi.WChar> p_b);
-typedef DartGDExtensionInterfaceStringOperatorPlusEqWcstrFunction = void
-    Function(GDExtensionStringPtr p_self, ffi.Pointer<ffi.WChar> p_b);
+typedef GDExtensionInterfaceStringOperatorPlusEqCstr =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqCstrFunction>
+    >;
+typedef GDExtensionInterfaceStringOperatorPlusEqWcstrFunction =
+    ffi.Void Function(GDExtensionStringPtr p_self, ffi.Pointer<ffi.WChar> p_b);
+typedef DartGDExtensionInterfaceStringOperatorPlusEqWcstrFunction =
+    void Function(GDExtensionStringPtr p_self, ffi.Pointer<ffi.WChar> p_b);
 
 /// @name string_operator_plus_eq_wcstr
 /// @since 4.1
@@ -3839,12 +4277,14 @@ typedef DartGDExtensionInterfaceStringOperatorPlusEqWcstrFunction = void
 ///
 /// @param p_self A pointer to the String.
 /// @param p_b A pointer to a wide C string (null terminated).
-typedef GDExtensionInterfaceStringOperatorPlusEqWcstr = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqWcstrFunction>>;
-typedef GDExtensionInterfaceStringOperatorPlusEqC32strFunction = ffi.Void
-    Function(GDExtensionStringPtr p_self, ffi.Pointer<char32_t> p_b);
-typedef DartGDExtensionInterfaceStringOperatorPlusEqC32strFunction = void
-    Function(GDExtensionStringPtr p_self, ffi.Pointer<char32_t> p_b);
+typedef GDExtensionInterfaceStringOperatorPlusEqWcstr =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqWcstrFunction>
+    >;
+typedef GDExtensionInterfaceStringOperatorPlusEqC32strFunction =
+    ffi.Void Function(GDExtensionStringPtr p_self, ffi.Pointer<char32_t> p_b);
+typedef DartGDExtensionInterfaceStringOperatorPlusEqC32strFunction =
+    void Function(GDExtensionStringPtr p_self, ffi.Pointer<char32_t> p_b);
 
 /// @name string_operator_plus_eq_c32str
 /// @since 4.1
@@ -3853,17 +4293,20 @@ typedef DartGDExtensionInterfaceStringOperatorPlusEqC32strFunction = void
 ///
 /// @param p_self A pointer to the String.
 /// @param p_b A pointer to a UTF-32 encoded C string (null terminated).
-typedef GDExtensionInterfaceStringOperatorPlusEqC32str = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqC32strFunction>>;
-typedef GDExtensionInterfaceStringResizeFunction = GDExtensionInt Function(
-  GDExtensionStringPtr p_self,
-  GDExtensionInt p_resize,
-);
-typedef DartGDExtensionInterfaceStringResizeFunction = DartGDExtensionInt
-    Function(
-  GDExtensionStringPtr p_self,
-  DartGDExtensionInt p_resize,
-);
+typedef GDExtensionInterfaceStringOperatorPlusEqC32str =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringOperatorPlusEqC32strFunction>
+    >;
+typedef GDExtensionInterfaceStringResizeFunction =
+    GDExtensionInt Function(
+      GDExtensionStringPtr p_self,
+      GDExtensionInt p_resize,
+    );
+typedef DartGDExtensionInterfaceStringResizeFunction =
+    DartGDExtensionInt Function(
+      GDExtensionStringPtr p_self,
+      DartGDExtensionInt p_resize,
+    );
 
 /// @name string_resize
 /// @since 4.2
@@ -3880,20 +4323,20 @@ typedef DartGDExtensionInterfaceStringResizeFunction = DartGDExtensionInt
 /// @param p_resize The new length for the String.
 ///
 /// @return Error code signifying if the operation successful.
-typedef GDExtensionInterfaceStringResize
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceStringResizeFunction>>;
-typedef GDExtensionInterfaceStringNameNewWithLatin1CharsFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringNamePtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  GDExtensionBool p_is_static,
-);
-typedef DartGDExtensionInterfaceStringNameNewWithLatin1CharsFunction = void
-    Function(
-  GDExtensionUninitializedStringNamePtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  DartGDExtensionBool p_is_static,
-);
+typedef GDExtensionInterfaceStringResize =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceStringResizeFunction>>;
+typedef GDExtensionInterfaceStringNameNewWithLatin1CharsFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringNamePtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      GDExtensionBool p_is_static,
+    );
+typedef DartGDExtensionInterfaceStringNameNewWithLatin1CharsFunction =
+    void Function(
+      GDExtensionUninitializedStringNamePtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      DartGDExtensionBool p_is_static,
+    );
 
 /// @name string_name_new_with_latin1_chars
 /// @since 4.2
@@ -3910,19 +4353,22 @@ typedef DartGDExtensionInterfaceStringNameNewWithLatin1CharsFunction = void
 /// @param r_dest A pointer to uninitialized storage, into which the newly created StringName is constructed.
 /// @param p_contents A pointer to a C string (null terminated and Latin-1 or ASCII encoded).
 /// @param p_is_static Whether the StringName reuses the buffer directly (see above).
-typedef GDExtensionInterfaceStringNameNewWithLatin1Chars = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceStringNameNewWithLatin1CharsFunction>>;
-typedef GDExtensionInterfaceStringNameNewWithUtf8CharsFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringNamePtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-);
-typedef DartGDExtensionInterfaceStringNameNewWithUtf8CharsFunction = void
-    Function(
-  GDExtensionUninitializedStringNamePtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-);
+typedef GDExtensionInterfaceStringNameNewWithLatin1Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNameNewWithLatin1CharsFunction
+      >
+    >;
+typedef GDExtensionInterfaceStringNameNewWithUtf8CharsFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringNamePtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+    );
+typedef DartGDExtensionInterfaceStringNameNewWithUtf8CharsFunction =
+    void Function(
+      GDExtensionUninitializedStringNamePtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+    );
 
 /// @name string_name_new_with_utf8_chars
 /// @since 4.2
@@ -3931,20 +4377,22 @@ typedef DartGDExtensionInterfaceStringNameNewWithUtf8CharsFunction = void
 ///
 /// @param r_dest A pointer to uninitialized storage, into which the newly created StringName is constructed.
 /// @param p_contents A pointer to a C string (null terminated and UTF-8 encoded).
-typedef GDExtensionInterfaceStringNameNewWithUtf8Chars = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceStringNameNewWithUtf8CharsFunction>>;
-typedef GDExtensionInterfaceStringNameNewWithUtf8CharsAndLenFunction = ffi.Void
-    Function(
-  GDExtensionUninitializedStringNamePtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  GDExtensionInt p_size,
-);
-typedef DartGDExtensionInterfaceStringNameNewWithUtf8CharsAndLenFunction = void
-    Function(
-  GDExtensionUninitializedStringNamePtr r_dest,
-  ffi.Pointer<ffi.Char> p_contents,
-  DartGDExtensionInt p_size,
-);
+typedef GDExtensionInterfaceStringNameNewWithUtf8Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceStringNameNewWithUtf8CharsFunction>
+    >;
+typedef GDExtensionInterfaceStringNameNewWithUtf8CharsAndLenFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedStringNamePtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      GDExtensionInt p_size,
+    );
+typedef DartGDExtensionInterfaceStringNameNewWithUtf8CharsAndLenFunction =
+    void Function(
+      GDExtensionUninitializedStringNamePtr r_dest,
+      ffi.Pointer<ffi.Char> p_contents,
+      DartGDExtensionInt p_size,
+    );
 
 /// @name string_name_new_with_utf8_chars_and_len
 /// @since 4.2
@@ -3954,21 +4402,24 @@ typedef DartGDExtensionInterfaceStringNameNewWithUtf8CharsAndLenFunction = void
 /// @param r_dest A pointer to uninitialized storage, into which the newly created StringName is constructed.
 /// @param p_contents A pointer to a C string (null terminated and UTF-8 encoded).
 /// @param p_size The number of bytes (not UTF-8 code points).
-typedef GDExtensionInterfaceStringNameNewWithUtf8CharsAndLen = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceStringNameNewWithUtf8CharsAndLenFunction>>;
-typedef GDExtensionInterfaceXmlParserOpenBufferFunction = GDExtensionInt
-    Function(
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<ffi.Uint8> p_buffer,
-  ffi.Size p_size,
-);
-typedef DartGDExtensionInterfaceXmlParserOpenBufferFunction = DartGDExtensionInt
-    Function(
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<ffi.Uint8> p_buffer,
-  int p_size,
-);
+typedef GDExtensionInterfaceStringNameNewWithUtf8CharsAndLen =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceStringNameNewWithUtf8CharsAndLenFunction
+      >
+    >;
+typedef GDExtensionInterfaceXmlParserOpenBufferFunction =
+    GDExtensionInt Function(
+      GDExtensionObjectPtr p_instance,
+      ffi.Pointer<ffi.Uint8> p_buffer,
+      ffi.Size p_size,
+    );
+typedef DartGDExtensionInterfaceXmlParserOpenBufferFunction =
+    DartGDExtensionInt Function(
+      GDExtensionObjectPtr p_instance,
+      ffi.Pointer<ffi.Uint8> p_buffer,
+      int p_size,
+    );
 
 /// @name xml_parser_open_buffer
 /// @since 4.1
@@ -3982,18 +4433,22 @@ typedef DartGDExtensionInterfaceXmlParserOpenBufferFunction = DartGDExtensionInt
 /// @return A Godot error code (ex. OK, ERR_INVALID_DATA, etc).
 ///
 /// @see XMLParser::open_buffer()
-typedef GDExtensionInterfaceXmlParserOpenBuffer = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceXmlParserOpenBufferFunction>>;
-typedef GDExtensionInterfaceFileAccessStoreBufferFunction = ffi.Void Function(
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<ffi.Uint8> p_src,
-  ffi.Uint64 p_length,
-);
-typedef DartGDExtensionInterfaceFileAccessStoreBufferFunction = void Function(
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<ffi.Uint8> p_src,
-  int p_length,
-);
+typedef GDExtensionInterfaceXmlParserOpenBuffer =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceXmlParserOpenBufferFunction>
+    >;
+typedef GDExtensionInterfaceFileAccessStoreBufferFunction =
+    ffi.Void Function(
+      GDExtensionObjectPtr p_instance,
+      ffi.Pointer<ffi.Uint8> p_src,
+      ffi.Uint64 p_length,
+    );
+typedef DartGDExtensionInterfaceFileAccessStoreBufferFunction =
+    void Function(
+      GDExtensionObjectPtr p_instance,
+      ffi.Pointer<ffi.Uint8> p_src,
+      int p_length,
+    );
 
 /// @name file_access_store_buffer
 /// @since 4.1
@@ -4005,18 +4460,22 @@ typedef DartGDExtensionInterfaceFileAccessStoreBufferFunction = void Function(
 /// @param p_length The size of the buffer.
 ///
 /// @see FileAccess::store_buffer()
-typedef GDExtensionInterfaceFileAccessStoreBuffer = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceFileAccessStoreBufferFunction>>;
-typedef GDExtensionInterfaceFileAccessGetBufferFunction = ffi.Uint64 Function(
-  GDExtensionConstObjectPtr p_instance,
-  ffi.Pointer<ffi.Uint8> p_dst,
-  ffi.Uint64 p_length,
-);
-typedef DartGDExtensionInterfaceFileAccessGetBufferFunction = int Function(
-  GDExtensionConstObjectPtr p_instance,
-  ffi.Pointer<ffi.Uint8> p_dst,
-  int p_length,
-);
+typedef GDExtensionInterfaceFileAccessStoreBuffer =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceFileAccessStoreBufferFunction>
+    >;
+typedef GDExtensionInterfaceFileAccessGetBufferFunction =
+    ffi.Uint64 Function(
+      GDExtensionConstObjectPtr p_instance,
+      ffi.Pointer<ffi.Uint8> p_dst,
+      ffi.Uint64 p_length,
+    );
+typedef DartGDExtensionInterfaceFileAccessGetBufferFunction =
+    int Function(
+      GDExtensionConstObjectPtr p_instance,
+      ffi.Pointer<ffi.Uint8> p_dst,
+      int p_length,
+    );
 
 /// @name file_access_get_buffer
 /// @since 4.1
@@ -4028,10 +4487,12 @@ typedef DartGDExtensionInterfaceFileAccessGetBufferFunction = int Function(
 /// @param p_length The requested number of bytes to read.
 ///
 /// @return The actual number of bytes read (may be less than requested).
-typedef GDExtensionInterfaceFileAccessGetBuffer = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceFileAccessGetBufferFunction>>;
-typedef GDExtensionInterfaceImagePtrwFunction = ffi.Pointer<ffi.Uint8> Function(
-    GDExtensionObjectPtr p_instance);
+typedef GDExtensionInterfaceFileAccessGetBuffer =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceFileAccessGetBufferFunction>
+    >;
+typedef GDExtensionInterfaceImagePtrwFunction =
+    ffi.Pointer<ffi.Uint8> Function(GDExtensionObjectPtr p_instance);
 
 /// @name image_ptrw
 /// @since 4.3
@@ -4043,10 +4504,10 @@ typedef GDExtensionInterfaceImagePtrwFunction = ffi.Pointer<ffi.Uint8> Function(
 /// @return Pointer to internal Image buffer.
 ///
 /// @see Image::ptrw()
-typedef GDExtensionInterfaceImagePtrw
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceImagePtrwFunction>>;
-typedef GDExtensionInterfaceImagePtrFunction = ffi.Pointer<ffi.Uint8> Function(
-    GDExtensionObjectPtr p_instance);
+typedef GDExtensionInterfaceImagePtrw =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceImagePtrwFunction>>;
+typedef GDExtensionInterfaceImagePtrFunction =
+    ffi.Pointer<ffi.Uint8> Function(GDExtensionObjectPtr p_instance);
 
 /// @name image_ptr
 /// @since 4.3
@@ -4058,34 +4519,28 @@ typedef GDExtensionInterfaceImagePtrFunction = ffi.Pointer<ffi.Uint8> Function(
 /// @return Pointer to internal Image buffer.
 ///
 /// @see Image::ptr()
-typedef GDExtensionInterfaceImagePtr
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceImagePtrFunction>>;
-typedef GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction
-    = ffi.Int64 Function(
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32)>>
-      p_func,
-  ffi.Pointer<ffi.Void> p_userdata,
-  ffi.Int p_elements,
-  ffi.Int p_tasks,
-  GDExtensionBool p_high_priority,
-  GDExtensionConstStringPtr p_description,
-);
-typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction = int
-    Function(
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32)>>
-      p_func,
-  ffi.Pointer<ffi.Void> p_userdata,
-  int p_elements,
-  int p_tasks,
-  DartGDExtensionBool p_high_priority,
-  GDExtensionConstStringPtr p_description,
-);
+typedef GDExtensionInterfaceImagePtr =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceImagePtrFunction>>;
+typedef GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction =
+    ffi.Int64 Function(
+      GDExtensionObjectPtr p_instance,
+      GDExtensionWorkerThreadPoolGroupTask p_func,
+      ffi.Pointer<ffi.Void> p_userdata,
+      ffi.Int p_elements,
+      ffi.Int p_tasks,
+      GDExtensionBool p_high_priority,
+      GDExtensionConstStringPtr p_description,
+    );
+typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction =
+    int Function(
+      GDExtensionObjectPtr p_instance,
+      GDExtensionWorkerThreadPoolGroupTask p_func,
+      ffi.Pointer<ffi.Void> p_userdata,
+      int p_elements,
+      int p_tasks,
+      DartGDExtensionBool p_high_priority,
+      GDExtensionConstStringPtr p_description,
+    );
 
 /// @name worker_thread_pool_add_native_group_task
 /// @since 4.1
@@ -4095,6 +4550,7 @@ typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction = int
 /// @param p_instance A pointer to a WorkerThreadPool object.
 /// @param p_func A pointer to a function to run in the thread pool.
 /// @param p_userdata A pointer to arbitrary data which will be passed to p_func.
+/// @param p_elements The number of element needed in the group.
 /// @param p_tasks The number of tasks needed in the group.
 /// @param p_high_priority Whether or not this is a high priority task.
 /// @param p_description A pointer to a String with the task description.
@@ -4102,27 +4558,28 @@ typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction = int
 /// @return The task group ID.
 ///
 /// @see WorkerThreadPool::add_group_task()
-typedef GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTask = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction>>;
-typedef GDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction = ffi.Int64
-    Function(
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
-      p_func,
-  ffi.Pointer<ffi.Void> p_userdata,
-  GDExtensionBool p_high_priority,
-  GDExtensionConstStringPtr p_description,
-);
-typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction = int
-    Function(
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
-      p_func,
-  ffi.Pointer<ffi.Void> p_userdata,
-  DartGDExtensionBool p_high_priority,
-  GDExtensionConstStringPtr p_description,
-);
+typedef GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTask =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction
+      >
+    >;
+typedef GDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction =
+    ffi.Int64 Function(
+      GDExtensionObjectPtr p_instance,
+      GDExtensionWorkerThreadPoolTask p_func,
+      ffi.Pointer<ffi.Void> p_userdata,
+      GDExtensionBool p_high_priority,
+      GDExtensionConstStringPtr p_description,
+    );
+typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction =
+    int Function(
+      GDExtensionObjectPtr p_instance,
+      GDExtensionWorkerThreadPoolTask p_func,
+      ffi.Pointer<ffi.Void> p_userdata,
+      DartGDExtensionBool p_high_priority,
+      GDExtensionConstStringPtr p_description,
+    );
 
 /// @name worker_thread_pool_add_native_task
 /// @since 4.1
@@ -4136,19 +4593,22 @@ typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction = int
 /// @param p_description A pointer to a String with the task description.
 ///
 /// @return The task ID.
-typedef GDExtensionInterfaceWorkerThreadPoolAddNativeTask = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction>>;
-typedef GDExtensionInterfacePackedByteArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Uint8> Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedByteArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Uint8> Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfaceWorkerThreadPoolAddNativeTask =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedByteArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Uint8> Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedByteArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Uint8> Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_byte_array_operator_index
 /// @since 4.1
@@ -4159,19 +4619,22 @@ typedef DartGDExtensionInterfacePackedByteArrayOperatorIndexFunction
 /// @param p_index The index of the byte to get.
 ///
 /// @return A pointer to the requested byte.
-typedef GDExtensionInterfacePackedByteArrayOperatorIndex = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfacePackedByteArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedByteArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Uint8> Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedByteArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Uint8> Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedByteArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedByteArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedByteArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Uint8> Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedByteArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Uint8> Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_byte_array_operator_index_const
 /// @since 4.1
@@ -4182,19 +4645,22 @@ typedef DartGDExtensionInterfacePackedByteArrayOperatorIndexConstFunction
 /// @param p_index The index of the byte to get.
 ///
 /// @return A const pointer to the requested byte.
-typedef GDExtensionInterfacePackedByteArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedByteArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedFloat32ArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Float> Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedFloat32ArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Float> Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedByteArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedByteArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedFloat32ArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Float> Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedFloat32ArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Float> Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_float32_array_operator_index
 /// @since 4.1
@@ -4205,19 +4671,22 @@ typedef DartGDExtensionInterfacePackedFloat32ArrayOperatorIndexFunction
 /// @param p_index The index of the float to get.
 ///
 /// @return A pointer to the requested 32-bit float.
-typedef GDExtensionInterfacePackedFloat32ArrayOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedFloat32ArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedFloat32ArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Float> Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedFloat32ArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Float> Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedFloat32ArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedFloat32ArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedFloat32ArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Float> Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedFloat32ArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Float> Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_float32_array_operator_index_const
 /// @since 4.1
@@ -4228,19 +4697,22 @@ typedef DartGDExtensionInterfacePackedFloat32ArrayOperatorIndexConstFunction
 /// @param p_index The index of the float to get.
 ///
 /// @return A const pointer to the requested 32-bit float.
-typedef GDExtensionInterfacePackedFloat32ArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedFloat32ArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedFloat64ArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Double> Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedFloat64ArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Double> Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedFloat32ArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedFloat32ArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedFloat64ArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Double> Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedFloat64ArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Double> Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_float64_array_operator_index
 /// @since 4.1
@@ -4251,19 +4723,22 @@ typedef DartGDExtensionInterfacePackedFloat64ArrayOperatorIndexFunction
 /// @param p_index The index of the float to get.
 ///
 /// @return A pointer to the requested 64-bit float.
-typedef GDExtensionInterfacePackedFloat64ArrayOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedFloat64ArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedFloat64ArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Double> Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedFloat64ArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Double> Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedFloat64ArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedFloat64ArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedFloat64ArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Double> Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedFloat64ArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Double> Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_float64_array_operator_index_const
 /// @since 4.1
@@ -4274,19 +4749,22 @@ typedef DartGDExtensionInterfacePackedFloat64ArrayOperatorIndexConstFunction
 /// @param p_index The index of the float to get.
 ///
 /// @return A const pointer to the requested 64-bit float.
-typedef GDExtensionInterfacePackedFloat64ArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedFloat64ArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedInt32ArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Int32> Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedInt32ArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Int32> Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedFloat64ArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedFloat64ArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedInt32ArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Int32> Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedInt32ArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Int32> Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_int32_array_operator_index
 /// @since 4.1
@@ -4297,19 +4775,22 @@ typedef DartGDExtensionInterfacePackedInt32ArrayOperatorIndexFunction
 /// @param p_index The index of the integer to get.
 ///
 /// @return A pointer to the requested 32-bit integer.
-typedef GDExtensionInterfacePackedInt32ArrayOperatorIndex = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfacePackedInt32ArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedInt32ArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Int32> Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedInt32ArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Int32> Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedInt32ArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedInt32ArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedInt32ArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Int32> Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedInt32ArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Int32> Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_int32_array_operator_index_const
 /// @since 4.1
@@ -4320,19 +4801,22 @@ typedef DartGDExtensionInterfacePackedInt32ArrayOperatorIndexConstFunction
 /// @param p_index The index of the integer to get.
 ///
 /// @return A const pointer to the requested 32-bit integer.
-typedef GDExtensionInterfacePackedInt32ArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedInt32ArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedInt64ArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Int64> Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedInt64ArrayOperatorIndexFunction
-    = ffi.Pointer<ffi.Int64> Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedInt32ArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedInt32ArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedInt64ArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Int64> Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedInt64ArrayOperatorIndexFunction =
+    ffi.Pointer<ffi.Int64> Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_int64_array_operator_index
 /// @since 4.1
@@ -4343,19 +4827,22 @@ typedef DartGDExtensionInterfacePackedInt64ArrayOperatorIndexFunction
 /// @param p_index The index of the integer to get.
 ///
 /// @return A pointer to the requested 64-bit integer.
-typedef GDExtensionInterfacePackedInt64ArrayOperatorIndex = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfacePackedInt64ArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedInt64ArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Int64> Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedInt64ArrayOperatorIndexConstFunction
-    = ffi.Pointer<ffi.Int64> Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedInt64ArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedInt64ArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedInt64ArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Int64> Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedInt64ArrayOperatorIndexConstFunction =
+    ffi.Pointer<ffi.Int64> Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_int64_array_operator_index_const
 /// @since 4.1
@@ -4366,19 +4853,22 @@ typedef DartGDExtensionInterfacePackedInt64ArrayOperatorIndexConstFunction
 /// @param p_index The index of the integer to get.
 ///
 /// @return A const pointer to the requested 64-bit integer.
-typedef GDExtensionInterfacePackedInt64ArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedInt64ArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedStringArrayOperatorIndexFunction
-    = GDExtensionStringPtr Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedStringArrayOperatorIndexFunction
-    = GDExtensionStringPtr Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedInt64ArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedInt64ArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedStringArrayOperatorIndexFunction =
+    GDExtensionStringPtr Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedStringArrayOperatorIndexFunction =
+    GDExtensionStringPtr Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_string_array_operator_index
 /// @since 4.1
@@ -4389,19 +4879,22 @@ typedef DartGDExtensionInterfacePackedStringArrayOperatorIndexFunction
 /// @param p_index The index of the String to get.
 ///
 /// @return A pointer to the requested String.
-typedef GDExtensionInterfacePackedStringArrayOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedStringArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedStringArrayOperatorIndexConstFunction
-    = GDExtensionStringPtr Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedStringArrayOperatorIndexConstFunction
-    = GDExtensionStringPtr Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedStringArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedStringArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedStringArrayOperatorIndexConstFunction =
+    GDExtensionStringPtr Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedStringArrayOperatorIndexConstFunction =
+    GDExtensionStringPtr Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_string_array_operator_index_const
 /// @since 4.1
@@ -4412,19 +4905,22 @@ typedef DartGDExtensionInterfacePackedStringArrayOperatorIndexConstFunction
 /// @param p_index The index of the String to get.
 ///
 /// @return A const pointer to the requested String.
-typedef GDExtensionInterfacePackedStringArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedStringArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedVector2ArrayOperatorIndexFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedVector2ArrayOperatorIndexFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedStringArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedStringArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedVector2ArrayOperatorIndexFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedVector2ArrayOperatorIndexFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_vector2_array_operator_index
 /// @since 4.1
@@ -4435,19 +4931,22 @@ typedef DartGDExtensionInterfacePackedVector2ArrayOperatorIndexFunction
 /// @param p_index The index of the Vector2 to get.
 ///
 /// @return A pointer to the requested Vector2.
-typedef GDExtensionInterfacePackedVector2ArrayOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedVector2ArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedVector2ArrayOperatorIndexConstFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedVector2ArrayOperatorIndexConstFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedVector2ArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedVector2ArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedVector2ArrayOperatorIndexConstFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedVector2ArrayOperatorIndexConstFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_vector2_array_operator_index_const
 /// @since 4.1
@@ -4458,19 +4957,22 @@ typedef DartGDExtensionInterfacePackedVector2ArrayOperatorIndexConstFunction
 /// @param p_index The index of the Vector2 to get.
 ///
 /// @return A const pointer to the requested Vector2.
-typedef GDExtensionInterfacePackedVector2ArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedVector2ArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedVector3ArrayOperatorIndexFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedVector3ArrayOperatorIndexFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedVector2ArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedVector2ArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedVector3ArrayOperatorIndexFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedVector3ArrayOperatorIndexFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_vector3_array_operator_index
 /// @since 4.1
@@ -4481,19 +4983,22 @@ typedef DartGDExtensionInterfacePackedVector3ArrayOperatorIndexFunction
 /// @param p_index The index of the Vector3 to get.
 ///
 /// @return A pointer to the requested Vector3.
-typedef GDExtensionInterfacePackedVector3ArrayOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedVector3ArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedVector3ArrayOperatorIndexConstFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedVector3ArrayOperatorIndexConstFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedVector3ArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedVector3ArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedVector3ArrayOperatorIndexConstFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedVector3ArrayOperatorIndexConstFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_vector3_array_operator_index_const
 /// @since 4.1
@@ -4504,19 +5009,22 @@ typedef DartGDExtensionInterfacePackedVector3ArrayOperatorIndexConstFunction
 /// @param p_index The index of the Vector3 to get.
 ///
 /// @return A const pointer to the requested Vector3.
-typedef GDExtensionInterfacePackedVector3ArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedVector3ArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedVector4ArrayOperatorIndexFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedVector4ArrayOperatorIndexFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedVector3ArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedVector3ArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedVector4ArrayOperatorIndexFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedVector4ArrayOperatorIndexFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_vector4_array_operator_index
 /// @since 4.3
@@ -4527,19 +5035,22 @@ typedef DartGDExtensionInterfacePackedVector4ArrayOperatorIndexFunction
 /// @param p_index The index of the Vector4 to get.
 ///
 /// @return A pointer to the requested Vector4.
-typedef GDExtensionInterfacePackedVector4ArrayOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedVector4ArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedVector4ArrayOperatorIndexConstFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedVector4ArrayOperatorIndexConstFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedVector4ArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedVector4ArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedVector4ArrayOperatorIndexConstFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedVector4ArrayOperatorIndexConstFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_vector4_array_operator_index_const
 /// @since 4.3
@@ -4550,19 +5061,22 @@ typedef DartGDExtensionInterfacePackedVector4ArrayOperatorIndexConstFunction
 /// @param p_index The index of the Vector4 to get.
 ///
 /// @return A const pointer to the requested Vector4.
-typedef GDExtensionInterfacePackedVector4ArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedVector4ArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfacePackedColorArrayOperatorIndexFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedColorArrayOperatorIndexFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedVector4ArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedVector4ArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedColorArrayOperatorIndexFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedColorArrayOperatorIndexFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_color_array_operator_index
 /// @since 4.1
@@ -4573,19 +5087,22 @@ typedef DartGDExtensionInterfacePackedColorArrayOperatorIndexFunction
 /// @param p_index The index of the Color to get.
 ///
 /// @return A pointer to the requested Color.
-typedef GDExtensionInterfacePackedColorArrayOperatorIndex = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfacePackedColorArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfacePackedColorArrayOperatorIndexConstFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfacePackedColorArrayOperatorIndexConstFunction
-    = GDExtensionTypePtr Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedColorArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedColorArrayOperatorIndexFunction
+      >
+    >;
+typedef GDExtensionInterfacePackedColorArrayOperatorIndexConstFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfacePackedColorArrayOperatorIndexConstFunction =
+    GDExtensionTypePtr Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name packed_color_array_operator_index_const
 /// @since 4.1
@@ -4596,19 +5113,22 @@ typedef DartGDExtensionInterfacePackedColorArrayOperatorIndexConstFunction
 /// @param p_index The index of the Color to get.
 ///
 /// @return A const pointer to the requested Color.
-typedef GDExtensionInterfacePackedColorArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePackedColorArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfaceArrayOperatorIndexFunction = GDExtensionVariantPtr
-    Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfaceArrayOperatorIndexFunction
-    = GDExtensionVariantPtr Function(
-  GDExtensionTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfacePackedColorArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePackedColorArrayOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfaceArrayOperatorIndexFunction =
+    GDExtensionVariantPtr Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfaceArrayOperatorIndexFunction =
+    GDExtensionVariantPtr Function(
+      GDExtensionTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name array_operator_index
 /// @since 4.1
@@ -4619,18 +5139,20 @@ typedef DartGDExtensionInterfaceArrayOperatorIndexFunction
 /// @param p_index The index of the Variant to get.
 ///
 /// @return A pointer to the requested Variant.
-typedef GDExtensionInterfaceArrayOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceArrayOperatorIndexFunction>>;
-typedef GDExtensionInterfaceArrayOperatorIndexConstFunction
-    = GDExtensionVariantPtr Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfaceArrayOperatorIndexConstFunction
-    = GDExtensionVariantPtr Function(
-  GDExtensionConstTypePtr p_self,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfaceArrayOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceArrayOperatorIndexFunction>
+    >;
+typedef GDExtensionInterfaceArrayOperatorIndexConstFunction =
+    GDExtensionVariantPtr Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfaceArrayOperatorIndexConstFunction =
+    GDExtensionVariantPtr Function(
+      GDExtensionConstTypePtr p_self,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name array_operator_index_const
 /// @since 4.1
@@ -4641,36 +5163,42 @@ typedef DartGDExtensionInterfaceArrayOperatorIndexConstFunction
 /// @param p_index The index of the Variant to get.
 ///
 /// @return A const pointer to the requested Variant.
-typedef GDExtensionInterfaceArrayOperatorIndexConst = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceArrayOperatorIndexConstFunction>>;
-typedef GDExtensionInterfaceArrayRefFunction = ffi.Void Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionConstTypePtr p_from,
-);
-typedef DartGDExtensionInterfaceArrayRefFunction = void Function(
-    GDExtensionTypePtr p_self, GDExtensionConstTypePtr p_from);
+typedef GDExtensionInterfaceArrayOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceArrayOperatorIndexConstFunction>
+    >;
+typedef GDExtensionInterfaceArrayRefFunction =
+    ffi.Void Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionConstTypePtr p_from,
+    );
+typedef DartGDExtensionInterfaceArrayRefFunction =
+    void Function(GDExtensionTypePtr p_self, GDExtensionConstTypePtr p_from);
 
 /// @name array_ref
 /// @since 4.1
+/// @deprecated in Godot 4.5. use `Array::operator=` instead.
 ///
 /// Sets an Array to be a reference to another Array object.
 ///
 /// @param p_self A pointer to the Array object to update.
 /// @param p_from A pointer to the Array object to reference.
-typedef GDExtensionInterfaceArrayRef
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceArrayRefFunction>>;
-typedef GDExtensionInterfaceArraySetTypedFunction = ffi.Void Function(
-  GDExtensionTypePtr p_self,
-  ffi.UnsignedInt p_type,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstVariantPtr p_script,
-);
-typedef DartGDExtensionInterfaceArraySetTypedFunction = void Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionVariantType p_type,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstVariantPtr p_script,
-);
+typedef GDExtensionInterfaceArrayRef =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceArrayRefFunction>>;
+typedef GDExtensionInterfaceArraySetTypedFunction =
+    ffi.Void Function(
+      GDExtensionTypePtr p_self,
+      ffi.UnsignedInt p_type,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstVariantPtr p_script,
+    );
+typedef DartGDExtensionInterfaceArraySetTypedFunction =
+    void Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionVariantType p_type,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstVariantPtr p_script,
+    );
 
 /// @name array_set_typed
 /// @since 4.1
@@ -4681,13 +5209,13 @@ typedef DartGDExtensionInterfaceArraySetTypedFunction = void Function(
 /// @param p_type The type of Variant the Array will store.
 /// @param p_class_name A pointer to a StringName with the name of the object (if p_type is GDEXTENSION_VARIANT_TYPE_OBJECT).
 /// @param p_script A pointer to a Script object (if p_type is GDEXTENSION_VARIANT_TYPE_OBJECT and the base class is extended by a script).
-typedef GDExtensionInterfaceArraySetTyped = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceArraySetTypedFunction>>;
-typedef GDExtensionInterfaceDictionaryOperatorIndexFunction
-    = GDExtensionVariantPtr Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionConstVariantPtr p_key,
-);
+typedef GDExtensionInterfaceArraySetTyped =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceArraySetTypedFunction>>;
+typedef GDExtensionInterfaceDictionaryOperatorIndexFunction =
+    GDExtensionVariantPtr Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionConstVariantPtr p_key,
+    );
 
 /// @name dictionary_operator_index
 /// @since 4.1
@@ -4698,13 +5226,15 @@ typedef GDExtensionInterfaceDictionaryOperatorIndexFunction
 /// @param p_key A pointer to a Variant representing the key.
 ///
 /// @return A pointer to a Variant representing the value at the given key.
-typedef GDExtensionInterfaceDictionaryOperatorIndex = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceDictionaryOperatorIndexFunction>>;
-typedef GDExtensionInterfaceDictionaryOperatorIndexConstFunction
-    = GDExtensionVariantPtr Function(
-  GDExtensionConstTypePtr p_self,
-  GDExtensionConstVariantPtr p_key,
-);
+typedef GDExtensionInterfaceDictionaryOperatorIndex =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceDictionaryOperatorIndexFunction>
+    >;
+typedef GDExtensionInterfaceDictionaryOperatorIndexConstFunction =
+    GDExtensionVariantPtr Function(
+      GDExtensionConstTypePtr p_self,
+      GDExtensionConstVariantPtr p_key,
+    );
 
 /// @name dictionary_operator_index_const
 /// @since 4.1
@@ -4715,27 +5245,32 @@ typedef GDExtensionInterfaceDictionaryOperatorIndexConstFunction
 /// @param p_key A pointer to a Variant representing the key.
 ///
 /// @return A const pointer to a Variant representing the value at the given key.
-typedef GDExtensionInterfaceDictionaryOperatorIndexConst = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceDictionaryOperatorIndexConstFunction>>;
-typedef GDExtensionInterfaceDictionarySetTypedFunction = ffi.Void Function(
-  GDExtensionTypePtr p_self,
-  ffi.UnsignedInt p_key_type,
-  GDExtensionConstStringNamePtr p_key_class_name,
-  GDExtensionConstVariantPtr p_key_script,
-  ffi.UnsignedInt p_value_type,
-  GDExtensionConstStringNamePtr p_value_class_name,
-  GDExtensionConstVariantPtr p_value_script,
-);
-typedef DartGDExtensionInterfaceDictionarySetTypedFunction = void Function(
-  GDExtensionTypePtr p_self,
-  GDExtensionVariantType p_key_type,
-  GDExtensionConstStringNamePtr p_key_class_name,
-  GDExtensionConstVariantPtr p_key_script,
-  GDExtensionVariantType p_value_type,
-  GDExtensionConstStringNamePtr p_value_class_name,
-  GDExtensionConstVariantPtr p_value_script,
-);
+typedef GDExtensionInterfaceDictionaryOperatorIndexConst =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceDictionaryOperatorIndexConstFunction
+      >
+    >;
+typedef GDExtensionInterfaceDictionarySetTypedFunction =
+    ffi.Void Function(
+      GDExtensionTypePtr p_self,
+      ffi.UnsignedInt p_key_type,
+      GDExtensionConstStringNamePtr p_key_class_name,
+      GDExtensionConstVariantPtr p_key_script,
+      ffi.UnsignedInt p_value_type,
+      GDExtensionConstStringNamePtr p_value_class_name,
+      GDExtensionConstVariantPtr p_value_script,
+    );
+typedef DartGDExtensionInterfaceDictionarySetTypedFunction =
+    void Function(
+      GDExtensionTypePtr p_self,
+      GDExtensionVariantType p_key_type,
+      GDExtensionConstStringNamePtr p_key_class_name,
+      GDExtensionConstVariantPtr p_key_script,
+      GDExtensionVariantType p_value_type,
+      GDExtensionConstStringNamePtr p_value_class_name,
+      GDExtensionConstVariantPtr p_value_script,
+    );
 
 /// @name dictionary_set_typed
 /// @since 4.4
@@ -4749,24 +5284,28 @@ typedef DartGDExtensionInterfaceDictionarySetTypedFunction = void Function(
 /// @param p_value_type The type of Variant the Dictionary value will store.
 /// @param p_value_class_name A pointer to a StringName with the name of the object (if p_value_type is GDEXTENSION_VARIANT_TYPE_OBJECT).
 /// @param p_value_script A pointer to a Script object (if p_value_type is GDEXTENSION_VARIANT_TYPE_OBJECT and the base class is extended by a script).
-typedef GDExtensionInterfaceDictionarySetTyped = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceDictionarySetTypedFunction>>;
-typedef GDExtensionInterfaceObjectMethodBindCallFunction = ffi.Void Function(
-  GDExtensionMethodBindPtr p_method_bind,
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionInt p_arg_count,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef DartGDExtensionInterfaceObjectMethodBindCallFunction = void Function(
-  GDExtensionMethodBindPtr p_method_bind,
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  DartGDExtensionInt p_arg_count,
-  GDExtensionUninitializedVariantPtr r_ret,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
+typedef GDExtensionInterfaceDictionarySetTyped =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceDictionarySetTypedFunction>
+    >;
+typedef GDExtensionInterfaceObjectMethodBindCallFunction =
+    ffi.Void Function(
+      GDExtensionMethodBindPtr p_method_bind,
+      GDExtensionObjectPtr p_instance,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionInt p_arg_count,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef DartGDExtensionInterfaceObjectMethodBindCallFunction =
+    void Function(
+      GDExtensionMethodBindPtr p_method_bind,
+      GDExtensionObjectPtr p_instance,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      DartGDExtensionInt p_arg_count,
+      GDExtensionUninitializedVariantPtr r_ret,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
 
 /// @name object_method_bind_call
 /// @since 4.1
@@ -4779,20 +5318,24 @@ typedef DartGDExtensionInterfaceObjectMethodBindCallFunction = void Function(
 /// @param p_arg_count The number of arguments.
 /// @param r_ret A pointer to Variant which will receive the return value.
 /// @param r_error A pointer to a GDExtensionCallError struct that will receive error information.
-typedef GDExtensionInterfaceObjectMethodBindCall = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectMethodBindCallFunction>>;
-typedef GDExtensionInterfaceObjectMethodBindPtrcallFunction = ffi.Void Function(
-  GDExtensionMethodBindPtr p_method_bind,
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_ret,
-);
-typedef DartGDExtensionInterfaceObjectMethodBindPtrcallFunction = void Function(
-  GDExtensionMethodBindPtr p_method_bind,
-  GDExtensionObjectPtr p_instance,
-  ffi.Pointer<GDExtensionConstTypePtr> p_args,
-  GDExtensionTypePtr r_ret,
-);
+typedef GDExtensionInterfaceObjectMethodBindCall =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectMethodBindCallFunction>
+    >;
+typedef GDExtensionInterfaceObjectMethodBindPtrcallFunction =
+    ffi.Void Function(
+      GDExtensionMethodBindPtr p_method_bind,
+      GDExtensionObjectPtr p_instance,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_ret,
+    );
+typedef DartGDExtensionInterfaceObjectMethodBindPtrcallFunction =
+    void Function(
+      GDExtensionMethodBindPtr p_method_bind,
+      GDExtensionObjectPtr p_instance,
+      ffi.Pointer<GDExtensionConstTypePtr> p_args,
+      GDExtensionTypePtr r_ret,
+    );
 
 /// @name object_method_bind_ptrcall
 /// @since 4.1
@@ -4803,12 +5346,14 @@ typedef DartGDExtensionInterfaceObjectMethodBindPtrcallFunction = void Function(
 /// @param p_instance A pointer to the Object.
 /// @param p_args A pointer to a C array representing the arguments.
 /// @param r_ret A pointer to the Object that will receive the return value.
-typedef GDExtensionInterfaceObjectMethodBindPtrcall = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectMethodBindPtrcallFunction>>;
-typedef GDExtensionInterfaceObjectDestroyFunction = ffi.Void Function(
-    GDExtensionObjectPtr p_o);
-typedef DartGDExtensionInterfaceObjectDestroyFunction = void Function(
-    GDExtensionObjectPtr p_o);
+typedef GDExtensionInterfaceObjectMethodBindPtrcall =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectMethodBindPtrcallFunction>
+    >;
+typedef GDExtensionInterfaceObjectDestroyFunction =
+    ffi.Void Function(GDExtensionObjectPtr p_o);
+typedef DartGDExtensionInterfaceObjectDestroyFunction =
+    void Function(GDExtensionObjectPtr p_o);
 
 /// @name object_destroy
 /// @since 4.1
@@ -4816,10 +5361,10 @@ typedef DartGDExtensionInterfaceObjectDestroyFunction = void Function(
 /// Destroys an Object.
 ///
 /// @param p_o A pointer to the Object.
-typedef GDExtensionInterfaceObjectDestroy = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceObjectDestroyFunction>>;
-typedef GDExtensionInterfaceGlobalGetSingletonFunction = GDExtensionObjectPtr
-    Function(GDExtensionConstStringNamePtr p_name);
+typedef GDExtensionInterfaceObjectDestroy =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceObjectDestroyFunction>>;
+typedef GDExtensionInterfaceGlobalGetSingletonFunction =
+    GDExtensionObjectPtr Function(GDExtensionConstStringNamePtr p_name);
 
 /// @name global_get_singleton
 /// @since 4.1
@@ -4829,14 +5374,16 @@ typedef GDExtensionInterfaceGlobalGetSingletonFunction = GDExtensionObjectPtr
 /// @param p_name A pointer to a StringName with the singleton name.
 ///
 /// @return A pointer to the singleton Object.
-typedef GDExtensionInterfaceGlobalGetSingleton = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceGlobalGetSingletonFunction>>;
-typedef GDExtensionInterfaceObjectGetInstanceBindingFunction
-    = ffi.Pointer<ffi.Void> Function(
-  GDExtensionObjectPtr p_o,
-  ffi.Pointer<ffi.Void> p_token,
-  ffi.Pointer<GDExtensionInstanceBindingCallbacks> p_callbacks,
-);
+typedef GDExtensionInterfaceGlobalGetSingleton =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceGlobalGetSingletonFunction>
+    >;
+typedef GDExtensionInterfaceObjectGetInstanceBindingFunction =
+    ffi.Pointer<ffi.Void> Function(
+      GDExtensionObjectPtr p_o,
+      ffi.Pointer<ffi.Void> p_token,
+      ffi.Pointer<GDExtensionInstanceBindingCallbacks> p_callbacks,
+    );
 
 /// @name object_get_instance_binding
 /// @since 4.1
@@ -4844,26 +5391,28 @@ typedef GDExtensionInterfaceObjectGetInstanceBindingFunction
 /// Gets a pointer representing an Object's instance binding.
 ///
 /// @param p_o A pointer to the Object.
-/// @param p_library A token the library received by the GDExtension's entry point function.
+/// @param p_token A token the library received by the GDExtension's entry point function.
 /// @param p_callbacks A pointer to a GDExtensionInstanceBindingCallbacks struct.
 ///
-/// @return
-typedef GDExtensionInterfaceObjectGetInstanceBinding = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>>;
-typedef GDExtensionInterfaceObjectSetInstanceBindingFunction = ffi.Void
-    Function(
-  GDExtensionObjectPtr p_o,
-  ffi.Pointer<ffi.Void> p_token,
-  ffi.Pointer<ffi.Void> p_binding,
-  ffi.Pointer<GDExtensionInstanceBindingCallbacks> p_callbacks,
-);
-typedef DartGDExtensionInterfaceObjectSetInstanceBindingFunction = void
-    Function(
-  GDExtensionObjectPtr p_o,
-  ffi.Pointer<ffi.Void> p_token,
-  ffi.Pointer<ffi.Void> p_binding,
-  ffi.Pointer<GDExtensionInstanceBindingCallbacks> p_callbacks,
-);
+/// @return A pointer to the instance binding.
+typedef GDExtensionInterfaceObjectGetInstanceBinding =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>
+    >;
+typedef GDExtensionInterfaceObjectSetInstanceBindingFunction =
+    ffi.Void Function(
+      GDExtensionObjectPtr p_o,
+      ffi.Pointer<ffi.Void> p_token,
+      ffi.Pointer<ffi.Void> p_binding,
+      ffi.Pointer<GDExtensionInstanceBindingCallbacks> p_callbacks,
+    );
+typedef DartGDExtensionInterfaceObjectSetInstanceBindingFunction =
+    void Function(
+      GDExtensionObjectPtr p_o,
+      ffi.Pointer<ffi.Void> p_token,
+      ffi.Pointer<ffi.Void> p_binding,
+      ffi.Pointer<GDExtensionInstanceBindingCallbacks> p_callbacks,
+    );
 
 /// @name object_set_instance_binding
 /// @since 4.1
@@ -4871,15 +5420,17 @@ typedef DartGDExtensionInterfaceObjectSetInstanceBindingFunction = void
 /// Sets an Object's instance binding.
 ///
 /// @param p_o A pointer to the Object.
-/// @param p_library A token the library received by the GDExtension's entry point function.
+/// @param p_token A token the library received by the GDExtension's entry point function.
 /// @param p_binding A pointer to the instance binding.
 /// @param p_callbacks A pointer to a GDExtensionInstanceBindingCallbacks struct.
-typedef GDExtensionInterfaceObjectSetInstanceBinding = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectSetInstanceBindingFunction>>;
-typedef GDExtensionInterfaceObjectFreeInstanceBindingFunction = ffi.Void
-    Function(GDExtensionObjectPtr p_o, ffi.Pointer<ffi.Void> p_token);
-typedef DartGDExtensionInterfaceObjectFreeInstanceBindingFunction = void
-    Function(GDExtensionObjectPtr p_o, ffi.Pointer<ffi.Void> p_token);
+typedef GDExtensionInterfaceObjectSetInstanceBinding =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectSetInstanceBindingFunction>
+    >;
+typedef GDExtensionInterfaceObjectFreeInstanceBindingFunction =
+    ffi.Void Function(GDExtensionObjectPtr p_o, ffi.Pointer<ffi.Void> p_token);
+typedef DartGDExtensionInterfaceObjectFreeInstanceBindingFunction =
+    void Function(GDExtensionObjectPtr p_o, ffi.Pointer<ffi.Void> p_token);
 
 /// @name object_free_instance_binding
 /// @since 4.2
@@ -4887,42 +5438,50 @@ typedef DartGDExtensionInterfaceObjectFreeInstanceBindingFunction = void
 /// Free an Object's instance binding.
 ///
 /// @param p_o A pointer to the Object.
-/// @param p_library A token the library received by the GDExtension's entry point function.
-typedef GDExtensionInterfaceObjectFreeInstanceBinding = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectFreeInstanceBindingFunction>>;
-typedef GDExtensionInterfaceObjectSetInstanceFunction = ffi.Void Function(
-  GDExtensionObjectPtr p_o,
-  GDExtensionConstStringNamePtr p_classname,
-  GDExtensionClassInstancePtr p_instance,
-);
-typedef DartGDExtensionInterfaceObjectSetInstanceFunction = void Function(
-  GDExtensionObjectPtr p_o,
-  GDExtensionConstStringNamePtr p_classname,
-  GDExtensionClassInstancePtr p_instance,
-);
+/// @param p_token A token the library received by the GDExtension's entry point function.
+typedef GDExtensionInterfaceObjectFreeInstanceBinding =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectFreeInstanceBindingFunction>
+    >;
+typedef GDExtensionInterfaceObjectSetInstanceFunction =
+    ffi.Void Function(
+      GDExtensionObjectPtr p_o,
+      GDExtensionConstStringNamePtr p_classname,
+      GDExtensionClassInstancePtr p_instance,
+    );
+typedef DartGDExtensionInterfaceObjectSetInstanceFunction =
+    void Function(
+      GDExtensionObjectPtr p_o,
+      GDExtensionConstStringNamePtr p_classname,
+      GDExtensionClassInstancePtr p_instance,
+    );
 
 /// @name object_set_instance
 /// @since 4.1
 ///
 /// Sets an extension class instance on a Object.
 ///
+/// `p_classname` should be a registered extension class and should extend the `p_o` Object's class.
+///
 /// @param p_o A pointer to the Object.
 /// @param p_classname A pointer to a StringName with the registered extension class's name.
 /// @param p_instance A pointer to the extension class instance.
-typedef GDExtensionInterfaceObjectSetInstance = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceObjectSetInstanceFunction>>;
-typedef GDExtensionInterfaceObjectGetClassNameFunction = GDExtensionBool
-    Function(
-  GDExtensionConstObjectPtr p_object,
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionUninitializedStringNamePtr r_class_name,
-);
-typedef DartGDExtensionInterfaceObjectGetClassNameFunction = DartGDExtensionBool
-    Function(
-  GDExtensionConstObjectPtr p_object,
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionUninitializedStringNamePtr r_class_name,
-);
+typedef GDExtensionInterfaceObjectSetInstance =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectSetInstanceFunction>
+    >;
+typedef GDExtensionInterfaceObjectGetClassNameFunction =
+    GDExtensionBool Function(
+      GDExtensionConstObjectPtr p_object,
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionUninitializedStringNamePtr r_class_name,
+    );
+typedef DartGDExtensionInterfaceObjectGetClassNameFunction =
+    DartGDExtensionBool Function(
+      GDExtensionConstObjectPtr p_object,
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionUninitializedStringNamePtr r_class_name,
+    );
 
 /// @name object_get_class_name
 /// @since 4.1
@@ -4937,13 +5496,15 @@ typedef DartGDExtensionInterfaceObjectGetClassNameFunction = DartGDExtensionBool
 /// @param r_class_name A pointer to a String to receive the class name.
 ///
 /// @return true if successful in getting the class name; otherwise false.
-typedef GDExtensionInterfaceObjectGetClassName = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectGetClassNameFunction>>;
-typedef GDExtensionInterfaceObjectCastToFunction = GDExtensionObjectPtr
-    Function(
-  GDExtensionConstObjectPtr p_object,
-  ffi.Pointer<ffi.Void> p_class_tag,
-);
+typedef GDExtensionInterfaceObjectGetClassName =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectGetClassNameFunction>
+    >;
+typedef GDExtensionInterfaceObjectCastToFunction =
+    GDExtensionObjectPtr Function(
+      GDExtensionConstObjectPtr p_object,
+      ffi.Pointer<ffi.Void> p_class_tag,
+    );
 
 /// @name object_cast_to
 /// @since 4.1
@@ -4954,12 +5515,12 @@ typedef GDExtensionInterfaceObjectCastToFunction = GDExtensionObjectPtr
 /// @param p_class_tag A pointer uniquely identifying a built-in class in the ClassDB.
 ///
 /// @return Returns a pointer to the Object, or NULL if it can't be cast to the requested type.
-typedef GDExtensionInterfaceObjectCastTo
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceObjectCastToFunction>>;
-typedef GDExtensionInterfaceObjectGetInstanceFromIdFunction
-    = GDExtensionObjectPtr Function(GDObjectInstanceID p_instance_id);
-typedef DartGDExtensionInterfaceObjectGetInstanceFromIdFunction
-    = GDExtensionObjectPtr Function(DartGDObjectInstanceID p_instance_id);
+typedef GDExtensionInterfaceObjectCastTo =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceObjectCastToFunction>>;
+typedef GDExtensionInterfaceObjectGetInstanceFromIdFunction =
+    GDExtensionObjectPtr Function(GDObjectInstanceID p_instance_id);
+typedef DartGDExtensionInterfaceObjectGetInstanceFromIdFunction =
+    GDExtensionObjectPtr Function(DartGDObjectInstanceID p_instance_id);
 
 /// @name object_get_instance_from_id
 /// @since 4.1
@@ -4969,12 +5530,14 @@ typedef DartGDExtensionInterfaceObjectGetInstanceFromIdFunction
 /// @param p_instance_id The instance ID.
 ///
 /// @return A pointer to the Object.
-typedef GDExtensionInterfaceObjectGetInstanceFromId = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectGetInstanceFromIdFunction>>;
-typedef GDExtensionInterfaceObjectGetInstanceIdFunction = GDObjectInstanceID
-    Function(GDExtensionConstObjectPtr p_object);
-typedef DartGDExtensionInterfaceObjectGetInstanceIdFunction
-    = DartGDObjectInstanceID Function(GDExtensionConstObjectPtr p_object);
+typedef GDExtensionInterfaceObjectGetInstanceFromId =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectGetInstanceFromIdFunction>
+    >;
+typedef GDExtensionInterfaceObjectGetInstanceIdFunction =
+    GDObjectInstanceID Function(GDExtensionConstObjectPtr p_object);
+typedef DartGDExtensionInterfaceObjectGetInstanceIdFunction =
+    DartGDObjectInstanceID Function(GDExtensionConstObjectPtr p_object);
 
 /// @name object_get_instance_id
 /// @since 4.1
@@ -4984,18 +5547,20 @@ typedef DartGDExtensionInterfaceObjectGetInstanceIdFunction
 /// @param p_object A pointer to the Object.
 ///
 /// @return The instance ID.
-typedef GDExtensionInterfaceObjectGetInstanceId = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectGetInstanceIdFunction>>;
-typedef GDExtensionInterfaceObjectHasScriptMethodFunction = GDExtensionBool
-    Function(
-  GDExtensionConstObjectPtr p_object,
-  GDExtensionConstStringNamePtr p_method,
-);
-typedef DartGDExtensionInterfaceObjectHasScriptMethodFunction
-    = DartGDExtensionBool Function(
-  GDExtensionConstObjectPtr p_object,
-  GDExtensionConstStringNamePtr p_method,
-);
+typedef GDExtensionInterfaceObjectGetInstanceId =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectGetInstanceIdFunction>
+    >;
+typedef GDExtensionInterfaceObjectHasScriptMethodFunction =
+    GDExtensionBool Function(
+      GDExtensionConstObjectPtr p_object,
+      GDExtensionConstStringNamePtr p_method,
+    );
+typedef DartGDExtensionInterfaceObjectHasScriptMethodFunction =
+    DartGDExtensionBool Function(
+      GDExtensionConstObjectPtr p_object,
+      GDExtensionConstStringNamePtr p_method,
+    );
 
 /// @name object_has_script_method
 /// @since 4.3
@@ -5005,25 +5570,29 @@ typedef DartGDExtensionInterfaceObjectHasScriptMethodFunction
 /// @param p_object A pointer to the Object.
 /// @param p_method A pointer to a StringName identifying the method.
 ///
-/// @returns true if the object has a script and that script has a method with the given name. Returns false if the object has no script.
-typedef GDExtensionInterfaceObjectHasScriptMethod = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectHasScriptMethodFunction>>;
-typedef GDExtensionInterfaceObjectCallScriptMethodFunction = ffi.Void Function(
-  GDExtensionObjectPtr p_object,
-  GDExtensionConstStringNamePtr p_method,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  GDExtensionInt p_argument_count,
-  GDExtensionUninitializedVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
-typedef DartGDExtensionInterfaceObjectCallScriptMethodFunction = void Function(
-  GDExtensionObjectPtr p_object,
-  GDExtensionConstStringNamePtr p_method,
-  ffi.Pointer<GDExtensionConstVariantPtr> p_args,
-  DartGDExtensionInt p_argument_count,
-  GDExtensionUninitializedVariantPtr r_return,
-  ffi.Pointer<GDExtensionCallError> r_error,
-);
+/// @return true if the object has a script and that script has a method with the given name. Returns false if the object has no script.
+typedef GDExtensionInterfaceObjectHasScriptMethod =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectHasScriptMethodFunction>
+    >;
+typedef GDExtensionInterfaceObjectCallScriptMethodFunction =
+    ffi.Void Function(
+      GDExtensionObjectPtr p_object,
+      GDExtensionConstStringNamePtr p_method,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      GDExtensionInt p_argument_count,
+      GDExtensionUninitializedVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
+typedef DartGDExtensionInterfaceObjectCallScriptMethodFunction =
+    void Function(
+      GDExtensionObjectPtr p_object,
+      GDExtensionConstStringNamePtr p_method,
+      ffi.Pointer<GDExtensionConstVariantPtr> p_args,
+      DartGDExtensionInt p_argument_count,
+      GDExtensionUninitializedVariantPtr r_return,
+      ffi.Pointer<GDExtensionCallError> r_error,
+    );
 
 /// @name object_call_script_method
 /// @since 4.3
@@ -5036,10 +5605,12 @@ typedef DartGDExtensionInterfaceObjectCallScriptMethodFunction = void Function(
 /// @param p_argument_count The number of arguments.
 /// @param r_return A pointer a Variant which will be assigned the return value.
 /// @param r_error A pointer the structure which will hold error information.
-typedef GDExtensionInterfaceObjectCallScriptMethod = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectCallScriptMethodFunction>>;
-typedef GDExtensionInterfaceRefGetObjectFunction = GDExtensionObjectPtr
-    Function(GDExtensionConstRefPtr p_ref);
+typedef GDExtensionInterfaceObjectCallScriptMethod =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectCallScriptMethodFunction>
+    >;
+typedef GDExtensionInterfaceRefGetObjectFunction =
+    GDExtensionObjectPtr Function(GDExtensionConstRefPtr p_ref);
 
 /// @name ref_get_object
 /// @since 4.1
@@ -5049,12 +5620,12 @@ typedef GDExtensionInterfaceRefGetObjectFunction = GDExtensionObjectPtr
 /// @param p_ref A pointer to the reference.
 ///
 /// @return A pointer to the Object from the reference or NULL.
-typedef GDExtensionInterfaceRefGetObject
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceRefGetObjectFunction>>;
-typedef GDExtensionInterfaceRefSetObjectFunction = ffi.Void Function(
-    GDExtensionRefPtr p_ref, GDExtensionObjectPtr p_object);
-typedef DartGDExtensionInterfaceRefSetObjectFunction = void Function(
-    GDExtensionRefPtr p_ref, GDExtensionObjectPtr p_object);
+typedef GDExtensionInterfaceRefGetObject =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceRefGetObjectFunction>>;
+typedef GDExtensionInterfaceRefSetObjectFunction =
+    ffi.Void Function(GDExtensionRefPtr p_ref, GDExtensionObjectPtr p_object);
+typedef DartGDExtensionInterfaceRefSetObjectFunction =
+    void Function(GDExtensionRefPtr p_ref, GDExtensionObjectPtr p_object);
 
 /// @name ref_set_object
 /// @since 4.1
@@ -5063,13 +5634,13 @@ typedef DartGDExtensionInterfaceRefSetObjectFunction = void Function(
 ///
 /// @param p_ref A pointer to the reference.
 /// @param p_object A pointer to the Object to refer to.
-typedef GDExtensionInterfaceRefSetObject
-    = ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceRefSetObjectFunction>>;
-typedef GDExtensionInterfaceScriptInstanceCreateFunction
-    = GDExtensionScriptInstancePtr Function(
-  ffi.Pointer<GDExtensionScriptInstanceInfo> p_info,
-  GDExtensionScriptInstanceDataPtr p_instance_data,
-);
+typedef GDExtensionInterfaceRefSetObject =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceRefSetObjectFunction>>;
+typedef GDExtensionInterfaceScriptInstanceCreateFunction =
+    GDExtensionScriptInstancePtr Function(
+      ffi.Pointer<GDExtensionScriptInstanceInfo> p_info,
+      GDExtensionScriptInstanceDataPtr p_instance_data,
+    );
 
 /// @name script_instance_create
 /// @since 4.1
@@ -5081,13 +5652,15 @@ typedef GDExtensionInterfaceScriptInstanceCreateFunction
 /// @param p_instance_data A pointer to a data representing the script instance in the GDExtension. This will be passed to all the function pointers on p_info.
 ///
 /// @return A pointer to a ScriptInstanceExtension object.
-typedef GDExtensionInterfaceScriptInstanceCreate = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceScriptInstanceCreateFunction>>;
-typedef GDExtensionInterfaceScriptInstanceCreate2Function
-    = GDExtensionScriptInstancePtr Function(
-  ffi.Pointer<GDExtensionScriptInstanceInfo2> p_info,
-  GDExtensionScriptInstanceDataPtr p_instance_data,
-);
+typedef GDExtensionInterfaceScriptInstanceCreate =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceScriptInstanceCreateFunction>
+    >;
+typedef GDExtensionInterfaceScriptInstanceCreate2Function =
+    GDExtensionScriptInstancePtr Function(
+      ffi.Pointer<GDExtensionScriptInstanceInfo2> p_info,
+      GDExtensionScriptInstanceDataPtr p_instance_data,
+    );
 
 /// @name script_instance_create2
 /// @since 4.2
@@ -5099,13 +5672,15 @@ typedef GDExtensionInterfaceScriptInstanceCreate2Function
 /// @param p_instance_data A pointer to a data representing the script instance in the GDExtension. This will be passed to all the function pointers on p_info.
 ///
 /// @return A pointer to a ScriptInstanceExtension object.
-typedef GDExtensionInterfaceScriptInstanceCreate2 = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceScriptInstanceCreate2Function>>;
-typedef GDExtensionInterfaceScriptInstanceCreate3Function
-    = GDExtensionScriptInstancePtr Function(
-  ffi.Pointer<GDExtensionScriptInstanceInfo3> p_info,
-  GDExtensionScriptInstanceDataPtr p_instance_data,
-);
+typedef GDExtensionInterfaceScriptInstanceCreate2 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceScriptInstanceCreate2Function>
+    >;
+typedef GDExtensionInterfaceScriptInstanceCreate3Function =
+    GDExtensionScriptInstancePtr Function(
+      ffi.Pointer<GDExtensionScriptInstanceInfo3> p_info,
+      GDExtensionScriptInstanceDataPtr p_instance_data,
+    );
 
 /// @name script_instance_create3
 /// @since 4.3
@@ -5116,14 +5691,16 @@ typedef GDExtensionInterfaceScriptInstanceCreate3Function
 /// @param p_instance_data A pointer to a data representing the script instance in the GDExtension. This will be passed to all the function pointers on p_info.
 ///
 /// @return A pointer to a ScriptInstanceExtension object.
-typedef GDExtensionInterfaceScriptInstanceCreate3 = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceScriptInstanceCreate3Function>>;
-typedef GDExtensionInterfacePlaceHolderScriptInstanceCreateFunction
-    = GDExtensionScriptInstancePtr Function(
-  GDExtensionObjectPtr p_language,
-  GDExtensionObjectPtr p_script,
-  GDExtensionObjectPtr p_owner,
-);
+typedef GDExtensionInterfaceScriptInstanceCreate3 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceScriptInstanceCreate3Function>
+    >;
+typedef GDExtensionInterfacePlaceHolderScriptInstanceCreateFunction =
+    GDExtensionScriptInstancePtr Function(
+      GDExtensionObjectPtr p_language,
+      GDExtensionObjectPtr p_script,
+      GDExtensionObjectPtr p_owner,
+    );
 
 /// @name placeholder_script_instance_create
 /// @since 4.2
@@ -5137,21 +5714,24 @@ typedef GDExtensionInterfacePlaceHolderScriptInstanceCreateFunction
 /// @param p_owner A pointer to an Object.
 ///
 /// @return A pointer to a PlaceHolderScriptInstance object.
-typedef GDExtensionInterfacePlaceHolderScriptInstanceCreate = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePlaceHolderScriptInstanceCreateFunction>>;
-typedef GDExtensionInterfacePlaceHolderScriptInstanceUpdateFunction = ffi.Void
-    Function(
-  GDExtensionScriptInstancePtr p_placeholder,
-  GDExtensionConstTypePtr p_properties,
-  GDExtensionConstTypePtr p_values,
-);
-typedef DartGDExtensionInterfacePlaceHolderScriptInstanceUpdateFunction = void
-    Function(
-  GDExtensionScriptInstancePtr p_placeholder,
-  GDExtensionConstTypePtr p_properties,
-  GDExtensionConstTypePtr p_values,
-);
+typedef GDExtensionInterfacePlaceHolderScriptInstanceCreate =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePlaceHolderScriptInstanceCreateFunction
+      >
+    >;
+typedef GDExtensionInterfacePlaceHolderScriptInstanceUpdateFunction =
+    ffi.Void Function(
+      GDExtensionScriptInstancePtr p_placeholder,
+      GDExtensionConstTypePtr p_properties,
+      GDExtensionConstTypePtr p_values,
+    );
+typedef DartGDExtensionInterfacePlaceHolderScriptInstanceUpdateFunction =
+    void Function(
+      GDExtensionScriptInstancePtr p_placeholder,
+      GDExtensionConstTypePtr p_properties,
+      GDExtensionConstTypePtr p_values,
+    );
 
 /// @name placeholder_script_instance_update
 /// @since 4.2
@@ -5164,14 +5744,17 @@ typedef DartGDExtensionInterfacePlaceHolderScriptInstanceUpdateFunction = void
 /// @param p_placeholder A pointer to a PlaceHolderScriptInstance.
 /// @param p_properties A pointer to an Array of Dictionary representing PropertyInfo.
 /// @param p_values A pointer to a Dictionary mapping StringName to Variant values.
-typedef GDExtensionInterfacePlaceHolderScriptInstanceUpdate = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfacePlaceHolderScriptInstanceUpdateFunction>>;
-typedef GDExtensionInterfaceObjectGetScriptInstanceFunction
-    = GDExtensionScriptInstanceDataPtr Function(
-  GDExtensionConstObjectPtr p_object,
-  GDExtensionObjectPtr p_language,
-);
+typedef GDExtensionInterfacePlaceHolderScriptInstanceUpdate =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfacePlaceHolderScriptInstanceUpdateFunction
+      >
+    >;
+typedef GDExtensionInterfaceObjectGetScriptInstanceFunction =
+    GDExtensionScriptInstanceDataPtr Function(
+      GDExtensionConstObjectPtr p_object,
+      GDExtensionObjectPtr p_language,
+    );
 
 /// @name object_get_script_instance
 /// @since 4.2
@@ -5182,16 +5765,42 @@ typedef GDExtensionInterfaceObjectGetScriptInstanceFunction
 /// @param p_language A pointer to the language expected for this script instance.
 ///
 /// @return A GDExtensionScriptInstanceDataPtr that was attached to this object as part of script_instance_create.
-typedef GDExtensionInterfaceObjectGetScriptInstance = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceObjectGetScriptInstanceFunction>>;
-typedef GDExtensionInterfaceCallableCustomCreateFunction = ffi.Void Function(
-  GDExtensionUninitializedTypePtr r_callable,
-  ffi.Pointer<GDExtensionCallableCustomInfo> p_callable_custom_info,
-);
-typedef DartGDExtensionInterfaceCallableCustomCreateFunction = void Function(
-  GDExtensionUninitializedTypePtr r_callable,
-  ffi.Pointer<GDExtensionCallableCustomInfo> p_callable_custom_info,
-);
+typedef GDExtensionInterfaceObjectGetScriptInstance =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectGetScriptInstanceFunction>
+    >;
+typedef GDExtensionInterfaceObjectSetScriptInstanceFunction =
+    ffi.Void Function(
+      GDExtensionObjectPtr p_object,
+      GDExtensionScriptInstanceDataPtr p_script_instance,
+    );
+typedef DartGDExtensionInterfaceObjectSetScriptInstanceFunction =
+    void Function(
+      GDExtensionObjectPtr p_object,
+      GDExtensionScriptInstanceDataPtr p_script_instance,
+    );
+
+/// @name object_set_script_instance
+/// @since 4.5
+///
+/// Set the script instance data attached to this object.
+///
+/// @param p_object A pointer to the Object.
+/// @param p_script_instance A pointer to the script instance data to attach to this object.
+typedef GDExtensionInterfaceObjectSetScriptInstance =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceObjectSetScriptInstanceFunction>
+    >;
+typedef GDExtensionInterfaceCallableCustomCreateFunction =
+    ffi.Void Function(
+      GDExtensionUninitializedTypePtr r_callable,
+      ffi.Pointer<GDExtensionCallableCustomInfo> p_callable_custom_info,
+    );
+typedef DartGDExtensionInterfaceCallableCustomCreateFunction =
+    void Function(
+      GDExtensionUninitializedTypePtr r_callable,
+      ffi.Pointer<GDExtensionCallableCustomInfo> p_callable_custom_info,
+    );
 
 /// @name callable_custom_create
 /// @since 4.2
@@ -5203,16 +5812,20 @@ typedef DartGDExtensionInterfaceCallableCustomCreateFunction = void Function(
 ///
 /// @param r_callable A pointer that will receive the new Callable.
 /// @param p_callable_custom_info The info required to construct a Callable.
-typedef GDExtensionInterfaceCallableCustomCreate = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceCallableCustomCreateFunction>>;
-typedef GDExtensionInterfaceCallableCustomCreate2Function = ffi.Void Function(
-  GDExtensionUninitializedTypePtr r_callable,
-  ffi.Pointer<GDExtensionCallableCustomInfo2> p_callable_custom_info,
-);
-typedef DartGDExtensionInterfaceCallableCustomCreate2Function = void Function(
-  GDExtensionUninitializedTypePtr r_callable,
-  ffi.Pointer<GDExtensionCallableCustomInfo2> p_callable_custom_info,
-);
+typedef GDExtensionInterfaceCallableCustomCreate =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceCallableCustomCreateFunction>
+    >;
+typedef GDExtensionInterfaceCallableCustomCreate2Function =
+    ffi.Void Function(
+      GDExtensionUninitializedTypePtr r_callable,
+      ffi.Pointer<GDExtensionCallableCustomInfo2> p_callable_custom_info,
+    );
+typedef DartGDExtensionInterfaceCallableCustomCreate2Function =
+    void Function(
+      GDExtensionUninitializedTypePtr r_callable,
+      ffi.Pointer<GDExtensionCallableCustomInfo2> p_callable_custom_info,
+    );
 
 /// @name callable_custom_create2
 /// @since 4.3
@@ -5223,13 +5836,15 @@ typedef DartGDExtensionInterfaceCallableCustomCreate2Function = void Function(
 ///
 /// @param r_callable A pointer that will receive the new Callable.
 /// @param p_callable_custom_info The info required to construct a Callable.
-typedef GDExtensionInterfaceCallableCustomCreate2 = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceCallableCustomCreate2Function>>;
-typedef GDExtensionInterfaceCallableCustomGetUserDataFunction
-    = ffi.Pointer<ffi.Void> Function(
-  GDExtensionConstTypePtr p_callable,
-  ffi.Pointer<ffi.Void> p_token,
-);
+typedef GDExtensionInterfaceCallableCustomCreate2 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceCallableCustomCreate2Function>
+    >;
+typedef GDExtensionInterfaceCallableCustomGetUserDataFunction =
+    ffi.Pointer<ffi.Void> Function(
+      GDExtensionConstTypePtr p_callable,
+      ffi.Pointer<ffi.Void> p_token,
+    );
 
 /// @name callable_custom_get_userdata
 /// @since 4.2
@@ -5240,10 +5855,14 @@ typedef GDExtensionInterfaceCallableCustomGetUserDataFunction
 ///
 /// @param p_callable A pointer to a Callable.
 /// @param p_token A pointer to an address that uniquely identifies the GDExtension.
-typedef GDExtensionInterfaceCallableCustomGetUserData = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceCallableCustomGetUserDataFunction>>;
-typedef GDExtensionInterfaceClassdbConstructObjectFunction
-    = GDExtensionObjectPtr Function(GDExtensionConstStringNamePtr p_classname);
+///
+/// @return The userdata pointer given when creating this custom Callable.
+typedef GDExtensionInterfaceCallableCustomGetUserData =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceCallableCustomGetUserDataFunction>
+    >;
+typedef GDExtensionInterfaceClassdbConstructObjectFunction =
+    GDExtensionObjectPtr Function(GDExtensionConstStringNamePtr p_classname);
 
 /// @name classdb_construct_object
 /// @since 4.1
@@ -5256,10 +5875,12 @@ typedef GDExtensionInterfaceClassdbConstructObjectFunction
 /// @param p_classname A pointer to a StringName with the class name.
 ///
 /// @return A pointer to the newly created Object.
-typedef GDExtensionInterfaceClassdbConstructObject = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceClassdbConstructObjectFunction>>;
-typedef GDExtensionInterfaceClassdbConstructObject2Function
-    = GDExtensionObjectPtr Function(GDExtensionConstStringNamePtr p_classname);
+typedef GDExtensionInterfaceClassdbConstructObject =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceClassdbConstructObjectFunction>
+    >;
+typedef GDExtensionInterfaceClassdbConstructObject2Function =
+    GDExtensionObjectPtr Function(GDExtensionConstStringNamePtr p_classname);
 
 /// @name classdb_construct_object2
 /// @since 4.4
@@ -5273,20 +5894,22 @@ typedef GDExtensionInterfaceClassdbConstructObject2Function
 /// @param p_classname A pointer to a StringName with the class name.
 ///
 /// @return A pointer to the newly created Object.
-typedef GDExtensionInterfaceClassdbConstructObject2 = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceClassdbConstructObject2Function>>;
-typedef GDExtensionInterfaceClassdbGetMethodBindFunction
-    = GDExtensionMethodBindPtr Function(
-  GDExtensionConstStringNamePtr p_classname,
-  GDExtensionConstStringNamePtr p_methodname,
-  GDExtensionInt p_hash,
-);
-typedef DartGDExtensionInterfaceClassdbGetMethodBindFunction
-    = GDExtensionMethodBindPtr Function(
-  GDExtensionConstStringNamePtr p_classname,
-  GDExtensionConstStringNamePtr p_methodname,
-  DartGDExtensionInt p_hash,
-);
+typedef GDExtensionInterfaceClassdbConstructObject2 =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceClassdbConstructObject2Function>
+    >;
+typedef GDExtensionInterfaceClassdbGetMethodBindFunction =
+    GDExtensionMethodBindPtr Function(
+      GDExtensionConstStringNamePtr p_classname,
+      GDExtensionConstStringNamePtr p_methodname,
+      GDExtensionInt p_hash,
+    );
+typedef DartGDExtensionInterfaceClassdbGetMethodBindFunction =
+    GDExtensionMethodBindPtr Function(
+      GDExtensionConstStringNamePtr p_classname,
+      GDExtensionConstStringNamePtr p_methodname,
+      DartGDExtensionInt p_hash,
+    );
 
 /// @name classdb_get_method_bind
 /// @since 4.1
@@ -5298,10 +5921,12 @@ typedef DartGDExtensionInterfaceClassdbGetMethodBindFunction
 /// @param p_hash A hash representing the function signature.
 ///
 /// @return A pointer to the MethodBind from ClassDB.
-typedef GDExtensionInterfaceClassdbGetMethodBind = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceClassdbGetMethodBindFunction>>;
-typedef GDExtensionInterfaceClassdbGetClassTagFunction = ffi.Pointer<ffi.Void>
-    Function(GDExtensionConstStringNamePtr p_classname);
+typedef GDExtensionInterfaceClassdbGetMethodBind =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceClassdbGetMethodBindFunction>
+    >;
+typedef GDExtensionInterfaceClassdbGetClassTagFunction =
+    ffi.Pointer<ffi.Void> Function(GDExtensionConstStringNamePtr p_classname);
 
 /// @name classdb_get_class_tag
 /// @since 4.1
@@ -5311,22 +5936,24 @@ typedef GDExtensionInterfaceClassdbGetClassTagFunction = ffi.Pointer<ffi.Void>
 /// @param p_classname A pointer to a StringName with the class name.
 ///
 /// @return A pointer uniquely identifying the built-in class in the ClassDB.
-typedef GDExtensionInterfaceClassdbGetClassTag = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceClassdbGetClassTagFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassFunction = ffi.Void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_parent_class_name,
-  ffi.Pointer<GDExtensionClassCreationInfo> p_extension_funcs,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassFunction = void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_parent_class_name,
-  ffi.Pointer<GDExtensionClassCreationInfo> p_extension_funcs,
-);
+typedef GDExtensionInterfaceClassdbGetClassTag =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceClassdbGetClassTagFunction>
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo> p_extension_funcs,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo> p_extension_funcs,
+    );
 
 /// @name classdb_register_extension_class
 /// @since 4.1
@@ -5340,23 +5967,26 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassFunction = void
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_parent_class_name A pointer to a StringName with the parent class name.
 /// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo struct.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass = ffi.Pointer<
-    ffi
-    .NativeFunction<GDExtensionInterfaceClassdbRegisterExtensionClassFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass2Function = ffi.Void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_parent_class_name,
-  ffi.Pointer<GDExtensionClassCreationInfo2> p_extension_funcs,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass2Function = void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_parent_class_name,
-  ffi.Pointer<GDExtensionClassCreationInfo2> p_extension_funcs,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass2Function =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo2> p_extension_funcs,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass2Function =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo2> p_extension_funcs,
+    );
 
 /// @name classdb_register_extension_class2
 /// @since 4.2
@@ -5370,23 +6000,26 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass2Function = void
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_parent_class_name A pointer to a StringName with the parent class name.
 /// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo2 struct.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass2 = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceClassdbRegisterExtensionClass2Function>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass3Function = ffi.Void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_parent_class_name,
-  ffi.Pointer<GDExtensionClassCreationInfo3> p_extension_funcs,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass3Function = void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_parent_class_name,
-  ffi.Pointer<GDExtensionClassCreationInfo3> p_extension_funcs,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass2 =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClass2Function
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass3Function =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo3> p_extension_funcs,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass3Function =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo3> p_extension_funcs,
+    );
 
 /// @name classdb_register_extension_class3
 /// @since 4.3
@@ -5399,27 +6032,31 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass3Function = void
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_parent_class_name A pointer to a StringName with the parent class name.
-/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo2 struct.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass3 = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceClassdbRegisterExtensionClass3Function>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass4Function = ffi.Void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_parent_class_name,
-  ffi.Pointer<GDExtensionClassCreationInfo4> p_extension_funcs,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass4Function = void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_parent_class_name,
-  ffi.Pointer<GDExtensionClassCreationInfo4> p_extension_funcs,
-);
+/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo3 struct.
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass3 =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClass3Function
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass4Function =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo4> p_extension_funcs,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass4Function =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo4> p_extension_funcs,
+    );
 
 /// @name classdb_register_extension_class4
 /// @since 4.4
+/// @deprecated in Godot 4.5. Use `classdb_register_extension_class5` instead.
 ///
 /// Registers an extension class in the ClassDB.
 ///
@@ -5428,22 +6065,57 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass4Function = void
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_parent_class_name A pointer to a StringName with the parent class name.
-/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo2 struct.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass4 = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceClassdbRegisterExtensionClass4Function>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction
-    = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  ffi.Pointer<GDExtensionClassMethodInfo> p_method_info,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction
-    = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  ffi.Pointer<GDExtensionClassMethodInfo> p_method_info,
-);
+/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo4 struct.
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass4 =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClass4Function
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass5Function =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo5> p_extension_funcs,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass5Function =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_parent_class_name,
+      ffi.Pointer<GDExtensionClassCreationInfo5> p_extension_funcs,
+    );
+
+/// @name classdb_register_extension_class5
+/// @since 4.5
+///
+/// Registers an extension class in the ClassDB.
+///
+/// Provided struct can be safely freed once the function returns.
+///
+/// @param p_library A pointer the library received by the GDExtension's entry point function.
+/// @param p_class_name A pointer to a StringName with the class name.
+/// @param p_parent_class_name A pointer to a StringName with the parent class name.
+/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo5 struct.
+typedef GDExtensionInterfaceClassdbRegisterExtensionClass5 =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClass5Function
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      ffi.Pointer<GDExtensionClassMethodInfo> p_method_info,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      ffi.Pointer<GDExtensionClassMethodInfo> p_method_info,
+    );
 
 /// @name classdb_register_extension_class_method
 /// @since 4.1
@@ -5455,21 +6127,24 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_method_info A pointer to a GDExtensionClassMethodInfo struct.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassMethod = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethodFunction
-    = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  ffi.Pointer<GDExtensionClassVirtualMethodInfo> p_method_info,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethodFunction
-    = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  ffi.Pointer<GDExtensionClassVirtualMethodInfo> p_method_info,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassMethod =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethodFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      ffi.Pointer<GDExtensionClassVirtualMethodInfo> p_method_info,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethodFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      ffi.Pointer<GDExtensionClassVirtualMethodInfo> p_method_info,
+    );
 
 /// @name classdb_register_extension_class_virtual_method
 /// @since 4.3
@@ -5481,28 +6156,30 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethodFuncti
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_method_info A pointer to a GDExtensionClassMethodInfo struct.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethod
-    = ffi.Pointer<
-        ffi.NativeFunction<
-            GDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethodFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstantFunction
-    = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_enum_name,
-  GDExtensionConstStringNamePtr p_constant_name,
-  GDExtensionInt p_constant_value,
-  GDExtensionBool p_is_bitfield,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstantFunction
-    = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_enum_name,
-  GDExtensionConstStringNamePtr p_constant_name,
-  DartGDExtensionInt p_constant_value,
-  DartGDExtensionBool p_is_bitfield,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethod =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassVirtualMethodFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstantFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_enum_name,
+      GDExtensionConstStringNamePtr p_constant_name,
+      GDExtensionInt p_constant_value,
+      GDExtensionBool p_is_bitfield,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstantFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_enum_name,
+      GDExtensionConstStringNamePtr p_constant_name,
+      DartGDExtensionInt p_constant_value,
+      DartGDExtensionBool p_is_bitfield,
+    );
 
 /// @name classdb_register_extension_class_integer_constant
 /// @since 4.1
@@ -5519,26 +6196,28 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstantFunc
 /// @param p_constant_name A pointer to a StringName with the constant name.
 /// @param p_constant_value The constant value.
 /// @param p_is_bitfield Whether or not this constant is part of a bitfield.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstant
-    = ffi.Pointer<
-        ffi.NativeFunction<
-            GDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstantFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyFunction
-    = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  ffi.Pointer<GDExtensionPropertyInfo> p_info,
-  GDExtensionConstStringNamePtr p_setter,
-  GDExtensionConstStringNamePtr p_getter,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyFunction
-    = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  ffi.Pointer<GDExtensionPropertyInfo> p_info,
-  GDExtensionConstStringNamePtr p_setter,
-  GDExtensionConstStringNamePtr p_getter,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstant =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassIntegerConstantFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      ffi.Pointer<GDExtensionPropertyInfo> p_info,
+      GDExtensionConstStringNamePtr p_setter,
+      GDExtensionConstStringNamePtr p_getter,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      ffi.Pointer<GDExtensionPropertyInfo> p_info,
+      GDExtensionConstStringNamePtr p_setter,
+      GDExtensionConstStringNamePtr p_getter,
+    );
 
 /// @name classdb_register_extension_class_property
 /// @since 4.1
@@ -5552,27 +6231,30 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyFunction
 /// @param p_info A pointer to a GDExtensionPropertyInfo struct.
 /// @param p_setter A pointer to a StringName with the name of the setter method.
 /// @param p_getter A pointer to a StringName with the name of the getter method.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassProperty = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceClassdbRegisterExtensionClassPropertyFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexedFunction
-    = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  ffi.Pointer<GDExtensionPropertyInfo> p_info,
-  GDExtensionConstStringNamePtr p_setter,
-  GDExtensionConstStringNamePtr p_getter,
-  GDExtensionInt p_index,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexedFunction
-    = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  ffi.Pointer<GDExtensionPropertyInfo> p_info,
-  GDExtensionConstStringNamePtr p_setter,
-  GDExtensionConstStringNamePtr p_getter,
-  DartGDExtensionInt p_index,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassProperty =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassPropertyFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexedFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      ffi.Pointer<GDExtensionPropertyInfo> p_info,
+      GDExtensionConstStringNamePtr p_setter,
+      GDExtensionConstStringNamePtr p_getter,
+      GDExtensionInt p_index,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexedFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      ffi.Pointer<GDExtensionPropertyInfo> p_info,
+      GDExtensionConstStringNamePtr p_setter,
+      GDExtensionConstStringNamePtr p_getter,
+      DartGDExtensionInt p_index,
+    );
 
 /// @name classdb_register_extension_class_property_indexed
 /// @since 4.2
@@ -5587,24 +6269,26 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexedFunc
 /// @param p_setter A pointer to a StringName with the name of the setter method.
 /// @param p_getter A pointer to a StringName with the name of the getter method.
 /// @param p_index The index to pass as the first argument to the getter and setter methods.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexed
-    = ffi.Pointer<
-        ffi.NativeFunction<
-            GDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexedFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroupFunction
-    = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringPtr p_group_name,
-  GDExtensionConstStringPtr p_prefix,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroupFunction
-    = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringPtr p_group_name,
-  GDExtensionConstStringPtr p_prefix,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexed =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassPropertyIndexedFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroupFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringPtr p_group_name,
+      GDExtensionConstStringPtr p_prefix,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroupFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringPtr p_group_name,
+      GDExtensionConstStringPtr p_prefix,
+    );
 
 /// @name classdb_register_extension_class_property_group
 /// @since 4.1
@@ -5615,24 +6299,26 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroupFuncti
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_group_name A pointer to a String with the group name.
 /// @param p_prefix A pointer to a String with the prefix used by properties in this group.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroup
-    = ffi.Pointer<
-        ffi.NativeFunction<
-            GDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroupFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroupFunction
-    = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringPtr p_subgroup_name,
-  GDExtensionConstStringPtr p_prefix,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroupFunction
-    = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringPtr p_subgroup_name,
-  GDExtensionConstStringPtr p_prefix,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroup =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassPropertyGroupFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroupFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringPtr p_subgroup_name,
+      GDExtensionConstStringPtr p_prefix,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroupFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringPtr p_subgroup_name,
+      GDExtensionConstStringPtr p_prefix,
+    );
 
 /// @name classdb_register_extension_class_property_subgroup
 /// @since 4.1
@@ -5643,26 +6329,28 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroupFun
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_subgroup_name A pointer to a String with the subgroup name.
 /// @param p_prefix A pointer to a String with the prefix used by properties in this subgroup.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroup
-    = ffi.Pointer<
-        ffi.NativeFunction<
-            GDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroupFunction>>;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassSignalFunction
-    = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_signal_name,
-  ffi.Pointer<GDExtensionPropertyInfo> p_argument_info,
-  GDExtensionInt p_argument_count,
-);
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassSignalFunction
-    = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-  GDExtensionConstStringNamePtr p_signal_name,
-  ffi.Pointer<GDExtensionPropertyInfo> p_argument_info,
-  DartGDExtensionInt p_argument_count,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroup =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassPropertySubgroupFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassSignalFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_signal_name,
+      ffi.Pointer<GDExtensionPropertyInfo> p_argument_info,
+      GDExtensionInt p_argument_count,
+    );
+typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassSignalFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+      GDExtensionConstStringNamePtr p_signal_name,
+      ffi.Pointer<GDExtensionPropertyInfo> p_argument_info,
+      DartGDExtensionInt p_argument_count,
+    );
 
 /// @name classdb_register_extension_class_signal
 /// @since 4.1
@@ -5676,38 +6364,48 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClassSignalFunction
 /// @param p_signal_name A pointer to a StringName with the signal name.
 /// @param p_argument_info A pointer to a GDExtensionPropertyInfo struct.
 /// @param p_argument_count The number of arguments the signal receives.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClassSignal = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceClassdbRegisterExtensionClassSignalFunction>>;
-typedef GDExtensionInterfaceClassdbUnregisterExtensionClassFunction = ffi.Void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-);
-typedef DartGDExtensionInterfaceClassdbUnregisterExtensionClassFunction = void
-    Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionConstStringNamePtr p_class_name,
-);
+typedef GDExtensionInterfaceClassdbRegisterExtensionClassSignal =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbRegisterExtensionClassSignalFunction
+      >
+    >;
+typedef GDExtensionInterfaceClassdbUnregisterExtensionClassFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+    );
+typedef DartGDExtensionInterfaceClassdbUnregisterExtensionClassFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionConstStringNamePtr p_class_name,
+    );
 
 /// @name classdb_unregister_extension_class
 /// @since 4.1
 ///
 /// Unregisters an extension class in the ClassDB.
 ///
+/// Unregistering a parent class before a class that inherits it will result in failure. Inheritors must be unregistered first.
+///
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param p_class_name A pointer to a StringName with the class name.
-typedef GDExtensionInterfaceClassdbUnregisterExtensionClass = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionInterfaceClassdbUnregisterExtensionClassFunction>>;
-typedef GDExtensionInterfaceGetLibraryPathFunction = ffi.Void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionUninitializedStringPtr r_path,
-);
-typedef DartGDExtensionInterfaceGetLibraryPathFunction = void Function(
-  GDExtensionClassLibraryPtr p_library,
-  GDExtensionUninitializedStringPtr r_path,
-);
+typedef GDExtensionInterfaceClassdbUnregisterExtensionClass =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceClassdbUnregisterExtensionClassFunction
+      >
+    >;
+typedef GDExtensionInterfaceGetLibraryPathFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionUninitializedStringPtr r_path,
+    );
+typedef DartGDExtensionInterfaceGetLibraryPathFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionUninitializedStringPtr r_path,
+    );
 
 /// @name get_library_path
 /// @since 4.1
@@ -5716,12 +6414,12 @@ typedef DartGDExtensionInterfaceGetLibraryPathFunction = void Function(
 ///
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param r_path A pointer to a String which will receive the path.
-typedef GDExtensionInterfaceGetLibraryPath = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceGetLibraryPathFunction>>;
-typedef GDExtensionInterfaceEditorAddPluginFunction = ffi.Void Function(
-    GDExtensionConstStringNamePtr p_class_name);
-typedef DartGDExtensionInterfaceEditorAddPluginFunction = void Function(
-    GDExtensionConstStringNamePtr p_class_name);
+typedef GDExtensionInterfaceGetLibraryPath =
+    ffi.Pointer<ffi.NativeFunction<GDExtensionInterfaceGetLibraryPathFunction>>;
+typedef GDExtensionInterfaceEditorAddPluginFunction =
+    ffi.Void Function(GDExtensionConstStringNamePtr p_class_name);
+typedef DartGDExtensionInterfaceEditorAddPluginFunction =
+    void Function(GDExtensionConstStringNamePtr p_class_name);
 
 /// @name editor_add_plugin
 /// @since 4.1
@@ -5731,12 +6429,14 @@ typedef DartGDExtensionInterfaceEditorAddPluginFunction = void Function(
 /// It's safe to call during initialization.
 ///
 /// @param p_class_name A pointer to a StringName with the name of a class (descending from EditorPlugin) which is already registered with ClassDB.
-typedef GDExtensionInterfaceEditorAddPlugin = ffi
-    .Pointer<ffi.NativeFunction<GDExtensionInterfaceEditorAddPluginFunction>>;
-typedef GDExtensionInterfaceEditorRemovePluginFunction = ffi.Void Function(
-    GDExtensionConstStringNamePtr p_class_name);
-typedef DartGDExtensionInterfaceEditorRemovePluginFunction = void Function(
-    GDExtensionConstStringNamePtr p_class_name);
+typedef GDExtensionInterfaceEditorAddPlugin =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceEditorAddPluginFunction>
+    >;
+typedef GDExtensionInterfaceEditorRemovePluginFunction =
+    ffi.Void Function(GDExtensionConstStringNamePtr p_class_name);
+typedef DartGDExtensionInterfaceEditorRemovePluginFunction =
+    void Function(GDExtensionConstStringNamePtr p_class_name);
 
 /// @name editor_remove_plugin
 /// @since 4.1
@@ -5744,12 +6444,14 @@ typedef DartGDExtensionInterfaceEditorRemovePluginFunction = void Function(
 /// Removes an editor plugin.
 ///
 /// @param p_class_name A pointer to a StringName with the name of a class that was previously added as an editor plugin.
-typedef GDExtensionInterfaceEditorRemovePlugin = ffi.Pointer<
-    ffi.NativeFunction<GDExtensionInterfaceEditorRemovePluginFunction>>;
-typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsFunction = ffi.Void
-    Function(ffi.Pointer<ffi.Char> p_data);
-typedef DartGDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsFunction = void
-    Function(ffi.Pointer<ffi.Char> p_data);
+typedef GDExtensionInterfaceEditorRemovePlugin =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceEditorRemovePluginFunction>
+    >;
+typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsFunction =
+    ffi.Void Function(ffi.Pointer<ffi.Char> p_data);
+typedef DartGDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsFunction =
+    void Function(ffi.Pointer<ffi.Char> p_data);
 
 /// @name editor_help_load_xml_from_utf8_chars
 /// @since 4.3
@@ -5759,13 +6461,16 @@ typedef DartGDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsFunction = void
 /// The provided pointer can be immediately freed once the function returns.
 ///
 /// @param p_data A pointer to a UTF-8 encoded C string (null terminated).
-typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8Chars = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsFunction>>;
-typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction
-    = ffi.Void Function(ffi.Pointer<ffi.Char> p_data, GDExtensionInt p_size);
-typedef DartGDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction
-    = void Function(ffi.Pointer<ffi.Char> p_data, DartGDExtensionInt p_size);
+typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8Chars =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsFunction
+      >
+    >;
+typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction =
+    ffi.Void Function(ffi.Pointer<ffi.Char> p_data, GDExtensionInt p_size);
+typedef DartGDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction =
+    void Function(ffi.Pointer<ffi.Char> p_data, DartGDExtensionInt p_size);
 
 /// @name editor_help_load_xml_from_utf8_chars_and_len
 /// @since 4.3
@@ -5776,204 +6481,60 @@ typedef DartGDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction
 ///
 /// @param p_data A pointer to a UTF-8 encoded C string.
 /// @param p_size The number of bytes (not code units).
-typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLen = ffi.Pointer<
-    ffi.NativeFunction<
-        GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction>>;
-typedef CallbackData = ffi.Pointer<ffi.Void>;
-typedef ExecutorData = ffi.Pointer<ffi.Void>;
-typedef InvokeCallbackFunction = ffi.Void Function(CallbackData p_data);
-typedef DartInvokeCallbackFunction = void Function(CallbackData p_data);
-typedef InvokeCallback
-    = ffi.Pointer<ffi.NativeFunction<InvokeCallbackFunction>>;
-typedef InvokeCallbackFunctionFunction = ffi.Void Function(
-  InvokeCallback p_callback,
-  CallbackData p_callback_data,
-  ExecutorData p_executor_data,
-);
-typedef DartInvokeCallbackFunctionFunction = void Function(
-  InvokeCallback p_callback,
-  CallbackData p_callback_data,
-  ExecutorData p_executor_data,
-);
-typedef InvokeCallbackFunction$1
-    = ffi.Pointer<ffi.NativeFunction<InvokeCallbackFunctionFunction>>;
-
-const int __has_safe_buffers = 1;
-
-const int __DARWIN_ONLY_64_BIT_INO_T = 1;
-
-const int __DARWIN_ONLY_UNIX_CONFORMANCE = 1;
-
-const int __DARWIN_ONLY_VERS_1050 = 1;
-
-const int __DARWIN_UNIX03 = 1;
-
-const int __DARWIN_64_BIT_INO_T = 1;
-
-const int __DARWIN_VERS_1050 = 1;
-
-const int __DARWIN_NON_CANCELABLE = 0;
-
-const String __DARWIN_SUF_EXTSN = '\$DARWIN_EXTSN';
-
-const int __DARWIN_C_ANSI = 4096;
-
-const int __DARWIN_C_FULL = 900000;
-
-const int __DARWIN_C_LEVEL = 900000;
-
-const int __STDC_WANT_LIB_EXT1__ = 1;
-
-const int __DARWIN_NO_LONG_LONG = 0;
-
-const int _DARWIN_FEATURE_64_BIT_INODE = 1;
-
-const int _DARWIN_FEATURE_ONLY_64_BIT_INODE = 1;
-
-const int _DARWIN_FEATURE_ONLY_VERS_1050 = 1;
-
-const int _DARWIN_FEATURE_ONLY_UNIX_CONFORMANCE = 1;
-
-const int _DARWIN_FEATURE_UNIX_CONFORMANCE = 3;
-
-const int __has_ptrcheck = 0;
-
-const int __has_bounds_safety_attributes = 0;
-
-const int __DARWIN_NULL = 0;
-
-const int __PTHREAD_SIZE__ = 8176;
-
-const int __PTHREAD_ATTR_SIZE__ = 56;
-
-const int __PTHREAD_MUTEXATTR_SIZE__ = 8;
-
-const int __PTHREAD_MUTEX_SIZE__ = 56;
-
-const int __PTHREAD_CONDATTR_SIZE__ = 8;
-
-const int __PTHREAD_COND_SIZE__ = 40;
-
-const int __PTHREAD_ONCE_SIZE__ = 8;
-
-const int __PTHREAD_RWLOCK_SIZE__ = 192;
-
-const int __PTHREAD_RWLOCKATTR_SIZE__ = 16;
-
-const int __DARWIN_WCHAR_MAX = 2147483647;
-
-const int __DARWIN_WCHAR_MIN = -2147483648;
-
-const int __DARWIN_WEOF = -1;
-
-const int _FORTIFY_SOURCE = 2;
-
-const int NULL = 0;
-
-const int USER_ADDR_NULL = 0;
-
-const int __WORDSIZE = 64;
-
-const int INT8_MAX = 127;
-
-const int INT16_MAX = 32767;
-
-const int INT32_MAX = 2147483647;
-
-const int INT64_MAX = 9223372036854775807;
-
-const int INT8_MIN = -128;
-
-const int INT16_MIN = -32768;
-
-const int INT32_MIN = -2147483648;
-
-const int INT64_MIN = -9223372036854775808;
-
-const int UINT8_MAX = 255;
-
-const int UINT16_MAX = 65535;
-
-const int UINT32_MAX = 4294967295;
-
-const int UINT64_MAX = -1;
-
-const int INT_LEAST8_MIN = -128;
-
-const int INT_LEAST16_MIN = -32768;
-
-const int INT_LEAST32_MIN = -2147483648;
-
-const int INT_LEAST64_MIN = -9223372036854775808;
-
-const int INT_LEAST8_MAX = 127;
-
-const int INT_LEAST16_MAX = 32767;
-
-const int INT_LEAST32_MAX = 2147483647;
-
-const int INT_LEAST64_MAX = 9223372036854775807;
-
-const int UINT_LEAST8_MAX = 255;
-
-const int UINT_LEAST16_MAX = 65535;
-
-const int UINT_LEAST32_MAX = 4294967295;
-
-const int UINT_LEAST64_MAX = -1;
-
-const int INT_FAST8_MIN = -128;
-
-const int INT_FAST16_MIN = -32768;
-
-const int INT_FAST32_MIN = -2147483648;
-
-const int INT_FAST64_MIN = -9223372036854775808;
-
-const int INT_FAST8_MAX = 127;
-
-const int INT_FAST16_MAX = 32767;
-
-const int INT_FAST32_MAX = 2147483647;
-
-const int INT_FAST64_MAX = 9223372036854775807;
-
-const int UINT_FAST8_MAX = 255;
-
-const int UINT_FAST16_MAX = 65535;
-
-const int UINT_FAST32_MAX = 4294967295;
-
-const int UINT_FAST64_MAX = -1;
-
-const int INTPTR_MAX = 9223372036854775807;
-
-const int INTPTR_MIN = -9223372036854775808;
-
-const int UINTPTR_MAX = -1;
-
-const int INTMAX_MAX = 9223372036854775807;
-
-const int UINTMAX_MAX = -1;
-
-const int INTMAX_MIN = -9223372036854775808;
-
-const int PTRDIFF_MIN = -9223372036854775808;
-
-const int PTRDIFF_MAX = 9223372036854775807;
-
-const int SIZE_MAX = -1;
-
-const int RSIZE_MAX = 9223372036854775807;
-
-const int WCHAR_MAX = 2147483647;
-
-const int WCHAR_MIN = -2147483648;
-
-const int WINT_MIN = -2147483648;
-
-const int WINT_MAX = 2147483647;
-
-const int SIG_ATOMIC_MIN = -2147483648;
-
-const int SIG_ATOMIC_MAX = 2147483647;
+typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLen =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction
+      >
+    >;
+typedef GDExtensionInterfaceEditorRegisterGetClassesUsedCallbackFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionEditorGetClassesUsedCallback p_callback,
+    );
+typedef DartGDExtensionInterfaceEditorRegisterGetClassesUsedCallbackFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      GDExtensionEditorGetClassesUsedCallback p_callback,
+    );
+
+/// @name editor_register_get_classes_used_callback
+/// @since 4.5
+///
+/// Registers a callback that Godot can call to get the list of all classes (from ClassDB) that may be used by the calling GDExtension.
+///
+/// This is used by the editor to generate a build profile (in "Tools" > "Engine Compilation Configuration Editor..." > "Detect from project"),
+/// in order to recompile Godot with only the classes used.
+/// In the provided callback, the GDExtension should provide the list of classes that _may_ be used statically, thus the time of invocation shouldn't matter.
+/// If a GDExtension doesn't register a callback, Godot will assume that it could be using any classes.
+///
+/// @param p_library A pointer the library received by the GDExtension's entry point function.
+/// @param p_callback The callback to retrieve the list of classes used.
+typedef GDExtensionInterfaceEditorRegisterGetClassesUsedCallback =
+    ffi.Pointer<
+      ffi.NativeFunction<
+        GDExtensionInterfaceEditorRegisterGetClassesUsedCallbackFunction
+      >
+    >;
+typedef GDExtensionInterfaceRegisterMainLoopCallbacksFunction =
+    ffi.Void Function(
+      GDExtensionClassLibraryPtr p_library,
+      ffi.Pointer<GDExtensionMainLoopCallbacks> p_callbacks,
+    );
+typedef DartGDExtensionInterfaceRegisterMainLoopCallbacksFunction =
+    void Function(
+      GDExtensionClassLibraryPtr p_library,
+      ffi.Pointer<GDExtensionMainLoopCallbacks> p_callbacks,
+    );
+
+/// @name register_main_loop_callbacks
+/// @since 4.5
+///
+/// Registers callbacks to be called at different phases of the main loop.
+///
+/// @param p_library A pointer the library received by the GDExtension's entry point function.
+/// @param p_callbacks A pointer to the structure that contains the callbacks.
+typedef GDExtensionInterfaceRegisterMainLoopCallbacks =
+    ffi.Pointer<
+      ffi.NativeFunction<GDExtensionInterfaceRegisterMainLoopCallbacksFunction>
+    >;
