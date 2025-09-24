@@ -1,9 +1,7 @@
 import 'package:cross_file/cross_file.dart';
 import 'package:libgodot/core/native.dart';
 import 'package:libgodot/core/process.dart';
-import 'package:libgodot/core/render.dart';
 import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
-import 'package:libgodot/godot/generated/engine_classes.dart';
 import 'package:libgodot/utils/logging.dart';
 import 'package:logging/logging.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -26,7 +24,7 @@ class LibGodot {
 
   /// Initializes all LibGodot libraries
   /// Must be called before interacting with it in any way
-  static void ensureInitialized() {
+  static Future<void> ensureInitialized() async {
     if (_isInitialized) return;
     setupLogging();
 
@@ -36,7 +34,7 @@ class LibGodot {
       );
     }
 
-    _interface = NativeBridge.loadLibGodot();
+    _interface = await NativeBridge.loadLibGodot();
     _isInitialized = true;
   }
 

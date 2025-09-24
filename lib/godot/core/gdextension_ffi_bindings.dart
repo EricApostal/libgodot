@@ -19,21 +19,40 @@ class GDExtensionFFI {
   ) : _lookup = lookup;
 
   /// @name libgodot_create_godot_instance
-  /// @since 4.6
+  /// @since 4.4
   ///
   /// Creates a new Godot instance.
   ///
   /// @param p_argc The number of command line arguments.
   /// @param p_argv The C-style array of command line arguments.
   /// @param p_init_func GDExtension initialization function of the host application.
+  /// @param p_log_func Initialization log function, called with log message c string.
   ///
   /// @return A pointer to created \ref GodotInstance GDExtension object or nullptr if there was an error.
   GDExtensionObjectPtr libgodot_create_godot_instance(
     int p_argc,
     ffi.Pointer<ffi.Pointer<ffi.Char>> p_argv,
     GDExtensionInitializationFunction p_init_func,
+    InvokeCallbackFunction$1 p_async_func,
+    ExecutorData p_async_data,
+    InvokeCallbackFunction$1 p_sync_func,
+    ExecutorData p_sync_data,
+    LogCallbackFunction p_log_func,
+    LogCallbackData p_log_data,
+    ffi.Pointer<ffi.Void> p_platform_data,
   ) {
-    return _libgodot_create_godot_instance(p_argc, p_argv, p_init_func);
+    return _libgodot_create_godot_instance(
+      p_argc,
+      p_argv,
+      p_init_func,
+      p_async_func,
+      p_async_data,
+      p_sync_func,
+      p_sync_data,
+      p_log_func,
+      p_log_data,
+      p_platform_data,
+    );
   }
 
   late final _libgodot_create_godot_instancePtr =
@@ -43,6 +62,13 @@ class GDExtensionFFI {
             ffi.Int,
             ffi.Pointer<ffi.Pointer<ffi.Char>>,
             GDExtensionInitializationFunction,
+            InvokeCallbackFunction$1,
+            ExecutorData,
+            InvokeCallbackFunction$1,
+            ExecutorData,
+            LogCallbackFunction,
+            LogCallbackData,
+            ffi.Pointer<ffi.Void>,
           )
         >
       >('libgodot_create_godot_instance');
@@ -53,11 +79,18 @@ class GDExtensionFFI {
               int,
               ffi.Pointer<ffi.Pointer<ffi.Char>>,
               GDExtensionInitializationFunction,
+              InvokeCallbackFunction$1,
+              ExecutorData,
+              InvokeCallbackFunction$1,
+              ExecutorData,
+              LogCallbackFunction,
+              LogCallbackData,
+              ffi.Pointer<ffi.Void>,
             )
           >();
 
   /// @name libgodot_destroy_godot_instance
-  /// @since 4.6
+  /// @since 4.4
   ///
   /// Destroys an existing Godot instance.
   ///
@@ -6538,3 +6571,44 @@ typedef GDExtensionInterfaceRegisterMainLoopCallbacks =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceRegisterMainLoopCallbacksFunction>
     >;
+typedef CallbackData = ffi.Pointer<ffi.Void>;
+typedef ExecutorData = ffi.Pointer<ffi.Void>;
+typedef InvokeCallbackFunction = ffi.Void Function(CallbackData p_data);
+typedef DartInvokeCallbackFunction = void Function(CallbackData p_data);
+typedef InvokeCallback =
+    ffi.Pointer<ffi.NativeFunction<InvokeCallbackFunction>>;
+typedef InvokeCallbackFunctionFunction =
+    ffi.Void Function(
+      InvokeCallback p_callback,
+      CallbackData p_callback_data,
+      ExecutorData p_executor_data,
+    );
+typedef DartInvokeCallbackFunctionFunction =
+    void Function(
+      InvokeCallback p_callback,
+      CallbackData p_callback_data,
+      ExecutorData p_executor_data,
+    );
+typedef InvokeCallbackFunction$1 =
+    ffi.Pointer<ffi.NativeFunction<InvokeCallbackFunctionFunction>>;
+typedef LogCallbackData = ffi.Pointer<ffi.Void>;
+typedef LogCallbackFunctionFunction =
+    ffi.Void Function(
+      LogCallbackData p_data,
+      ffi.Pointer<ffi.Char> p_log_message,
+      ffi.Bool p_err,
+    );
+typedef DartLogCallbackFunctionFunction =
+    void Function(
+      LogCallbackData p_data,
+      ffi.Pointer<ffi.Char> p_log_message,
+      bool p_err,
+    );
+typedef LogCallbackFunction =
+    ffi.Pointer<ffi.NativeFunction<LogCallbackFunctionFunction>>;
+
+const int __bool_true_false_are_defined = 1;
+
+const int true$ = 1;
+
+const int false$ = 0;

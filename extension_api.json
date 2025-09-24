@@ -1,11 +1,11 @@
 {
 	"header": {
 		"version_major": 4,
-		"version_minor": 5,
+		"version_minor": 6,
 		"version_patch": 0,
-		"version_status": "rc",
+		"version_status": "dev",
 		"version_build": "custom_build",
-		"version_full_name": "Godot Engine v4.5.rc.custom_build",
+		"version_full_name": "Godot Engine v4.6.dev.custom_build",
 		"precision": "single"
 	},
 	"builtin_class_sizes": [
@@ -90543,6 +90543,209 @@
 					]
 				},
 				{
+					"name": "mouse_button",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 714290363,
+					"arguments": [
+						{
+							"name": "x",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "y",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "mouse_button_index",
+							"type": "enum::MouseButton"
+						},
+						{
+							"name": "pressed",
+							"type": "bool"
+						},
+						{
+							"name": "double_click",
+							"type": "bool"
+						},
+						{
+							"name": "cancelled",
+							"type": "bool"
+						},
+						{
+							"name": "window",
+							"type": "int",
+							"meta": "int32"
+						}
+					]
+				},
+				{
+					"name": "mouse_motion",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 1770277138,
+					"arguments": [
+						{
+							"name": "prev_x",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "prev_y",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "x",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "y",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "window",
+							"type": "int",
+							"meta": "int32"
+						}
+					]
+				},
+				{
+					"name": "touch_press",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 2276808320,
+					"arguments": [
+						{
+							"name": "idx",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "x",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "y",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "pressed",
+							"type": "bool"
+						},
+						{
+							"name": "double_click",
+							"type": "bool"
+						},
+						{
+							"name": "window",
+							"type": "int",
+							"meta": "int32"
+						}
+					]
+				},
+				{
+					"name": "touch_drag",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 413772270,
+					"arguments": [
+						{
+							"name": "idx",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "prev_x",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "prev_y",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "x",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "y",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "pressure",
+							"type": "float",
+							"meta": "float"
+						},
+						{
+							"name": "tilt",
+							"type": "Vector2"
+						},
+						{
+							"name": "window",
+							"type": "int",
+							"meta": "int32"
+						}
+					]
+				},
+				{
+					"name": "key",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 4184172234,
+					"arguments": [
+						{
+							"name": "key",
+							"type": "enum::Key"
+						},
+						{
+							"name": "char",
+							"type": "int",
+							"meta": "char32"
+						},
+						{
+							"name": "unshifted",
+							"type": "enum::Key"
+						},
+						{
+							"name": "physical",
+							"type": "enum::Key"
+						},
+						{
+							"name": "modifiers",
+							"type": "bitfield::KeyModifierMask"
+						},
+						{
+							"name": "pressed",
+							"type": "bool"
+						},
+						{
+							"name": "window",
+							"type": "int",
+							"meta": "int32"
+						}
+					]
+				},
+				{
 					"name": "create_status_indicator",
 					"is_const": false,
 					"is_vararg": false,
@@ -90781,6 +90984,194 @@
 					"return_value": {
 						"type": "bool"
 					}
+				}
+			]
+		},
+		{
+			"name": "DisplayServerEmbedded",
+			"is_refcounted": false,
+			"is_instantiable": false,
+			"inherits": "DisplayServer",
+			"api_type": "core",
+			"methods": [
+				{
+					"name": "set_native_surface",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": true,
+					"is_virtual": false,
+					"hash": 2894024005,
+					"arguments": [
+						{
+							"name": "native_surface",
+							"type": "RenderingNativeSurface"
+						}
+					]
+				},
+				{
+					"name": "get_singleton",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": true,
+					"is_virtual": false,
+					"hash": 287655567,
+					"return_value": {
+						"type": "DisplayServerEmbedded"
+					}
+				},
+				{
+					"name": "set_screen_get_dpi_callback",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": true,
+					"is_virtual": false,
+					"hash": 1611583062,
+					"arguments": [
+						{
+							"name": "callback",
+							"type": "Callable"
+						}
+					]
+				},
+				{
+					"name": "set_screen_get_size_callback",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": true,
+					"is_virtual": false,
+					"hash": 1611583062,
+					"arguments": [
+						{
+							"name": "callback",
+							"type": "Callable"
+						}
+					]
+				},
+				{
+					"name": "set_screen_get_scale_callback",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": true,
+					"is_virtual": false,
+					"hash": 1611583062,
+					"arguments": [
+						{
+							"name": "callback",
+							"type": "Callable"
+						}
+					]
+				},
+				{
+					"name": "resize_window",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 3200960707,
+					"arguments": [
+						{
+							"name": "size",
+							"type": "Vector2i"
+						},
+						{
+							"name": "id",
+							"type": "int",
+							"meta": "int32"
+						}
+					]
+				},
+				{
+					"name": "set_content_scale",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 373806689,
+					"arguments": [
+						{
+							"name": "content_scale",
+							"type": "float",
+							"meta": "float"
+						}
+					]
+				},
+				{
+					"name": "touches_canceled",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 3937882851,
+					"arguments": [
+						{
+							"name": "idx",
+							"type": "int",
+							"meta": "int32"
+						},
+						{
+							"name": "window",
+							"type": "int",
+							"meta": "int32"
+						}
+					]
+				},
+				{
+					"name": "set_host_interface",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 1926063311,
+					"arguments": [
+						{
+							"name": "host_interface",
+							"type": "DisplayServerEmbeddedHostInterface"
+						}
+					]
+				},
+				{
+					"name": "delete_host_interface",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 3218959716
+				}
+			]
+		},
+		{
+			"name": "DisplayServerEmbeddedHostInterface",
+			"is_refcounted": true,
+			"is_instantiable": true,
+			"inherits": "RefCounted",
+			"api_type": "core",
+			"methods": [
+				{
+					"name": "_cursor_get_shape",
+					"is_const": true,
+					"is_static": false,
+					"is_required": false,
+					"is_vararg": false,
+					"is_virtual": true,
+					"hash": 3455658929,
+					"return_value": {
+						"type": "enum::Input.CursorShape"
+					}
+				},
+				{
+					"name": "_cursor_set_shape",
+					"is_const": false,
+					"is_static": false,
+					"is_required": false,
+					"is_vararg": false,
+					"is_virtual": true,
+					"hash": 165452010,
+					"arguments": [
+						{
+							"name": "shape",
+							"type": "enum::Input.CursorShape"
+						}
+					]
 				}
 			]
 		},
@@ -115623,7 +116014,7 @@
 					]
 				},
 				{
-					"name": "load_extension_from_function",
+					"name": "load_function_extension",
 					"is_const": false,
 					"is_vararg": false,
 					"is_static": false,
@@ -127159,6 +127550,56 @@
 					"return_value": {
 						"type": "bool"
 					}
+				},
+				{
+					"name": "focus_in",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 3218959716
+				},
+				{
+					"name": "focus_out",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 3218959716
+				},
+				{
+					"name": "pause",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 3218959716
+				},
+				{
+					"name": "resume",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 3218959716
+				},
+				{
+					"name": "execute",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 3158409417,
+					"arguments": [
+						{
+							"name": "callback",
+							"type": "Callable"
+						},
+						{
+							"name": "async",
+							"type": "bool"
+						}
+					]
 				}
 			]
 		},
@@ -233569,6 +234010,78 @@
 			]
 		},
 		{
+			"name": "RenderingNativeSurface",
+			"is_refcounted": true,
+			"is_instantiable": false,
+			"inherits": "RefCounted",
+			"api_type": "core"
+		},
+		{
+			"name": "RenderingNativeSurfaceApple",
+			"is_refcounted": true,
+			"is_instantiable": false,
+			"inherits": "RenderingNativeSurface",
+			"api_type": "core",
+			"methods": [
+				{
+					"name": "create",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": true,
+					"is_virtual": false,
+					"hash": 4233771684,
+					"return_value": {
+						"type": "RenderingNativeSurfaceApple"
+					},
+					"arguments": [
+						{
+							"name": "layer",
+							"type": "int",
+							"meta": "uint64"
+						}
+					]
+				},
+				{
+					"name": "get_layer",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 2455072627,
+					"return_value": {
+						"type": "int",
+						"meta": "uint64"
+					}
+				}
+			]
+		},
+		{
+			"name": "RenderingNativeSurfaceVulkan",
+			"is_refcounted": true,
+			"is_instantiable": false,
+			"inherits": "RenderingNativeSurface",
+			"api_type": "core",
+			"methods": [
+				{
+					"name": "create",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": true,
+					"is_virtual": false,
+					"hash": 1056151817,
+					"return_value": {
+						"type": "RenderingNativeSurfaceVulkan"
+					},
+					"arguments": [
+						{
+							"name": "vulkan_surface",
+							"type": "const void*"
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "RenderingServer",
 			"is_refcounted": false,
 			"is_instantiable": false,
@@ -246282,10 +246795,7 @@
 					"is_vararg": false,
 					"is_static": false,
 					"is_virtual": false,
-					"hash": 3759744527,
-					"hash_compatibility": [
-						2244367877
-					],
+					"hash": 4241564265,
 					"arguments": [
 						{
 							"name": "image",
@@ -246298,6 +246808,11 @@
 						{
 							"name": "scale",
 							"type": "bool"
+						},
+						{
+							"name": "screen",
+							"type": "int",
+							"meta": "int32"
 						},
 						{
 							"name": "use_filter",
@@ -329510,6 +330025,31 @@
 					"hash": 36873697,
 					"return_value": {
 						"type": "bool"
+					}
+				},
+				{
+					"name": "set_native_surface",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 2894024005,
+					"arguments": [
+						{
+							"name": "native_surface",
+							"type": "RenderingNativeSurface"
+						}
+					]
+				},
+				{
+					"name": "get_native_surface",
+					"is_const": false,
+					"is_vararg": false,
+					"is_static": false,
+					"is_virtual": false,
+					"hash": 1517110549,
+					"return_value": {
+						"type": "RenderingNativeSurface"
 					}
 				},
 				{

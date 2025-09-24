@@ -13,8 +13,7 @@ import 'package:libgodot/godot/core/gdextension.dart';
 import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
 import 'package:libgodot/godot/core/type_info.dart';
 import 'package:libgodot/godot/generated/builtins.dart';
-import 'package:libgodot/godot/generated/engine_classes.dart'
-    hide GDExtensionInitializationLevel;
+import 'package:libgodot/godot/generated/engine_classes.dart' hide Logger, GDExtensionInitializationLevel;
 import 'package:libgodot/godot/generated/utility_functions.dart';
 import 'package:libgodot/godot/variant/variant.dart';
 import 'package:logging/logging.dart';
@@ -237,20 +236,21 @@ class LibGodotProcess {
     logger.info("Loaded the resource pack from file: ${resourcePack.path}");
 
     String renderingDriver = 'metal';
-    String renderingMethod = 'forward_plus';
+    String renderingMethod = 'mobile';
 
 
     List<String> args = [
       '/usr/bin/libgodot_embed',
       '--main-pack',
       ensuredResourcePack.path,
-      '--rendering-driver',
-      renderingDriver,
-      '--rendering-method',
-      renderingMethod,
-      '--display-driver',
-      'embedded',
-      '--verbose',
+      // '--rendering-driver',
+      // renderingDriver,
+      // '--rendering-method',
+      // renderingMethod,
+      // '--display-driver',
+      // 'macos',
+      '--embedded',
+      // '--verbose',
     ];
 
     final argc = args.length;
@@ -267,11 +267,14 @@ class LibGodotProcess {
 
     final instance = interface.libgodot_create_godot_instance(
       argc,
-      args
+      argv,
       _initCallbackPtr,
       _asyncExecutorPtr,
       ffi.nullptr,
       _syncExecutorPtr,
+      ffi.nullptr,
+      ffi.nullptr,
+      ffi.nullptr,
       ffi.nullptr,
     );
 
@@ -308,16 +311,17 @@ class LibGodotProcess {
     // We might want to do something else with that? Maybe return it?
 
 
-        final layer = await LibGodotRenderer.createMetalLayer();
+    final layer = await LibGodotRenderer.createMetalLayer();
     print("Got metal layer: $layer");
 
     final caLayer = RenderingNativeSurfaceApple.create(layer!);
+    
     print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
-    // thoughts - I am using libgodot from miguel, which is I think a bit different
+
+
+    // don't even matter here.
     DisplayServerEmbedded.setNativeSurface(caLayer);
-    // final singleton = DisplayServerEmbedded.getSingleton();
-    // singleton!.getName();
-    // print(DisplayServer.singleton.isDarkMode());
+
 
     final status = godotInstance.start();
 

@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initGodot() async {
-    LibGodot.ensureInitialized();
+    await LibGodot.ensureInitialized();
     final assetData = (await rootBundle.load(
       "assets/game.pck",
     )).buffer.asUint8List();
