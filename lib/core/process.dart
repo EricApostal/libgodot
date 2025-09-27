@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:ffi' as ffi;
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:ffi/ffi.dart' as pkg_ffi;
@@ -235,8 +236,8 @@ class LibGodotProcess {
 
     logger.info("Loaded the resource pack from file: ${resourcePack.path}");
 
-    String renderingDriver = 'metal';
-    String renderingMethod = 'mobile';
+    String renderingDriver = 'opengl3';
+    String renderingMethod = 'gl_compatibility';
 
 
     List<String> args = [
@@ -245,12 +246,12 @@ class LibGodotProcess {
       ensuredResourcePack.path,
       // '--rendering-driver',
       // renderingDriver,
-      // '--rendering-method',
-      // renderingMethod,
+      '--rendering-method',
+      renderingMethod,
       // '--display-driver',
       // 'macos',
       '--embedded',
-      // '--verbose',
+      '--verbose',
     ];
 
     final argc = args.length;
@@ -316,7 +317,7 @@ class LibGodotProcess {
 
     final caLayer = RenderingNativeSurfaceApple.create(layer!);
     
-    print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
+    // print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
 
 
     // don't even matter here.
@@ -324,6 +325,8 @@ class LibGodotProcess {
 
 
     final status = godotInstance.start();
+
+    print(DisplayServer.singleton.getName());
 
     logger.info("Godot instance started with status = $status");
 

@@ -58,7 +58,7 @@ flutter:
 
   assets:
     - assets/game.pck
-    - assets/libgodot.macos.editor.arm64.dylib
+    - assets/libgodot.macos.template_debug.dev.arm64.dylib
 
   # To add assets to your application, add an assets section, like this:
   # assets:
