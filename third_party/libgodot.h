@@ -28,10 +28,10 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#pragma once
+#ifndef LIBGODOT_H
+#define LIBGODOT_H
 
 #include "gdextension_interface.h"
-#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,8 +48,6 @@ typedef void *CallbackData;
 typedef void *ExecutorData;
 typedef void (*InvokeCallback)(CallbackData p_data);
 typedef void (*InvokeCallbackFunction)(InvokeCallback p_callback, CallbackData p_callback_data, ExecutorData p_executor_data);
-typedef void *LogCallbackData;
-typedef void (*LogCallbackFunction)(LogCallbackData p_data, const char *p_log_message, bool p_err);
 
 /**
  * @name libgodot_create_godot_instance
@@ -60,11 +58,10 @@ typedef void (*LogCallbackFunction)(LogCallbackData p_data, const char *p_log_me
  * @param p_argc The number of command line arguments.
  * @param p_argv The C-style array of command line arguments.
  * @param p_init_func GDExtension initialization function of the host application.
- * @param p_log_func Initialization log function, called with log message c string.
  *
  * @return A pointer to created \ref GodotInstance GDExtension object or nullptr if there was an error.
  */
-LIBGODOT_API GDExtensionObjectPtr libgodot_create_godot_instance(int p_argc, char *p_argv[], GDExtensionInitializationFunction p_init_func, InvokeCallbackFunction p_async_func, ExecutorData p_async_data, InvokeCallbackFunction p_sync_func, ExecutorData p_sync_data, LogCallbackFunction p_log_func, LogCallbackData p_log_data, void *p_platform_data);
+LIBGODOT_API GDExtensionObjectPtr libgodot_create_godot_instance(int p_argc, char *p_argv[], GDExtensionInitializationFunction p_init_func, InvokeCallbackFunction p_async_func, ExecutorData p_async_data, InvokeCallbackFunction p_sync_func, ExecutorData p_sync_data);
 
 /**
  * @name libgodot_destroy_godot_instance
@@ -80,3 +77,5 @@ LIBGODOT_API void libgodot_destroy_godot_instance(GDExtensionObjectPtr p_godot_i
 #ifdef __cplusplus
 }
 #endif
+
+#endif // LIBGODOT_H

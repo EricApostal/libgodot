@@ -26,7 +26,6 @@ class GDExtensionFFI {
   /// @param p_argc The number of command line arguments.
   /// @param p_argv The C-style array of command line arguments.
   /// @param p_init_func GDExtension initialization function of the host application.
-  /// @param p_log_func Initialization log function, called with log message c string.
   ///
   /// @return A pointer to created \ref GodotInstance GDExtension object or nullptr if there was an error.
   GDExtensionObjectPtr libgodot_create_godot_instance(
@@ -37,9 +36,6 @@ class GDExtensionFFI {
     ExecutorData p_async_data,
     InvokeCallbackFunction$1 p_sync_func,
     ExecutorData p_sync_data,
-    LogCallbackFunction p_log_func,
-    LogCallbackData p_log_data,
-    ffi.Pointer<ffi.Void> p_platform_data,
   ) {
     return _libgodot_create_godot_instance(
       p_argc,
@@ -49,9 +45,6 @@ class GDExtensionFFI {
       p_async_data,
       p_sync_func,
       p_sync_data,
-      p_log_func,
-      p_log_data,
-      p_platform_data,
     );
   }
 
@@ -66,9 +59,6 @@ class GDExtensionFFI {
             ExecutorData,
             InvokeCallbackFunction$1,
             ExecutorData,
-            LogCallbackFunction,
-            LogCallbackData,
-            ffi.Pointer<ffi.Void>,
           )
         >
       >('libgodot_create_godot_instance');
@@ -83,9 +73,6 @@ class GDExtensionFFI {
               ExecutorData,
               InvokeCallbackFunction$1,
               ExecutorData,
-              LogCallbackFunction,
-              LogCallbackData,
-              ffi.Pointer<ffi.Void>,
             )
           >();
 
@@ -1290,16 +1277,7 @@ final class GDExtensionClassCreationInfo4 extends ffi.Struct {
   external ffi.Pointer<ffi.Void> class_userdata;
 }
 
-typedef GDExtensionClassCreationInfo5 = GDExtensionClassCreationInfo4;
 typedef GDExtensionClassLibraryPtr = ffi.Pointer<ffi.Void>;
-typedef GDExtensionEditorGetClassesUsedCallbackFunction =
-    ffi.Void Function(GDExtensionTypePtr p_packed_string_array);
-typedef DartGDExtensionEditorGetClassesUsedCallbackFunction =
-    void Function(GDExtensionTypePtr p_packed_string_array);
-typedef GDExtensionEditorGetClassesUsedCallback =
-    ffi.Pointer<
-      ffi.NativeFunction<GDExtensionEditorGetClassesUsedCallbackFunction>
-    >;
 
 enum GDExtensionClassMethodFlags {
   GDEXTENSION_METHOD_FLAG_NORMAL(1),
@@ -2142,21 +2120,6 @@ final class GDExtensionScriptInstanceInfo3 extends ffi.Struct {
   external GDExtensionScriptInstanceFree free_func;
 }
 
-typedef GDExtensionWorkerThreadPoolGroupTaskFunction =
-    ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32);
-typedef DartGDExtensionWorkerThreadPoolGroupTaskFunction =
-    void Function(ffi.Pointer<ffi.Void>, int);
-typedef GDExtensionWorkerThreadPoolGroupTask =
-    ffi.Pointer<
-      ffi.NativeFunction<GDExtensionWorkerThreadPoolGroupTaskFunction>
-    >;
-typedef GDExtensionWorkerThreadPoolTaskFunction =
-    ffi.Void Function(ffi.Pointer<ffi.Void>);
-typedef DartGDExtensionWorkerThreadPoolTaskFunction =
-    void Function(ffi.Pointer<ffi.Void>);
-typedef GDExtensionWorkerThreadPoolTask =
-    ffi.Pointer<ffi.NativeFunction<GDExtensionWorkerThreadPoolTaskFunction>>;
-
 enum GDExtensionInitializationLevel {
   GDEXTENSION_INITIALIZATION_CORE(0),
   GDEXTENSION_INITIALIZATION_SERVERS(1),
@@ -2179,31 +2142,6 @@ enum GDExtensionInitializationLevel {
   };
 }
 
-typedef GDExtensionInitializeCallbackFunction =
-    ffi.Void Function(
-      ffi.Pointer<ffi.Void> p_userdata,
-      ffi.UnsignedInt p_level,
-    );
-typedef DartGDExtensionInitializeCallbackFunction =
-    void Function(
-      ffi.Pointer<ffi.Void> p_userdata,
-      GDExtensionInitializationLevel p_level,
-    );
-typedef GDExtensionInitializeCallback =
-    ffi.Pointer<ffi.NativeFunction<GDExtensionInitializeCallbackFunction>>;
-typedef GDExtensionDeinitializeCallbackFunction =
-    ffi.Void Function(
-      ffi.Pointer<ffi.Void> p_userdata,
-      ffi.UnsignedInt p_level,
-    );
-typedef DartGDExtensionDeinitializeCallbackFunction =
-    void Function(
-      ffi.Pointer<ffi.Void> p_userdata,
-      GDExtensionInitializationLevel p_level,
-    );
-typedef GDExtensionDeinitializeCallback =
-    ffi.Pointer<ffi.NativeFunction<GDExtensionDeinitializeCallbackFunction>>;
-
 final class GDExtensionInitialization extends ffi.Struct {
   @ffi.UnsignedInt()
   external int minimum_initialization_levelAsInt;
@@ -2215,9 +2153,19 @@ final class GDExtensionInitialization extends ffi.Struct {
 
   external ffi.Pointer<ffi.Void> userdata;
 
-  external GDExtensionInitializeCallback initialize;
+  external ffi.Pointer<
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<ffi.Void> userdata, ffi.UnsignedInt p_level)
+    >
+  >
+  initialize;
 
-  external GDExtensionDeinitializeCallback deinitialize;
+  external ffi.Pointer<
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<ffi.Void> userdata, ffi.UnsignedInt p_level)
+    >
+  >
+  deinitialize;
 }
 
 typedef GDExtensionInterfaceFunctionPtrFunction = ffi.Void Function();
@@ -2258,54 +2206,6 @@ final class GDExtensionGodotVersion extends ffi.Struct {
   external ffi.Pointer<ffi.Char> string;
 }
 
-final class GDExtensionGodotVersion2 extends ffi.Struct {
-  @ffi.Uint32()
-  external int major;
-
-  @ffi.Uint32()
-  external int minor;
-
-  @ffi.Uint32()
-  external int patch;
-
-  @ffi.Uint32()
-  external int hex;
-
-  external ffi.Pointer<ffi.Char> status;
-
-  external ffi.Pointer<ffi.Char> build;
-
-  external ffi.Pointer<ffi.Char> hash;
-
-  @ffi.Uint64()
-  external int timestamp;
-
-  external ffi.Pointer<ffi.Char> string;
-}
-
-typedef GDExtensionMainLoopStartupCallbackFunction = ffi.Void Function();
-typedef DartGDExtensionMainLoopStartupCallbackFunction = void Function();
-typedef GDExtensionMainLoopStartupCallback =
-    ffi.Pointer<ffi.NativeFunction<GDExtensionMainLoopStartupCallbackFunction>>;
-typedef GDExtensionMainLoopShutdownCallbackFunction = ffi.Void Function();
-typedef DartGDExtensionMainLoopShutdownCallbackFunction = void Function();
-typedef GDExtensionMainLoopShutdownCallback =
-    ffi.Pointer<
-      ffi.NativeFunction<GDExtensionMainLoopShutdownCallbackFunction>
-    >;
-typedef GDExtensionMainLoopFrameCallbackFunction = ffi.Void Function();
-typedef DartGDExtensionMainLoopFrameCallbackFunction = void Function();
-typedef GDExtensionMainLoopFrameCallback =
-    ffi.Pointer<ffi.NativeFunction<GDExtensionMainLoopFrameCallbackFunction>>;
-
-final class GDExtensionMainLoopCallbacks extends ffi.Struct {
-  external GDExtensionMainLoopStartupCallback startup_func;
-
-  external GDExtensionMainLoopShutdownCallback shutdown_func;
-
-  external GDExtensionMainLoopFrameCallback frame_func;
-}
-
 typedef GDExtensionInterfaceGetGodotVersionFunction =
     ffi.Void Function(ffi.Pointer<GDExtensionGodotVersion> r_godot_version);
 typedef DartGDExtensionInterfaceGetGodotVersionFunction =
@@ -2313,7 +2213,6 @@ typedef DartGDExtensionInterfaceGetGodotVersionFunction =
 
 /// @name get_godot_version
 /// @since 4.1
-/// @deprecated in Godot 4.5. Use `get_godot_version2` instead.
 ///
 /// Gets the Godot version that the GDExtension was loaded into.
 ///
@@ -2321,21 +2220,6 @@ typedef DartGDExtensionInterfaceGetGodotVersionFunction =
 typedef GDExtensionInterfaceGetGodotVersion =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceGetGodotVersionFunction>
-    >;
-typedef GDExtensionInterfaceGetGodotVersion2Function =
-    ffi.Void Function(ffi.Pointer<GDExtensionGodotVersion2> r_godot_version);
-typedef DartGDExtensionInterfaceGetGodotVersion2Function =
-    void Function(ffi.Pointer<GDExtensionGodotVersion2> r_godot_version);
-
-/// @name get_godot_version2
-/// @since 4.5
-///
-/// Gets the Godot version that the GDExtension was loaded into.
-///
-/// @param r_godot_version A pointer to the structure to write the version information into.
-typedef GDExtensionInterfaceGetGodotVersion2 =
-    ffi.Pointer<
-      ffi.NativeFunction<GDExtensionInterfaceGetGodotVersion2Function>
     >;
 typedef GDExtensionInterfaceMemAllocFunction =
     ffi.Pointer<ffi.Void> Function(ffi.Size p_bytes);
@@ -2698,7 +2582,7 @@ typedef DartGDExtensionInterfaceVariantCallStaticFunction =
 ///
 /// Calls a static method on a Variant.
 ///
-/// @param p_type The variant type.
+/// @param p_self A pointer to the Variant.
 /// @param p_method A pointer to a StringName identifying the method.
 /// @param p_args A pointer to a C array of Variant.
 /// @param p_argument_count The number of arguments.
@@ -3228,7 +3112,7 @@ typedef DartGDExtensionInterfaceVariantHasMethodFunction =
 /// @param p_self A pointer to the Variant.
 /// @param p_method A pointer to a StringName with the method name.
 ///
-/// @return true if the variant has the given method; otherwise false.
+/// @return
 typedef GDExtensionInterfaceVariantHasMethod =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceVariantHasMethodFunction>
@@ -3252,7 +3136,7 @@ typedef DartGDExtensionInterfaceVariantHasMemberFunction =
 /// @param p_type The Variant type.
 /// @param p_member A pointer to a StringName with the member name.
 ///
-/// @return true if the variant has the given method; otherwise false.
+/// @return
 typedef GDExtensionInterfaceVariantHasMember =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceVariantHasMemberFunction>
@@ -3554,7 +3438,7 @@ typedef DartGDExtensionInterfaceVariantConstructFunction =
 /// Constructs a Variant of the given type, using the first constructor that matches the given arguments.
 ///
 /// @param p_type The Variant type.
-/// @param r_base A pointer to a Variant to store the constructed value.
+/// @param p_base A pointer to a Variant to store the constructed value.
 /// @param p_args A pointer to a C array of Variant pointers representing the arguments for the constructor.
 /// @param p_argument_count The number of arguments to pass to the constructor.
 /// @param r_error A pointer the structure which will be updated with error information.
@@ -3961,7 +3845,7 @@ typedef DartGDExtensionInterfaceStringNewWithUtf16CharsAndLenFunction =
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-16 encoded C string.
-/// @param p_char_count The number of characters (not bytes).
+/// @param p_size The number of characters (not bytes).
 typedef GDExtensionInterfaceStringNewWithUtf16CharsAndLen =
     ffi.Pointer<
       ffi.NativeFunction<
@@ -3990,7 +3874,7 @@ typedef DartGDExtensionInterfaceStringNewWithUtf16CharsAndLen2Function =
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-16 encoded C string.
-/// @param p_char_count The number of characters (not bytes).
+/// @param p_size The number of characters (not bytes).
 /// @param p_default_little_endian If true, UTF-16 use little endian.
 ///
 /// @return Error code signifying if the operation successful.
@@ -4020,7 +3904,7 @@ typedef DartGDExtensionInterfaceStringNewWithUtf32CharsAndLenFunction =
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a UTF-32 encoded C string.
-/// @param p_char_count The number of characters (not bytes).
+/// @param p_size The number of characters (not bytes).
 typedef GDExtensionInterfaceStringNewWithUtf32CharsAndLen =
     ffi.Pointer<
       ffi.NativeFunction<
@@ -4047,7 +3931,7 @@ typedef DartGDExtensionInterfaceStringNewWithWideCharsAndLenFunction =
 ///
 /// @param r_dest A pointer to a Variant to hold the newly created String.
 /// @param p_contents A pointer to a wide C string.
-/// @param p_char_count The number of characters (not bytes).
+/// @param p_size The number of characters (not bytes).
 typedef GDExtensionInterfaceStringNewWithWideCharsAndLen =
     ffi.Pointer<
       ffi.NativeFunction<
@@ -4557,7 +4441,10 @@ typedef GDExtensionInterfaceImagePtr =
 typedef GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction =
     ffi.Int64 Function(
       GDExtensionObjectPtr p_instance,
-      GDExtensionWorkerThreadPoolGroupTask p_func,
+      ffi.Pointer<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32)>
+      >
+      p_func,
       ffi.Pointer<ffi.Void> p_userdata,
       ffi.Int p_elements,
       ffi.Int p_tasks,
@@ -4567,7 +4454,10 @@ typedef GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction =
 typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction =
     int Function(
       GDExtensionObjectPtr p_instance,
-      GDExtensionWorkerThreadPoolGroupTask p_func,
+      ffi.Pointer<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32)>
+      >
+      p_func,
       ffi.Pointer<ffi.Void> p_userdata,
       int p_elements,
       int p_tasks,
@@ -4583,7 +4473,6 @@ typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeGroupTaskFunction =
 /// @param p_instance A pointer to a WorkerThreadPool object.
 /// @param p_func A pointer to a function to run in the thread pool.
 /// @param p_userdata A pointer to arbitrary data which will be passed to p_func.
-/// @param p_elements The number of element needed in the group.
 /// @param p_tasks The number of tasks needed in the group.
 /// @param p_high_priority Whether or not this is a high priority task.
 /// @param p_description A pointer to a String with the task description.
@@ -4600,7 +4489,8 @@ typedef GDExtensionInterfaceWorkerThreadPoolAddNativeGroupTask =
 typedef GDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction =
     ffi.Int64 Function(
       GDExtensionObjectPtr p_instance,
-      GDExtensionWorkerThreadPoolTask p_func,
+      ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      p_func,
       ffi.Pointer<ffi.Void> p_userdata,
       GDExtensionBool p_high_priority,
       GDExtensionConstStringPtr p_description,
@@ -4608,7 +4498,8 @@ typedef GDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction =
 typedef DartGDExtensionInterfaceWorkerThreadPoolAddNativeTaskFunction =
     int Function(
       GDExtensionObjectPtr p_instance,
-      GDExtensionWorkerThreadPoolTask p_func,
+      ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      p_func,
       ffi.Pointer<ffi.Void> p_userdata,
       DartGDExtensionBool p_high_priority,
       GDExtensionConstStringPtr p_description,
@@ -5210,7 +5101,6 @@ typedef DartGDExtensionInterfaceArrayRefFunction =
 
 /// @name array_ref
 /// @since 4.1
-/// @deprecated in Godot 4.5. use `Array::operator=` instead.
 ///
 /// Sets an Array to be a reference to another Array object.
 ///
@@ -5424,10 +5314,10 @@ typedef GDExtensionInterfaceObjectGetInstanceBindingFunction =
 /// Gets a pointer representing an Object's instance binding.
 ///
 /// @param p_o A pointer to the Object.
-/// @param p_token A token the library received by the GDExtension's entry point function.
+/// @param p_library A token the library received by the GDExtension's entry point function.
 /// @param p_callbacks A pointer to a GDExtensionInstanceBindingCallbacks struct.
 ///
-/// @return A pointer to the instance binding.
+/// @return
 typedef GDExtensionInterfaceObjectGetInstanceBinding =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceObjectGetInstanceBindingFunction>
@@ -5453,7 +5343,7 @@ typedef DartGDExtensionInterfaceObjectSetInstanceBindingFunction =
 /// Sets an Object's instance binding.
 ///
 /// @param p_o A pointer to the Object.
-/// @param p_token A token the library received by the GDExtension's entry point function.
+/// @param p_library A token the library received by the GDExtension's entry point function.
 /// @param p_binding A pointer to the instance binding.
 /// @param p_callbacks A pointer to a GDExtensionInstanceBindingCallbacks struct.
 typedef GDExtensionInterfaceObjectSetInstanceBinding =
@@ -5471,7 +5361,7 @@ typedef DartGDExtensionInterfaceObjectFreeInstanceBindingFunction =
 /// Free an Object's instance binding.
 ///
 /// @param p_o A pointer to the Object.
-/// @param p_token A token the library received by the GDExtension's entry point function.
+/// @param p_library A token the library received by the GDExtension's entry point function.
 typedef GDExtensionInterfaceObjectFreeInstanceBinding =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceObjectFreeInstanceBindingFunction>
@@ -5493,8 +5383,6 @@ typedef DartGDExtensionInterfaceObjectSetInstanceFunction =
 /// @since 4.1
 ///
 /// Sets an extension class instance on a Object.
-///
-/// `p_classname` should be a registered extension class and should extend the `p_o` Object's class.
 ///
 /// @param p_o A pointer to the Object.
 /// @param p_classname A pointer to a StringName with the registered extension class's name.
@@ -5603,7 +5491,7 @@ typedef DartGDExtensionInterfaceObjectHasScriptMethodFunction =
 /// @param p_object A pointer to the Object.
 /// @param p_method A pointer to a StringName identifying the method.
 ///
-/// @return true if the object has a script and that script has a method with the given name. Returns false if the object has no script.
+/// @returns true if the object has a script and that script has a method with the given name. Returns false if the object has no script.
 typedef GDExtensionInterfaceObjectHasScriptMethod =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceObjectHasScriptMethodFunction>
@@ -5802,28 +5690,6 @@ typedef GDExtensionInterfaceObjectGetScriptInstance =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceObjectGetScriptInstanceFunction>
     >;
-typedef GDExtensionInterfaceObjectSetScriptInstanceFunction =
-    ffi.Void Function(
-      GDExtensionObjectPtr p_object,
-      GDExtensionScriptInstanceDataPtr p_script_instance,
-    );
-typedef DartGDExtensionInterfaceObjectSetScriptInstanceFunction =
-    void Function(
-      GDExtensionObjectPtr p_object,
-      GDExtensionScriptInstanceDataPtr p_script_instance,
-    );
-
-/// @name object_set_script_instance
-/// @since 4.5
-///
-/// Set the script instance data attached to this object.
-///
-/// @param p_object A pointer to the Object.
-/// @param p_script_instance A pointer to the script instance data to attach to this object.
-typedef GDExtensionInterfaceObjectSetScriptInstance =
-    ffi.Pointer<
-      ffi.NativeFunction<GDExtensionInterfaceObjectSetScriptInstanceFunction>
-    >;
 typedef GDExtensionInterfaceCallableCustomCreateFunction =
     ffi.Void Function(
       GDExtensionUninitializedTypePtr r_callable,
@@ -5888,8 +5754,6 @@ typedef GDExtensionInterfaceCallableCustomGetUserDataFunction =
 ///
 /// @param p_callable A pointer to a Callable.
 /// @param p_token A pointer to an address that uniquely identifies the GDExtension.
-///
-/// @return The userdata pointer given when creating this custom Callable.
 typedef GDExtensionInterfaceCallableCustomGetUserData =
     ffi.Pointer<
       ffi.NativeFunction<GDExtensionInterfaceCallableCustomGetUserDataFunction>
@@ -6065,7 +5929,7 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass3Function =
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_parent_class_name A pointer to a StringName with the parent class name.
-/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo3 struct.
+/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo2 struct.
 typedef GDExtensionInterfaceClassdbRegisterExtensionClass3 =
     ffi.Pointer<
       ffi.NativeFunction<
@@ -6089,7 +5953,6 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass4Function =
 
 /// @name classdb_register_extension_class4
 /// @since 4.4
-/// @deprecated in Godot 4.5. Use `classdb_register_extension_class5` instead.
 ///
 /// Registers an extension class in the ClassDB.
 ///
@@ -6098,43 +5961,11 @@ typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass4Function =
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param p_class_name A pointer to a StringName with the class name.
 /// @param p_parent_class_name A pointer to a StringName with the parent class name.
-/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo4 struct.
+/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo2 struct.
 typedef GDExtensionInterfaceClassdbRegisterExtensionClass4 =
     ffi.Pointer<
       ffi.NativeFunction<
         GDExtensionInterfaceClassdbRegisterExtensionClass4Function
-      >
-    >;
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass5Function =
-    ffi.Void Function(
-      GDExtensionClassLibraryPtr p_library,
-      GDExtensionConstStringNamePtr p_class_name,
-      GDExtensionConstStringNamePtr p_parent_class_name,
-      ffi.Pointer<GDExtensionClassCreationInfo5> p_extension_funcs,
-    );
-typedef DartGDExtensionInterfaceClassdbRegisterExtensionClass5Function =
-    void Function(
-      GDExtensionClassLibraryPtr p_library,
-      GDExtensionConstStringNamePtr p_class_name,
-      GDExtensionConstStringNamePtr p_parent_class_name,
-      ffi.Pointer<GDExtensionClassCreationInfo5> p_extension_funcs,
-    );
-
-/// @name classdb_register_extension_class5
-/// @since 4.5
-///
-/// Registers an extension class in the ClassDB.
-///
-/// Provided struct can be safely freed once the function returns.
-///
-/// @param p_library A pointer the library received by the GDExtension's entry point function.
-/// @param p_class_name A pointer to a StringName with the class name.
-/// @param p_parent_class_name A pointer to a StringName with the parent class name.
-/// @param p_extension_funcs A pointer to a GDExtensionClassCreationInfo5 struct.
-typedef GDExtensionInterfaceClassdbRegisterExtensionClass5 =
-    ffi.Pointer<
-      ffi.NativeFunction<
-        GDExtensionInterfaceClassdbRegisterExtensionClass5Function
       >
     >;
 typedef GDExtensionInterfaceClassdbRegisterExtensionClassMethodFunction =
@@ -6419,8 +6250,6 @@ typedef DartGDExtensionInterfaceClassdbUnregisterExtensionClassFunction =
 ///
 /// Unregisters an extension class in the ClassDB.
 ///
-/// Unregistering a parent class before a class that inherits it will result in failure. Inheritors must be unregistered first.
-///
 /// @param p_library A pointer the library received by the GDExtension's entry point function.
 /// @param p_class_name A pointer to a StringName with the class name.
 typedef GDExtensionInterfaceClassdbUnregisterExtensionClass =
@@ -6520,57 +6349,6 @@ typedef GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLen =
         GDExtensionsInterfaceEditorHelpLoadXmlFromUtf8CharsAndLenFunction
       >
     >;
-typedef GDExtensionInterfaceEditorRegisterGetClassesUsedCallbackFunction =
-    ffi.Void Function(
-      GDExtensionClassLibraryPtr p_library,
-      GDExtensionEditorGetClassesUsedCallback p_callback,
-    );
-typedef DartGDExtensionInterfaceEditorRegisterGetClassesUsedCallbackFunction =
-    void Function(
-      GDExtensionClassLibraryPtr p_library,
-      GDExtensionEditorGetClassesUsedCallback p_callback,
-    );
-
-/// @name editor_register_get_classes_used_callback
-/// @since 4.5
-///
-/// Registers a callback that Godot can call to get the list of all classes (from ClassDB) that may be used by the calling GDExtension.
-///
-/// This is used by the editor to generate a build profile (in "Tools" > "Engine Compilation Configuration Editor..." > "Detect from project"),
-/// in order to recompile Godot with only the classes used.
-/// In the provided callback, the GDExtension should provide the list of classes that _may_ be used statically, thus the time of invocation shouldn't matter.
-/// If a GDExtension doesn't register a callback, Godot will assume that it could be using any classes.
-///
-/// @param p_library A pointer the library received by the GDExtension's entry point function.
-/// @param p_callback The callback to retrieve the list of classes used.
-typedef GDExtensionInterfaceEditorRegisterGetClassesUsedCallback =
-    ffi.Pointer<
-      ffi.NativeFunction<
-        GDExtensionInterfaceEditorRegisterGetClassesUsedCallbackFunction
-      >
-    >;
-typedef GDExtensionInterfaceRegisterMainLoopCallbacksFunction =
-    ffi.Void Function(
-      GDExtensionClassLibraryPtr p_library,
-      ffi.Pointer<GDExtensionMainLoopCallbacks> p_callbacks,
-    );
-typedef DartGDExtensionInterfaceRegisterMainLoopCallbacksFunction =
-    void Function(
-      GDExtensionClassLibraryPtr p_library,
-      ffi.Pointer<GDExtensionMainLoopCallbacks> p_callbacks,
-    );
-
-/// @name register_main_loop_callbacks
-/// @since 4.5
-///
-/// Registers callbacks to be called at different phases of the main loop.
-///
-/// @param p_library A pointer the library received by the GDExtension's entry point function.
-/// @param p_callbacks A pointer to the structure that contains the callbacks.
-typedef GDExtensionInterfaceRegisterMainLoopCallbacks =
-    ffi.Pointer<
-      ffi.NativeFunction<GDExtensionInterfaceRegisterMainLoopCallbacksFunction>
-    >;
 typedef CallbackData = ffi.Pointer<ffi.Void>;
 typedef ExecutorData = ffi.Pointer<ffi.Void>;
 typedef InvokeCallbackFunction = ffi.Void Function(CallbackData p_data);
@@ -6591,24 +6369,183 @@ typedef DartInvokeCallbackFunctionFunction =
     );
 typedef InvokeCallbackFunction$1 =
     ffi.Pointer<ffi.NativeFunction<InvokeCallbackFunctionFunction>>;
-typedef LogCallbackData = ffi.Pointer<ffi.Void>;
-typedef LogCallbackFunctionFunction =
-    ffi.Void Function(
-      LogCallbackData p_data,
-      ffi.Pointer<ffi.Char> p_log_message,
-      ffi.Bool p_err,
-    );
-typedef DartLogCallbackFunctionFunction =
-    void Function(
-      LogCallbackData p_data,
-      ffi.Pointer<ffi.Char> p_log_message,
-      bool p_err,
-    );
-typedef LogCallbackFunction =
-    ffi.Pointer<ffi.NativeFunction<LogCallbackFunctionFunction>>;
 
-const int __bool_true_false_are_defined = 1;
+const int __has_safe_buffers = 1;
 
-const int true$ = 1;
+const int __DARWIN_ONLY_64_BIT_INO_T = 1;
 
-const int false$ = 0;
+const int __DARWIN_ONLY_UNIX_CONFORMANCE = 1;
+
+const int __DARWIN_ONLY_VERS_1050 = 1;
+
+const int __DARWIN_UNIX03 = 1;
+
+const int __DARWIN_64_BIT_INO_T = 1;
+
+const int __DARWIN_VERS_1050 = 1;
+
+const int __DARWIN_NON_CANCELABLE = 0;
+
+const String __DARWIN_SUF_EXTSN = '\$DARWIN_EXTSN';
+
+const int __DARWIN_C_ANSI = 4096;
+
+const int __DARWIN_C_FULL = 900000;
+
+const int __DARWIN_C_LEVEL = 900000;
+
+const int __STDC_WANT_LIB_EXT1__ = 1;
+
+const int __DARWIN_NO_LONG_LONG = 0;
+
+const int _DARWIN_FEATURE_64_BIT_INODE = 1;
+
+const int _DARWIN_FEATURE_ONLY_64_BIT_INODE = 1;
+
+const int _DARWIN_FEATURE_ONLY_VERS_1050 = 1;
+
+const int _DARWIN_FEATURE_ONLY_UNIX_CONFORMANCE = 1;
+
+const int _DARWIN_FEATURE_UNIX_CONFORMANCE = 3;
+
+const int __has_ptrcheck = 0;
+
+const int __has_bounds_safety_attributes = 0;
+
+const int __DARWIN_NULL = 0;
+
+const int __PTHREAD_SIZE__ = 8176;
+
+const int __PTHREAD_ATTR_SIZE__ = 56;
+
+const int __PTHREAD_MUTEXATTR_SIZE__ = 8;
+
+const int __PTHREAD_MUTEX_SIZE__ = 56;
+
+const int __PTHREAD_CONDATTR_SIZE__ = 8;
+
+const int __PTHREAD_COND_SIZE__ = 40;
+
+const int __PTHREAD_ONCE_SIZE__ = 8;
+
+const int __PTHREAD_RWLOCK_SIZE__ = 192;
+
+const int __PTHREAD_RWLOCKATTR_SIZE__ = 16;
+
+const int __DARWIN_WCHAR_MAX = 2147483647;
+
+const int __DARWIN_WCHAR_MIN = -2147483648;
+
+const int __DARWIN_WEOF = -1;
+
+const int _FORTIFY_SOURCE = 2;
+
+const int NULL = 0;
+
+const int USER_ADDR_NULL = 0;
+
+const int __WORDSIZE = 64;
+
+const int INT8_MAX = 127;
+
+const int INT16_MAX = 32767;
+
+const int INT32_MAX = 2147483647;
+
+const int INT64_MAX = 9223372036854775807;
+
+const int INT8_MIN = -128;
+
+const int INT16_MIN = -32768;
+
+const int INT32_MIN = -2147483648;
+
+const int INT64_MIN = -9223372036854775808;
+
+const int UINT8_MAX = 255;
+
+const int UINT16_MAX = 65535;
+
+const int UINT32_MAX = 4294967295;
+
+const int UINT64_MAX = -1;
+
+const int INT_LEAST8_MIN = -128;
+
+const int INT_LEAST16_MIN = -32768;
+
+const int INT_LEAST32_MIN = -2147483648;
+
+const int INT_LEAST64_MIN = -9223372036854775808;
+
+const int INT_LEAST8_MAX = 127;
+
+const int INT_LEAST16_MAX = 32767;
+
+const int INT_LEAST32_MAX = 2147483647;
+
+const int INT_LEAST64_MAX = 9223372036854775807;
+
+const int UINT_LEAST8_MAX = 255;
+
+const int UINT_LEAST16_MAX = 65535;
+
+const int UINT_LEAST32_MAX = 4294967295;
+
+const int UINT_LEAST64_MAX = -1;
+
+const int INT_FAST8_MIN = -128;
+
+const int INT_FAST16_MIN = -32768;
+
+const int INT_FAST32_MIN = -2147483648;
+
+const int INT_FAST64_MIN = -9223372036854775808;
+
+const int INT_FAST8_MAX = 127;
+
+const int INT_FAST16_MAX = 32767;
+
+const int INT_FAST32_MAX = 2147483647;
+
+const int INT_FAST64_MAX = 9223372036854775807;
+
+const int UINT_FAST8_MAX = 255;
+
+const int UINT_FAST16_MAX = 65535;
+
+const int UINT_FAST32_MAX = 4294967295;
+
+const int UINT_FAST64_MAX = -1;
+
+const int INTPTR_MAX = 9223372036854775807;
+
+const int INTPTR_MIN = -9223372036854775808;
+
+const int UINTPTR_MAX = -1;
+
+const int INTMAX_MAX = 9223372036854775807;
+
+const int UINTMAX_MAX = -1;
+
+const int INTMAX_MIN = -9223372036854775808;
+
+const int PTRDIFF_MIN = -9223372036854775808;
+
+const int PTRDIFF_MAX = 9223372036854775807;
+
+const int SIZE_MAX = -1;
+
+const int RSIZE_MAX = 9223372036854775807;
+
+const int WCHAR_MAX = 2147483647;
+
+const int WCHAR_MIN = -2147483648;
+
+const int WINT_MIN = -2147483648;
+
+const int WINT_MAX = 2147483647;
+
+const int SIG_ATOMIC_MIN = -2147483648;
+
+const int SIG_ATOMIC_MAX = 2147483647;

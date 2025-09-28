@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 
@@ -19,6 +20,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late final LibGodot libGodot;
+  late final Ticker _ticker;
+  
   @override
   void initState() {
     super.initState();
@@ -28,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _initGodot() async {
     await LibGodot.ensureInitialized();
     final assetData = (await rootBundle.load(
-      "assets/game.pck",
+      "assets/game-44.pck",
     )).buffer.asUint8List();
 
     final file = XFile.fromData(assetData);

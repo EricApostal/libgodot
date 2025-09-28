@@ -31,38 +31,6 @@ const GDEXTENSION_VARIANT_SIZE = 24;
 ffi.Pointer<GDExtensionInstanceBindingCallbacks>? _bindingCallbacksPtr;
 GDExtensionClassLibraryPtr? _capturedExtensionLibraryPtr;
 
-/// Helper function to create a Dart wrapper for a given Godot class
-Object? _createDartWrapperForClass(
-  String className,
-  GDExtensionObjectPtr nativePtr,
-) {
-  try {
-    // The binding system doesn't actually need typed objects!
-    // It just needs something that can be registered and retrieved
-    // Your existing gdObjectToDartObject() can handle type conversion later
-
-    // For now, create a simple wrapper that the binding system can track
-    // When you actually USE the object later (via gdObjectToDartObject),
-    // THAT's when you create the proper typed object using your full type system
-
-    return _SimpleGodotWrapper(className, nativePtr);
-  } catch (e) {
-    print("Error creating wrapper for $className: $e");
-    return _SimpleGodotWrapper(className, nativePtr);
-  }
-}
-
-/// Simple wrapper class for Godot objects until proper type resolution is implemented
-class _SimpleGodotWrapper {
-  final String className;
-  final GDExtensionObjectPtr nativePtr;
-
-  _SimpleGodotWrapper(this.className, this.nativePtr);
-
-  @override
-  String toString() => 'GodotWrapper($className, ${nativePtr.address})';
-}
-
 void _extensionInitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
 
 void _extensionDeinitialize(ffi.Pointer<ffi.Void> userdata, int level) {}
@@ -114,18 +82,18 @@ ffi.Pointer<ffi.Void> _bindingCreate(
 
       print("Class name: $className");
 
-      final dartObject = _createDartWrapperForClass(className, p_instance);
+      // final dartObject = _createDartWrapperForClass(className, p_instance);
 
-      if (dartObject != null) {
-        // Register the Dart wrapper with the binding system
-        gde.dartBindings.registerDartWrapper(dartObject, p_instance);
-        print("Registered wrapper for $className");
+      // if (dartObject != null) {
+      //   // Register the Dart wrapper with the binding system
+      //   gde.dartBindings.registerDartWrapper(dartObject, p_instance);
+      //   print("Registered wrapper for $className");
 
-        // Return a persistent handle to the Dart object
-        return gde.dartBindings.toPersistentHandle(dartObject);
-      } else {
-        print("Could not create Dart wrapper for class: $className");
-      }
+      //   // Return a persistent handle to the Dart object
+      //   return gde.dartBindings.toPersistentHandle(dartObject);
+      // } else {
+      //   print("Could not create Dart wrapper for class: $className");
+      // }
     } else {
       print("Failed to get class name, success = $success");
     }
@@ -164,6 +132,7 @@ void _syncExecutor(
   CallbackData pCallbackData,
   ExecutorData pExecutorData,
 ) {
+  print("running sync executor");
   final fn = pCallback.asFunction<DartInvokeCallbackFunction>();
   fn(pCallbackData);
 }
@@ -173,6 +142,7 @@ void _asyncExecutor(
   CallbackData pCallbackData,
   ExecutorData pExecutorData,
 ) {
+  print("running async executor");
   final fn = pCallback.asFunction<DartInvokeCallbackFunction>();
   scheduleMicrotask(() => fn(pCallbackData));
 }
@@ -236,22 +206,20 @@ class LibGodotProcess {
 
     logger.info("Loaded the resource pack from file: ${resourcePack.path}");
 
-    String renderingDriver = 'opengl3';
-    String renderingMethod = 'gl_compatibility';
-
+    String renderingDriver = 'metal';
+    String renderingMethod = 'mobile';
 
     List<String> args = [
       '/usr/bin/libgodot_embed',
       '--main-pack',
       ensuredResourcePack.path,
-      // '--rendering-driver',
-      // renderingDriver,
+      '--rendering-driver',
+      renderingDriver,
       '--rendering-method',
       renderingMethod,
-      // '--display-driver',
-      // 'macos',
-      '--embedded',
-      '--verbose',
+      '--display-driver',
+      'embedded',
+      '--verbose'
     ];
 
     final argc = args.length;
@@ -274,9 +242,9 @@ class LibGodotProcess {
       ffi.nullptr,
       _syncExecutorPtr,
       ffi.nullptr,
-      ffi.nullptr,
-      ffi.nullptr,
-      ffi.nullptr,
+      // ffi.nullptr,
+      // ffi.nullptr,
+      // ffi.nullptr,
     );
 
     for (final p in allocatedStrings) {
@@ -311,18 +279,13 @@ class LibGodotProcess {
     logger.info("Sending native call to start godot instance");
     // We might want to do something else with that? Maybe return it?
 
-
     final layer = await LibGodotRenderer.createMetalLayer();
     print("Got metal layer: $layer");
 
     final caLayer = RenderingNativeSurfaceApple.create(layer!);
     
-    // print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
-
-
-    // don't even matter here.
+    print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
     DisplayServerEmbedded.setNativeSurface(caLayer);
-
 
     final status = godotInstance.start();
 
