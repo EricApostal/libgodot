@@ -1,0 +1,2 @@
+[env]
+GODOT4_BIN = { value = "../godot.macos.editor.dev.arm64", relative = true, force = true }

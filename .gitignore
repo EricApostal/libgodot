@@ -78,3 +78,6 @@ macos/libgodot/.swiftpm/
 
 # TODO: Have a single generator script and generate these all at once
 lib/godot/generated
+
+# For rust gen
+godot.macos.editor.dev.arm64

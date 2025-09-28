@@ -40,19 +40,19 @@ Future<void> _initGodot() async {
     libGodot = LibGodot(resourcePack: file);
     final instance = await libGodot.create();
 
-    final layer = await LibGodotRenderer.createMetalLayer();
-    print("Got metal layer: $layer");
-    final caLayer = RenderingNativeSurfaceApple.create(layer!);
-    print("Got native layer: $caLayer, ${caLayer?.nativePtr}");
+    // final layer = await LibGodotRenderer.createMetalLayer();
+    // print("Got metal layer: $layer");
+    // final caLayer = RenderingNativeSurfaceApple.create(layer!);
+    // print("Got native layer: $caLayer, ${caLayer?.nativePtr}");
 
-    DisplayServerEmbedded.setNativeSurface(caLayer);
+    // DisplayServerEmbedded.setNativeSurface(caLayer);
 
     instance.start();
 
-    _ticker = createTicker((elapsed) {
-      instance.iteration();
-    });
-    _ticker.start();
+    // _ticker = createTicker((elapsed) {
+    //   instance.iteration();
+    // });
+    // _ticker.start();
 }
   @override
   Widget build(BuildContext context) {

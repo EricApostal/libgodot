@@ -48,7 +48,7 @@ class LibGodot {
     return instance;
   }
 
-    Future<void> start(GodotInstance godotInstance) async {
+  Future<void> start(GodotInstance godotInstance) async {
     final instance = await LibGodotProcess.start(godotInstance);
   }
 }

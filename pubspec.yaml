@@ -13,11 +13,14 @@ dependencies:
   ffi: ^2.1.4
   flutter:
     sdk: flutter
+  flutter_rust_bridge: 2.11.1
   logging: ^1.3.0
   meta: ^1.16.0
   path: ^1.9.1
   path_provider: ^2.1.5
   plugin_platform_interface: ^2.0.2
+  rust_lib_libgodot:
+    path: rust_builder
   universal_platform: ^1.1.0
   uuid: ^4.5.1
 
@@ -26,6 +29,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   ffigen: ^19.1.0
+  integration_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
