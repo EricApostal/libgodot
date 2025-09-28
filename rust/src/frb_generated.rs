@@ -133,9 +133,7 @@ fn wire__crate__api__rust_godot__start_godot_impl(
             let api_path = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             transform_result_sse::<_, ()>((move || {
-                let output_ok = Result::<_, ()>::Ok({
-                    crate::api::rust_godot::start_godot(api_path);
-                })?;
+                let output_ok = Result::<_, ()>::Ok(crate::api::rust_godot::start_godot(api_path))?;
                 Ok(output_ok)
             })())
         },

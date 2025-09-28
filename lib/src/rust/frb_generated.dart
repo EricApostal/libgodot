@@ -81,7 +81,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiRustGodotInitApp();
 
-  void crateApiRustGodotStartGodot({required String path});
+  String crateApiRustGodotStartGodot({required String path});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -143,7 +143,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override
-  void crateApiRustGodotStartGodot({required String path}) {
+  String crateApiRustGodotStartGodot({required String path}) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
@@ -152,7 +152,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
         },
         codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
+          decodeSuccessData: sse_decode_String,
           decodeErrorData: null,
         ),
         constMeta: kCrateApiRustGodotStartGodotConstMeta,

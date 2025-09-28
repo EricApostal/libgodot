@@ -23,6 +23,6 @@ class NativeBridge {
     await Process.run('chmod', ['+x', dylibPath]);
 
     // final dylib = DynamicLibrary.open(dylibPath);
-    return startGodot(path: dylibPath);
+    startGodot(path: dylibPath);
   }
 }

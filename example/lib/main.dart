@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:libgodot/core/render.dart';
-import 'package:libgodot/godot/generated/engine_classes.dart';
 import 'dart:async';
 
 import 'dart:io' show Platform;

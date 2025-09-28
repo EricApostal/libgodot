@@ -1,8 +1,5 @@
 import 'package:cross_file/cross_file.dart';
 import 'package:libgodot/core/native.dart';
-import 'package:libgodot/core/process.dart';
-import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
-import 'package:libgodot/godot/generated/engine_classes.dart';
 import 'package:libgodot/utils/logging.dart';
 import 'package:logging/logging.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -17,7 +14,7 @@ class LibGodot {
 
   LibGodot({required this.resourcePack});
 
-  static GDExtensionFFI? _interface;
+  // static GDExtensionFFI? _interface;
 
   static bool _isInitialized = false;
 
@@ -35,20 +32,23 @@ class LibGodot {
       );
     }
 
-    _interface = await NativeBridge.loadLibGodot();
     _isInitialized = true;
   }
 
-  Future<GodotInstance> create() async {
-    final instance = await LibGodotProcess.create(
-      resourcePack: resourcePack,
-      interface: _interface!,
-    );
+  Future<void> create() async {
 
-    return instance;
+    NativeBridge.loadLibGodot();
+    // final instance = await LibGodotProcess.create(
+    //   resourcePack: resourcePack,
+    //   interface: _interface!,
+    // );
+
+    // startGodot(path: );
+
+    // return instance;
   }
 
-  Future<void> start(GodotInstance godotInstance) async {
-    final instance = await LibGodotProcess.start(godotInstance);
-  }
+  // Future<void> start(GodotInstance godotInstance) async {
+  //   final instance = await LibGodotProcess.start(godotInstance);
+  // }
 }
