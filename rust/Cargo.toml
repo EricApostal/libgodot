@@ -9,6 +9,11 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 flutter_rust_bridge = "=2.11.1"
 godot = {version = "0.3.5", features = ["api-custom"], path = "/Users/eric/Documents/development/languages/rust/gdext/godot"}
+libloading = "0.8.9"
+
+[build-dependencies]
+bindgen = "0.71.0"
+
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

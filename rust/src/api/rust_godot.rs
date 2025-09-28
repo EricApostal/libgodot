@@ -6,7 +6,7 @@ pub fn greet(name: String) -> String {
 }
 
 #[flutter_rust_bridge::frb(sync)]
-pub fn startGodot() {
+pub fn start_godot(path: String) {
     format!("Starting Godot!");
     
     
