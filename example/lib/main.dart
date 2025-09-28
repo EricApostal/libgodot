@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:libgodot/core/render.dart';
+import 'package:libgodot/godot/generated/engine_classes.dart';
 import 'dart:async';
 
 import 'dart:io' show Platform;
@@ -18,29 +20,40 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   late final LibGodot libGodot;
   late final Ticker _ticker;
-  
+
   @override
   void initState() {
     super.initState();
     _initGodot();
   }
 
-  Future<void> _initGodot() async {
+Future<void> _initGodot() async {
     await LibGodot.ensureInitialized();
     final assetData = (await rootBundle.load(
       "assets/game-44.pck",
     )).buffer.asUint8List();
-
     final file = XFile.fromData(assetData);
 
     libGodot = LibGodot(resourcePack: file);
+    final instance = await libGodot.create();
 
-    libGodot.start();
-  }
+    final layer = await LibGodotRenderer.createMetalLayer();
+    print("Got metal layer: $layer");
+    final caLayer = RenderingNativeSurfaceApple.create(layer!);
+    print("Got native layer: $caLayer, ${caLayer?.nativePtr}");
 
+    DisplayServerEmbedded.setNativeSurface(caLayer);
+
+    instance.start();
+
+    _ticker = createTicker((elapsed) {
+      instance.iteration();
+    });
+    _ticker.start();
+}
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -2,6 +2,7 @@ import 'package:cross_file/cross_file.dart';
 import 'package:libgodot/core/native.dart';
 import 'package:libgodot/core/process.dart';
 import 'package:libgodot/godot/core/gdextension_ffi_bindings.dart';
+import 'package:libgodot/godot/generated/engine_classes.dart';
 import 'package:libgodot/utils/logging.dart';
 import 'package:logging/logging.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -38,10 +39,16 @@ class LibGodot {
     _isInitialized = true;
   }
 
-  Future<void> start() async {
-    final instance = await LibGodotProcess.start(
+  Future<GodotInstance> create() async {
+    final instance = await LibGodotProcess.create(
       resourcePack: resourcePack,
       interface: _interface!,
     );
+
+    return instance;
+  }
+
+    Future<void> start(GodotInstance godotInstance) async {
+    final instance = await LibGodotProcess.start(godotInstance);
   }
 }

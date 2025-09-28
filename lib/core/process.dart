@@ -194,7 +194,7 @@ int _gdExtensionInit(
 class LibGodotProcess {
   static Logger get logger => Logger("LibGodotProcess");
 
-  static Future<GodotInstance> start({
+  static Future<GodotInstance> create({
     required XFile resourcePack,
     required GDExtensionFFI interface,
   }) async {
@@ -274,27 +274,27 @@ class LibGodotProcess {
 
 
     final godotInstance = GodotInstance.withNonNullOwner(instance);
+    return godotInstance;
+  }
 
-
+  static Future<void> start(GodotInstance godotInstance) async {
     logger.info("Sending native call to start godot instance");
     // We might want to do something else with that? Maybe return it?
 
-    final layer = await LibGodotRenderer.createMetalLayer();
-    print("Got metal layer: $layer");
+    // final layer = await LibGodotRenderer.createMetalLayer();
+    // print("Got metal layer: $layer");
 
-    final caLayer = RenderingNativeSurfaceApple.create(layer!);
+    // final caLayer = RenderingNativeSurfaceApple.create(layer!);
     
-    print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
-    DisplayServerEmbedded.setNativeSurface(caLayer);
+    // print("Got native layer: $caLayer, ${caLayer!.nativePtr}");
+    // DisplayServerEmbedded.setNativeSurface(caLayer);
 
-    final status = godotInstance.start();
-
-    print(DisplayServer.singleton.getName());
-
-    logger.info("Godot instance started with status = $status");
+    godotInstance.start();
 
 
-    return godotInstance;
+    // print(DisplayServer.singleton.getName());
+
+    logger.info("Godot instance started");
   }
 
   static Future<XFile> _getXFile(XFile resourcePack) async {
