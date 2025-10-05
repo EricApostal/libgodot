@@ -11,7 +11,13 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 String greet({required String name}) =>
     RustLib.instance.api.crateApiRustGodotGreet(name: name);
 
-String startGodot({required String libPath, required String pckPath}) => RustLib
+PlatformInt64 startGodot({required String libPath, required String pckPath}) =>
+    RustLib.instance.api.crateApiRustGodotStartGodot(
+      libPath: libPath,
+      pckPath: pckPath,
+    );
+
+String startGodotInstance({required PlatformInt64 instanceId}) => RustLib
     .instance
     .api
-    .crateApiRustGodotStartGodot(libPath: libPath, pckPath: pckPath);
+    .crateApiRustGodotStartGodotInstance(instanceId: instanceId);

@@ -32,7 +32,9 @@ class NativeBridge {
     print("launching with path: $dylibPath}");
 
     // final dylib = DynamicLibrary.open(dylibPath);
-    final message = startGodot(libPath: dylibPath, pckPath: pckPath);
-    print("Message = $message");
+    final instanceId = startGodot(libPath: dylibPath, pckPath: pckPath);
+    await Future.delayed(Duration(seconds: 3));
+    final message = startGodotInstance(instanceId: instanceId);
+    print(message);
   }
 }
