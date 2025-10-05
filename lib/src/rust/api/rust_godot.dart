@@ -6,8 +6,12 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These functions are ignored because they are not marked as `pub`: `p_init_func`
+
 String greet({required String name}) =>
     RustLib.instance.api.crateApiRustGodotGreet(name: name);
 
-String startGodot({required String path}) =>
-    RustLib.instance.api.crateApiRustGodotStartGodot(path: path);
+String startGodot({required String libPath, required String pckPath}) => RustLib
+    .instance
+    .api
+    .crateApiRustGodotStartGodot(libPath: libPath, pckPath: pckPath);

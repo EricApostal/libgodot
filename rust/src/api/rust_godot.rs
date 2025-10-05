@@ -40,19 +40,33 @@ unsafe extern "C" fn p_init_func(
 }
 
 #[flutter_rust_bridge::frb(sync)]
-pub fn start_godot(path: String) -> String {
+pub fn start_godot(lib_path: String, pck_path: String) -> String {
+    std::println!("[Native] Starting godot");
     unsafe {
-        let c_path = match CString::new(path.clone()) {
+        let c_path = match CString::new(lib_path.clone()) {
             Ok(c_str) => c_str,
-            Err(_) => return format!("Failed to convert path to C string: {}", path),
+            Err(_) => return format!("Failed to convert path to C string: {}", lib_path),
         };
 
-        let argv = vec![c_path.as_ptr() as *mut i8];
+        let c_main_pack = match CString::new("--main-pack") {
+            Ok(c_str) => c_str,
+            Err(_) => return format!("Failed to convert --main-pack to C string"),
+        };
+
+        let c_pck_path = match CString::new(pck_path.clone()) {
+            Ok(c_str) => c_str,
+            Err(_) => return format!("Failed to convert pck_path to C string: {}", pck_path),
+        };
+
+        let argv = vec![
+            c_path.as_ptr() as *mut i8,
+            c_main_pack.as_ptr() as *mut i8,
+            c_pck_path.as_ptr() as *mut i8,
+        ];
+
         let argc = argv.len() as i32;
         
-        // Dynamically load the libgodot library
-        let lib_path = "../example/assets/libgodot-46.macos.template_debug.dev.arm64.dylib";
-        let lib = match Library::new(lib_path) {
+        let lib = match Library::new(lib_path.clone()) {
             Ok(lib) => lib,
             Err(e) => return format!("Failed to load library {}: {}", lib_path, e),
         };
@@ -72,20 +86,25 @@ pub fn start_godot(path: String) -> String {
         };
         
         // Create Godot instance using the dynamically loaded function
+        let init_func_ptr: GDExtensionInitializationFunction = unsafe {
+            std::mem::transmute(p_init_func as *const ())
+        };
+        println!("Start create instance");
         let godot_instance = create_instance(
             argc,
             argv.as_ptr() as *mut *mut i8,
-            Some(p_init_func), // Pass our initialization function
+            Some(init_func_ptr), // Pass our initialization function
             None, // p_async_func
             ptr::null_mut(), // p_async_data
             None, // p_sync_func
             ptr::null_mut(), // p_sync_data
         );
+        println!("End create instance");
         
         if godot_instance.is_null() {
-            format!("Failed to create Godot instance with path: {}", path)
+            format!("Failed to create Godot instance with path: {}", lib_path)
         } else {
-            format!("Successfully started Godot with path: {}", path)
+            format!("Successfully started Godot with path: {}", lib_path)
         }
     }
 }

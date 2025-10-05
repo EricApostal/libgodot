@@ -81,7 +81,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiRustGodotInitApp();
 
-  String crateApiRustGodotStartGodot({required String path});
+  String crateApiRustGodotStartGodot({
+    required String libPath,
+    required String pckPath,
+  });
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -143,12 +146,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override
-  String crateApiRustGodotStartGodot({required String path}) {
+  String crateApiRustGodotStartGodot({
+    required String libPath,
+    required String pckPath,
+  }) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_String(path, serializer);
+          sse_encode_String(libPath, serializer);
+          sse_encode_String(pckPath, serializer);
           return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
         },
         codec: SseCodec(
@@ -156,14 +163,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: null,
         ),
         constMeta: kCrateApiRustGodotStartGodotConstMeta,
-        argValues: [path],
+        argValues: [libPath, pckPath],
         apiImpl: this,
       ),
     );
   }
 
   TaskConstMeta get kCrateApiRustGodotStartGodotConstMeta =>
-      const TaskConstMeta(debugName: "start_godot", argNames: ["path"]);
+      const TaskConstMeta(
+        debugName: "start_godot",
+        argNames: ["libPath", "pckPath"],
+      );
 
   @protected
   String dco_decode_String(dynamic raw) {

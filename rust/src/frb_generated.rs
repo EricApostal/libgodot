@@ -130,10 +130,14 @@ fn wire__crate__api__rust_godot__start_godot_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_path = <String>::sse_decode(&mut deserializer);
+            let api_lib_path = <String>::sse_decode(&mut deserializer);
+            let api_pck_path = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             transform_result_sse::<_, ()>((move || {
-                let output_ok = Result::<_, ()>::Ok(crate::api::rust_godot::start_godot(api_path))?;
+                let output_ok = Result::<_, ()>::Ok(crate::api::rust_godot::start_godot(
+                    api_lib_path,
+                    api_pck_path,
+                ))?;
                 Ok(output_ok)
             })())
         },
