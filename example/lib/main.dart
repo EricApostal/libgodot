@@ -37,7 +37,7 @@ Future<void> _initGodot() async {
     final file = XFile.fromData(assetData);
 
     libGodot = LibGodot(resourcePack: file);
-    final instance = await libGodot.create();
+   await libGodot.create();
 
     // final layer = await LibGodotRenderer.createMetalLayer();
     // print("Got metal layer: $layer");
@@ -46,7 +46,7 @@ Future<void> _initGodot() async {
 
     // DisplayServerEmbedded.setNativeSurface(caLayer);
 
-    instance.start();
+    // instance.start();
 
     // _ticker = createTicker((elapsed) {
     //   instance.iteration();
