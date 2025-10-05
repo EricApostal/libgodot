@@ -43,19 +43,26 @@ unsafe extern "C" fn p_init_func(
 pub fn start_godot(lib_path: String, pck_path: String) -> String {
     std::println!("[Native] Starting godot");
     unsafe {
+        if lib_path.is_empty() {
+            return "Library path cannot be empty".to_string();
+        }
+        if pck_path.is_empty() {
+            return "PCK path cannot be empty".to_string();
+        }
+
         let c_path = match CString::new(lib_path.clone()) {
             Ok(c_str) => c_str,
-            Err(_) => return format!("Failed to convert path to C string: {}", lib_path),
+            Err(e) => return format!("Failed to convert path to C string: {}: {}", lib_path, e),
         };
 
         let c_main_pack = match CString::new("--main-pack") {
             Ok(c_str) => c_str,
-            Err(_) => return format!("Failed to convert --main-pack to C string"),
+            Err(e) => return format!("Failed to convert --main-pack to C string: {}", e),
         };
 
         let c_pck_path = match CString::new(pck_path.clone()) {
             Ok(c_str) => c_str,
-            Err(_) => return format!("Failed to convert pck_path to C string: {}", pck_path),
+            Err(e) => return format!("Failed to convert pck_path to C string: {}: {}", pck_path, e),
         };
 
         let argv = vec![
@@ -66,19 +73,24 @@ pub fn start_godot(lib_path: String, pck_path: String) -> String {
 
         let argc = argv.len() as i32;
         
+        for (i, arg) in argv.iter().enumerate() {
+            if arg.is_null() {
+                return format!("Invalid argument at index {}: null pointer", i);
+            }
+        }
+        
         let lib = match Library::new(lib_path.clone()) {
             Ok(lib) => lib,
             Err(e) => return format!("Failed to load library {}: {}", lib_path, e),
         };
         
-        // Get the function symbol dynamically
         let create_instance: Symbol<unsafe extern "C" fn(
-            i32,
-            *mut *mut i8,
-            Option<GDExtensionInitializationFunction>,
-            Option<InvokeCallbackFunction>,
+            ::core::ffi::c_int,
+            *mut *mut ::core::ffi::c_char,
+            GDExtensionInitializationFunction,
+            InvokeCallbackFunction,
             ExecutorData,
-            Option<InvokeCallbackFunction>,
+            InvokeCallbackFunction,
             ExecutorData,
         ) -> GDExtensionObjectPtr> = match lib.get(b"libgodot_create_godot_instance") {
             Ok(func) => func,
@@ -86,14 +98,11 @@ pub fn start_godot(lib_path: String, pck_path: String) -> String {
         };
         
         // Create Godot instance using the dynamically loaded function
-        let init_func_ptr: GDExtensionInitializationFunction = unsafe {
-            std::mem::transmute(p_init_func as *const ())
-        };
         println!("Start create instance");
         let godot_instance = create_instance(
             argc,
-            argv.as_ptr() as *mut *mut i8,
-            Some(init_func_ptr), // Pass our initialization function
+            argv.as_ptr() as *mut *mut ::core::ffi::c_char,
+            Some(p_init_func), 
             None, // p_async_func
             ptr::null_mut(), // p_async_data
             None, // p_sync_func
