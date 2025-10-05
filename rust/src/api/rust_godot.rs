@@ -1,5 +1,6 @@
 use std::ffi::CString;
 use std::ptr;
+use godot::classes::GodotInstance;
 use libloading::{Library, Symbol};
 use crate::ffi_bindings::*;
 use super::extension::LibGodotExtension;
@@ -99,7 +100,7 @@ pub fn start_godot(lib_path: String, pck_path: String) -> String {
         
         // Create Godot instance using the dynamically loaded function
         println!("Start create instance");
-        let godot_instance = create_instance(
+        let godot_instance_ptr = create_instance(
             argc,
             argv.as_ptr() as *mut *mut ::core::ffi::c_char,
             Some(p_init_func), 
@@ -109,12 +110,27 @@ pub fn start_godot(lib_path: String, pck_path: String) -> String {
             ptr::null_mut(), // p_sync_data
         );
         println!("End create instance");
-        
-        if godot_instance.is_null() {
+
+        if godot_instance_ptr.is_null() {
             format!("Failed to create Godot instance with path: {}", lib_path)
         } else {
-            format!("Successfully started Godot with path: {}", lib_path)
+            // Get the instance ID from the raw pointer
+            let get_instance_id_fn = godot::sys::interface_fn!(object_get_instance_id);
+            let instance_id = get_instance_id_fn(godot_instance_ptr as godot::sys::GDExtensionConstObjectPtr);
+
+            let mut gd_instance: godot::obj::Gd<GodotInstance> = godot::obj::Gd::from_instance_id(
+                godot::obj::InstanceId::from_i64(instance_id as i64)
+            );
+            
+            let start_result = gd_instance.start();
+            
+            format!("Successfully created and started Godot instance with path: {}, instance ID: {}, start result: {}", 
+                    lib_path, instance_id, start_result)
         }
+        
+        
+        
+        
     }
 }
 
