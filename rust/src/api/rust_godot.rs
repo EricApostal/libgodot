@@ -1,5 +1,6 @@
 use std::ffi::CString;
 use std::ptr;
+use godot::classes::DisplayServerEmbedded;
 use libloading::{Library, Symbol};
 use crate::ffi_bindings::*;
 use super::extension::LibGodotExtension;
@@ -32,16 +33,23 @@ unsafe extern "C" fn p_init_func(
     let godot_library = library as ::godot::sys::GDExtensionClassLibraryPtr;
     let godot_init = init as *mut ::godot::sys::GDExtensionInitialization;
 
-    ::godot::init::__gdext_load_library::<LibGodotExtension>(
+
+    println!("Doing extension init with SCENE initialization level");
+    let success = ::godot::init::__gdext_load_library::<LibGodotExtension>(
         godot_get_proc_address,
         godot_library,
         godot_init
-    )
+    );
+
+    println!("Got success! {success}");
+
+    return success;
 }
 
 #[flutter_rust_bridge::frb(sync)]
 pub fn start_godot(lib_path: String, pck_path: String) -> i64 {
     std::println!("[Native] Starting godot");
+
     unsafe {
         if lib_path.is_empty() {
             println!("[Native] Error: Library path cannot be empty");
@@ -148,17 +156,17 @@ pub fn start_godot(lib_path: String, pck_path: String) -> i64 {
 
 #[flutter_rust_bridge::frb(sync)]
 pub fn start_godot_instance(instance_id: i64) -> String {
-    // This function should be called after Godot is fully initialized
-    // and the Scene level is loaded
     use godot::classes::GodotInstance;
     
     let mut gd_instance: godot::obj::Gd<GodotInstance> = godot::obj::Gd::from_instance_id(
         godot::obj::InstanceId::from_i64(instance_id)
     );
+
     
     let start_result = gd_instance.start();
     format!("Successfully started Godot instance ID: {}, start result: {}", 
             instance_id, start_result)
+
 }
 
 #[flutter_rust_bridge::frb(init)]
