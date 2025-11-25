@@ -1,6 +1,5 @@
 use std::ffi::CString;
 use std::ptr;
-use godot::classes::DisplayServerEmbedded;
 use libloading::{Library, Symbol};
 use crate::ffi_bindings::*;
 use super::extension::LibGodotExtension;

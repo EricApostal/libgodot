@@ -8,7 +8,7 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 flutter_rust_bridge = "=2.11.1"
-godot = {version = "0.3.5", features = ["api-custom", "__debug-log"], path = "/Users/eric/Documents/development/languages/rust/gdext/godot"}
+godot = {version = "0.4.2", features = ["api-custom", "__debug-log"], path = "/Users/eric/Documents/development/languages/rust/gdext/godot"}
 libloading = "0.8.9"
 
 [build-dependencies]

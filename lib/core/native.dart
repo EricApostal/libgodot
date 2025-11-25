@@ -11,8 +11,8 @@ class NativeBridge {
   static final methodChannel = MethodChannel("libgodot-native-bridge");
 
   static Future<void> loadLibGodot() async {
-    final ByteData dylibData = await rootBundle.load('assets/libgodot-44.macos.template_debug.dev.arm64.dylib');
-    final Uint8List dylibBytes = dylibData.buffer.asUint8List();
+    // final ByteData dylibData = await rootBundle.load('assets/libgodot-44.macos.template_debug.dev.arm64.dylib');
+    // final Uint8List dylibBytes = dylibData.buffer.asUint8List();
 
     final ByteData pckData = await rootBundle.load("assets/game-44.pck");
     final pckBytes = pckData.buffer.asUint8List();
@@ -21,8 +21,8 @@ class NativeBridge {
     final String dylibPath = path.join(tempDir.path, 'libgodot-44.macos.template_debug.dev.arm64.dylib');
     final String pckPath = path.join(tempDir.path, 'game-44.pck');
 
-    final File dylibFile = File(dylibPath);
-    await dylibFile.writeAsBytes(dylibBytes);
+    // final File dylibFile = File(dylibPath);
+    // await dylibFile.writeAsBytes(dylibBytes);
 
     final File pckFile = File(pckPath);
     await pckFile.writeAsBytes(pckBytes);
@@ -34,6 +34,5 @@ class NativeBridge {
     // final dylib = DynamicLibrary.open(dylibPath);
     final instanceId = startGodot(libPath: dylibPath, pckPath: pckPath);
     final message = startGodotInstance(instanceId: instanceId);
-    print(message);
   }
 }
