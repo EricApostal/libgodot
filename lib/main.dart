@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:libgodot/src/rust/frb_generated.dart';
-
+import 'package:libgodot/rust_bridge/frb_generated.dart';
 Future<void> main() async {
   await RustLib.init();
   runApp(const MyApp());

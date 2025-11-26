@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:libgodot/src/rust/api/rust_godot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -32,7 +31,7 @@ class NativeBridge {
     print("launching with path: $dylibPath}");
 
     // final dylib = DynamicLibrary.open(dylibPath);
-    final instanceId = startGodot(libPath: dylibPath, pckPath: pckPath);
-    final message = startGodotInstance(instanceId: instanceId);
+    // final instanceId = startGodot(libPath: dylibPath, pckPath: pckPath);
+    // final message = startGodotInstance(instanceId: instanceId);
   }
 }

@@ -1,43 +1,13 @@
 use std::env;
 use std::path::PathBuf;
 
+use cached_path::{Options, cached_path_with_options};
+
 fn main() {
-    // Tell cargo to invalidate the built crate whenever any of the
-    // included header files changed.
-    println!("cargo:rerun-if-changed=wrapper.h");
-    println!("cargo:rerun-if-changed=../third_party/gdextension_interface.h");
-    println!("cargo:rerun-if-changed=../third_party/libgodot.h");
+    let url =  "https://github.com/migeran/libgodot/releases/download/4.5.1.migeran.2/godot-cpp-android.zip";
+    let path = cached_path_with_options(url,  &Options::default().extract(),).unwrap();
 
-    // The bindgen::Builder is the main entry point
-    // to bindgen, and lets you build up options for
-    // the resulting bindings.
-    let bindings = bindgen::Builder::default()
-        // The input header we would like to generate
-        // bindings for.
-        .header("wrapper.h")
-        // Add include path for third_party headers
-        .clang_arg("-I../third_party")
-        // Generate bindings for Godot types
-        .allowlist_type("GDExtension.*")
-        .allowlist_type("GodotInstance.*")
-        .allowlist_function("libgodot_.*")
-        .allowlist_var("GDEXTENSION_.*")
-        // Use core types for compatibility
-        .use_core()
-        .derive_debug(true)
-        .derive_default(true)
-        .derive_copy(true)
-        // Tell cargo to invalidate the built crate whenever any of the
-        // included header files changed.
-        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
-        // Finish the builder and generate the bindings.
-        .generate()
-        // Unwrap the Result and panic on failure.
-        .expect("Unable to generate bindings");
+    assert!(path.is_dir());
+    println!("END BUILD!");
 
-    // Write the bindings to the $OUT_DIR/bindings.rs file.
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-    bindings
-        .write_to_file(out_path.join("bindings.rs"))
-        .expect("Couldn't write bindings!");
 }

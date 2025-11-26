@@ -1,3 +1,3 @@
 rust_input: crate::api, godot::classes
 rust_root: rust/
-dart_output: lib/src/rust
+dart_output: lib/rust_bridge

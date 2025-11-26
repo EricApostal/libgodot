@@ -1,2 +1,3 @@
 [env]
-GODOT4_BIN = { value = "godot.macos.editor.dev.arm64", relative = true, force = true }
+GODOT4_GDEXTENSION_JSON = { value = "../extension_api.json", relative = true, force = true }
+

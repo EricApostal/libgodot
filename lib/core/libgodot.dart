@@ -1,6 +1,6 @@
 import 'package:cross_file/cross_file.dart';
 import 'package:libgodot/core/native.dart';
-import 'package:libgodot/src/rust/frb_generated.dart';
+import 'package:libgodot/rust_bridge/frb_generated.dart';
 import 'package:libgodot/utils/logging.dart';
 import 'package:logging/logging.dart';
 import 'package:universal_platform/universal_platform.dart';
