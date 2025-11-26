@@ -13,8 +13,12 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
-        .target(
+        // Use remote xcframework as a binary target
+        .binaryTarget(
             name: "libgodot",
+            url: "https://github.com/migeran/libgodot/releases/download/4.5.1.migeran.2/libgodot.xcframework.zip",
+            // IMPORTANT: Update this checksum using `swift package compute-checksum` for the downloaded zip
+            checksum: "699fcc7e3eef7d0aee3132c6ebd7a8a9a7b6b0c9da801d220d72950e4ac79958"
         ),
 
         // .target(

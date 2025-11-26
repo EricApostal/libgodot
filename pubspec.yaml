@@ -52,6 +52,9 @@ flutter:
     
   plugin:
     platforms:
+      android:
+        package: com.example.libgodot
+        pluginClass: LibgodotPlugin
       macos:
         pluginClass: LibgodotPlugin
         
