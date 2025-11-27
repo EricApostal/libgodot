@@ -16,6 +16,19 @@ pub fn init_app() {
     flutter_rust_bridge::setup_default_user_utils();
 
     unsafe {
-    libgodot_create_godot_instance_android(p_argc, p_argv, p_init_func, std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null());
+        libgodot_create_godot_instance_android(
+            0,
+            std::ptr::null_mut(),
+            Some(p_init_func), 
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+        );
     }
 }
+
