@@ -57,8 +57,8 @@ pub const UINT_LEAST32_MAX: u32 = 4294967295;
 pub const UINT_FAST32_MAX: u32 = 4294967295;
 pub const SIG_ATOMIC_MAX: u32 = 2147483647;
 pub const SIG_ATOMIC_MIN: i32 = -2147483648;
-pub const WINT_MAX: u32 = 4294967295;
-pub const WINT_MIN: u32 = 0;
+pub const WINT_MAX: u32 = 2147483647;
+pub const WINT_MIN: i32 = -2147483648;
 pub const JNI_FALSE: u32 = 0;
 pub const JNI_TRUE: u32 = 1;
 pub const JNI_VERSION_1_1: u32 = 65537;
@@ -75,23 +75,7 @@ pub const JNI_EINVAL: i32 = -6;
 pub const JNI_COMMIT: u32 = 1;
 pub const JNI_ABORT: u32 = 2;
 pub type wchar_t = ::std::os::raw::c_int;
-#[repr(C)]
-#[repr(align(16))]
-#[derive(Debug, Copy, Clone)]
-pub struct max_align_t {
-    pub __clang_max_align_nonce1: ::std::os::raw::c_longlong,
-    pub __bindgen_padding_0: u64,
-    pub __clang_max_align_nonce2: u128,
-}
-#[allow(clippy::unnecessary_operation, clippy::identity_op)]
-const _: () = {
-    ["Size of max_align_t"][::std::mem::size_of::<max_align_t>() - 32usize];
-    ["Alignment of max_align_t"][::std::mem::align_of::<max_align_t>() - 16usize];
-    ["Offset of field: max_align_t::__clang_max_align_nonce1"]
-        [::std::mem::offset_of!(max_align_t, __clang_max_align_nonce1) - 0usize];
-    ["Offset of field: max_align_t::__clang_max_align_nonce2"]
-        [::std::mem::offset_of!(max_align_t, __clang_max_align_nonce2) - 16usize];
-};
+pub type max_align_t = f64;
 unsafe extern "C" {
     #[doc = " Returns the API level of the device we're actually running on, or -1 on failure.\n The returned values correspond to the named constants in `<android/api-level.h>`,\n and is equivalent to the Java `Build.VERSION.SDK_INT` API.\n\n See also android_get_application_target_sdk_version()."]
     pub fn android_get_device_api_level() -> ::std::os::raw::c_int;
@@ -3086,7 +3070,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jobject,
     >,
     pub NewObjectA: ::std::option::Option<
@@ -3118,7 +3102,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jobject,
     >,
     pub CallObjectMethodA: ::std::option::Option<
@@ -3137,7 +3121,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jboolean,
     >,
     pub CallBooleanMethodA: ::std::option::Option<
@@ -3156,7 +3140,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jbyte,
     >,
     pub CallByteMethodA: ::std::option::Option<
@@ -3175,7 +3159,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jchar,
     >,
     pub CallCharMethodA: ::std::option::Option<
@@ -3194,7 +3178,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jshort,
     >,
     pub CallShortMethodA: ::std::option::Option<
@@ -3213,7 +3197,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jint,
     >,
     pub CallIntMethodA: ::std::option::Option<
@@ -3232,7 +3216,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jlong,
     >,
     pub CallLongMethodA: ::std::option::Option<
@@ -3251,7 +3235,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jfloat,
     >,
     pub CallFloatMethodA: ::std::option::Option<
@@ -3270,7 +3254,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jobject,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jdouble,
     >,
     pub CallDoubleMethodA: ::std::option::Option<
@@ -3285,12 +3269,7 @@ pub struct JNINativeInterface {
         unsafe extern "C" fn(arg1: *mut JNIEnv, arg2: jobject, arg3: jmethodID, ...),
     >,
     pub CallVoidMethodV: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *mut JNIEnv,
-            arg2: jobject,
-            arg3: jmethodID,
-            arg4: *mut __va_list_tag,
-        ),
+        unsafe extern "C" fn(arg1: *mut JNIEnv, arg2: jobject, arg3: jmethodID, arg4: va_list),
     >,
     pub CallVoidMethodA: ::std::option::Option<
         unsafe extern "C" fn(
@@ -3315,7 +3294,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jobject,
     >,
     pub CallNonvirtualObjectMethodA: ::std::option::Option<
@@ -3342,7 +3321,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jboolean,
     >,
     pub CallNonvirtualBooleanMethodA: ::std::option::Option<
@@ -3369,7 +3348,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jbyte,
     >,
     pub CallNonvirtualByteMethodA: ::std::option::Option<
@@ -3396,7 +3375,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jchar,
     >,
     pub CallNonvirtualCharMethodA: ::std::option::Option<
@@ -3423,7 +3402,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jshort,
     >,
     pub CallNonvirtualShortMethodA: ::std::option::Option<
@@ -3450,7 +3429,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jint,
     >,
     pub CallNonvirtualIntMethodA: ::std::option::Option<
@@ -3477,7 +3456,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jlong,
     >,
     pub CallNonvirtualLongMethodA: ::std::option::Option<
@@ -3504,7 +3483,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jfloat,
     >,
     pub CallNonvirtualFloatMethodA: ::std::option::Option<
@@ -3531,7 +3510,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ) -> jdouble,
     >,
     pub CallNonvirtualDoubleMethodA: ::std::option::Option<
@@ -3552,7 +3531,7 @@ pub struct JNINativeInterface {
             arg2: jobject,
             arg3: jclass,
             arg4: jmethodID,
-            arg5: *mut __va_list_tag,
+            arg5: va_list,
         ),
     >,
     pub CallNonvirtualVoidMethodA: ::std::option::Option<
@@ -3642,7 +3621,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jobject,
     >,
     pub CallStaticObjectMethodA: ::std::option::Option<
@@ -3661,7 +3640,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jboolean,
     >,
     pub CallStaticBooleanMethodA: ::std::option::Option<
@@ -3680,7 +3659,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jbyte,
     >,
     pub CallStaticByteMethodA: ::std::option::Option<
@@ -3699,7 +3678,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jchar,
     >,
     pub CallStaticCharMethodA: ::std::option::Option<
@@ -3718,7 +3697,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jshort,
     >,
     pub CallStaticShortMethodA: ::std::option::Option<
@@ -3737,7 +3716,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jint,
     >,
     pub CallStaticIntMethodA: ::std::option::Option<
@@ -3756,7 +3735,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jlong,
     >,
     pub CallStaticLongMethodA: ::std::option::Option<
@@ -3775,7 +3754,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jfloat,
     >,
     pub CallStaticFloatMethodA: ::std::option::Option<
@@ -3794,7 +3773,7 @@ pub struct JNINativeInterface {
             arg1: *mut JNIEnv,
             arg2: jclass,
             arg3: jmethodID,
-            arg4: *mut __va_list_tag,
+            arg4: va_list,
         ) -> jdouble,
     >,
     pub CallStaticDoubleMethodA: ::std::option::Option<
@@ -3809,12 +3788,7 @@ pub struct JNINativeInterface {
         unsafe extern "C" fn(arg1: *mut JNIEnv, arg2: jclass, arg3: jmethodID, ...),
     >,
     pub CallStaticVoidMethodV: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *mut JNIEnv,
-            arg2: jclass,
-            arg3: jmethodID,
-            arg4: *mut __va_list_tag,
-        ),
+        unsafe extern "C" fn(arg1: *mut JNIEnv, arg2: jclass, arg3: jmethodID, arg4: va_list),
     >,
     pub CallStaticVoidMethodA: ::std::option::Option<
         unsafe extern "C" fn(arg1: *mut JNIEnv, arg2: jclass, arg3: jmethodID, arg4: *const jvalue),
@@ -4879,25 +4853,4 @@ unsafe extern "C" {
     #[doc = " @name libgodot_destroy_godot_instance\n @since 4.4\n\n Destroys an existing Godot instance.\n\n @param p_godot_instance The reference to the GodotInstance object to destroy.\n"]
     pub fn libgodot_destroy_godot_instance(p_godot_instance: GDExtensionObjectPtr);
 }
-pub type __builtin_va_list = [__va_list_tag; 1usize];
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct __va_list_tag {
-    pub gp_offset: ::std::os::raw::c_uint,
-    pub fp_offset: ::std::os::raw::c_uint,
-    pub overflow_arg_area: *mut ::std::os::raw::c_void,
-    pub reg_save_area: *mut ::std::os::raw::c_void,
-}
-#[allow(clippy::unnecessary_operation, clippy::identity_op)]
-const _: () = {
-    ["Size of __va_list_tag"][::std::mem::size_of::<__va_list_tag>() - 24usize];
-    ["Alignment of __va_list_tag"][::std::mem::align_of::<__va_list_tag>() - 8usize];
-    ["Offset of field: __va_list_tag::gp_offset"]
-        [::std::mem::offset_of!(__va_list_tag, gp_offset) - 0usize];
-    ["Offset of field: __va_list_tag::fp_offset"]
-        [::std::mem::offset_of!(__va_list_tag, fp_offset) - 4usize];
-    ["Offset of field: __va_list_tag::overflow_arg_area"]
-        [::std::mem::offset_of!(__va_list_tag, overflow_arg_area) - 8usize];
-    ["Offset of field: __va_list_tag::reg_save_area"]
-        [::std::mem::offset_of!(__va_list_tag, reg_save_area) - 16usize];
-};
+pub type __builtin_va_list = *mut ::std::os::raw::c_char;

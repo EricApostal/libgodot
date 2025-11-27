@@ -36,8 +36,9 @@ Future<void> _initGodot() async {
     )).buffer.asUint8List();
     final file = XFile.fromData(assetData);
 
-    libGodot = LibGodot(resourcePack: file);
+  libGodot = LibGodot(resourcePack: file);
    await libGodot.create();
+
 
     // final layer = await LibGodotRenderer.createMetalLayer();
     // print("Got metal layer: $layer");

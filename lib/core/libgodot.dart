@@ -1,5 +1,6 @@
 import 'package:cross_file/cross_file.dart';
 import 'package:libgodot/core/native.dart';
+import 'package:libgodot/rust_bridge/api/rust_godot.dart';
 import 'package:libgodot/rust_bridge/frb_generated.dart';
 import 'package:libgodot/utils/logging.dart';
 import 'package:logging/logging.dart';
@@ -46,7 +47,7 @@ class LibGodot {
     //   interface: _interface!,
     // );
 
-    // startGodot(path: );
+    startGodot(pckPath: resourcePack.path);
 
     // return instance;
   }

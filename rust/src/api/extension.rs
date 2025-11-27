@@ -1,13 +1,17 @@
-// use godot::init::{gdextension, ExtensionLibrary, InitLevel};
+use godot::init::{gdextension, ExtensionLibrary, InitLevel};
 
-// pub struct LibGodotExtension;
-// #[gdextension]
-// pub unsafe impl ExtensionLibrary for LibGodotExtension {
-//     // fn min_level() -> InitLevel {
-//     //     InitLevel::Scene
-//     // }
+#[derive(Debug)]
+pub struct LibGodotExtension;
 
-//     // fn on_level_init(level: InitLevel) {
-//     //     println!("doing level init:");
-//     // }
-// }
+#[gdextension]
+unsafe impl ExtensionLibrary for LibGodotExtension {
+    fn min_level() -> InitLevel {
+        InitLevel::Scene
+    }
+
+    fn on_level_init(level: InitLevel) {
+        if level == InitLevel::Scene {
+            println!("doing level init: {:?}", level);
+        }
+    }
+}
