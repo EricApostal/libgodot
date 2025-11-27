@@ -28,11 +28,11 @@ class LibGodot {
     await RustLib.init();
     setupLogging();
 
-    if (!UniversalPlatform.isMacOS) {
-      throw UnsupportedError(
-        'libgodot native bindings only implemented for macOS yet',
-      );
-    }
+    // if (!UniversalPlatform.isMacOS) {
+    //   throw UnsupportedError(
+    //     'libgodot native bindings only implemented for macOS yet',
+    //   );
+    // }
 
     _isInitialized = true;
   }
