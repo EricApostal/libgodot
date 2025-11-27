@@ -14,4 +14,8 @@ pub fn greet(name: String) -> String {
 pub fn init_app() {
     // Default utilities - feel free to customize
     flutter_rust_bridge::setup_default_user_utils();
+
+    unsafe {
+    libgodot_create_godot_instance_android(p_argc, p_argv, p_init_func, std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null(), std::ptr::null());
+    }
 }
