@@ -32,9 +32,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _initGodot() async {
-    print("loading lib!");
-    final ree = DynamicLibrary.open("libgodot_android.so");
-    print(ree);
 
     await LibGodot.ensureInitialized();
     final assetData = (await rootBundle.load(
