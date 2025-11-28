@@ -16,16 +16,21 @@ fn generate_bindings() {
     if !sysroot_include.exists() {
         panic!("Could not find NDK includes at: {}", sysroot_include.display());
     }
+
+    let target = env::var("TARGET").expect("TARGET env var not set");
+
     let bindings = bindgen::Builder::default()
         .header("include/libgodot_android.h")
+        .clang_arg(format!("--target={}", target))
         // for jni
         .clang_arg(format!("-I{}", sysroot_include.display()))
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");
 
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
-        .write_to_file("src/ffi_bindings.rs")
+        .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 }
 

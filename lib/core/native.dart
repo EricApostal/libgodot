@@ -26,9 +26,9 @@ class NativeBridge {
     final File pckFile = File(pckPath);
     await pckFile.writeAsBytes(pckBytes);
 
-    await Process.run('chmod', ['+x', dylibPath]);
+    // await Process.run('chmod', ['+x', dylibPath]);
 
-    print("launching with path: $dylibPath}");
+    // print("launching with path: $dylibPath}");
 
     // final dylib = DynamicLibrary.open(dylibPath);
     // final instanceId = startGodot(libPath: dylibPath, pckPath: pckPath);

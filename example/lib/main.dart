@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -29,16 +31,19 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     _initGodot();
   }
 
-Future<void> _initGodot() async {
+  Future<void> _initGodot() async {
+    print("loading lib!");
+    final ree = DynamicLibrary.open("libgodot_android.so");
+    print(ree);
+
     await LibGodot.ensureInitialized();
     final assetData = (await rootBundle.load(
       "assets/game-44.pck",
     )).buffer.asUint8List();
     final file = XFile.fromData(assetData);
 
-  libGodot = LibGodot(resourcePack: file);
-   await libGodot.create();
-
+    libGodot = LibGodot(resourcePack: file);
+    await libGodot.create();
 
     // final layer = await LibGodotRenderer.createMetalLayer();
     // print("Got metal layer: $layer");
@@ -53,7 +58,8 @@ Future<void> _initGodot() async {
     //   instance.iteration();
     // });
     // _ticker.start();
-}
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

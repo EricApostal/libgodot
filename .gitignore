@@ -82,4 +82,5 @@ lib/godot/generated
 # For rust gen
 godot.macos.editor.dev.arm64
 
+libgodot_android.so
 rust/libs/
