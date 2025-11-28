@@ -52,7 +52,7 @@ class LibGodot {
 
 
 
-    // startGodot(pckPath: resourcePack.path);
+    startGodot(pckPath: resourcePack.path);
 
     // return instance;
   }

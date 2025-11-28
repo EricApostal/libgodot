@@ -44,7 +44,6 @@ unsafe extern "C" fn p_init_func(
 #[flutter_rust_bridge::frb(sync)]
 pub fn start_godot(pck_path: String) -> i64 {
     std::println!("[Native] Starting godot");
-    return 0;
 
     unsafe {
         if pck_path.is_empty() {
