@@ -1,4 +1,6 @@
 use std::ffi::CString;
+use log::{info, LevelFilter};
+
 use crate::ffi_bindings::*;
 use super::extension::LibGodotExtension;
 
@@ -29,25 +31,26 @@ unsafe extern "C" fn p_init_func(
     let godot_init = init as *mut ::godot::sys::GDExtensionInitialization;
 
 
-    println!("Doing extension init with SCENE initialization level");
+    info!("Doing extension init with SCENE initialization level");
     let success = ::godot::init::__gdext_load_library::<LibGodotExtension>(
         godot_get_proc_address,
         godot_library,
         godot_init
     );
 
-    println!("Got success! {success}");
+    info!("Got success! {success}");
 
     return success as u8;
 }
 
 #[flutter_rust_bridge::frb(sync)]
 pub fn start_godot(pck_path: String) -> i64 {
-    std::println!("[Native] Starting godot");
+    info!("STARTING GODOT WAHOOO!");
+    info!("Starting godot");
 
     unsafe {
         if pck_path.is_empty() {
-            println!("[Native] Error: PCK path cannot be empty");
+            println!("Error: PCK path cannot be empty RAA");
             return -1;
         }
 
@@ -56,7 +59,7 @@ pub fn start_godot(pck_path: String) -> i64 {
         let c_pck_path = match CString::new(pck_path.clone()) {
             Ok(c_str) => c_str,
             Err(e) => {
-                println!("[Native] Error: Failed to convert pck_path to C string: {}: {}", pck_path, e);
+                info!("[Native] Error: Failed to convert pck_path to C string: {}: {}", pck_path, e);
                 return -1;
             }
         };
@@ -70,7 +73,7 @@ pub fn start_godot(pck_path: String) -> i64 {
         let argc = argv.len() as i32;
         
         // Create Godot instance using the linked function
-        println!("Start create instance");
+        info!("Start create instance");
         let godot_instance_ptr = libgodot_create_godot_instance_android(
             argc,
             argv.as_ptr() as *mut *mut ::core::ffi::c_char,
@@ -84,10 +87,10 @@ pub fn start_godot(pck_path: String) -> i64 {
             std::ptr::null_mut(), // p_godot_wrapper
             std::ptr::null_mut(), // p_class_loader
         );
-        println!("End create instance");
+        info!("End create instance");
 
         if godot_instance_ptr.is_null() {
-            println!("[Native] Error: Failed to create Godot instance");
+            info!("[Native] Error: Failed to create Godot instance");
             -1
         } else {
             // Store the raw pointer for later use when Godot is fully initialized
@@ -95,7 +98,7 @@ pub fn start_godot(pck_path: String) -> i64 {
             let get_instance_id_fn = godot::sys::interface_fn!(object_get_instance_id);
             let instance_id = get_instance_id_fn(godot_instance_ptr as godot::sys::GDExtensionConstObjectPtr);
             
-            println!("[Native] Successfully created Godot instance, instance ID: {}", instance_id);
+            info!("[Native] Successfully created Godot instance, instance ID: {}", instance_id);
             
             // Return the instance ID directly
             instance_id as i64
@@ -122,5 +125,8 @@ pub fn start_godot_instance(instance_id: i64) -> String {
 pub fn init_app() {
     // Default utilities - feel free to customize
     flutter_rust_bridge::setup_default_user_utils();
+
 }
+
+flutter_logger::flutter_logger_init!();
 

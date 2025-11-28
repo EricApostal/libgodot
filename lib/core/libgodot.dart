@@ -43,7 +43,7 @@ class LibGodot {
   Future<void> create() async {
     print("creating");
 
-    NativeBridge.loadLibGodot();
+    final pack = await NativeBridge.loadPack();
     // final instance = await LibGodotProcess.create(
     //   resourcePack: resourcePack,
     //   interface: _interface!,
@@ -51,8 +51,8 @@ class LibGodot {
 
 
 
-
-    startGodot(pckPath: resourcePack.path);
+    print("running start godot!");
+    startGodot(pckPath: pack.path);
 
     // return instance;
   }

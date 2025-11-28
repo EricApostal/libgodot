@@ -7,6 +7,7 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These functions are ignored because they are not marked as `pub`: `p_init_func`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `send`
 
 String greet({required String name}) =>
     RustLib.instance.api.crateApiRustGodotGreet(name: name);
@@ -18,3 +19,36 @@ String startGodotInstance({required PlatformInt64 instanceId}) => RustLib
     .instance
     .api
     .crateApiRustGodotStartGodotInstance(instanceId: instanceId);
+
+Stream<LogEntry> setupLogStream() =>
+    RustLib.instance.api.crateApiRustGodotSetupLogStream();
+
+enum Level { error, warn, info, debug, trace }
+
+class LogEntry {
+  final PlatformInt64 timeMillis;
+  final String msg;
+  final Level logLevel;
+  final String lbl;
+
+  const LogEntry({
+    required this.timeMillis,
+    required this.msg,
+    required this.logLevel,
+    required this.lbl,
+  });
+
+  @override
+  int get hashCode =>
+      timeMillis.hashCode ^ msg.hashCode ^ logLevel.hashCode ^ lbl.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LogEntry &&
+          runtimeType == other.runtimeType &&
+          timeMillis == other.timeMillis &&
+          msg == other.msg &&
+          logLevel == other.logLevel &&
+          lbl == other.lbl;
+}

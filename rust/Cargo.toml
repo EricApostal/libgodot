@@ -7,11 +7,14 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
+android_logger = "0.15.1"
+flutter_logger = "0.6.1"
 flutter_rust_bridge = "=2.11.1"
 godot = {version = "0.4.2", features = ["api-custom-json", "__debug-log"]}
 jni = "0.21.1"
 libc = "0.2.177"
 libloading = "0.8.9"
+log = "0.4.28"
 
 [build-dependencies]
 bindgen = "0.71.0"

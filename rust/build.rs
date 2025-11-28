@@ -63,6 +63,20 @@ fn link_godot() {
 
         println!("cargo:rustc-link-search=native={}", lib_path.display());
         println!("cargo:rustc-link-lib=static=godot-cpp");
+
+        // Link against libgodot_android.so
+        let jni_libs_path = PathBuf::from(&manifest_dir)
+            .parent()
+            .unwrap()
+            .join("android/src/main/jniLibs")
+            .join(abi);
+
+        if jni_libs_path.exists() {
+            println!("cargo:rustc-link-search=native={}", jni_libs_path.display());
+            println!("cargo:rustc-link-lib=dylib=godot_android");
+        } else {
+            println!("cargo:warning=Could not find jniLibs path: {}", jni_libs_path.display());
+        }
     } else {
         // windows or something
     }

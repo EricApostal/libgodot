@@ -593,6 +593,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "flutter_logger"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a3d407fd7ed76065e3d7ddbc574af50082d4301dcbf19000badc3c4367fdbd0"
+dependencies = [
+ "log",
+ "once_cell",
+]
+
+[[package]]
 name = "flutter_rust_bridge"
 version = "2.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1843,14 +1853,17 @@ dependencies = [
 name = "rust_lib_libgodot"
 version = "0.1.0"
 dependencies = [
+ "android_logger",
  "anyhow",
  "bindgen",
  "cached-path",
+ "flutter_logger",
  "flutter_rust_bridge",
  "godot",
  "jni",
  "libc",
  "libloading",
+ "log",
  "reqwest",
  "zip 6.0.0",
 ]
