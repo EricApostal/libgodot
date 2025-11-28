@@ -1,3 +1,4 @@
+
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -32,6 +33,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _initGodot() async {
+    final process = DynamicLibrary.process();
+    final pointer = process.lookup("libgodot_create_godot_instance_android");
+    print("found pointer = $pointer");
 
     await LibGodot.ensureInitialized();
     final assetData = (await rootBundle.load(
