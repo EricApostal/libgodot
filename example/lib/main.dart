@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 
-import 'dart:io' show Platform;
-
+import 'package:flutter/services.dart';
 import 'package:libgodot/libgodot.dart';
 
 void main() {
@@ -18,55 +16,44 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final LibGodot libGodot;
+  String _platformVersion = 'Unknown';
+  final _libgodotPlugin = Libgodot();
+
   @override
   void initState() {
     super.initState();
-    _initGodot();
+    initPlatformState();
   }
 
-  Future<void> _initGodot() async {
-    LibGodot.ensureInitialized();
-    final assetData = (await rootBundle.load(
-      "assets/game.pck",
-    )).buffer.asUint8List();
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    // We also handle the message potentially returning null.
+    try {
+      platformVersion =
+          await _libgodotPlugin.getPlatformVersion() ?? 'Unknown platform version';
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
 
-    final file = XFile.fromData(assetData);
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
 
-    libGodot = LibGodot(resourcePack: file);
-
-    libGodot.start();
+    setState(() {
+      _platformVersion = platformVersion;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('LibGodot example app')),
-        body: Column(
-          children: [if (Platform.isMacOS) const Expanded(child: Text("hi"))],
-        ),
+        appBar: AppBar(title: const Text('Plugin example app')),
+        body: Center(child: Text('Running on: $_platformVersion\n')),
       ),
-    );
-  }
-}
-
-class GodotView extends StatelessWidget {
-  const GodotView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    if (!Platform.isMacOS) {
-      return const Center(
-        child: Text('GodotView is only implemented for macOS in this example'),
-      );
-    }
-
-    const viewType = 'libgodot/metal_view';
-    return AppKitView(
-      viewType: viewType,
-      layoutDirection: TextDirection.ltr,
-      creationParamsCodec: const StandardMessageCodec(),
     );
   }
 }

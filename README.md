@@ -1,15 +1,15 @@
-# LibGodot
-Embedding Godot in Flutter
+# libgodot
+
+A new Flutter plugin project.
 
 ## Getting Started
-Uses LibGodot to embed Godot 4.4 as a library in Flutter.
 
-### Progress
+This project is a starting point for a Flutter
+[plug-in package](https://flutter.dev/to/develop-plugins),
+a specialized package that includes platform-specific implementation code for
+Android and/or iOS.
 
-- 🟩 Implement [godot_dart](github.com/fuzzybinary/godot_dart) to call libgodot as a GDExtension
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
 
-- 🟩 Create bindings to start and control a godot instance on MacOS
-
-- 🟥 Window Embedding
-
-- 🟥 Support for platforms outside of MacOS (iOS, Android, Windows, Linux, and later Web)

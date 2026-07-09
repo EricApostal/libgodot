@@ -1,2 +1,8 @@
-export 'core/libgodot.dart' show LibGodot;
-export 'package:cross_file/cross_file.dart' show XFile;
+
+import 'libgodot_platform_interface.dart';
+
+class Libgodot {
+  Future<String?> getPlatformVersion() {
+    return LibgodotPlatform.instance.getPlatformVersion();
+  }
+}
