@@ -26,7 +26,13 @@ class _MyAppState extends State<MyApp> {
     projectPath: _godotProjectPath,
     initialWidth: 640,
     initialHeight: 360,
-    initFunctionAddress: GodotDartEntryPoint.nativeFunctionPointer.address,
+    // Android only: Main::setup2() (which combines this into the engine's GDExtension init) runs
+    // on GodotLib.step()'s own VkThread rather than synchronously on the thread that called
+    // GodotController.attach(), unlike every other platform -- Dart's native callback machinery
+    // can't be invoked from a thread its isolate doesn't recognize ("Cannot invoke native
+    // callback outside an isolate"), so Dart-authored GDExtension classes aren't registered on
+    // Android yet. Tracked as a known gap, not something this example works around.
+    initFunctionAddress: Platform.isAndroid ? null : GodotDartEntryPoint.nativeFunctionPointer.address,
   );
 
   /// On Linux desktop builds the `flutter_assets` directory is unpacked as plain files next to

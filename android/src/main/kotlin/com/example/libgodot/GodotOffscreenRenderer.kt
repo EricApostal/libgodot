@@ -1,18 +1,16 @@
 package com.example.libgodot
 
-import android.hardware.HardwareBuffer
 import android.view.Surface
 
 /**
  * Thin JNI wrapper around godot_offscreen_renderer.cpp, which imports the AHardwareBuffer frames
- * produced by Godot's "offscreen" Android display driver into a [Surface] via EGL.
+ * produced by Godot's "offscreen" Android display driver into a [Surface] via EGL, and drives the
+ * shared native/godot_core/godot_core.h init-func-combining/frame-callback-registration logic via
+ * the companion functions below. (Resize is called directly from Dart via FFI against this same
+ * native library instead -- see lib/godot_controller.dart.)
  *
- * Not thread-safe on its own; callers are responsible for not calling [submitFrame] concurrently
- * with [setSurface]/[clearSurface]/[destroy]. In practice [submitFrame] is called from
- * [org.godotengine.godot.GodotHost.onOffscreenFrameAvailable] (Godot's render thread) while the
- * surface lifecycle calls happen in response to Flutter's
- * [io.flutter.view.TextureRegistry.SurfaceProducer.Callback], so a real implementation may need to
- * synchronize the two; see [LibgodotPlugin] for how these are coordinated.
+ * Not thread-safe on its own; callers are responsible for not calling [setGodotInstance] or the
+ * surface lifecycle methods concurrently. See [LibgodotPlugin] for how these are coordinated.
  */
 class GodotOffscreenRenderer {
     private var nativeHandle: Long = nativeCreate()
@@ -32,9 +30,15 @@ class GodotOffscreenRenderer {
         }
     }
 
-    fun submitFrame(buffer: HardwareBuffer, width: Int, height: Int) {
+    /**
+     * Registers this renderer to receive frames from the Godot instance at [godotInstanceHandle]
+     * (see [getInstanceHandle]), replacing any previously-registered instance. Frames are
+     * delivered straight from native code (via godot_core_set_frame_callback) with no further
+     * JNI/Kotlin involvement -- see godot_offscreen_renderer.cpp's file comment.
+     */
+    fun setGodotInstance(godotInstanceHandle: Long) {
         if (isValid) {
-            nativeSubmitFrame(nativeHandle, buffer, width, height)
+            nativeSetGodotInstance(nativeHandle, godotInstanceHandle)
         }
     }
 
@@ -48,12 +52,31 @@ class GodotOffscreenRenderer {
     private external fun nativeCreate(): Long
     private external fun nativeSetSurface(handle: Long, surface: Surface)
     private external fun nativeClearSurface(handle: Long)
-    private external fun nativeSubmitFrame(handle: Long, buffer: HardwareBuffer, width: Int, height: Int)
+    private external fun nativeSetGodotInstance(handle: Long, godotInstanceHandle: Long)
     private external fun nativeDestroy(handle: Long)
 
     companion object {
         init {
             System.loadLibrary("godot_offscreen_renderer")
         }
+
+        /**
+         * Combines [delegateInitFunc] (0 for none, e.g. no package:godot_dart entry point) with
+         * this plugin's own init logic (see native/godot_core/godot_core.h's
+         * godot_core_prepare_init_func), returning the address of the resulting function. Must
+         * be called before [Godot.initEngine]/`GodotLib.setup()`, and its result passed as
+         * `initEngine`'s `initFunc` argument.
+         */
+        @JvmStatic
+        external fun prepareInitFunc(delegateInitFunc: Long): Long
+
+        /**
+         * The native handle for the Godot instance [Godot.initEngine] just started (see
+         * platform/android/libgodot_android.cpp's libgodot_android_get_godot_instance()), or 0 if
+         * [Godot.initEngine] wasn't called with a non-zero `initFunc` from [prepareInitFunc].
+         * Only meaningful after `initEngine` returns true.
+         */
+        @JvmStatic
+        external fun getInstanceHandle(): Long
     }
 }

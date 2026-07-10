@@ -19,9 +19,16 @@ ffi.DynamicLibrary _openGodotCoreLibrary() {
   if (Platform.isLinux) {
     return ffi.DynamicLibrary.open('liblibgodot_plugin.so');
   }
+  if (Platform.isAndroid) {
+    // godot_offscreen_renderer.so (see android/CMakeLists.txt) -- Android's boot sequence itself
+    // still goes through a MethodChannel (see attach()'s Platform.isAndroid branch below), but
+    // this same library exports godot_core_resize with default visibility, same as every other
+    // platform, so resize doesn't need to round-trip through Kotlin either.
+    return ffi.DynamicLibrary.open('libgodot_offscreen_renderer.so');
+  }
   throw UnsupportedError(
     'GodotController does not support ${Platform.operatingSystem} yet -- '
-    'only macos/ and linux/ currently compile native/godot_core into their plugin build.',
+    'only macos/, linux/, and android/ currently compile native/godot_core into their plugin build.',
   );
 }
 
@@ -33,7 +40,10 @@ final GodotCoreBindings _bindings = GodotCoreBindings(_openGodotCoreLibrary());
 /// rather than a `MethodChannel` -- the one exception is texture registration
 /// ([LibgodotPlatform.registerTexture]/`unregisterTexture`), which only native platform code can
 /// do (it needs a `FlutterTextureRegistrar`/`FlTextureRegistrar`, which isn't reachable from Dart
-/// FFI).
+/// FFI). Android is a further exception: it has no `godot_core_create`/`_start` equivalent at
+/// all, so its whole boot sequence goes through
+/// [LibgodotPlatform.createAndroidInstance]/`destroyAndroidInstance` instead -- see [attach]'s
+/// `Platform.isAndroid` branch.
 ///
 /// Not `final`: subclass to customize behavior (react to [error], forward input, expose extra
 /// native calls) -- the same customization point each platform's own plugin class plays
@@ -94,6 +104,33 @@ class GodotController extends ChangeNotifier {
   Future<void> attach() async {
     if (_attached) return;
     _attached = true;
+
+    if (Platform.isAndroid) {
+      // Android has no godot_core_create()/_start() equivalent -- its bootstrap goes through
+      // Kotlin's Godot/GodotLib JNI layer instead (see LibgodotPlugin.kt's class doc), so the
+      // whole boot sequence happens natively in one channel call rather than via FFI. Resize
+      // afterward still goes through FFI (see _requestResize), same as every other platform.
+      try {
+        final (:textureId, :handleAddress) = await LibgodotPlatform.instance.createAndroidInstance(
+          projectPath: projectPath,
+          width: _renderWidth,
+          height: _renderHeight,
+          initFunctionAddress: initFunctionAddress,
+        );
+        if (!_attached) {
+          // detach() ran while this was in flight; tear down what was just created.
+          await LibgodotPlatform.instance.destroyAndroidInstance(textureId);
+          return;
+        }
+        _handle = ffi.Pointer.fromAddress(handleAddress);
+        _textureId = textureId;
+        notifyListeners();
+      } catch (e) {
+        _error = e;
+        notifyListeners();
+      }
+      return;
+    }
 
     final args = <String>[
       'libgodot_example',
@@ -212,7 +249,10 @@ class GodotController extends ChangeNotifier {
     final textureId = _textureId;
     _textureId = null;
     _handle = ffi.nullptr;
-    if (textureId != null) {
+    if (textureId == null) return;
+    if (Platform.isAndroid) {
+      await LibgodotPlatform.instance.destroyAndroidInstance(textureId);
+    } else {
       await LibgodotPlatform.instance.unregisterTexture(textureId);
     }
   }

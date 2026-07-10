@@ -1,10 +1,14 @@
 #include "godot_core.h"
 
+#if defined(__ANDROID__)
+#include <dlfcn.h>
+#endif
+
 // MARK: - Trivial GDExtension init function.
 //
 // libgodot hands the host straight into the engine's GDExtension loading machinery, but this
 // plugin doesn't register any custom classes of its own, so this just satisfies the required
-// shape, unless the caller supplied its own init function (see godot_core_create).
+// shape, unless the caller supplied its own init function (see godot_core_prepare_init_func).
 
 static void trivial_initialize(void *, GDExtensionInitializationLevel) {}
 static void trivial_deinitialize(void *, GDExtensionInitializationLevel) {}
@@ -31,11 +35,11 @@ static GDExtensionBool trivial_init_func(GDExtensionInterfaceGetProcAddress,
 // one actually applies.
 //
 // These are file-static (not per-handle) because ClassDB/singletons are process-global in this
-// engine, and libgodot itself only ever allows one instance to exist at a time (see
-// libgodot_create_godot_instance's ERR_FAIL_COND_V_MSG) - there's never more than one
-// meaningfully different set of these at once. It also sidesteps the fact that a raw
-// GDExtensionInitializationFunction is a plain C function pointer with no room for a captured
-// per-instance context.
+// engine, and every bootstrap this file supports (godot_core_desktop.cpp's godot_core_create, or
+// Android's GodotLib.setup() via godot_core_prepare_init_func) only ever allows one instance to
+// exist at a time - there's never more than one meaningfully different set of these at once. It
+// also sidesteps the fact that a raw GDExtensionInitializationFunction is a plain C function
+// pointer with no room for a captured per-instance context.
 static GDExtensionInterfaceGetProcAddress g_get_proc_address = nullptr;
 static GDExtensionInitializationFunction g_delegate_init_func = nullptr;
 
@@ -70,6 +74,11 @@ static GDExtensionBool combined_init_func(GDExtensionInterfaceGetProcAddress p_g
   resolve_resize_api();
   GDExtensionInitializationFunction delegate = g_delegate_init_func != nullptr ? g_delegate_init_func : trivial_init_func;
   return delegate(p_get_proc_address, p_library, r_initialization);
+}
+
+GDExtensionInitializationFunction godot_core_prepare_init_func(GDExtensionInitializationFunction p_delegate_init_func) {
+  g_delegate_init_func = p_delegate_init_func;
+  return &combined_init_func;
 }
 
 // Calls DisplayServer.window_set_size(Vector2i(width, height), 0). Returns false (harmlessly) if
@@ -121,33 +130,6 @@ static bool godot_resize_offscreen(int width, int height) {
   return true;
 }
 
-// MARK: - Handle.
-//
-// The handle is just the GDExtensionObjectPtr libgodot itself hands back; there's no pump-thread
-// or other state to wrap it with (see godot_core_iteration's doc comment for why iteration can't
-// live on a shared background thread the way the rest of this file's logic could be hoisted out).
-
-GodotCoreHandle godot_core_create(int p_argc, char **p_argv, GDExtensionInitializationFunction p_init_func) {
-  g_delegate_init_func = p_init_func;
-  return libgodot_create_godot_instance(p_argc, p_argv, &combined_init_func);
-}
-
-bool godot_core_start(GodotCoreHandle p_handle) {
-  if (p_handle == nullptr) {
-    return false;
-  }
-  return libgodot_godot_instance_start(static_cast<GDExtensionObjectPtr>(p_handle));
-}
-
-void godot_core_destroy(GodotCoreHandle p_handle) {
-  if (p_handle == nullptr) {
-    return;
-  }
-  GDExtensionObjectPtr instance = static_cast<GDExtensionObjectPtr>(p_handle);
-  libgodot_godot_instance_set_offscreen_frame_callback(instance, nullptr, nullptr);
-  libgodot_destroy_godot_instance(instance);
-}
-
 bool godot_core_resize(GodotCoreHandle p_handle, int p_width, int p_height) {
   if (p_handle == nullptr) {
     return false;
@@ -155,16 +137,43 @@ bool godot_core_resize(GodotCoreHandle p_handle, int p_width, int p_height) {
   return godot_resize_offscreen(p_width, p_height);
 }
 
+#if defined(__ANDROID__)
+// Unlike macOS/Linux, this file isn't link-time linked against the engine's .so on Android (see
+// android/CMakeLists.txt's comment on why: doing so trips a native-lib packaging conflict with
+// the godot-lib AAR's own copy in AGP's merge step). libgodot_godot_instance_set_offscreen_frame_callback
+// is resolved via dlopen()+dlsym() instead of a plain link-time call.
+//
+// RTLD_DEFAULT doesn't work for this on Android: unlike desktop Linux, a library loaded via
+// System.loadLibrary() isn't added to the global/default symbol scope, so dlsym(RTLD_DEFAULT, ...)
+// can't see its symbols from another library's code even when both are loaded in the same
+// process. dlopen()'ing it by soname instead returns a handle to the copy Kotlin's GodotLib
+// already loaded (dlopen is refcounted or a given path/soname; it doesn't reload), and dlsym()
+// against *that specific handle* can see its symbols regardless of default-scope visibility.
+typedef void (*LibgodotSetOffscreenFrameCallbackFn)(GDExtensionObjectPtr, GodotOffscreenFrameCallback, void *);
+
+static LibgodotSetOffscreenFrameCallbackFn resolve_set_offscreen_frame_callback() {
+  static LibgodotSetOffscreenFrameCallbackFn fn = []() -> LibgodotSetOffscreenFrameCallbackFn {
+    void *lib = dlopen("libgodot_android.so", RTLD_NOW);
+    if (lib == nullptr) {
+      return nullptr;
+    }
+    return reinterpret_cast<LibgodotSetOffscreenFrameCallbackFn>(
+        dlsym(lib, "libgodot_godot_instance_set_offscreen_frame_callback"));
+  }();
+  return fn;
+}
+#endif
+
 void godot_core_set_frame_callback(GodotCoreHandle p_handle, GodotOffscreenFrameCallback p_callback, void *p_userdata) {
   if (p_handle == nullptr) {
     return;
   }
-  libgodot_godot_instance_set_offscreen_frame_callback(static_cast<GDExtensionObjectPtr>(p_handle), p_callback, p_userdata);
-}
-
-bool godot_core_iteration(GodotCoreHandle p_handle) {
-  if (p_handle == nullptr) {
-    return true;
+#if defined(__ANDROID__)
+  LibgodotSetOffscreenFrameCallbackFn fn = resolve_set_offscreen_frame_callback();
+  if (fn != nullptr) {
+    fn(static_cast<GDExtensionObjectPtr>(p_handle), p_callback, p_userdata);
   }
-  return libgodot_godot_instance_iteration(static_cast<GDExtensionObjectPtr>(p_handle));
+#else
+  libgodot_godot_instance_set_offscreen_frame_callback(static_cast<GDExtensionObjectPtr>(p_handle), p_callback, p_userdata);
+#endif
 }

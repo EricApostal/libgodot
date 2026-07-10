@@ -36,4 +36,33 @@ class MethodChannelLibgodot extends LibgodotPlatform {
   Future<void> unregisterTexture(int textureId) async {
     await methodChannel.invokeMethod<void>('unregisterTexture', textureId);
   }
+
+  @override
+  Future<({int textureId, int handleAddress})> createAndroidInstance({
+    required String projectPath,
+    required int width,
+    required int height,
+    int? initFunctionAddress,
+  }) async {
+    final result = await methodChannel.invokeMapMethod<String, Object?>('createInstance', {
+      'projectPath': projectPath,
+      'width': width,
+      'height': height,
+      'initFunctionAddress': ?initFunctionAddress,
+    });
+    final textureId = result?['textureId'] as int?;
+    final handleAddress = result?['handleAddress'] as int?;
+    if (textureId == null || handleAddress == null) {
+      throw PlatformException(
+        code: 'create_instance_failed',
+        message: 'Native side did not return a textureId/handleAddress.',
+      );
+    }
+    return (textureId: textureId, handleAddress: handleAddress);
+  }
+
+  @override
+  Future<void> destroyAndroidInstance(int textureId) async {
+    await methodChannel.invokeMethod<void>('destroyInstance', textureId);
+  }
 }

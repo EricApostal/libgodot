@@ -46,4 +46,31 @@ abstract class LibgodotPlatform extends PlatformInterface {
   Future<void> unregisterTexture(int textureId) {
     throw UnimplementedError('unregisterTexture() has not been implemented.');
   }
+
+  /// Android only: boots a Godot instance and registers its texture in one call.
+  ///
+  /// Android can't use [registerTexture]'s FFI-driven create/start (there is no
+  /// `libgodot_create_godot_instance()` for Android -- its bootstrap goes through Kotlin's
+  /// `Godot`/`GodotLib` JNI layer instead, see `LibgodotPlugin.kt`), so the whole boot sequence
+  /// happens natively here instead of via `godot_core_create`/`_start`.
+  ///
+  /// [projectPath] is validated but otherwise unused: Godot's Android build always loads the
+  /// project bundled into the APK's own assets (see [GodotController]'s doc comment).
+  ///
+  /// Returns the Flutter texture id, plus the native `GodotCoreHandle` address so
+  /// [GodotController] can still resize via FFI (`godot_core_resize`) afterward, same as the
+  /// other platforms.
+  Future<({int textureId, int handleAddress})> createAndroidInstance({
+    required String projectPath,
+    required int width,
+    required int height,
+    int? initFunctionAddress,
+  }) {
+    throw UnimplementedError('createAndroidInstance() has not been implemented.');
+  }
+
+  /// Android only: stops the Godot instance backing [textureId] and unregisters its texture.
+  Future<void> destroyAndroidInstance(int textureId) {
+    throw UnimplementedError('destroyAndroidInstance() has not been implemented.');
+  }
 }

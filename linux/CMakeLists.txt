@@ -19,6 +19,7 @@ list(APPEND PLUGIN_SOURCES
   "libgodot_plugin.cc"
   "godot_texture.cc"
   "../native/godot_core/godot_core.cpp"
+  "../native/godot_core/godot_core_desktop.cpp"
 )
 
 # libgodot shared library, built separately via:

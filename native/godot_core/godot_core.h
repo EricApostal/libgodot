@@ -2,10 +2,9 @@
 #define LIBGODOT_NATIVE_GODOT_CORE_H_
 
 // Shared, platform-agnostic core for this plugin's per-platform native code (macos/Classes,
-// linux/, and eventually windows/, ios/, android/). Every platform's offscreen embedding today
-// wraps the exact same sequence of libgodot.h calls plus two pieces of logic that have nothing
-// platform-specific about them and were, until now, hand-duplicated verbatim in each platform's
-// own source file:
+// linux/, android/). Every desktop-style platform's offscreen embedding wraps the exact same
+// sequence of libgodot.h calls plus two pieces of logic that have nothing platform-specific about
+// them and were, until now, hand-duplicated verbatim in each platform's own source file:
 //
 //   - Combining a host-supplied GDExtension init function (e.g. package:godot_dart's) with this
 //     plugin's own trivial one, and capturing GDExtensionInterfaceGetProcAddress as a side effect
@@ -14,12 +13,23 @@
 //     offscreen surface at runtime means reaching into ClassDB via the raw GDExtension ABI by
 //     hand (see godot_core_resize below).
 //
+// Implemented across two .cpp files, compiled selectively per platform:
+//   - godot_core.cpp: everything above, plus godot_core_resize/godot_core_set_frame_callback.
+//     Needs only libgodot_godot_instance_set_offscreen_frame_callback, which every platform's
+//     libgodot.h surface exports (including Android's, via platform/android/libgodot_android.cpp
+//     upstream) -- macOS, Linux, AND Android all compile this file.
+//   - godot_core_desktop.cpp: godot_core_create/_start/_destroy/_iteration, which wrap
+//     libgodot_create_godot_instance/_start/_destroy_godot_instance/_iteration. Android's
+//     bootstrap doesn't go through these at all (its engine .so doesn't even export
+//     libgodot_create_godot_instance/_destroy_godot_instance -- see that file's own header
+//     comment upstream) -- only macOS and Linux compile this file.
+//
 // This header is also fed directly to `ffigen` to generate Dart FFI bindings, so Dart can call
-// create/start/resize/destroy directly instead of round-tripping through a MethodChannel. Only
-// texture registration (associating a GodotCoreHandle with a Flutter Texture id) still needs a
-// platform channel call, since only native platform code has a FlutterTextureRegistrar/
-// FlTextureRegistrar to register against — that's the one thing genuinely left for each
-// platform's own plugin code to do.
+// create/start/resize/destroy directly instead of round-tripping through a MethodChannel (mac/
+// Linux only; Android's bootstrap stays behind a MethodChannel -- see lib/godot_controller.dart).
+// Texture registration (associating a GodotCoreHandle with a Flutter Texture id) also always
+// needs a platform channel call on every platform, since only native platform code has a
+// FlutterTextureRegistrar/FlTextureRegistrar to register against.
 
 // stdbool.h so `bool` resolves when this header is parsed as plain C (e.g. by ffigen); a no-op
 // under C++, where bool is already a keyword.
@@ -42,15 +52,28 @@ extern "C" {
 
 typedef void *GodotCoreHandle;
 
-// Creates and starts a Godot instance running the "offscreen" display driver, combining
-// `p_init_func` (may be nullptr for none, e.g. a package:godot_dart entry point) with this
-// plugin's own no-op init function so both this plugin and the caller's GDExtension classes get
-// registered. `p_argv[0]` is conventionally an argv0-style program name; the caller is expected
-// to have already included `--offscreen`/`--path`/`--resolution` etc. in `p_argv`, same as
-// libgodot_create_godot_instance itself.
+// Combines `p_delegate_init_func` (may be null, e.g. a package:godot_dart entry point) with this
+// plugin's own no-op init function, so both this plugin and the caller's GDExtension classes get
+// registered, and captures GDExtensionInterfaceGetProcAddress as a side effect so
+// godot_core_resize has something to resolve against. Returns the address of the resulting
+// combined init function, implemented in godot_core.cpp (unlike godot_core_create/_start/
+// _destroy/_iteration below, implemented in godot_core_desktop.cpp -- see that file's header
+// comment for why the split, and why this half is the one Android can also use).
+//
+// godot_core_create() below already calls this internally; the only reason to call it directly
+// is a bootstrap that doesn't go through godot_core_create() at all, i.e. Android's
+// GodotLib.setup(), which takes an init function pointer of its own (see
+// android/src/main/cpp/godot_core_android_bridge.cpp).
+GODOT_CORE_API GDExtensionInitializationFunction godot_core_prepare_init_func(GDExtensionInitializationFunction p_delegate_init_func);
+
+// Creates and starts a Godot instance running the "offscreen" display driver (see
+// godot_core_prepare_init_func for the init-func-combining this does internally). `p_argv[0]` is
+// conventionally an argv0-style program name; the caller is expected to have already included
+// `--offscreen`/`--path`/`--resolution` etc. in `p_argv`, same as libgodot_create_godot_instance
+// itself.
 //
 // Returns NULL on failure (see stderr for the engine's own log). Only one instance may exist at
-// a time (enforced by libgodot itself).
+// a time (enforced by libgodot itself). Not available on Android -- see godot_core_desktop.cpp.
 GODOT_CORE_API GodotCoreHandle godot_core_create(int p_argc, char **p_argv, GDExtensionInitializationFunction p_init_func);
 
 // Starts an instance created by godot_core_create. Returns false on failure.
@@ -78,7 +101,8 @@ GODOT_CORE_API void godot_core_set_frame_callback(GodotCoreHandle p_handle, Godo
 // every platform's behalf. Each platform plugin is expected to call this repeatedly (~60Hz) from
 // its own main-thread-affine run loop primitive (an NSTimer on macOS, a GLib timeout on Linux,
 // ...). Returns true if the engine requested exit (the caller should stop calling this and call
-// godot_core_destroy()).
+// godot_core_destroy()). Not available on Android, whose own GodotLib.step() already drives this
+// -- see godot_core_desktop.cpp.
 GODOT_CORE_API bool godot_core_iteration(GodotCoreHandle p_handle);
 
 #ifdef __cplusplus

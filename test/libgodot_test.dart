@@ -15,6 +15,17 @@ class MockLibgodotPlatform
 
   @override
   Future<void> unregisterTexture(int textureId) => Future.value();
+
+  @override
+  Future<({int textureId, int handleAddress})> createAndroidInstance({
+    required String projectPath,
+    required int width,
+    required int height,
+    int? initFunctionAddress,
+  }) => Future.value((textureId: 0, handleAddress: 0));
+
+  @override
+  Future<void> destroyAndroidInstance(int textureId) => Future.value();
 }
 
 void main() {

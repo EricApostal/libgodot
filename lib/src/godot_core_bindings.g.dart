@@ -23,6 +23,27 @@ class GodotCoreBindings {
     ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) lookup,
   ) : _lookup = lookup;
 
+  GDExtensionInitializationFunction godot_core_prepare_init_func(
+    GDExtensionInitializationFunction p_delegate_init_func,
+  ) {
+    return _godot_core_prepare_init_func(p_delegate_init_func);
+  }
+
+  late final _godot_core_prepare_init_funcPtr =
+      _lookup<
+        ffi.NativeFunction<
+          GDExtensionInitializationFunction Function(
+            GDExtensionInitializationFunction,
+          )
+        >
+      >('godot_core_prepare_init_func');
+  late final _godot_core_prepare_init_func = _godot_core_prepare_init_funcPtr
+      .asFunction<
+        GDExtensionInitializationFunction Function(
+          GDExtensionInitializationFunction,
+        )
+      >();
+
   GodotCoreHandle godot_core_create(
     int p_argc,
     ffi.Pointer<ffi.Pointer<ffi.Char>> p_argv,
