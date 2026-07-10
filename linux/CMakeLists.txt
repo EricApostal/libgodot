@@ -12,9 +12,13 @@ project(${PROJECT_NAME} LANGUAGES CXX)
 set(PLUGIN_NAME "libgodot_plugin")
 
 # Any new source files that you add to the plugin should be added here.
+#
+# ../native/godot_core is the shared C++ core (used identically by macos/libgodot.podspec) that
+# combined_init_func/resize/pump logic used to be hand-duplicated into godot_texture.cc.
 list(APPEND PLUGIN_SOURCES
   "libgodot_plugin.cc"
   "godot_texture.cc"
+  "../native/godot_core/godot_core.cpp"
 )
 
 # libgodot shared library, built separately via:
@@ -57,7 +61,8 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_include_directories(${PLUGIN_NAME} PRIVATE
-  "${GODOT_SOURCE_DIR}")
+  "${GODOT_SOURCE_DIR}"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../native/godot_core")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
@@ -115,6 +120,7 @@ add_executable(${TEST_RUNNER}
 apply_standard_settings(${TEST_RUNNER})
 target_include_directories(${TEST_RUNNER} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(${TEST_RUNNER} PRIVATE "${GODOT_SOURCE_DIR}")
+target_include_directories(${TEST_RUNNER} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../native/godot_core")
 target_link_libraries(${TEST_RUNNER} PRIVATE flutter)
 target_link_libraries(${TEST_RUNNER} PRIVATE PkgConfig::GTK)
 target_link_libraries(${TEST_RUNNER} PRIVATE PkgConfig::EPOXY)

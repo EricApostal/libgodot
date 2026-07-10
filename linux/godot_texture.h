@@ -10,38 +10,24 @@ G_BEGIN_DECLS
 #define LIBGODOT_TYPE_TEXTURE (libgodot_texture_get_type())
 G_DECLARE_FINAL_TYPE(LibgodotTexture, libgodot_texture, LIBGODOT, TEXTURE, FlTextureGL)
 
-// Boots a Godot instance running the project at `project_path` with the
-// "offscreen" display driver, and returns a texture that streams its
-// rendered frames (delivered as dma-buf handles) into a GL texture each time
+// Wraps an already-created-and-started libgodot instance (see native/godot_core/godot_core.h),
+// streaming its rendered frames (delivered as dma-buf handles) into a GL texture each time
 // Flutter asks for a new frame. Returns NULL (with `error` set) on failure.
 //
-// `init_function_address`, if non-zero, is the native address of a
-// GDExtensionInitializationFunction (e.g. a Dart-supplied
-// GodotDartEntryPoint.nativeFunctionPointer.address from package:godot_dart),
-// used in place of the built-in no-op init function so Dart-authored
-// GDExtension classes get registered with this instance.
+// `godot_core_create`/`_start`/`_resize` are called directly by Dart via the `ffigen`-generated
+// bindings in lib/src/godot_core_bindings.g.dart -- this only takes ownership of a handle Dart
+// already created, driving its iteration and bridging its frames into a GL texture.
 //
 // The caller owns the returned reference and is responsible for calling
 // `fl_texture_registrar_register_texture()` on it and, eventually,
 // `libgodot_texture_stop()` followed by `g_object_unref()`.
 LibgodotTexture *libgodot_texture_new(FlTextureRegistrar *registrar,
-                                       const char *project_path,
-                                       int width,
-                                       int height,
-                                       int64_t init_function_address,
+                                       void *handle,
                                        GError **error);
 
-// Stops the underlying Godot instance and releases its resources. Safe to
-// call more than once; safe to call before unregistering/unreffing the
-// texture.
+// Stops the underlying Godot instance (via godot_core_destroy) and releases its resources. Safe
+// to call more than once; safe to call before unregistering/unreffing the texture.
 void libgodot_texture_stop(LibgodotTexture *self);
-
-// Requests the engine resize its offscreen surface to `width`x`height` via
-// DisplayServer.window_set_size(). Not immediate: the new size takes effect
-// over the next few rendered frames as the engine reallocates its dma-buf
-// ring, so populate() may keep reporting the previous size for a moment.
-// Returns FALSE if the resize API isn't available yet.
-gboolean libgodot_texture_resize(LibgodotTexture *self, int width, int height);
 
 G_END_DECLS
 

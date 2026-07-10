@@ -3,6 +3,13 @@
 
 #include <sys/utsname.h>
 
+// createInstance/resizeInstance/destroyInstance used to live here, calling into libgodot
+// directly; that control-plane logic is now called by Dart directly via the ffigen-generated
+// bindings in lib/src/godot_core_bindings.g.dart (see lib/godot_controller.dart), since none of
+// it actually needs native platform APIs. All that's left here is registerTexture/
+// unregisterTexture, which genuinely do need native code: only this plugin has a
+// FlutterTextureRegistrar to register a GodotTexture against.
+
 @interface LibgodotPlugin ()
 
 @property(nonatomic, strong) id<FlutterPluginRegistrar> registrar;
@@ -34,50 +41,31 @@
     struct utsname uname_data = {};
     uname(&uname_data);
     result([NSString stringWithFormat:@"macOS %s", uname_data.release]);
-  } else if ([call.method isEqualToString:@"createInstance"]) {
-    [self handleCreateInstance:call result:result];
-  } else if ([call.method isEqualToString:@"destroyInstance"]) {
-    [self handleDestroyInstance:call result:result];
-  } else if ([call.method isEqualToString:@"resizeInstance"]) {
-    [self handleResizeInstance:call result:result];
+  } else if ([call.method isEqualToString:@"registerTexture"]) {
+    [self handleRegisterTexture:call result:result];
+  } else if ([call.method isEqualToString:@"unregisterTexture"]) {
+    [self handleUnregisterTexture:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
 }
 
-- (void)handleCreateInstance:(FlutterMethodCall *)call result:(FlutterResult)result {
-  NSDictionary *args = call.arguments;
-  NSString *projectPath = args[@"projectPath"];
-  if (![projectPath isKindOfClass:[NSString class]]) {
+- (void)handleRegisterTexture:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSNumber *handleValue = call.arguments;
+  if (![handleValue isKindOfClass:[NSNumber class]]) {
     result([FlutterError errorWithCode:@"invalid_args"
-                                message:@"createInstance requires a string \"projectPath\" argument."
+                                message:@"registerTexture requires the int handle address as its argument."
                                 details:nil]);
     return;
   }
 
-  int width = 480;
-  if ([args[@"width"] isKindOfClass:[NSNumber class]]) {
-    width = [args[@"width"] intValue];
-  }
-  int height = 270;
-  if ([args[@"height"] isKindOfClass:[NSNumber class]]) {
-    height = [args[@"height"] intValue];
-  }
-
-  int64_t initFunctionAddress = 0;
-  if ([args[@"initFunctionAddress"] isKindOfClass:[NSNumber class]]) {
-    initFunctionAddress = [args[@"initFunctionAddress"] longLongValue];
-  }
-
+  void *handle = (void *)handleValue.longLongValue;
   NSError *error = nil;
   GodotTexture *texture = [[GodotTexture alloc] initWithRegistrar:self.registrar
-                                                       projectPath:projectPath
-                                                             width:width
-                                                            height:height
-                                               initFunctionAddress:initFunctionAddress
+                                                            handle:handle
                                                              error:&error];
   if (texture == nil) {
-    result([FlutterError errorWithCode:@"create_instance_failed"
+    result([FlutterError errorWithCode:@"register_texture_failed"
                                 message:error.localizedDescription ?: @"unknown error"
                                 details:nil]);
     return;
@@ -87,49 +75,11 @@
   result(@(texture.textureId));
 }
 
-- (void)handleResizeInstance:(FlutterMethodCall *)call result:(FlutterResult)result {
-  NSDictionary *args = call.arguments;
-  NSNumber *textureIdValue = args[@"textureId"];
+- (void)handleUnregisterTexture:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSNumber *textureIdValue = call.arguments;
   if (![textureIdValue isKindOfClass:[NSNumber class]]) {
     result([FlutterError errorWithCode:@"invalid_args"
-                                message:@"resizeInstance requires an int \"textureId\" argument."
-                                details:nil]);
-    return;
-  }
-  int width = 0;
-  int height = 0;
-  if ([args[@"width"] isKindOfClass:[NSNumber class]]) {
-    width = [args[@"width"] intValue];
-  }
-  if ([args[@"height"] isKindOfClass:[NSNumber class]]) {
-    height = [args[@"height"] intValue];
-  }
-  if (width <= 0 || height <= 0) {
-    result([FlutterError errorWithCode:@"invalid_args"
-                                message:@"resizeInstance requires positive \"width\"/\"height\" arguments."
-                                details:nil]);
-    return;
-  }
-
-  int64_t textureId = textureIdValue.longLongValue;
-  GodotTexture *texture = self.textures[@(textureId)];
-  if (texture == nil) {
-    result([FlutterError errorWithCode:@"invalid_texture_id"
-                                message:@"No instance is registered under that texture id."
-                                details:nil]);
-    return;
-  }
-
-  BOOL resized = [texture resizeToWidth:width height:height];
-  result(@(resized));
-}
-
-- (void)handleDestroyInstance:(FlutterMethodCall *)call result:(FlutterResult)result {
-  NSDictionary *args = call.arguments;
-  NSNumber *textureIdValue = args[@"textureId"];
-  if (![textureIdValue isKindOfClass:[NSNumber class]]) {
-    result([FlutterError errorWithCode:@"invalid_args"
-                                message:@"destroyInstance requires an int \"textureId\" argument."
+                                message:@"unregisterTexture requires the int textureId as its argument."
                                 details:nil]);
     return;
   }

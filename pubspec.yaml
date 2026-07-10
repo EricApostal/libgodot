@@ -8,6 +8,7 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
+  ffi: ^2.2.0
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
@@ -16,6 +17,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  ffigen: ^20.1.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -41,8 +43,10 @@ flutter:
         pluginClass: LibgodotPlugin
       linux:
         pluginClass: LibgodotPlugin
+        ffiPlugin: true
       macos:
         pluginClass: LibgodotPlugin
+        ffiPlugin: true
       windows:
         pluginClass: LibgodotPluginCApi
 

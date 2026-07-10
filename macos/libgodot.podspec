@@ -2,6 +2,7 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
 # Run `pod lib lint libgodot.podspec` to validate before publishing.
 #
+require 'fileutils'
 
 Pod::Spec.new do |s|
   s.name             = 'libgodot'
@@ -17,6 +18,19 @@ offscreen into an IOSurface and bridging it into a Flutter Texture.
 
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
+  # godot_core.h pulls in third_party/godot engine headers that only resolve via this pod's own
+  # HEADER_SEARCH_PATHS below; if it were a public header (CocoaPods' default for use_frameworks!
+  # builds), Xcode's module dependency scanner tries to build it standalone as part of the
+  # framework's umbrella header and can't find those engine headers in that context.
+  s.private_header_files = 'Classes/godot_core.h'
+
+  # ../native/godot_core is the shared C++ core (used identically by linux/CMakeLists.txt) that
+  # combined_init_func/resize/pump logic used to be hand-duplicated into Classes/GodotTexture.mm.
+  # CocoaPods' source_files can't reach outside the pod's own root (`.` above), so it's copied
+  # into Classes/ here instead of glob'd in directly -- re-run `pod install` after editing it.
+  Dir.glob(File.join(File.expand_path('../native/godot_core', __dir__), '*.{h,cpp}')).each do |shared_src|
+    FileUtils.cp(shared_src, File.join(__dir__, 'Classes', File.basename(shared_src)), preserve: false)
+  end
 
   s.dependency 'FlutterMacOS'
   s.frameworks = 'CoreVideo', 'IOSurface'

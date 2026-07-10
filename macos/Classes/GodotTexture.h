@@ -2,42 +2,30 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Wraps a single libgodot instance rendering offscreen, bridging its IOSurface
-/// frames into a Flutter `Texture` via `CVPixelBufferCreateWithIOSurface`.
+/// Wraps a single, already-created-and-started libgodot instance (see native/godot_core/
+/// godot_core.h), bridging its IOSurface frames into a Flutter `Texture` via
+/// `CVPixelBufferCreateWithIOSurface`.
+///
+/// `godot_core_create`/`_start`/`_resize` are called directly by Dart via the `ffigen`-generated
+/// bindings in lib/src/godot_core_bindings.g.dart -- this class only takes ownership of a handle
+/// Dart already created, driving its iteration and bridging its frames into a Flutter Texture.
+/// Destruction still goes through this class (see `stop`) rather than Dart calling
+/// `godot_core_destroy` directly, so the iteration timer is guaranteed to be stopped first.
 @interface GodotTexture : NSObject <FlutterTexture>
 
-/// Creates and starts a Godot instance rendering at `width`x`height`, and
-/// registers it with `registrar`'s texture registry. Returns nil on failure,
-/// with `error` populated.
-///
-/// `initFunctionAddress`, if non-zero, is the native address of a
-/// `GDExtensionInitializationFunction` (e.g. a Dart-supplied
-/// `GodotDartEntryPoint.nativeFunctionPointer.address` from
-/// `package:godot_dart`), used in place of the built-in no-op init function
-/// so Dart-authored GDExtension classes get registered with this instance.
+/// Wraps `handle` (a `GodotCoreHandle` from `godot_core_create`, already started) and registers
+/// it with `registrar`'s texture registry. Returns nil on failure, with `error` populated.
 - (nullable instancetype)initWithRegistrar:(id<FlutterPluginRegistrar>)registrar
-                               projectPath:(NSString *)projectPath
-                                     width:(int)width
-                                    height:(int)height
-                       initFunctionAddress:(int64_t)initFunctionAddress
-                                     error:(NSError **)error;
+                                     handle:(void *)handle
+                                      error:(NSError **)error;
 
 /// The Flutter texture id this instance was registered under.
 @property(nonatomic, readonly) int64_t textureId;
 
-/// Stops iteration and destroys the underlying Godot instance. Safe to call
-/// more than once. Does not unregister the texture; the caller (plugin) owns
-/// that via its own registrar reference.
+/// Stops iteration and destroys the underlying Godot instance (via `godot_core_destroy`). Safe
+/// to call more than once. Does not unregister the texture; the caller (plugin) owns that via
+/// its own registrar reference.
 - (void)stop;
-
-/// Requests the engine resize its offscreen surface to `width`x`height` via
-/// `DisplayServer.window_set_size()`. The resize is not immediate: the new
-/// size takes effect over the next few rendered frames as the engine
-/// reallocates its surface ring, so `copyPixelBuffer` may keep returning the
-/// previous size for a moment after this returns. Returns NO if the resize
-/// API isn't available yet (e.g. called before the instance finished
-/// starting).
-- (BOOL)resizeToWidth:(int)width height:(int)height;
 
 @end
 

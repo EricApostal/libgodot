@@ -14,8 +14,20 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final _controller = GodotController(
+    projectPath: _godotProjectPath,
+    initialWidth: 640,
+    initialHeight: 360,
+    initFunctionAddress: GodotDartEntryPoint.nativeFunctionPointer.address,
+  );
 
   /// On Linux desktop builds the `flutter_assets` directory is unpacked as plain files next to
   /// the executable, so the bundled Godot project can be pointed at directly. On macOS it instead
@@ -33,18 +45,17 @@ class MyApp extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('libgodot: all-Dart scene')),
-        body: Center(
-          child: GodotView(
-            projectPath: _godotProjectPath,
-            width: 640,
-            height: 360,
-            initFunctionAddress: GodotDartEntryPoint.nativeFunctionPointer.address,
-          ),
-        ),
+        body: Center(child: GodotView(controller: _controller)),
       ),
     );
   }

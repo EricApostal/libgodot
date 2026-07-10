@@ -18,21 +18,14 @@ class MethodChannelLibgodot extends LibgodotPlatform {
   }
 
   @override
-  Future<int> createInstance({
-    required String projectPath,
-    int width = 480,
-    int height = 270,
-    int? initFunctionAddress,
-  }) async {
-    final textureId = await methodChannel.invokeMethod<int>('createInstance', {
-      'projectPath': projectPath,
-      'width': width,
-      'height': height,
-      'initFunctionAddress': ?initFunctionAddress,
-    });
+  Future<int> registerTexture(int handleAddress) async {
+    final textureId = await methodChannel.invokeMethod<int>(
+      'registerTexture',
+      handleAddress,
+    );
     if (textureId == null) {
       throw PlatformException(
-        code: 'create_instance_failed',
+        code: 'register_texture_failed',
         message: 'Native side did not return a texture id.',
       );
     }
@@ -40,19 +33,7 @@ class MethodChannelLibgodot extends LibgodotPlatform {
   }
 
   @override
-  Future<void> destroyInstance(int textureId) async {
-    await methodChannel.invokeMethod<void>('destroyInstance', {
-      'textureId': textureId,
-    });
-  }
-
-  @override
-  Future<bool> resizeInstance(int textureId, int width, int height) async {
-    final resized = await methodChannel.invokeMethod<bool>('resizeInstance', {
-      'textureId': textureId,
-      'width': width,
-      'height': height,
-    });
-    return resized ?? false;
+  Future<void> unregisterTexture(int textureId) async {
+    await methodChannel.invokeMethod<void>('unregisterTexture', textureId);
   }
 }

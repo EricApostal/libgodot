@@ -9,14 +9,11 @@
 // Handles the getPlatformVersion method call.
 FlMethodResponse *get_platform_version();
 
-// Handles the createInstance method call: boots a Godot instance for the
-// requested project and registers a texture for its rendered frames.
-FlMethodResponse *handle_create_instance(LibgodotPlugin *self, FlMethodCall *method_call);
+// Handles the registerTexture method call: wraps an already-created-and-started libgodot
+// instance (its handle, passed as an int by Dart -- see native/godot_core/godot_core.h and
+// lib/godot_controller.dart) in a texture and registers it with Flutter.
+FlMethodResponse *handle_register_texture(LibgodotPlugin *self, FlMethodCall *method_call);
 
-// Handles the destroyInstance method call: stops the Godot instance backing
-// a previously created texture and unregisters it.
-FlMethodResponse *handle_destroy_instance(LibgodotPlugin *self, FlMethodCall *method_call);
-
-// Handles the resizeInstance method call: asks the engine to resize its
-// offscreen surface for a previously created texture.
-FlMethodResponse *handle_resize_instance(LibgodotPlugin *self, FlMethodCall *method_call);
+// Handles the unregisterTexture method call: stops the Godot instance backing a previously
+// registered texture (via godot_core_destroy) and unregisters it.
+FlMethodResponse *handle_unregister_texture(LibgodotPlugin *self, FlMethodCall *method_call);

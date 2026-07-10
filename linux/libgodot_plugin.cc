@@ -10,6 +10,13 @@
 #include "godot_texture.h"
 #include "libgodot_plugin_private.h"
 
+// createInstance/resizeInstance/destroyInstance used to live here, calling into libgodot
+// directly; that control-plane logic is now called by Dart directly via the ffigen-generated
+// bindings in lib/src/godot_core_bindings.g.dart (see lib/godot_controller.dart), since none of
+// it actually needs native platform APIs. All that's left here is registerTexture/
+// unregisterTexture, which genuinely do need native code: only this plugin has an
+// FlTextureRegistrar to register a LibgodotTexture against.
+
 #define LIBGODOT_PLUGIN(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), libgodot_plugin_get_type(), \
                               LibgodotPlugin))
@@ -34,12 +41,10 @@ static void libgodot_plugin_handle_method_call(
 
   if (strcmp(method, "getPlatformVersion") == 0) {
     response = get_platform_version();
-  } else if (strcmp(method, "createInstance") == 0) {
-    response = handle_create_instance(self, method_call);
-  } else if (strcmp(method, "destroyInstance") == 0) {
-    response = handle_destroy_instance(self, method_call);
-  } else if (strcmp(method, "resizeInstance") == 0) {
-    response = handle_resize_instance(self, method_call);
+  } else if (strcmp(method, "registerTexture") == 0) {
+    response = handle_register_texture(self, method_call);
+  } else if (strcmp(method, "unregisterTexture") == 0) {
+    response = handle_unregister_texture(self, method_call);
   } else {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
@@ -55,42 +60,20 @@ FlMethodResponse* get_platform_version() {
   return FL_METHOD_RESPONSE(fl_method_success_response_new(result));
 }
 
-FlMethodResponse* handle_create_instance(LibgodotPlugin* self, FlMethodCall* method_call) {
+FlMethodResponse* handle_register_texture(LibgodotPlugin* self, FlMethodCall* method_call) {
   FlValue* args = fl_method_call_get_args(method_call);
-  FlValue* project_path_value = args != nullptr
-      ? fl_value_lookup_string(args, "projectPath")
-      : nullptr;
-
-  if (project_path_value == nullptr || fl_value_get_type(project_path_value) != FL_VALUE_TYPE_STRING) {
+  if (args == nullptr || fl_value_get_type(args) != FL_VALUE_TYPE_INT) {
     return FL_METHOD_RESPONSE(fl_method_error_response_new(
-        "invalid_args", "createInstance requires a string \"projectPath\" argument.", nullptr));
+        "invalid_args", "registerTexture requires the int handle address as its argument.", nullptr));
   }
 
-  const gchar* project_path = fl_value_get_string(project_path_value);
-
-  int width = 480;
-  FlValue* width_value = fl_value_lookup_string(args, "width");
-  if (width_value != nullptr && fl_value_get_type(width_value) == FL_VALUE_TYPE_INT) {
-    width = (int)fl_value_get_int(width_value);
-  }
-
-  int height = 270;
-  FlValue* height_value = fl_value_lookup_string(args, "height");
-  if (height_value != nullptr && fl_value_get_type(height_value) == FL_VALUE_TYPE_INT) {
-    height = (int)fl_value_get_int(height_value);
-  }
-
-  int64_t init_function_address = 0;
-  FlValue* init_function_address_value = fl_value_lookup_string(args, "initFunctionAddress");
-  if (init_function_address_value != nullptr && fl_value_get_type(init_function_address_value) == FL_VALUE_TYPE_INT) {
-    init_function_address = fl_value_get_int(init_function_address_value);
-  }
+  void* handle = (void*)(intptr_t)fl_value_get_int(args);
 
   GError* error = nullptr;
-  LibgodotTexture* texture = libgodot_texture_new(self->texture_registrar, project_path, width, height, init_function_address, &error);
+  LibgodotTexture* texture = libgodot_texture_new(self->texture_registrar, handle, &error);
   if (texture == nullptr) {
     FlMethodResponse* response = FL_METHOD_RESPONSE(fl_method_error_response_new(
-        "create_instance_failed", error != nullptr ? error->message : "unknown error", nullptr));
+        "register_texture_failed", error != nullptr ? error->message : "unknown error", nullptr));
     g_clear_error(&error);
     return response;
   }
@@ -109,58 +92,14 @@ FlMethodResponse* handle_create_instance(LibgodotPlugin* self, FlMethodCall* met
   return FL_METHOD_RESPONSE(fl_method_success_response_new(result));
 }
 
-FlMethodResponse* handle_resize_instance(LibgodotPlugin* self, FlMethodCall* method_call) {
+FlMethodResponse* handle_unregister_texture(LibgodotPlugin* self, FlMethodCall* method_call) {
   FlValue* args = fl_method_call_get_args(method_call);
-  FlValue* texture_id_value = args != nullptr
-      ? fl_value_lookup_string(args, "textureId")
-      : nullptr;
-
-  if (texture_id_value == nullptr || fl_value_get_type(texture_id_value) != FL_VALUE_TYPE_INT) {
+  if (args == nullptr || fl_value_get_type(args) != FL_VALUE_TYPE_INT) {
     return FL_METHOD_RESPONSE(fl_method_error_response_new(
-        "invalid_args", "resizeInstance requires an int \"textureId\" argument.", nullptr));
+        "invalid_args", "unregisterTexture requires the int textureId as its argument.", nullptr));
   }
 
-  int width = 0;
-  FlValue* width_value = fl_value_lookup_string(args, "width");
-  if (width_value != nullptr && fl_value_get_type(width_value) == FL_VALUE_TYPE_INT) {
-    width = (int)fl_value_get_int(width_value);
-  }
-
-  int height = 0;
-  FlValue* height_value = fl_value_lookup_string(args, "height");
-  if (height_value != nullptr && fl_value_get_type(height_value) == FL_VALUE_TYPE_INT) {
-    height = (int)fl_value_get_int(height_value);
-  }
-
-  if (width <= 0 || height <= 0) {
-    return FL_METHOD_RESPONSE(fl_method_error_response_new(
-        "invalid_args", "resizeInstance requires positive \"width\"/\"height\" arguments.", nullptr));
-  }
-
-  int64_t texture_id = fl_value_get_int(texture_id_value);
-  LibgodotTexture* texture = LIBGODOT_TEXTURE(g_hash_table_lookup(self->textures, (gpointer)(intptr_t)texture_id));
-  if (texture == nullptr) {
-    return FL_METHOD_RESPONSE(fl_method_error_response_new(
-        "invalid_texture_id", "No instance is registered under that texture id.", nullptr));
-  }
-
-  gboolean resized = libgodot_texture_resize(texture, width, height);
-  g_autoptr(FlValue) result = fl_value_new_bool(resized);
-  return FL_METHOD_RESPONSE(fl_method_success_response_new(result));
-}
-
-FlMethodResponse* handle_destroy_instance(LibgodotPlugin* self, FlMethodCall* method_call) {
-  FlValue* args = fl_method_call_get_args(method_call);
-  FlValue* texture_id_value = args != nullptr
-      ? fl_value_lookup_string(args, "textureId")
-      : nullptr;
-
-  if (texture_id_value == nullptr || fl_value_get_type(texture_id_value) != FL_VALUE_TYPE_INT) {
-    return FL_METHOD_RESPONSE(fl_method_error_response_new(
-        "invalid_args", "destroyInstance requires an int \"textureId\" argument.", nullptr));
-  }
-
-  int64_t texture_id = fl_value_get_int(texture_id_value);
+  int64_t texture_id = fl_value_get_int(args);
   gpointer key = (gpointer)(intptr_t)texture_id;
   LibgodotTexture* texture = LIBGODOT_TEXTURE(g_hash_table_lookup(self->textures, key));
   if (texture != nullptr) {

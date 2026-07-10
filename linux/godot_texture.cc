@@ -8,10 +8,18 @@
 #include <unistd.h>
 
 #include <cerrno>
-#include <string>
 #include <vector>
 
-#include "core/extension/libgodot.h"
+#include "godot_core.h"
+
+// combined_init_func/resize-via-ClassDB-reflection used to be duplicated verbatim here and in
+// macos/Classes/GodotTexture.mm; they now live once in native/godot_core/godot_core.cpp (shared
+// by both platforms), reached only through the plain C API in godot_core.h, and are called
+// directly by Dart via ffigen (see lib/godot_controller.dart) rather than through this plugin at
+// all. Iteration still has to be pumped from this file's own GLib timeout (see
+// godot_core_iteration's doc comment for why). What's left here is what's genuinely
+// Linux-specific: bridging the dma-buf frames the engine delivers into a GL texture via
+// EGL_EXT_image_dma_buf_import.
 
 struct _LibgodotTexture {
   FlTextureGL parent_instance;
@@ -19,7 +27,7 @@ struct _LibgodotTexture {
   // Borrowed; owned by the plugin registrar for the lifetime of the engine.
   FlTextureRegistrar *registrar;
 
-  GDExtensionObjectPtr godot_instance;
+  GodotCoreHandle core;
   guint iteration_source_id;
 
   // Frames arrive on whatever thread the engine's renderer happens to use
@@ -43,126 +51,6 @@ struct _LibgodotTexture {
 };
 
 G_DEFINE_TYPE(LibgodotTexture, libgodot_texture, fl_texture_gl_get_type())
-
-// MARK: - Trivial GDExtension init function.
-//
-// libgodot hands the host straight into the engine's GDExtension loading
-// machinery, but this plugin doesn't register any custom classes, so this
-// just satisfies the required shape.
-
-static void trivial_initialize(void *, GDExtensionInitializationLevel) {}
-static void trivial_deinitialize(void *, GDExtensionInitializationLevel) {}
-
-static GDExtensionBool trivial_init_func(GDExtensionInterfaceGetProcAddress,
-                                          GDExtensionClassLibraryPtr,
-                                          GDExtensionInitialization *r_initialization) {
-  r_initialization->initialize = trivial_initialize;
-  r_initialization->deinitialize = trivial_deinitialize;
-  r_initialization->userdata = nullptr;
-  r_initialization->minimum_initialization_level = GDEXTENSION_INITIALIZATION_CORE;
-  return true;
-}
-
-// MARK: - Runtime resize support.
-//
-// DisplayServer.window_set_size() is a normal bound ClassDB method, and the
-// offscreen display driver's override of it genuinely reallocates the
-// underlying dma-buf ring at the new size (see the fork's
-// display_server_linuxbsd_offscreen.cpp) - there's no dedicated libgodot.h C
-// API for this, so it's called directly through the GDExtension interface
-// instead. This has to work regardless of whether the Dart side supplied its
-// own init function (godot_dart's registration path) or this plugin's own
-// trivial_init_func is used, so a combined_init_func always runs first to
-// capture GetProcAddress before delegating to whichever one actually applies.
-//
-// These are file-static (not per-LibgodotTexture) because ClassDB/singletons
-// are process-global in this engine; only one embedded instance's worth of
-// these is meaningfully different at a time in this plugin's current usage.
-static GDExtensionInterfaceGetProcAddress g_get_proc_address = nullptr;
-static GDExtensionInitializationFunction g_delegate_init_func = nullptr;
-
-typedef GDExtensionObjectPtr (*GlobalGetSingletonFn)(GDExtensionConstStringNamePtr);
-typedef GDExtensionMethodBindPtr (*ClassdbGetMethodBindFn)(GDExtensionConstStringNamePtr, GDExtensionConstStringNamePtr, GDExtensionInt);
-typedef void (*ObjectMethodBindPtrcallFn)(GDExtensionMethodBindPtr, GDExtensionObjectPtr, const GDExtensionConstTypePtr *, GDExtensionTypePtr);
-typedef void (*StringNameNewWithUtf8CharsFn)(GDExtensionUninitializedStringNamePtr, const char *);
-typedef GDExtensionPtrDestructor (*VariantGetPtrDestructorFn)(GDExtensionVariantType);
-
-static GlobalGetSingletonFn g_global_get_singleton = nullptr;
-static ClassdbGetMethodBindFn g_classdb_get_method_bind = nullptr;
-static ObjectMethodBindPtrcallFn g_object_method_bind_ptrcall = nullptr;
-static StringNameNewWithUtf8CharsFn g_string_name_new_with_utf8_chars = nullptr;
-static VariantGetPtrDestructorFn g_variant_get_ptr_destructor = nullptr;
-static GDExtensionMethodBindPtr g_window_set_size_bind = nullptr;
-
-static void resolve_resize_api() {
-  if (g_global_get_singleton != nullptr || g_get_proc_address == nullptr) {
-    return;
-  }
-  g_global_get_singleton = (GlobalGetSingletonFn)(void *)g_get_proc_address("global_get_singleton");
-  g_classdb_get_method_bind = (ClassdbGetMethodBindFn)(void *)g_get_proc_address("classdb_get_method_bind");
-  g_object_method_bind_ptrcall = (ObjectMethodBindPtrcallFn)(void *)g_get_proc_address("object_method_bind_ptrcall");
-  g_string_name_new_with_utf8_chars = (StringNameNewWithUtf8CharsFn)(void *)g_get_proc_address("string_name_new_with_utf8_chars");
-  g_variant_get_ptr_destructor = (VariantGetPtrDestructorFn)(void *)g_get_proc_address("variant_get_ptr_destructor");
-}
-
-static GDExtensionBool combined_init_func(GDExtensionInterfaceGetProcAddress p_get_proc_address,
-                                           GDExtensionClassLibraryPtr p_library,
-                                           GDExtensionInitialization *r_initialization) {
-  g_get_proc_address = p_get_proc_address;
-  resolve_resize_api();
-  GDExtensionInitializationFunction delegate = g_delegate_init_func != nullptr ? g_delegate_init_func : trivial_init_func;
-  return delegate(p_get_proc_address, p_library, r_initialization);
-}
-
-// Calls DisplayServer.window_set_size(Vector2i(width, height), 0). Returns
-// false (harmlessly) if the resize API couldn't be resolved yet, e.g. called
-// before any instance has started.
-static bool godot_resize_offscreen(int width, int height) {
-  resolve_resize_api();
-  if (g_global_get_singleton == nullptr || g_classdb_get_method_bind == nullptr ||
-      g_object_method_bind_ptrcall == nullptr || g_string_name_new_with_utf8_chars == nullptr) {
-    return false;
-  }
-
-  GDExtensionPtrDestructor string_name_destructor =
-      g_variant_get_ptr_destructor != nullptr ? g_variant_get_ptr_destructor(GDEXTENSION_VARIANT_TYPE_STRING_NAME) : nullptr;
-
-  uint8_t display_server_name[8];
-  g_string_name_new_with_utf8_chars(display_server_name, "DisplayServer");
-  GDExtensionObjectPtr display_server = g_global_get_singleton(display_server_name);
-  if (string_name_destructor != nullptr) {
-    string_name_destructor(display_server_name);
-  }
-  if (display_server == nullptr) {
-    return false;
-  }
-
-  if (g_window_set_size_bind == nullptr) {
-    uint8_t class_name[8];
-    uint8_t method_name[8];
-    g_string_name_new_with_utf8_chars(class_name, "DisplayServer");
-    g_string_name_new_with_utf8_chars(method_name, "window_set_size");
-    // Hash from extension_api.json for DisplayServer.window_set_size(Vector2i, int); re-verify
-    // against a fresh dump if this ever starts returning null (engine ABI drift).
-    g_window_set_size_bind = g_classdb_get_method_bind(class_name, method_name, 2019273902);
-    if (string_name_destructor != nullptr) {
-      string_name_destructor(class_name);
-      string_name_destructor(method_name);
-    }
-  }
-  if (g_window_set_size_bind == nullptr) {
-    return false;
-  }
-
-  struct {
-    int32_t x;
-    int32_t y;
-  } size_arg = {width, height};
-  int64_t window_id_arg = 0;
-  const void *args[2] = {&size_arg, &window_id_arg};
-  g_object_method_bind_ptrcall(g_window_set_size_bind, display_server, args, nullptr);
-  return true;
-}
 
 // MARK: - Frame delivery
 
@@ -204,11 +92,11 @@ static void on_offscreen_frame(void *p_userdata, const GodotOffscreenFrame *p_fr
 
 static gboolean iterate_cb(gpointer user_data) {
   LibgodotTexture *self = LIBGODOT_TEXTURE(user_data);
-  if (self->godot_instance == nullptr) {
+  if (self->core == nullptr) {
     self->iteration_source_id = 0;
     return G_SOURCE_REMOVE;
   }
-  if (libgodot_godot_instance_iteration(self->godot_instance)) {
+  if (godot_core_iteration(self->core)) {
     // Engine requested exit.
     self->iteration_source_id = 0;
     return G_SOURCE_REMOVE;
@@ -329,58 +217,22 @@ static void libgodot_texture_init(LibgodotTexture *self) {
 // MARK: - Public API
 
 LibgodotTexture *libgodot_texture_new(FlTextureRegistrar *registrar,
-                                       const char *project_path,
-                                       int width,
-                                       int height,
-                                       int64_t init_function_address,
+                                       void *handle,
                                        GError **error) {
+  if (handle == nullptr) {
+    g_set_error(error, g_quark_from_static_string("libgodot"), 1, "libgodot_texture_new() requires a non-null handle.");
+    return nullptr;
+  }
+
   LibgodotTexture *self = LIBGODOT_TEXTURE(g_object_new(libgodot_texture_get_type(), nullptr));
   self->registrar = registrar;
+  self->core = handle;
 
-  std::vector<std::string> args_storage = {
-    "libgodot_example",
-    "--path", project_path,
-    "--offscreen",
-    "--resolution", std::to_string(width) + "x" + std::to_string(height),
-    "--rendering-driver", "vulkan",
-  };
-  std::vector<char *> argv;
-  argv.reserve(args_storage.size());
-  for (std::string &arg : args_storage) {
-    argv.push_back(arg.data());
-  }
-
-  g_delegate_init_func = init_function_address != 0
-      ? reinterpret_cast<GDExtensionInitializationFunction>(init_function_address)
-      : nullptr;
-
-  self->godot_instance = libgodot_create_godot_instance((int)argv.size(), argv.data(), &combined_init_func);
-  if (self->godot_instance == nullptr) {
-    g_set_error(error, g_quark_from_static_string("libgodot"), 1, "libgodot_create_godot_instance() failed; see stderr for engine log.");
-    g_object_unref(self);
-    return nullptr;
-  }
-
-  if (!libgodot_godot_instance_start(self->godot_instance)) {
-    g_set_error(error, g_quark_from_static_string("libgodot"), 2, "Godot instance failed to start; see stderr for engine log.");
-    libgodot_destroy_godot_instance(self->godot_instance);
-    self->godot_instance = nullptr;
-    g_object_unref(self);
-    return nullptr;
-  }
-
-  libgodot_godot_instance_set_offscreen_frame_callback(self->godot_instance, &on_offscreen_frame, self);
+  godot_core_set_frame_callback(self->core, &on_offscreen_frame, self);
 
   self->iteration_source_id = g_timeout_add(1000 / 60, iterate_cb, self);
 
   return self;
-}
-
-gboolean libgodot_texture_resize(LibgodotTexture *self, int width, int height) {
-  if (self->godot_instance == nullptr) {
-    return FALSE;
-  }
-  return godot_resize_offscreen(width, height) ? TRUE : FALSE;
 }
 
 void libgodot_texture_stop(LibgodotTexture *self) {
@@ -389,10 +241,9 @@ void libgodot_texture_stop(LibgodotTexture *self) {
     self->iteration_source_id = 0;
   }
 
-  if (self->godot_instance != nullptr) {
-    libgodot_godot_instance_set_offscreen_frame_callback(self->godot_instance, nullptr, nullptr);
-    libgodot_destroy_godot_instance(self->godot_instance);
-    self->godot_instance = nullptr;
+  if (self->core != nullptr) {
+    godot_core_destroy(self->core);
+    self->core = nullptr;
   }
 
   g_mutex_lock(&self->frame_mutex);

@@ -27,48 +27,23 @@ abstract class LibgodotPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  /// Boots a Godot instance running the project at [projectPath] using the
-  /// "offscreen" display driver, and registers a Flutter texture that its
-  /// rendered frames are streamed into.
+  /// Wraps the Godot instance at native address [handleAddress] (a `GodotCoreHandle` from
+  /// `godot_core_create`, already started -- see [GodotController]) in a platform texture and
+  /// registers it with Flutter.
   ///
-  /// On Android, [projectPath] is ignored: Godot's Android build always loads
-  /// the project bundled into the APK's own assets (the same way every real
-  /// exported Godot Android game works), so the project must instead be
-  /// placed under the app module's `src/main/assets/` at build time.
+  /// Everything about the instance itself (booting it, resizing it, tearing it down) goes
+  /// straight through `lib/src/godot_core_bindings.g.dart`'s FFI bindings instead of a method
+  /// channel; this is the one thing that still has to be a native platform call, since only
+  /// native code has a `FlutterTextureRegistrar`/`FlTextureRegistrar` to register against.
   ///
   /// Returns the Flutter texture id to pass to a [Texture] widget.
-  ///
-  /// [initFunctionAddress], if given, is the native address of a
-  /// `GDExtensionInitializationFunction` (e.g.
-  /// `GodotDartEntryPoint.nativeFunctionPointer.address` from
-  /// `package:godot_dart`), passed to `libgodot_create_godot_instance` in
-  /// place of the platform plugin's default no-op init function — this is
-  /// how Dart-authored GDExtension classes get registered with the engine.
-  Future<int> createInstance({
-    required String projectPath,
-    int width = 480,
-    int height = 270,
-    int? initFunctionAddress,
-  }) {
-    throw UnimplementedError('createInstance() has not been implemented.');
+  Future<int> registerTexture(int handleAddress) {
+    throw UnimplementedError('registerTexture() has not been implemented.');
   }
 
-  /// Stops the Godot instance backing [textureId] and unregisters its texture.
-  Future<void> destroyInstance(int textureId) {
-    throw UnimplementedError('destroyInstance() has not been implemented.');
-  }
-
-  /// Requests the Godot instance backing [textureId] resize its offscreen
-  /// surface to [width]x[height] (via `DisplayServer.window_set_size()` on
-  /// the native side).
-  ///
-  /// Not immediate: the engine reallocates its surface ring over the next
-  /// few rendered frames, so the [Texture] may keep showing the previous
-  /// size for a moment. Returns false if the resize couldn't be performed
-  /// (e.g. the instance hasn't finished starting yet, or [textureId] is
-  /// unknown) — callers should treat this as non-fatal and simply try again
-  /// later rather than surfacing an error.
-  Future<bool> resizeInstance(int textureId, int width, int height) {
-    throw UnimplementedError('resizeInstance() has not been implemented.');
+  /// Stops the Godot instance backing [textureId] (via `godot_core_destroy`) and unregisters
+  /// its texture.
+  Future<void> unregisterTexture(int textureId) {
+    throw UnimplementedError('unregisterTexture() has not been implemented.');
   }
 }

@@ -69,3 +69,12 @@ if [[ ! -f "${VENDORED_DYLIB}" ]] || ! cmp -s "${DYLIB}" "${VENDORED_DYLIB}"; th
 else
   echo "Vendored libgodot.dylib already up to date."
 fi
+
+# Keep Classes/godot_core.{h,cpp} in sync with native/godot_core/ (the actual source of truth --
+# see the comment in libgodot.podspec on why CocoaPods needs its own copy under Classes/). The
+# podspec's Ruby only does this copy at `pod install` time; doing it here too means edits to the
+# shared core get picked up on the next Xcode build without needing to remember to re-run that.
+for shared_src in "${SCRIPT_DIR}/../native/godot_core"/*.{h,cpp}; do
+  [[ -e "${shared_src}" ]] || continue
+  cp "${shared_src}" "${SCRIPT_DIR}/Classes/$(basename "${shared_src}")"
+done
