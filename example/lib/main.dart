@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show AssetManifest, rootBundle;
 import 'package:libgodot/libgodot.dart';
-import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,40 +11,13 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   /// On Linux desktop builds the `flutter_assets` directory is unpacked as plain files next to
-  /// the executable, so the bundled Godot project can be pointed at directly with no extraction
-  /// step. On Android it's packed inside the APK instead, so it's extracted to a real directory
-  /// under the app's own storage the first time it's needed; see [_extractGodotProjectAndroid].
-  Future<String> _godotProjectPath() async {
-    if (Platform.isAndroid) {
-      return _extractGodotProjectAndroid();
-    }
+  /// the executable, so the bundled Godot project can be pointed at directly. On Android this is
+  /// unused: Godot's Android build always loads the project bundled into the APK's own assets
+  /// (see example/android/app/src/main/assets/ and LibgodotPlugin.kt's class doc for why), rather
+  /// than an arbitrary runtime path.
+  String get _godotProjectPath {
     final exeDir = File(Platform.resolvedExecutable).parent.path;
     return '$exeDir/data/flutter_assets/assets/godot_project';
-  }
-
-  Future<String> _extractGodotProjectAndroid() async {
-    const assetPrefix = 'assets/godot_project/';
-    final targetDir = Directory(
-      '${(await getApplicationSupportDirectory()).path}/godot_project',
-    );
-
-    final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
-    for (final key in manifest.listAssets()) {
-      if (!key.startsWith(assetPrefix)) {
-        continue;
-      }
-      final bytes = await rootBundle.load(key);
-      final file = File('${targetDir.path}/${key.substring(assetPrefix.length)}');
-      await file.parent.create(recursive: true);
-      // `bytes` may be a view into a larger shared buffer, so its offset/length must be passed
-      // explicitly -- `bytes.buffer.asUint8List()` alone would (mis)copy the whole backing buffer.
-      await file.writeAsBytes(
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
-        flush: true,
-      );
-    }
-
-    return targetDir.path;
   }
 
   @override
@@ -55,19 +26,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: const Text('libgodot: rotating cube')),
         body: Center(
-          child: FutureBuilder<String>(
-            future: _godotProjectPath(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('Failed to extract Godot project: ${snapshot.error}');
-              }
-              final projectPath = snapshot.data;
-              if (projectPath == null) {
-                return const CircularProgressIndicator();
-              }
-              return GodotView(projectPath: projectPath, width: 480, height: 270);
-            },
-          ),
+          child: GodotView(projectPath: _godotProjectPath, width: 480, height: 270),
         ),
       ),
     );

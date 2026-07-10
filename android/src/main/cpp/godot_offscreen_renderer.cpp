@@ -209,7 +209,12 @@ Java_com_example_libgodot_GodotOffscreenRenderer_nativeCreate(JNIEnv *env, jobje
 
 	bool ok = init_gl_resources(renderer);
 
-	eglMakeCurrent(renderer->display, EGL_NO_SURFACE, EGL_NO_SURFACE, renderer->context);
+	// Release the context from *this* thread (EGL_NO_SURFACE requires EGL_NO_CONTEXT, not
+	// renderer->context here -- passing the latter is invalid and, critically, leaves the
+	// context considered "current" on this thread, so a later eglMakeCurrent() from the thread
+	// nativeSubmitFrame() actually runs on -- Godot's own render thread, not this one -- would
+	// fail with EGL_BAD_ACCESS since a context can only be current on one thread at a time).
+	eglMakeCurrent(renderer->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 	eglDestroySurface(renderer->display, pbuffer);
 
 	if (!ok) {

@@ -14,6 +14,8 @@ class GodotView extends StatefulWidget {
 
   /// Absolute filesystem path to a Godot project directory (the folder
   /// containing `project.godot`).
+  ///
+  /// Ignored on Android; see [Libgodot.createInstance].
   final String projectPath;
 
   final int width;

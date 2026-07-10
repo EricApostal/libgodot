@@ -9,6 +9,9 @@ class Libgodot {
 
   /// Boots a Godot instance running the project at [projectPath] and returns
   /// the Flutter texture id its rendered frames are streamed into.
+  ///
+  /// See [LibgodotPlatform.createInstance] for the Android-specific exception
+  /// to how [projectPath] is used.
   Future<int> createInstance({
     required String projectPath,
     int width = 480,

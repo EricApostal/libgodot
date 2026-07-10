@@ -34,6 +34,14 @@ import org.godotengine.godot.GodotHost
  * force-quit the process if the render thread doesn't exit promptly -- this matches the
  * lifecycle Godot's Android embedding is designed for (an app that owns the whole process),
  * rather than a cleanly restartable plugin instance.
+ *
+ * Unlike the other platforms, the `projectPath` argument to `createInstance` is NOT honored here:
+ * Godot's Android build always resolves `res://` against the APK's own bundled assets
+ * (AAssetManager), regardless of `--path` -- this is by design and matches how every real
+ * exported Godot Android game works, so it isn't something to work around by patching the
+ * engine. Concretely, this means the Godot project must be placed under this app module's own
+ * `src/main/assets/` (see example/android/app/src/main/assets/ for this plugin's example) at
+ * build time, rather than supplied as a runtime path like on Linux.
  */
 class LibgodotPlugin :
     FlutterPlugin,
@@ -93,8 +101,12 @@ class LibgodotPlugin :
             return
         }
 
-        val projectPath = call.argument<String>("projectPath")
-        if (projectPath == null) {
+        // Unlike the other platforms, `projectPath` is not forwarded to the engine here: Android
+        // only ever loads a project bundled into the APK's own assets (res://), the same way
+        // every real exported Godot Android game does -- see the class doc for why `--path`
+        // pointing at an arbitrary runtime directory doesn't work here. Still required/validated
+        // for API consistency with the other platforms' method channel calls.
+        if (call.argument<String>("projectPath") == null) {
             result.error("invalid_args", "createInstance requires a string \"projectPath\" argument.", null)
             return
         }
@@ -109,7 +121,6 @@ class LibgodotPlugin :
         }
 
         val commandLine = listOf(
-            "--path", projectPath,
             "--offscreen",
             "--resolution", "${width}x${height}",
             "--rendering-driver", "vulkan",
