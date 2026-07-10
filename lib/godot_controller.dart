@@ -10,7 +10,16 @@ import 'src/godot_core_bindings.g.dart';
 
 ffi.DynamicLibrary _openGodotCoreLibrary() {
   if (Platform.isMacOS || Platform.isIOS) {
-    return ffi.DynamicLibrary.open('libgodot.framework/libgodot');
+    for (final name in [
+      'libgodot_core.dylib',
+      'libgodot.framework/libgodot_core.dylib',
+      'libgodot.framework/libgodot',
+    ]) {
+      try {
+        return ffi.DynamicLibrary.open(name);
+      } catch (_) {}
+    }
+    return ffi.DynamicLibrary.open('libgodot_core.dylib');
   }
   if (Platform.isLinux) {
     return ffi.DynamicLibrary.open('liblibgodot_plugin.so');

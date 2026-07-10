@@ -343,3 +343,15 @@ void godot_core_set_frame_callback(GodotCoreHandle p_handle, GodotOffscreenFrame
   libgodot_godot_instance_set_offscreen_frame_callback(static_cast<GDExtensionObjectPtr>(p_handle), p_callback, p_userdata);
 #endif
 }
+
+uint32_t godot_core_frame_get_iosurface_id(const void *p_frame) {
+  if (p_frame == nullptr) {
+    return 0;
+  }
+  const GodotOffscreenFrame *frame = static_cast<const GodotOffscreenFrame *>(p_frame);
+  if (frame->type == GODOT_OFFSCREEN_SURFACE_TYPE_IOSURFACE) {
+    return frame->surface.iosurface.iosurface_id;
+  }
+  return 0;
+}
+

@@ -115,6 +115,9 @@ GODOT_CORE_API void godot_core_set_frame_callback(GodotCoreHandle p_handle, Godo
 // -- see godot_core_desktop.cpp.
 GODOT_CORE_API bool godot_core_iteration(GodotCoreHandle p_handle);
 
+// Helper to extract the IOSurface ID from an offscreen frame safely across language boundaries.
+GODOT_CORE_API uint32_t godot_core_frame_get_iosurface_id(const void *p_frame);
+
 #ifdef __cplusplus
 }
 #endif

@@ -33,6 +33,7 @@ migrate_working_dir/
 /coverage/
 
 /macos/libgodot.dylib
+/macos/libgodot_core.dylib
 # Copied from native/godot_core by macos/libgodot.podspec at `pod install` time (CocoaPods
 # source_files can't reach outside the pod's own root, so this is the canonical copy CocoaPods
 # actually compiles -- native/godot_core/ is the one to edit).

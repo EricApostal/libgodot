@@ -25,6 +25,11 @@ set -euo pipefail
 export PATH="/opt/homebrew/bin:/usr/local/bin:${PATH}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENSURE_SCRIPT="${SCRIPT_DIR}/../tool/ensure_godot_source.sh"
+if [[ -f "${ENSURE_SCRIPT}" ]]; then
+  bash "${ENSURE_SCRIPT}"
+fi
+
 GODOT_DIR="${GODOT_SRC:-$(cd "${SCRIPT_DIR}/../third_party/godot" && pwd)}"
 ARCH="${1:-arm64}"
 
@@ -55,26 +60,24 @@ if [[ -z "${DYLIB}" ]]; then
 fi
 
 VENDORED_DYLIB="${SCRIPT_DIR}/libgodot.dylib"
-# Only re-copy/re-sign when the built dylib actually changed; on a build phase that runs every
-# compile, this keeps a no-op scons run from touching the vendored file's mtime and forcing
-# Xcode to re-link every time.
 if [[ ! -f "${VENDORED_DYLIB}" ]] || ! cmp -s "${DYLIB}" "${VENDORED_DYLIB}"; then
   cp "${DYLIB}" "${VENDORED_DYLIB}"
   chmod u+w "${VENDORED_DYLIB}"
-  # scons leaves a relative "bin/libgodot..." LC_ID_DYLIB, which only resolves if the process's
-  # cwd happens to be godot_src/..; retarget it to @rpath so it resolves once CocoaPods embeds
-  # it into the app bundle.
   install_name_tool -id "@rpath/libgodot.dylib" "${VENDORED_DYLIB}"
   echo "Vendored $(basename "${DYLIB}") -> ${VENDORED_DYLIB}"
 else
   echo "Vendored libgodot.dylib already up to date."
 fi
 
-# Keep Classes/godot_core.{h,cpp} in sync with native/godot_core/ (the actual source of truth --
-# see the comment in libgodot.podspec on why CocoaPods needs its own copy under Classes/). The
-# podspec's Ruby only does this copy at `pod install` time; doing it here too means edits to the
-# shared core get picked up on the next Xcode build without needing to remember to re-run that.
-for shared_src in "${SCRIPT_DIR}/../native/godot_core"/*.{h,cpp}; do
-  [[ -e "${shared_src}" ]] || continue
-  cp "${shared_src}" "${SCRIPT_DIR}/Classes/$(basename "${shared_src}")"
-done
+CORE_DYLIB="${SCRIPT_DIR}/libgodot_core.dylib"
+echo "== Building libgodot_core.dylib (arch=${ARCH}) =="
+clang++ -std=c++17 -shared -fPIC -arch "${ARCH}" \
+  -I"${GODOT_DIR}" \
+  -I"${SCRIPT_DIR}/../native/godot_core" \
+  -L"${SCRIPT_DIR}" -lgodot \
+  -install_name "@rpath/libgodot_core.dylib" \
+  "${SCRIPT_DIR}/../native/godot_core/godot_core.cpp" \
+  "${SCRIPT_DIR}/../native/godot_core/godot_core_desktop.cpp" \
+  -o "${CORE_DYLIB}"
+echo "Built -> ${CORE_DYLIB}"
+
