@@ -244,7 +244,7 @@ void submit_frame(GodotOffscreenRenderer *renderer, AHardwareBuffer *buffer, uin
 	apply_pending_surface_change_locked(renderer);
 
 	renderer->frame_count++;
-	bool should_log = renderer->frame_count <= 5 || (renderer->frame_count % 120) == 0;
+	bool should_log = false; // renderer->frame_count <= 5 || (renderer->frame_count % 120) == 0;
 
 	if (renderer->surface == EGL_NO_SURFACE) {
 		// No destination surface yet (or the Surface was torn down, e.g. app backgrounded);
