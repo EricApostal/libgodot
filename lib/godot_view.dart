@@ -6,13 +6,9 @@ import 'godot_controller.dart';
 /// streamed into a Flutter [Texture].
 ///
 /// Automatically resizes to fill whatever space its parent gives it (via [LayoutBuilder]),
-/// forwarding that to [controller.reportConstraints] so the engine actually re-renders at the
-/// new resolution rather than just visually scaling a fixed-resolution texture. The displayed
-/// content is always shown at its own aspect ratio via `BoxFit.contain` -- it's letterboxed/
-/// pillarboxed to fit, never stretched to fill a container of a different shape, even during the
-/// brief window between requesting a resize and the engine's first frame at the new size
-/// actually arriving. All of that sizing/debounce state lives on [controller], not this widget --
-/// see [GodotController.reportConstraints].
+/// forwarding that to [controller.reportSize] so the engine actually re-renders at the
+/// new resolution. Unline FittedBox, this maps exactly 1:1 to physical pixels using an
+/// OverflowBox and ClipRect, preventing visual stretching or scaling artifacts.
 class GodotView extends StatefulWidget {
   const GodotView({super.key, required this.controller});
 
@@ -49,21 +45,37 @@ class _GodotViewState extends State<GodotView> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final density = MediaQuery.devicePixelRatioOf(context);
-            WidgetsBinding.instance.addPostFrameCallback(
-              (_) => widget.controller.reportConstraints(constraints, density),
-            );
-            return FittedBox(
-              fit: BoxFit.contain,
-              child: SizedBox(
-                width: widget.controller.renderWidth.toDouble(),
-                height: widget.controller.renderHeight.toDouble(),
-                child: Texture(textureId: textureId),
-              ),
-            );
-          },
+        return SizedBox.expand(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final density = MediaQuery.devicePixelRatioOf(context);
+
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) =>
+                    widget.controller.reportSize(constraints.biggest, density),
+              );
+
+              // Convert the physical pixel dimensions back to logical pixels
+              // to size the texture container correctly.
+              final paddedWidth = widget.controller.renderWidth / density;
+              final paddedHeight = widget.controller.renderHeight / density;
+
+              return ClipRect(
+                child: OverflowBox(
+                  alignment: Alignment.topLeft,
+                  minWidth: paddedWidth,
+                  minHeight: paddedHeight,
+                  maxWidth: paddedWidth,
+                  maxHeight: paddedHeight,
+                  child: SizedBox(
+                    width: paddedWidth,
+                    height: paddedHeight,
+                    child: Texture(textureId: textureId),
+                  ),
+                ),
+              );
+            },
+          ),
         );
       },
     );

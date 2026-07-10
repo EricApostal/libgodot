@@ -160,25 +160,28 @@ class GodotController extends ChangeNotifier {
     }
   }
 
-  /// Reports the space a [GodotView] has available, debouncing and requesting the engine
-  /// actually re-render at the new resolution (via `godot_core_resize`) rather than just
-  /// visually scaling a fixed-resolution texture.
-  void reportConstraints(BoxConstraints constraints, double density) {
+  /// Reports the space a [GodotView] has available, computing the actual physical resolution,
+  /// debouncing, and requesting the engine re-render at the new size.
+  void reportSize(Size size, double density) {
     if (_textureId == null) return;
-    if (!constraints.maxWidth.isFinite || !constraints.maxHeight.isFinite) {
+    if (size.width <= 0 ||
+        size.height <= 0 ||
+        !size.width.isFinite ||
+        !size.height.isFinite) {
       return;
     }
 
-    // TODO: Apparently AI was right and that it has to be a multiple of 4
-    // this has some annoying consequences on resize
-    // I think the native layer sucks
+    // Convert logical Flutter size into physical pixels needed by the engine
+    final physicalWidth = size.width * density;
+    final physicalHeight = size.height * density;
 
     // Metal requires an IOSurface's bytes-per-row (width * 4 for RGBA8) to be 16-byte aligned,
     // i.e. width must be a multiple of 4 - an arbitrary layout-derived width crashes with a
     // Metal validation assertion otherwise. Round both dimensions up to a multiple of 4 for
     // safety and to keep width/height alignment consistent across platforms.
-    final targetWidth = _alignTo4((constraints.maxWidth).round());
-    final targetHeight = _alignTo4((constraints.maxHeight).round());
+    final targetWidth = _alignTo4(physicalWidth.round());
+    final targetHeight = _alignTo4(physicalHeight.round());
+
     if (targetWidth <= 0 || targetHeight <= 0) return;
     if (targetWidth == (_pendingWidth ?? _renderWidth) &&
         targetHeight == (_pendingHeight ?? _renderHeight)) {
