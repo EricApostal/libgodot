@@ -22,7 +22,11 @@ class _GodotViewState extends State<GodotView> {
   @override
   void initState() {
     super.initState();
-    widget.controller.attach();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        widget.controller.attach();
+      }
+    });
   }
 
   @override

@@ -92,6 +92,7 @@ class GodotTextureContext {
 public class LibgodotPlugin: NSObject, FlutterPlugin {
   var textureRegistry: FlutterTextureRegistry?
   var pumpTimer: Timer?
+  var runLoopObserver: CFRunLoopObserver?
   var contextPtrs: [Int64: UnsafeMutableRawPointer] = [:]
   var activeTextures: [Int64: GodotTextureContext] = [:]
 
@@ -99,11 +100,37 @@ public class LibgodotPlugin: NSObject, FlutterPlugin {
     let channel = FlutterMethodChannel(name: "libgodot", binaryMessenger: registrar.messenger)
     let instance = LibgodotPlugin()
     instance.textureRegistry = registrar.textures
+    instance.startGodotLoop()
     registrar.addMethodCallDelegate(instance, channel: channel)
+  }
+
+  private func startGodotLoop() {
+    let activities =
+      CFRunLoopActivity.beforeSources.rawValue
+      | CFRunLoopActivity.beforeWaiting.rawValue
+      | CFRunLoopActivity.afterWaiting.rawValue
+
+    let observer = CFRunLoopObserverCreateWithHandler(
+      kCFAllocatorDefault,
+      activities,
+      true,
+      0
+    ) { [weak self] _, _ in
+      guard let self else { return }
+      self.pumpIterations()
+    }
+
+    guard let observer else { return }
+    CFRunLoopAddObserver(CFRunLoopGetMain(), observer, .commonModes)
+    runLoopObserver = observer
   }
 
   deinit {
     stopPumpTimer()
+    if let observer = runLoopObserver {
+      CFRunLoopRemoveObserver(CFRunLoopGetMain(), observer, .commonModes)
+      runLoopObserver = nil
+    }
   }
 
   private func updatePumpDriver() {
