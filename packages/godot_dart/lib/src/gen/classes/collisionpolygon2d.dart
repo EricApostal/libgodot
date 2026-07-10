@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CollisionPolygon2D extends Node2D {
   CollisionPolygon2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CollisionPolygon2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CollisionPolygon2D.create() {
+    return CollisionPolygon2D(resolveClassConstructor('CollisionPolygon2D'));
+  }
+
   // Skipped set_polygon(): an argument type is unsupported.
   // Skipped get_polygon(): unsupported return type "PackedVector2Array".
   static final Pointer<Void> _mb_set_build_mode =

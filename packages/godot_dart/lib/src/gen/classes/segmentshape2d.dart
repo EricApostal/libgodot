@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SegmentShape2D extends Shape2D {
   SegmentShape2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SegmentShape2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SegmentShape2D.create() {
+    return SegmentShape2D(resolveClassConstructor('SegmentShape2D'));
+  }
+
   static final Pointer<Void> _mb_set_a =
       resolveMethodBind('SegmentShape2D', 'set_a', 743155724);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Theme extends Resource {
   Theme(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Theme instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Theme.create() {
+    return Theme(resolveClassConstructor('Theme'));
+  }
+
   static final Pointer<Void> _mb_set_icon =
       resolveMethodBind('Theme', 'set_icon', 2188371082);
 

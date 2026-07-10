@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeVectorCompose extends VisualShaderNodeVectorBase {
   VisualShaderNodeVectorCompose(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeVectorCompose instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeVectorCompose.create() {
+    return VisualShaderNodeVectorCompose(resolveClassConstructor('VisualShaderNodeVectorCompose'));
+  }
+
 }

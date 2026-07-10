@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ClassDB extends GodotObject {
   ClassDB(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ClassDB instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ClassDB.create() {
+    return ClassDB(resolveClassConstructor('ClassDB'));
+  }
+
   // Skipped get_class_list(): unsupported return type "PackedStringArray".
   // Skipped get_inheriters_from_class(): unsupported return type "PackedStringArray".
   static final Pointer<Void> _mb_get_parent_class =

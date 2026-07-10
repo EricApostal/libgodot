@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsShapeQueryParameters2D extends RefCounted {
   PhysicsShapeQueryParameters2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsShapeQueryParameters2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsShapeQueryParameters2D.create() {
+    return PhysicsShapeQueryParameters2D(resolveClassConstructor('PhysicsShapeQueryParameters2D'));
+  }
+
   static final Pointer<Void> _mb_set_shape =
       resolveMethodBind('PhysicsShapeQueryParameters2D', 'set_shape', 968641751);
 

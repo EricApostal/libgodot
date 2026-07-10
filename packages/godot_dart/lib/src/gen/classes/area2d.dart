@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Area2D extends CollisionObject2D {
   Area2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Area2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Area2D.create() {
+    return Area2D(resolveClassConstructor('Area2D'));
+  }
+
   static final Pointer<Void> _mb_set_gravity_space_override_mode =
       resolveMethodBind('Area2D', 'set_gravity_space_override_mode', 2879900038);
 

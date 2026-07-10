@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class LabelSettings extends Resource {
   LabelSettings(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LabelSettings instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LabelSettings.create() {
+    return LabelSettings(resolveClassConstructor('LabelSettings'));
+  }
+
   static final Pointer<Void> _mb_set_line_spacing =
       resolveMethodBind('LabelSettings', 'set_line_spacing', 373806689);
 

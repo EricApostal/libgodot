@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDShaderSPIRV extends Resource {
   RDShaderSPIRV(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDShaderSPIRV instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDShaderSPIRV.create() {
+    return RDShaderSPIRV(resolveClassConstructor('RDShaderSPIRV'));
+  }
+
   // Skipped set_stage_bytecode(): an argument type is unsupported.
   // Skipped get_stage_bytecode(): unsupported return type "PackedByteArray".
   static final Pointer<Void> _mb_set_stage_compile_error =

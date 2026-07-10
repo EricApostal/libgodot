@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class CheckButton extends Button {
   CheckButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CheckButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CheckButton.create() {
+    return CheckButton(resolveClassConstructor('CheckButton'));
+  }
+
 }

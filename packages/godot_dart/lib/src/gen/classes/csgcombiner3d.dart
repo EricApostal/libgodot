@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class CSGCombiner3D extends CSGShape3D {
   CSGCombiner3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CSGCombiner3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CSGCombiner3D.create() {
+    return CSGCombiner3D(resolveClassConstructor('CSGCombiner3D'));
+  }
+
 }

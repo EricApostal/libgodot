@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Control extends CanvasItem {
   Control(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Control instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Control.create() {
+    return Control(resolveClassConstructor('Control'));
+  }
+
   static final Pointer<Void> _mb_accept_event =
       resolveMethodBind('Control', 'accept_event', 3218959716);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BoneTwistDisperser3D extends SkeletonModifier3D {
   BoneTwistDisperser3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BoneTwistDisperser3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BoneTwistDisperser3D.create() {
+    return BoneTwistDisperser3D(resolveClassConstructor('BoneTwistDisperser3D'));
+  }
+
   static final Pointer<Void> _mb_set_setting_count =
       resolveMethodBind('BoneTwistDisperser3D', 'set_setting_count', 1286410249);
 

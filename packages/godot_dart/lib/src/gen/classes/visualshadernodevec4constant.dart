@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeVec4Constant extends VisualShaderNodeConstant {
   VisualShaderNodeVec4Constant(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeVec4Constant instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeVec4Constant.create() {
+    return VisualShaderNodeVec4Constant(resolveClassConstructor('VisualShaderNodeVec4Constant'));
+  }
+
   static final Pointer<Void> _mb_set_constant =
       resolveMethodBind('VisualShaderNodeVec4Constant', 'set_constant', 1727505552);
 

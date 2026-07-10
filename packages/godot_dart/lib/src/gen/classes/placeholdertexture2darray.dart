@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class PlaceholderTexture2DArray extends PlaceholderTextureLayered {
   PlaceholderTexture2DArray(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PlaceholderTexture2DArray instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PlaceholderTexture2DArray.create() {
+    return PlaceholderTexture2DArray(resolveClassConstructor('PlaceholderTexture2DArray'));
+  }
+
 }

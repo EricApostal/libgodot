@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class HeightMapShape3D extends Shape3D {
   HeightMapShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HeightMapShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HeightMapShape3D.create() {
+    return HeightMapShape3D(resolveClassConstructor('HeightMapShape3D'));
+  }
+
   static final Pointer<Void> _mb_set_map_width =
       resolveMethodBind('HeightMapShape3D', 'set_map_width', 1286410249);
 

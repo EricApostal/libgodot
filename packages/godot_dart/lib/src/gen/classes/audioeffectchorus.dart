@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectChorus extends AudioEffect {
   AudioEffectChorus(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectChorus instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectChorus.create() {
+    return AudioEffectChorus(resolveClassConstructor('AudioEffectChorus'));
+  }
+
   static final Pointer<Void> _mb_set_voice_count =
       resolveMethodBind('AudioEffectChorus', 'set_voice_count', 1286410249);
 

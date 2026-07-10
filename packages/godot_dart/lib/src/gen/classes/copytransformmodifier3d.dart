@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CopyTransformModifier3D extends BoneConstraint3D {
   CopyTransformModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CopyTransformModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CopyTransformModifier3D.create() {
+    return CopyTransformModifier3D(resolveClassConstructor('CopyTransformModifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_copy_flags =
       resolveMethodBind('CopyTransformModifier3D', 'set_copy_flags', 2252507859);
 

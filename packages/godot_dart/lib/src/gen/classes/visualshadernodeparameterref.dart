@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeParameterRef extends VisualShaderNode {
   VisualShaderNodeParameterRef(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParameterRef instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParameterRef.create() {
+    return VisualShaderNodeParameterRef(resolveClassConstructor('VisualShaderNodeParameterRef'));
+  }
+
   static final Pointer<Void> _mb_set_parameter_name =
       resolveMethodBind('VisualShaderNodeParameterRef', 'set_parameter_name', 83702148);
 

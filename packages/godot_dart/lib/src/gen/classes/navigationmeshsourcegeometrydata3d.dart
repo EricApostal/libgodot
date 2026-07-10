@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationMeshSourceGeometryData3D extends Resource {
   NavigationMeshSourceGeometryData3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationMeshSourceGeometryData3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationMeshSourceGeometryData3D.create() {
+    return NavigationMeshSourceGeometryData3D(resolveClassConstructor('NavigationMeshSourceGeometryData3D'));
+  }
+
   // Skipped set_vertices(): an argument type is unsupported.
   // Skipped get_vertices(): unsupported return type "PackedFloat32Array".
   // Skipped set_indices(): an argument type is unsupported.

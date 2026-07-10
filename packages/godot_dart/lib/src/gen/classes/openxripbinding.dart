@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRIPBinding extends Resource {
   OpenXRIPBinding(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRIPBinding instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRIPBinding.create() {
+    return OpenXRIPBinding(resolveClassConstructor('OpenXRIPBinding'));
+  }
+
   static final Pointer<Void> _mb_set_action =
       resolveMethodBind('OpenXRIPBinding', 'set_action', 349361333);
 

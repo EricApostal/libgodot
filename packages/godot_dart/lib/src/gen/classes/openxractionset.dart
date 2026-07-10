@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRActionSet extends Resource {
   OpenXRActionSet(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRActionSet instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRActionSet.create() {
+    return OpenXRActionSet(resolveClassConstructor('OpenXRActionSet'));
+  }
+
   static final Pointer<Void> _mb_set_localized_name =
       resolveMethodBind('OpenXRActionSet', 'set_localized_name', 83702148);
 

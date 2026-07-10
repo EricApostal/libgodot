@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFSkin extends Resource {
   GLTFSkin(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFSkin instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFSkin.create() {
+    return GLTFSkin(resolveClassConstructor('GLTFSkin'));
+  }
+
   static final Pointer<Void> _mb_get_skin_root =
       resolveMethodBind('GLTFSkin', 'get_skin_root', 2455072627);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class UndoRedo extends GodotObject {
   UndoRedo(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned UndoRedo instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory UndoRedo.create() {
+    return UndoRedo(resolveClassConstructor('UndoRedo'));
+  }
+
   static final Pointer<Void> _mb_create_action =
       resolveMethodBind('UndoRedo', 'create_action', 3171901514);
 

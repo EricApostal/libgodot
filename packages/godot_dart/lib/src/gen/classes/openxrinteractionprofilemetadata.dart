@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRInteractionProfileMetadata extends GodotObject {
   OpenXRInteractionProfileMetadata(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRInteractionProfileMetadata instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRInteractionProfileMetadata.create() {
+    return OpenXRInteractionProfileMetadata(resolveClassConstructor('OpenXRInteractionProfileMetadata'));
+  }
+
   static final Pointer<Void> _mb_register_profile_rename =
       resolveMethodBind('OpenXRInteractionProfileMetadata', 'register_profile_rename', 3186203200);
 

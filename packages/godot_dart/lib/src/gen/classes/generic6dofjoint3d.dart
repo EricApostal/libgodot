@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Generic6DOFJoint3D extends Joint3D {
   Generic6DOFJoint3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Generic6DOFJoint3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Generic6DOFJoint3D.create() {
+    return Generic6DOFJoint3D(resolveClassConstructor('Generic6DOFJoint3D'));
+  }
+
   static final Pointer<Void> _mb_set_param_x =
       resolveMethodBind('Generic6DOFJoint3D', 'set_param_x', 2018184242);
 

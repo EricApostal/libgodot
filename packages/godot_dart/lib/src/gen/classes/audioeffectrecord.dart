@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectRecord extends AudioEffect {
   AudioEffectRecord(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectRecord instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectRecord.create() {
+    return AudioEffectRecord(resolveClassConstructor('AudioEffectRecord'));
+  }
+
   static final Pointer<Void> _mb_set_recording_active =
       resolveMethodBind('AudioEffectRecord', 'set_recording_active', 2586408642);
 

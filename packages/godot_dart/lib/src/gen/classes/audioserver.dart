@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioServer extends GodotObject {
   AudioServer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioServer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioServer.create() {
+    return AudioServer(resolveClassConstructor('AudioServer'));
+  }
+
   static final Pointer<Void> _mb_set_bus_count =
       resolveMethodBind('AudioServer', 'set_bus_count', 1286410249);
 

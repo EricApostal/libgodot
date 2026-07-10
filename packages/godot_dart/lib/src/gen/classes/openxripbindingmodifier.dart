@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class OpenXRIPBindingModifier extends OpenXRBindingModifier {
   OpenXRIPBindingModifier(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRIPBindingModifier instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRIPBindingModifier.create() {
+    return OpenXRIPBindingModifier(resolveClassConstructor('OpenXRIPBindingModifier'));
+  }
+
 }

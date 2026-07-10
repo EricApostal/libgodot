@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFLight extends Resource {
   GLTFLight(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFLight instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFLight.create() {
+    return GLTFLight(resolveClassConstructor('GLTFLight'));
+  }
+
   static final Pointer<Void> _mb_to_node =
       resolveMethodBind('GLTFLight', 'to_node', 2040811672);
 

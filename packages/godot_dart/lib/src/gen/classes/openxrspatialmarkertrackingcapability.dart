@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialMarkerTrackingCapability extends OpenXRExtensionWrapper {
   OpenXRSpatialMarkerTrackingCapability(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialMarkerTrackingCapability instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialMarkerTrackingCapability.create() {
+    return OpenXRSpatialMarkerTrackingCapability(resolveClassConstructor('OpenXRSpatialMarkerTrackingCapability'));
+  }
+
   static final Pointer<Void> _mb_is_qrcode_supported =
       resolveMethodBind('OpenXRSpatialMarkerTrackingCapability', 'is_qrcode_supported', 2240911060);
 

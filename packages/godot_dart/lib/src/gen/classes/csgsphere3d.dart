@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CSGSphere3D extends CSGPrimitive3D {
   CSGSphere3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CSGSphere3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CSGSphere3D.create() {
+    return CSGSphere3D(resolveClassConstructor('CSGSphere3D'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('CSGSphere3D', 'set_radius', 373806689);
 

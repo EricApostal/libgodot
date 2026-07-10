@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MeshInstance2D extends Node2D {
   MeshInstance2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MeshInstance2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MeshInstance2D.create() {
+    return MeshInstance2D(resolveClassConstructor('MeshInstance2D'));
+  }
+
   static final Pointer<Void> _mb_set_mesh =
       resolveMethodBind('MeshInstance2D', 'set_mesh', 194775623);
 

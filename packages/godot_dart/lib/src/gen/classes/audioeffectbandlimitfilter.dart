@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AudioEffectBandLimitFilter extends AudioEffectFilter {
   AudioEffectBandLimitFilter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectBandLimitFilter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectBandLimitFilter.create() {
+    return AudioEffectBandLimitFilter(resolveClassConstructor('AudioEffectBandLimitFilter'));
+  }
+
 }

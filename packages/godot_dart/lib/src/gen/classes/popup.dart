@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class Popup extends Window {
   Popup(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Popup instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Popup.create() {
+    return Popup(resolveClassConstructor('Popup'));
+  }
+
 }

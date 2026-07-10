@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TextServerManager extends GodotObject {
   TextServerManager(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextServerManager instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextServerManager.create() {
+    return TextServerManager(resolveClassConstructor('TextServerManager'));
+  }
+
   static final Pointer<Void> _mb_add_interface =
       resolveMethodBind('TextServerManager', 'add_interface', 1799689403);
 

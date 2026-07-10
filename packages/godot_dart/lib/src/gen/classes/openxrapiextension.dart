@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRAPIExtension extends RefCounted {
   OpenXRAPIExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRAPIExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRAPIExtension.create() {
+    return OpenXRAPIExtension(resolveClassConstructor('OpenXRAPIExtension'));
+  }
+
   static final Pointer<Void> _mb_get_openxr_version =
       resolveMethodBind('OpenXRAPIExtension', 'get_openxr_version', 2455072627);
 

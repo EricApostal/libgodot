@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class DTLSServer extends RefCounted {
   DTLSServer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned DTLSServer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory DTLSServer.create() {
+    return DTLSServer(resolveClassConstructor('DTLSServer'));
+  }
+
   static final Pointer<Void> _mb_setup =
       resolveMethodBind('DTLSServer', 'setup', 1262296096);
 

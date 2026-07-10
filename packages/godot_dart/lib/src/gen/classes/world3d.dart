@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class World3D extends Resource {
   World3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned World3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory World3D.create() {
+    return World3D(resolveClassConstructor('World3D'));
+  }
+
   // Skipped get_space(): unsupported return type "RID".
   // Skipped get_navigation_map(): unsupported return type "RID".
   // Skipped get_scenario(): unsupported return type "RID".

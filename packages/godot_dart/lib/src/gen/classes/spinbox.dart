@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SpinBox extends Range {
   SpinBox(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SpinBox instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SpinBox.create() {
+    return SpinBox(resolveClassConstructor('SpinBox'));
+  }
+
   static final Pointer<Void> _mb_set_horizontal_alignment =
       resolveMethodBind('SpinBox', 'set_horizontal_alignment', 2312603777);
 

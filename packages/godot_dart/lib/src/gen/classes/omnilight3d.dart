@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OmniLight3D extends Light3D {
   OmniLight3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OmniLight3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OmniLight3D.create() {
+    return OmniLight3D(resolveClassConstructor('OmniLight3D'));
+  }
+
   static final Pointer<Void> _mb_set_shadow_mode =
       resolveMethodBind('OmniLight3D', 'set_shadow_mode', 121862228);
 

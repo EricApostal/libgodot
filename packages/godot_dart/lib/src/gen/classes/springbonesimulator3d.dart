@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SpringBoneSimulator3D extends SkeletonModifier3D {
   SpringBoneSimulator3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SpringBoneSimulator3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SpringBoneSimulator3D.create() {
+    return SpringBoneSimulator3D(resolveClassConstructor('SpringBoneSimulator3D'));
+  }
+
   static final Pointer<Void> _mb_set_root_bone_name =
       resolveMethodBind('SpringBoneSimulator3D', 'set_root_bone_name', 501894301);
 

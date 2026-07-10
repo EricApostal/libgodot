@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BoneMap extends Resource {
   BoneMap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BoneMap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BoneMap.create() {
+    return BoneMap(resolveClassConstructor('BoneMap'));
+  }
+
   static final Pointer<Void> _mb_get_profile =
       resolveMethodBind('BoneMap', 'get_profile', 4291782652);
 

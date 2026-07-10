@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Parallax2D extends Node2D {
   Parallax2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Parallax2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Parallax2D.create() {
+    return Parallax2D(resolveClassConstructor('Parallax2D'));
+  }
+
   static final Pointer<Void> _mb_set_scroll_scale =
       resolveMethodBind('Parallax2D', 'set_scroll_scale', 743155724);
 

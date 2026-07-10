@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TouchScreenButton extends Node2D {
   TouchScreenButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TouchScreenButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TouchScreenButton.create() {
+    return TouchScreenButton(resolveClassConstructor('TouchScreenButton'));
+  }
+
   static final Pointer<Void> _mb_set_texture_normal =
       resolveMethodBind('TouchScreenButton', 'set_texture_normal', 4051416890);
 

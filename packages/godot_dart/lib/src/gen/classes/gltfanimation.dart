@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFAnimation extends Resource {
   GLTFAnimation(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFAnimation instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFAnimation.create() {
+    return GLTFAnimation(resolveClassConstructor('GLTFAnimation'));
+  }
+
   static final Pointer<Void> _mb_get_original_name =
       resolveMethodBind('GLTFAnimation', 'get_original_name', 2841200299);
 

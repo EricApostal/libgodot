@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GraphFrame extends GraphElement {
   GraphFrame(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GraphFrame instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GraphFrame.create() {
+    return GraphFrame(resolveClassConstructor('GraphFrame'));
+  }
+
   static final Pointer<Void> _mb_set_title =
       resolveMethodBind('GraphFrame', 'set_title', 83702148);
 

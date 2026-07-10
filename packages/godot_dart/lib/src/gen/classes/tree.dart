@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Tree extends Control {
   Tree(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Tree instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Tree.create() {
+    return Tree(resolveClassConstructor('Tree'));
+  }
+
   static final Pointer<Void> _mb_clear =
       resolveMethodBind('Tree', 'clear', 3218959716);
 

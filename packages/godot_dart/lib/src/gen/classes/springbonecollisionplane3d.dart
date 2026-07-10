@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class SpringBoneCollisionPlane3D extends SpringBoneCollision3D {
   SpringBoneCollisionPlane3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SpringBoneCollisionPlane3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SpringBoneCollisionPlane3D.create() {
+    return SpringBoneCollisionPlane3D(resolveClassConstructor('SpringBoneCollisionPlane3D'));
+  }
+
 }

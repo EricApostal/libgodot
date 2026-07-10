@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class DrawableTexture2D extends Texture2D {
   DrawableTexture2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned DrawableTexture2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory DrawableTexture2D.create() {
+    return DrawableTexture2D(resolveClassConstructor('DrawableTexture2D'));
+  }
+
   static final Pointer<Void> _mb_set_format =
       resolveMethodBind('DrawableTexture2D', 'set_format', 2875673594);
 

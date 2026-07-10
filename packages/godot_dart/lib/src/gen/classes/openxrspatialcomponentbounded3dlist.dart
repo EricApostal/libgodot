@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentBounded3DList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentBounded3DList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentBounded3DList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentBounded3DList.create() {
+    return OpenXRSpatialComponentBounded3DList(resolveClassConstructor('OpenXRSpatialComponentBounded3DList'));
+  }
+
   static final Pointer<Void> _mb_get_center_pose =
       resolveMethodBind('OpenXRSpatialComponentBounded3DList', 'get_center_pose', 1965739696);
 

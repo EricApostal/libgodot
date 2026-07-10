@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PathFollow3D extends Node3D {
   PathFollow3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PathFollow3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PathFollow3D.create() {
+    return PathFollow3D(resolveClassConstructor('PathFollow3D'));
+  }
+
   static final Pointer<Void> _mb_set_progress =
       resolveMethodBind('PathFollow3D', 'set_progress', 373806689);
 

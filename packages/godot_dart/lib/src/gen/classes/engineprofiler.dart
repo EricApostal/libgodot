@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class EngineProfiler extends RefCounted {
   EngineProfiler(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned EngineProfiler instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory EngineProfiler.create() {
+    return EngineProfiler(resolveClassConstructor('EngineProfiler'));
+  }
+
 }

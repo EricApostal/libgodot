@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDTextureFormat extends RefCounted {
   RDTextureFormat(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDTextureFormat instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDTextureFormat.create() {
+    return RDTextureFormat(resolveClassConstructor('RDTextureFormat'));
+  }
+
   static final Pointer<Void> _mb_set_format =
       resolveMethodBind('RDTextureFormat', 'set_format', 565531219);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SubtweenTweener extends Tweener {
   SubtweenTweener(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SubtweenTweener instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SubtweenTweener.create() {
+    return SubtweenTweener(resolveClassConstructor('SubtweenTweener'));
+  }
+
   static final Pointer<Void> _mb_set_delay =
       resolveMethodBind('SubtweenTweener', 'set_delay', 449181780);
 

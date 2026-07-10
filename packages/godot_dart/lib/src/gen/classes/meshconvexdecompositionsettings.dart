@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MeshConvexDecompositionSettings extends RefCounted {
   MeshConvexDecompositionSettings(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MeshConvexDecompositionSettings instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MeshConvexDecompositionSettings.create() {
+    return MeshConvexDecompositionSettings(resolveClassConstructor('MeshConvexDecompositionSettings'));
+  }
+
   static final Pointer<Void> _mb_set_max_concavity =
       resolveMethodBind('MeshConvexDecompositionSettings', 'set_max_concavity', 373806689);
 

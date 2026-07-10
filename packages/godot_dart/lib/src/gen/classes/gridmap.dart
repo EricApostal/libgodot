@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GridMap extends Node3D {
   GridMap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GridMap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GridMap.create() {
+    return GridMap(resolveClassConstructor('GridMap'));
+  }
+
   static final Pointer<Void> _mb_set_collision_layer =
       resolveMethodBind('GridMap', 'set_collision_layer', 1286410249);
 

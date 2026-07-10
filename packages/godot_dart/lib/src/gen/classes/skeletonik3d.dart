@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonIK3D extends SkeletonModifier3D {
   SkeletonIK3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonIK3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonIK3D.create() {
+    return SkeletonIK3D(resolveClassConstructor('SkeletonIK3D'));
+  }
+
   static final Pointer<Void> _mb_set_root_bone =
       resolveMethodBind('SkeletonIK3D', 'set_root_bone', 3304788590);
 

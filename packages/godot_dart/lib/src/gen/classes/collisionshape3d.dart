@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CollisionShape3D extends Node3D {
   CollisionShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CollisionShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CollisionShape3D.create() {
+    return CollisionShape3D(resolveClassConstructor('CollisionShape3D'));
+  }
+
   static final Pointer<Void> _mb_resource_changed =
       resolveMethodBind('CollisionShape3D', 'resource_changed', 968641751);
 

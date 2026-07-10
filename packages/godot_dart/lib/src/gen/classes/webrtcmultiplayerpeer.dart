@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class WebRTCMultiplayerPeer extends MultiplayerPeer {
   WebRTCMultiplayerPeer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned WebRTCMultiplayerPeer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory WebRTCMultiplayerPeer.create() {
+    return WebRTCMultiplayerPeer(resolveClassConstructor('WebRTCMultiplayerPeer'));
+  }
+
   // Skipped create_server(): an argument type is unsupported.
   // Skipped create_client(): an argument type is unsupported.
   // Skipped create_mesh(): an argument type is unsupported.

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ParticleProcessMaterial extends Material {
   ParticleProcessMaterial(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ParticleProcessMaterial instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ParticleProcessMaterial.create() {
+    return ParticleProcessMaterial(resolveClassConstructor('ParticleProcessMaterial'));
+  }
+
   static final Pointer<Void> _mb_set_direction =
       resolveMethodBind('ParticleProcessMaterial', 'set_direction', 3460891852);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class RenderSceneBuffersExtension extends RenderSceneBuffers {
   RenderSceneBuffersExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RenderSceneBuffersExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RenderSceneBuffersExtension.create() {
+    return RenderSceneBuffersExtension(resolveClassConstructor('RenderSceneBuffersExtension'));
+  }
+
 }

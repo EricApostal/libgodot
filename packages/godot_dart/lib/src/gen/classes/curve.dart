@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Curve extends Resource {
   Curve(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Curve instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Curve.create() {
+    return Curve(resolveClassConstructor('Curve'));
+  }
+
   static final Pointer<Void> _mb_get_point_count =
       resolveMethodBind('Curve', 'get_point_count', 3905245786);
 

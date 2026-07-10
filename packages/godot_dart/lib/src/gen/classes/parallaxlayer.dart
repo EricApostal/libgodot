@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ParallaxLayer extends Node2D {
   ParallaxLayer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ParallaxLayer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ParallaxLayer.create() {
+    return ParallaxLayer(resolveClassConstructor('ParallaxLayer'));
+  }
+
   static final Pointer<Void> _mb_set_motion_scale =
       resolveMethodBind('ParallaxLayer', 'set_motion_scale', 743155724);
 

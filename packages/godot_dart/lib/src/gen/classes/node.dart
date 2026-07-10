@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Node extends GodotObject {
   Node(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Node instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Node.create() {
+    return Node(resolveClassConstructor('Node'));
+  }
+
   static final Pointer<Void> _mb_add_sibling =
       resolveMethodBind('Node', 'add_sibling', 2570952461);
 

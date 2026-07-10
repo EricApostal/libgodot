@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Sprite2D extends Node2D {
   Sprite2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Sprite2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Sprite2D.create() {
+    return Sprite2D(resolveClassConstructor('Sprite2D'));
+  }
+
   static final Pointer<Void> _mb_set_texture =
       resolveMethodBind('Sprite2D', 'set_texture', 4051416890);
 

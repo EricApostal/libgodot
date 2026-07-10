@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Geometry2D extends GodotObject {
   Geometry2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Geometry2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Geometry2D.create() {
+    return Geometry2D(resolveClassConstructor('Geometry2D'));
+  }
+
   static final Pointer<Void> _mb_is_point_in_circle =
       resolveMethodBind('Geometry2D', 'is_point_in_circle', 2929491703);
 

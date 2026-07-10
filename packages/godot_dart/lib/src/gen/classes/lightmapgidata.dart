@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class LightmapGIData extends Resource {
   LightmapGIData(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LightmapGIData instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LightmapGIData.create() {
+    return LightmapGIData(resolveClassConstructor('LightmapGIData'));
+  }
+
   // Skipped set_lightmap_textures(): an argument type is unsupported.
   // Skipped get_lightmap_textures(): unsupported return type "typedarray::TextureLayered".
   // Skipped set_shadowmask_textures(): an argument type is unsupported.

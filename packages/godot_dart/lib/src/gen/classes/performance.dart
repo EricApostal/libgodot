@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Performance extends GodotObject {
   Performance(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Performance instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Performance.create() {
+    return Performance(resolveClassConstructor('Performance'));
+  }
+
   static final Pointer<Void> _mb_get_monitor =
       resolveMethodBind('Performance', 'get_monitor', 1943275655);
 

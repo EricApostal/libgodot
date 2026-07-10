@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFBufferView extends Resource {
   GLTFBufferView(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFBufferView instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFBufferView.create() {
+    return GLTFBufferView(resolveClassConstructor('GLTFBufferView'));
+  }
+
   // Skipped load_buffer_view_data(): unsupported return type "PackedByteArray".
   // Skipped to_dictionary(): unsupported return type "Dictionary".
   static final Pointer<Void> _mb_get_buffer =

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class JSONRPC extends GodotObject {
   JSONRPC(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned JSONRPC instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory JSONRPC.create() {
+    return JSONRPC(resolveClassConstructor('JSONRPC'));
+  }
+
   // Skipped set_method(): an argument type is unsupported.
   // Skipped process_action(): unsupported return type "Variant".
   static final Pointer<Void> _mb_process_string =

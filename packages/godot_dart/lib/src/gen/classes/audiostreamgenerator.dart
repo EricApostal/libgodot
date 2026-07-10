@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamGenerator extends AudioStream {
   AudioStreamGenerator(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamGenerator instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamGenerator.create() {
+    return AudioStreamGenerator(resolveClassConstructor('AudioStreamGenerator'));
+  }
+
   static final Pointer<Void> _mb_set_mix_rate =
       resolveMethodBind('AudioStreamGenerator', 'set_mix_rate', 373806689);
 

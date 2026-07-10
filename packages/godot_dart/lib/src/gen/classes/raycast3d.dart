@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RayCast3D extends Node3D {
   RayCast3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RayCast3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RayCast3D.create() {
+    return RayCast3D(resolveClassConstructor('RayCast3D'));
+  }
+
   static final Pointer<Void> _mb_set_enabled =
       resolveMethodBind('RayCast3D', 'set_enabled', 2586408642);
 

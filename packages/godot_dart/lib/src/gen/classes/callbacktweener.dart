@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CallbackTweener extends Tweener {
   CallbackTweener(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CallbackTweener instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CallbackTweener.create() {
+    return CallbackTweener(resolveClassConstructor('CallbackTweener'));
+  }
+
   static final Pointer<Void> _mb_set_delay =
       resolveMethodBind('CallbackTweener', 'set_delay', 3008182292);
 

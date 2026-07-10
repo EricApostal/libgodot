@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class WebRTCPeerConnection extends RefCounted {
   WebRTCPeerConnection(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned WebRTCPeerConnection instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory WebRTCPeerConnection.create() {
+    return WebRTCPeerConnection(resolveClassConstructor('WebRTCPeerConnection'));
+  }
+
   // Skipped initialize(): an argument type is unsupported.
   // Skipped create_data_channel(): an argument type is unsupported.
   static final Pointer<Void> _mb_create_offer =

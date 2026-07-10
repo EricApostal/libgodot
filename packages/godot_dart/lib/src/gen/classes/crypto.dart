@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Crypto extends RefCounted {
   Crypto(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Crypto instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Crypto.create() {
+    return Crypto(resolveClassConstructor('Crypto'));
+  }
+
   // Skipped generate_random_bytes(): unsupported return type "PackedByteArray".
   static final Pointer<Void> _mb_generate_rsa =
       resolveMethodBind('Crypto', 'generate_rsa', 1237515462);

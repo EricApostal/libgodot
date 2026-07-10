@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AESContext extends RefCounted {
   AESContext(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AESContext instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AESContext.create() {
+    return AESContext(resolveClassConstructor('AESContext'));
+  }
+
   // Skipped start(): an argument type is unsupported.
   // Skipped update(): unsupported return type "PackedByteArray".
   // Skipped get_iv_state(): unsupported return type "PackedByteArray".

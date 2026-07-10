@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRAction extends Resource {
   OpenXRAction(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRAction instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRAction.create() {
+    return OpenXRAction(resolveClassConstructor('OpenXRAction'));
+  }
+
   static final Pointer<Void> _mb_set_localized_name =
       resolveMethodBind('OpenXRAction', 'set_localized_name', 83702148);
 

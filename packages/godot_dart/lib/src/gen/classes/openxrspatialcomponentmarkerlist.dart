@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentMarkerList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentMarkerList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentMarkerList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentMarkerList.create() {
+    return OpenXRSpatialComponentMarkerList(resolveClassConstructor('OpenXRSpatialComponentMarkerList'));
+  }
+
   static final Pointer<Void> _mb_get_marker_type =
       resolveMethodBind('OpenXRSpatialComponentMarkerList', 'get_marker_type', 2627847866);
 

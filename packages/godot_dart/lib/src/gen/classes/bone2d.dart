@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Bone2D extends Node2D {
   Bone2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Bone2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Bone2D.create() {
+    return Bone2D(resolveClassConstructor('Bone2D'));
+  }
+
   static final Pointer<Void> _mb_set_rest =
       resolveMethodBind('Bone2D', 'set_rest', 2761652528);
 

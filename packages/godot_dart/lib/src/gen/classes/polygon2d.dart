@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Polygon2D extends Node2D {
   Polygon2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Polygon2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Polygon2D.create() {
+    return Polygon2D(resolveClassConstructor('Polygon2D'));
+  }
+
   // Skipped set_polygon(): an argument type is unsupported.
   // Skipped get_polygon(): unsupported return type "PackedVector2Array".
   // Skipped set_uv(): an argument type is unsupported.

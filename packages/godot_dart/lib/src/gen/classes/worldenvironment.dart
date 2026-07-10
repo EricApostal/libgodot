@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class WorldEnvironment extends Node {
   WorldEnvironment(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned WorldEnvironment instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory WorldEnvironment.create() {
+    return WorldEnvironment(resolveClassConstructor('WorldEnvironment'));
+  }
+
   static final Pointer<Void> _mb_set_environment =
       resolveMethodBind('WorldEnvironment', 'set_environment', 4143518816);
 

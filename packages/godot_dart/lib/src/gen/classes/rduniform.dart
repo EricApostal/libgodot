@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDUniform extends RefCounted {
   RDUniform(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDUniform instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDUniform.create() {
+    return RDUniform(resolveClassConstructor('RDUniform'));
+  }
+
   static final Pointer<Void> _mb_set_uniform_type =
       resolveMethodBind('RDUniform', 'set_uniform_type', 1664894931);
 

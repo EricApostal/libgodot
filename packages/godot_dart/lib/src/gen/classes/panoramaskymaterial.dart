@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PanoramaSkyMaterial extends Material {
   PanoramaSkyMaterial(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PanoramaSkyMaterial instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PanoramaSkyMaterial.create() {
+    return PanoramaSkyMaterial(resolveClassConstructor('PanoramaSkyMaterial'));
+  }
+
   static final Pointer<Void> _mb_set_panorama =
       resolveMethodBind('PanoramaSkyMaterial', 'set_panorama', 4051416890);
 

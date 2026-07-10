@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFPhysicsBody extends Resource {
   GLTFPhysicsBody(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFPhysicsBody instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFPhysicsBody.create() {
+    return GLTFPhysicsBody(resolveClassConstructor('GLTFPhysicsBody'));
+  }
+
   static final Pointer<Void> _mb_to_node =
       resolveMethodBind('GLTFPhysicsBody', 'to_node', 3224013656);
 

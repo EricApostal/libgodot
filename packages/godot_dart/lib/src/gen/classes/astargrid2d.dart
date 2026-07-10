@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AStarGrid2D extends RefCounted {
   AStarGrid2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AStarGrid2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AStarGrid2D.create() {
+    return AStarGrid2D(resolveClassConstructor('AStarGrid2D'));
+  }
+
   static final Pointer<Void> _mb_set_region =
       resolveMethodBind('AStarGrid2D', 'set_region', 1763793166);
 

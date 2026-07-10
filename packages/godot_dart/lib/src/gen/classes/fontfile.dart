@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FontFile extends Font {
   FontFile(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FontFile instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FontFile.create() {
+    return FontFile(resolveClassConstructor('FontFile'));
+  }
+
   static final Pointer<Void> _mb_load_bitmap_font =
       resolveMethodBind('FontFile', 'load_bitmap_font', 166001499);
 

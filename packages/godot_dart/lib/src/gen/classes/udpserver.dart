@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class UDPServer extends RefCounted {
   UDPServer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned UDPServer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory UDPServer.create() {
+    return UDPServer(resolveClassConstructor('UDPServer'));
+  }
+
   static final Pointer<Void> _mb_listen =
       resolveMethodBind('UDPServer', 'listen', 3167955072);
 

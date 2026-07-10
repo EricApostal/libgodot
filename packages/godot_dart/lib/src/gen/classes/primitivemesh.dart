@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PrimitiveMesh extends Mesh {
   PrimitiveMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PrimitiveMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PrimitiveMesh.create() {
+    return PrimitiveMesh(resolveClassConstructor('PrimitiveMesh'));
+  }
+
   static final Pointer<Void> _mb_set_material =
       resolveMethodBind('PrimitiveMesh', 'set_material', 2757459619);
 

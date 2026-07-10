@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AStar3D extends RefCounted {
   AStar3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AStar3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AStar3D.create() {
+    return AStar3D(resolveClassConstructor('AStar3D'));
+  }
+
   static final Pointer<Void> _mb_get_available_point_id =
       resolveMethodBind('AStar3D', 'get_available_point_id', 3905245786);
 

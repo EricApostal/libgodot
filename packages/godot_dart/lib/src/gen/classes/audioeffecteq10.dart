@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AudioEffectEQ10 extends AudioEffectEQ {
   AudioEffectEQ10(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectEQ10 instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectEQ10.create() {
+    return AudioEffectEQ10(resolveClassConstructor('AudioEffectEQ10'));
+  }
+
 }

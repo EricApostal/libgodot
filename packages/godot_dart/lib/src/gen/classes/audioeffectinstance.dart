@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AudioEffectInstance extends RefCounted {
   AudioEffectInstance(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectInstance instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectInstance.create() {
+    return AudioEffectInstance(resolveClassConstructor('AudioEffectInstance'));
+  }
+
 }

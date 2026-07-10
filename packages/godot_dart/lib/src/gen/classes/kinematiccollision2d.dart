@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class KinematicCollision2D extends RefCounted {
   KinematicCollision2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned KinematicCollision2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory KinematicCollision2D.create() {
+    return KinematicCollision2D(resolveClassConstructor('KinematicCollision2D'));
+  }
+
   static final Pointer<Void> _mb_get_position =
       resolveMethodBind('KinematicCollision2D', 'get_position', 3341600327);
 

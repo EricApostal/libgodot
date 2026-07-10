@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SplitContainer extends Container {
   SplitContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SplitContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SplitContainer.create() {
+    return SplitContainer(resolveClassConstructor('SplitContainer'));
+  }
+
   // Skipped set_split_offsets(): an argument type is unsupported.
   // Skipped get_split_offsets(): unsupported return type "PackedInt32Array".
   static final Pointer<Void> _mb_clamp_split_offset =

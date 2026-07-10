@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TriangleMesh extends RefCounted {
   TriangleMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TriangleMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TriangleMesh.create() {
+    return TriangleMesh(resolveClassConstructor('TriangleMesh'));
+  }
+
   // Skipped create_from_faces(): an argument type is unsupported.
   // Skipped get_faces(): unsupported return type "PackedVector3Array".
   // Skipped intersect_segment(): unsupported return type "Dictionary".

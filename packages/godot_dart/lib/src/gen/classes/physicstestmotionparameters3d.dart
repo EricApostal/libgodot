@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsTestMotionParameters3D extends RefCounted {
   PhysicsTestMotionParameters3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsTestMotionParameters3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsTestMotionParameters3D.create() {
+    return PhysicsTestMotionParameters3D(resolveClassConstructor('PhysicsTestMotionParameters3D'));
+  }
+
   static final Pointer<Void> _mb_get_from =
       resolveMethodBind('PhysicsTestMotionParameters3D', 'get_from', 3229777777);
 

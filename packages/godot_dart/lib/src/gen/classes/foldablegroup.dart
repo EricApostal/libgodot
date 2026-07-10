@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FoldableGroup extends Resource {
   FoldableGroup(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FoldableGroup instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FoldableGroup.create() {
+    return FoldableGroup(resolveClassConstructor('FoldableGroup'));
+  }
+
   static final Pointer<Void> _mb_get_expanded_container =
       resolveMethodBind('FoldableGroup', 'get_expanded_container', 1427441056);
 

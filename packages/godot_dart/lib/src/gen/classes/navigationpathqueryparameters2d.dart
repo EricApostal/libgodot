@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationPathQueryParameters2D extends RefCounted {
   NavigationPathQueryParameters2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationPathQueryParameters2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationPathQueryParameters2D.create() {
+    return NavigationPathQueryParameters2D(resolveClassConstructor('NavigationPathQueryParameters2D'));
+  }
+
   static final Pointer<Void> _mb_set_pathfinding_algorithm =
       resolveMethodBind('NavigationPathQueryParameters2D', 'set_pathfinding_algorithm', 2783519915);
 

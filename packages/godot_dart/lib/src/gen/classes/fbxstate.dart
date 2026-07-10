@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FBXState extends GLTFState {
   FBXState(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FBXState instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FBXState.create() {
+    return FBXState(resolveClassConstructor('FBXState'));
+  }
+
   static final Pointer<Void> _mb_get_allow_geometry_helper_nodes =
       resolveMethodBind('FBXState', 'get_allow_geometry_helper_nodes', 2240911060);
 

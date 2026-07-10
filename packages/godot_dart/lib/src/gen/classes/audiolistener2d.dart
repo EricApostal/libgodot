@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioListener2D extends Node2D {
   AudioListener2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioListener2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioListener2D.create() {
+    return AudioListener2D(resolveClassConstructor('AudioListener2D'));
+  }
+
   static final Pointer<Void> _mb_make_current =
       resolveMethodBind('AudioListener2D', 'make_current', 3218959716);
 

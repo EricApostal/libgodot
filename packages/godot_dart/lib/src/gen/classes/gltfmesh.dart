@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFMesh extends Resource {
   GLTFMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFMesh.create() {
+    return GLTFMesh(resolveClassConstructor('GLTFMesh'));
+  }
+
   static final Pointer<Void> _mb_get_original_name =
       resolveMethodBind('GLTFMesh', 'get_original_name', 2841200299);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class WebSocketPeer extends PacketPeer {
   WebSocketPeer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned WebSocketPeer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory WebSocketPeer.create() {
+    return WebSocketPeer(resolveClassConstructor('WebSocketPeer'));
+  }
+
   static final Pointer<Void> _mb_connect_to_url =
       resolveMethodBind('WebSocketPeer', 'connect_to_url', 1966198364);
 

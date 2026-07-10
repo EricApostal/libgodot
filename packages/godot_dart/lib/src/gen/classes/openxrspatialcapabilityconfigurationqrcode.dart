@@ -14,5 +14,11 @@ import '../classes.g.dart';
 class OpenXRSpatialCapabilityConfigurationQrCode extends OpenXRSpatialCapabilityConfigurationBaseHeader {
   OpenXRSpatialCapabilityConfigurationQrCode(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialCapabilityConfigurationQrCode instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialCapabilityConfigurationQrCode.create() {
+    return OpenXRSpatialCapabilityConfigurationQrCode(resolveClassConstructor('OpenXRSpatialCapabilityConfigurationQrCode'));
+  }
+
   // Skipped get_enabled_components(): unsupported return type "PackedInt64Array".
 }

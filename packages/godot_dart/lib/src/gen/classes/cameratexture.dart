@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CameraTexture extends Texture2D {
   CameraTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CameraTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CameraTexture.create() {
+    return CameraTexture(resolveClassConstructor('CameraTexture'));
+  }
+
   static final Pointer<Void> _mb_set_camera_feed_id =
       resolveMethodBind('CameraTexture', 'set_camera_feed_id', 1286410249);
 

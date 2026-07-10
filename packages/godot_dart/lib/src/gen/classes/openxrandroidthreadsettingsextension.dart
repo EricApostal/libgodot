@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRAndroidThreadSettingsExtension extends OpenXRExtensionWrapper {
   OpenXRAndroidThreadSettingsExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRAndroidThreadSettingsExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRAndroidThreadSettingsExtension.create() {
+    return OpenXRAndroidThreadSettingsExtension(resolveClassConstructor('OpenXRAndroidThreadSettingsExtension'));
+  }
+
   static final Pointer<Void> _mb_set_application_thread_type =
       resolveMethodBind('OpenXRAndroidThreadSettingsExtension', 'set_application_thread_type', 1558751158);
 

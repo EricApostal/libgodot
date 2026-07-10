@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeOneShot extends AnimationNodeSync {
   AnimationNodeOneShot(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeOneShot instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeOneShot.create() {
+    return AnimationNodeOneShot(resolveClassConstructor('AnimationNodeOneShot'));
+  }
+
   static final Pointer<Void> _mb_set_fadein_time =
       resolveMethodBind('AnimationNodeOneShot', 'set_fadein_time', 373806689);
 

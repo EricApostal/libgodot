@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SubViewportContainer extends Container {
   SubViewportContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SubViewportContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SubViewportContainer.create() {
+    return SubViewportContainer(resolveClassConstructor('SubViewportContainer'));
+  }
+
   static final Pointer<Void> _mb_set_stretch =
       resolveMethodBind('SubViewportContainer', 'set_stretch', 2586408642);
 

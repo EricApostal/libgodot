@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class HBoxContainer extends BoxContainer {
   HBoxContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HBoxContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HBoxContainer.create() {
+    return HBoxContainer(resolveClassConstructor('HBoxContainer'));
+  }
+
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TileSetScenesCollectionSource extends TileSetSource {
   TileSetScenesCollectionSource(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TileSetScenesCollectionSource instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TileSetScenesCollectionSource.create() {
+    return TileSetScenesCollectionSource(resolveClassConstructor('TileSetScenesCollectionSource'));
+  }
+
   static final Pointer<Void> _mb_get_scene_tiles_count =
       resolveMethodBind('TileSetScenesCollectionSource', 'get_scene_tiles_count', 2455072627);
 

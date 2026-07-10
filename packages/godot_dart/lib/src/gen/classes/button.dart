@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Button extends BaseButton {
   Button(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Button instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Button.create() {
+    return Button(resolveClassConstructor('Button'));
+  }
+
   static final Pointer<Void> _mb_set_text =
       resolveMethodBind('Button', 'set_text', 83702148);
 

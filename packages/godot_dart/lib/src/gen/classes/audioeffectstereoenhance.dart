@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectStereoEnhance extends AudioEffect {
   AudioEffectStereoEnhance(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectStereoEnhance instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectStereoEnhance.create() {
+    return AudioEffectStereoEnhance(resolveClassConstructor('AudioEffectStereoEnhance'));
+  }
+
   static final Pointer<Void> _mb_set_pan_pullout =
       resolveMethodBind('AudioEffectStereoEnhance', 'set_pan_pullout', 373806689);
 

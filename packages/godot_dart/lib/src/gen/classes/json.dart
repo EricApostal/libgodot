@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class JSON extends Resource {
   JSON(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned JSON instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory JSON.create() {
+    return JSON(resolveClassConstructor('JSON'));
+  }
+
   static final Pointer<Void> _mb_parse =
       resolveMethodBind('JSON', 'parse', 885841341);
 

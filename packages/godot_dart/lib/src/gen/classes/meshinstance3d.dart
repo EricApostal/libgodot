@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MeshInstance3D extends GeometryInstance3D {
   MeshInstance3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MeshInstance3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MeshInstance3D.create() {
+    return MeshInstance3D(resolveClassConstructor('MeshInstance3D'));
+  }
+
   static final Pointer<Void> _mb_set_mesh =
       resolveMethodBind('MeshInstance3D', 'set_mesh', 194775623);
 

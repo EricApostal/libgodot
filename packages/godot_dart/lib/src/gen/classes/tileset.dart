@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TileSet extends Resource {
   TileSet(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TileSet instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TileSet.create() {
+    return TileSet(resolveClassConstructor('TileSet'));
+  }
+
   static final Pointer<Void> _mb_get_next_source_id =
       resolveMethodBind('TileSet', 'get_next_source_id', 3905245786);
 

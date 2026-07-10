@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeBooleanConstant extends VisualShaderNodeConstant {
   VisualShaderNodeBooleanConstant(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeBooleanConstant instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeBooleanConstant.create() {
+    return VisualShaderNodeBooleanConstant(resolveClassConstructor('VisualShaderNodeBooleanConstant'));
+  }
+
   static final Pointer<Void> _mb_set_constant =
       resolveMethodBind('VisualShaderNodeBooleanConstant', 'set_constant', 2586408642);
 

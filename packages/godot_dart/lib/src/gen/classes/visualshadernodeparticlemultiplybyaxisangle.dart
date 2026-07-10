@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeParticleMultiplyByAxisAngle extends VisualShaderNode {
   VisualShaderNodeParticleMultiplyByAxisAngle(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParticleMultiplyByAxisAngle instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParticleMultiplyByAxisAngle.create() {
+    return VisualShaderNodeParticleMultiplyByAxisAngle(resolveClassConstructor('VisualShaderNodeParticleMultiplyByAxisAngle'));
+  }
+
   static final Pointer<Void> _mb_set_degrees_mode =
       resolveMethodBind('VisualShaderNodeParticleMultiplyByAxisAngle', 'set_degrees_mode', 2586408642);
 

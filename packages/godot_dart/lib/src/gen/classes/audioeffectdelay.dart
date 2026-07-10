@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectDelay extends AudioEffect {
   AudioEffectDelay(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectDelay instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectDelay.create() {
+    return AudioEffectDelay(resolveClassConstructor('AudioEffectDelay'));
+  }
+
   static final Pointer<Void> _mb_set_dry =
       resolveMethodBind('AudioEffectDelay', 'set_dry', 373806689);
 

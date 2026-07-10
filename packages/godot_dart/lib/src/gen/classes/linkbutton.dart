@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class LinkButton extends BaseButton {
   LinkButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LinkButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LinkButton.create() {
+    return LinkButton(resolveClassConstructor('LinkButton'));
+  }
+
   static final Pointer<Void> _mb_set_text =
       resolveMethodBind('LinkButton', 'set_text', 83702148);
 

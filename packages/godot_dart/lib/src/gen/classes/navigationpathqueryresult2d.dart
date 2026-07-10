@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationPathQueryResult2D extends RefCounted {
   NavigationPathQueryResult2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationPathQueryResult2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationPathQueryResult2D.create() {
+    return NavigationPathQueryResult2D(resolveClassConstructor('NavigationPathQueryResult2D'));
+  }
+
   // Skipped set_path(): an argument type is unsupported.
   // Skipped get_path(): unsupported return type "PackedVector2Array".
   // Skipped set_path_types(): an argument type is unsupported.

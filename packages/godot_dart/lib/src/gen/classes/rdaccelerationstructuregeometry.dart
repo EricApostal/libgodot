@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDAccelerationStructureGeometry extends RefCounted {
   RDAccelerationStructureGeometry(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDAccelerationStructureGeometry instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDAccelerationStructureGeometry.create() {
+    return RDAccelerationStructureGeometry(resolveClassConstructor('RDAccelerationStructureGeometry'));
+  }
+
   static final Pointer<Void> _mb_set_flags =
       resolveMethodBind('RDAccelerationStructureGeometry', 'set_flags', 1046628555);
 

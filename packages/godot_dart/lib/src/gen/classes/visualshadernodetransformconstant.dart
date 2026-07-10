@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeTransformConstant extends VisualShaderNodeConstant {
   VisualShaderNodeTransformConstant(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTransformConstant instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTransformConstant.create() {
+    return VisualShaderNodeTransformConstant(resolveClassConstructor('VisualShaderNodeTransformConstant'));
+  }
+
   static final Pointer<Void> _mb_set_constant =
       resolveMethodBind('VisualShaderNodeTransformConstant', 'set_constant', 2952846383);
 

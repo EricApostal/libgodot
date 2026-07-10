@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ENetConnection extends RefCounted {
   ENetConnection(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ENetConnection instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ENetConnection.create() {
+    return ENetConnection(resolveClassConstructor('ENetConnection'));
+  }
+
   static final Pointer<Void> _mb_create_host_bound =
       resolveMethodBind('ENetConnection', 'create_host_bound', 1515002313);
 

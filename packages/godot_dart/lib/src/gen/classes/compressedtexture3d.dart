@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CompressedTexture3D extends Texture3D {
   CompressedTexture3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CompressedTexture3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CompressedTexture3D.create() {
+    return CompressedTexture3D(resolveClassConstructor('CompressedTexture3D'));
+  }
+
   static final Pointer<Void> _mb_load =
       resolveMethodBind('CompressedTexture3D', 'load', 166001499);
 

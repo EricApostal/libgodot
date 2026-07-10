@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Environment extends Resource {
   Environment(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Environment instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Environment.create() {
+    return Environment(resolveClassConstructor('Environment'));
+  }
+
   static final Pointer<Void> _mb_set_background =
       resolveMethodBind('Environment', 'set_background', 4071623990);
 

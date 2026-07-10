@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FontVariation extends Font {
   FontVariation(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FontVariation instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FontVariation.create() {
+    return FontVariation(resolveClassConstructor('FontVariation'));
+  }
+
   static final Pointer<Void> _mb_set_base_font =
       resolveMethodBind('FontVariation', 'set_base_font', 1262170328);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PlaceholderTexture2D extends Texture2D {
   PlaceholderTexture2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PlaceholderTexture2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PlaceholderTexture2D.create() {
+    return PlaceholderTexture2D(resolveClassConstructor('PlaceholderTexture2D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('PlaceholderTexture2D', 'set_size', 743155724);
 

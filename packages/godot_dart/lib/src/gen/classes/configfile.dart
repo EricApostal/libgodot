@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ConfigFile extends RefCounted {
   ConfigFile(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ConfigFile instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ConfigFile.create() {
+    return ConfigFile(resolveClassConstructor('ConfigFile'));
+  }
+
   // Skipped set_value(): an argument type is unsupported.
   // Skipped get_value(): unsupported return type "Variant".
   static final Pointer<Void> _mb_has_section =

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStream extends Resource {
   AudioStream(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStream instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStream.create() {
+    return AudioStream(resolveClassConstructor('AudioStream'));
+  }
+
   static final Pointer<Void> _mb_get_length =
       resolveMethodBind('AudioStream', 'get_length', 1740695150);
 

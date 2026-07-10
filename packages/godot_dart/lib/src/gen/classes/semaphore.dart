@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Semaphore extends RefCounted {
   Semaphore(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Semaphore instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Semaphore.create() {
+    return Semaphore(resolveClassConstructor('Semaphore'));
+  }
+
   static final Pointer<Void> _mb_wait =
       resolveMethodBind('Semaphore', 'wait', 3218959716);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PlaceholderMesh extends Mesh {
   PlaceholderMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PlaceholderMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PlaceholderMesh.create() {
+    return PlaceholderMesh(resolveClassConstructor('PlaceholderMesh'));
+  }
+
   static final Pointer<Void> _mb_set_aabb =
       resolveMethodBind('PlaceholderMesh', 'set_aabb', 259215842);
 

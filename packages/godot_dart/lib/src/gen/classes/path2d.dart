@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Path2D extends Node2D {
   Path2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Path2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Path2D.create() {
+    return Path2D(resolveClassConstructor('Path2D'));
+  }
+
   static final Pointer<Void> _mb_set_curve =
       resolveMethodBind('Path2D', 'set_curve', 659985499);
 

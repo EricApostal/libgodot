@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Mutex extends RefCounted {
   Mutex(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Mutex instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Mutex.create() {
+    return Mutex(resolveClassConstructor('Mutex'));
+  }
+
   static final Pointer<Void> _mb_lock =
       resolveMethodBind('Mutex', 'lock', 3218959716);
 

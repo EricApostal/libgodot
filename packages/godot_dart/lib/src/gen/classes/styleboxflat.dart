@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StyleBoxFlat extends StyleBox {
   StyleBoxFlat(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StyleBoxFlat instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StyleBoxFlat.create() {
+    return StyleBoxFlat(resolveClassConstructor('StyleBoxFlat'));
+  }
+
   static final Pointer<Void> _mb_set_bg_color =
       resolveMethodBind('StyleBoxFlat', 'set_bg_color', 2920490490);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeStateMachine extends AnimationRootNode {
   AnimationNodeStateMachine(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeStateMachine instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeStateMachine.create() {
+    return AnimationNodeStateMachine(resolveClassConstructor('AnimationNodeStateMachine'));
+  }
+
   static final Pointer<Void> _mb_add_node =
       resolveMethodBind('AnimationNodeStateMachine', 'add_node', 1980270704);
 

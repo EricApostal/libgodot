@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class X509Certificate extends Resource {
   X509Certificate(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned X509Certificate instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory X509Certificate.create() {
+    return X509Certificate(resolveClassConstructor('X509Certificate'));
+  }
+
   static final Pointer<Void> _mb_save =
       resolveMethodBind('X509Certificate', 'save', 166001499);
 

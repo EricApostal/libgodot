@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class IntervalTweener extends Tweener {
   IntervalTweener(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned IntervalTweener instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory IntervalTweener.create() {
+    return IntervalTweener(resolveClassConstructor('IntervalTweener'));
+  }
+
 }

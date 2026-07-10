@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AnimationNodeExtension extends AnimationNode {
   AnimationNodeExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeExtension.create() {
+    return AnimationNodeExtension(resolveClassConstructor('AnimationNodeExtension'));
+  }
+
 }

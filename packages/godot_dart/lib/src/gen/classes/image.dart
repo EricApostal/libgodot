@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Image extends Resource {
   Image(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Image instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Image.create() {
+    return Image(resolveClassConstructor('Image'));
+  }
+
   static final Pointer<Void> _mb_get_width =
       resolveMethodBind('Image', 'get_width', 3905245786);
 

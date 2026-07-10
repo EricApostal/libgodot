@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TileMap extends Node2D {
   TileMap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TileMap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TileMap.create() {
+    return TileMap(resolveClassConstructor('TileMap'));
+  }
+
   // Skipped set_navigation_map(): an argument type is unsupported.
   // Skipped get_navigation_map(): unsupported return type "RID".
   static final Pointer<Void> _mb_force_update =

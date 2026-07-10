@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VoxelGIData extends Resource {
   VoxelGIData(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VoxelGIData instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VoxelGIData.create() {
+    return VoxelGIData(resolveClassConstructor('VoxelGIData'));
+  }
+
   // Skipped allocate(): an argument type is unsupported.
   static final Pointer<Void> _mb_get_bounds =
       resolveMethodBind('VoxelGIData', 'get_bounds', 1068685055);

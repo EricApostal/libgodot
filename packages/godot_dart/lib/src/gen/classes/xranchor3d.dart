@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRAnchor3D extends XRNode3D {
   XRAnchor3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRAnchor3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRAnchor3D.create() {
+    return XRAnchor3D(resolveClassConstructor('XRAnchor3D'));
+  }
+
   static final Pointer<Void> _mb_get_size =
       resolveMethodBind('XRAnchor3D', 'get_size', 3360562783);
 

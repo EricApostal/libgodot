@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRInterface extends XRInterface {
   OpenXRInterface(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRInterface instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRInterface.create() {
+    return OpenXRInterface(resolveClassConstructor('OpenXRInterface'));
+  }
+
   static final Pointer<Void> _mb_get_session_state =
       resolveMethodBind('OpenXRInterface', 'get_session_state', 896364779);
 

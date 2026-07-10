@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamPlayback extends RefCounted {
   AudioStreamPlayback(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamPlayback instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamPlayback.create() {
+    return AudioStreamPlayback(resolveClassConstructor('AudioStreamPlayback'));
+  }
+
   static final Pointer<Void> _mb_set_sample_playback =
       resolveMethodBind('AudioStreamPlayback', 'set_sample_playback', 3195455091);
 

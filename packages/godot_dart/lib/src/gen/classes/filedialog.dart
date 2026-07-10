@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FileDialog extends ConfirmationDialog {
   FileDialog(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FileDialog instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FileDialog.create() {
+    return FileDialog(resolveClassConstructor('FileDialog'));
+  }
+
   static final Pointer<Void> _mb_clear_filters =
       resolveMethodBind('FileDialog', 'clear_filters', 3218959716);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeComment extends VisualShaderNodeFrame {
   VisualShaderNodeComment(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeComment instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeComment.create() {
+    return VisualShaderNodeComment(resolveClassConstructor('VisualShaderNodeComment'));
+  }
+
   static final Pointer<Void> _mb_set_description =
       resolveMethodBind('VisualShaderNodeComment', 'set_description', 83702148);
 

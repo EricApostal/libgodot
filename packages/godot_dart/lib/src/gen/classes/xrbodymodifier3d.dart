@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRBodyModifier3D extends SkeletonModifier3D {
   XRBodyModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRBodyModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRBodyModifier3D.create() {
+    return XRBodyModifier3D(resolveClassConstructor('XRBodyModifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_body_tracker =
       resolveMethodBind('XRBodyModifier3D', 'set_body_tracker', 3304788590);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class JacobianIK3D extends IterateIK3D {
   JacobianIK3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned JacobianIK3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory JacobianIK3D.create() {
+    return JacobianIK3D(resolveClassConstructor('JacobianIK3D'));
+  }
+
 }

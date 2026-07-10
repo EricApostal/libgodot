@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SeparationRayShape3D extends Shape3D {
   SeparationRayShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SeparationRayShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SeparationRayShape3D.create() {
+    return SeparationRayShape3D(resolveClassConstructor('SeparationRayShape3D'));
+  }
+
   static final Pointer<Void> _mb_set_length =
       resolveMethodBind('SeparationRayShape3D', 'set_length', 373806689);
 

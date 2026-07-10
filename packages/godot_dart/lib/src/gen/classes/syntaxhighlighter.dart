@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SyntaxHighlighter extends Resource {
   SyntaxHighlighter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SyntaxHighlighter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SyntaxHighlighter.create() {
+    return SyntaxHighlighter(resolveClassConstructor('SyntaxHighlighter'));
+  }
+
   // Skipped get_line_syntax_highlighting(): unsupported return type "Dictionary".
   static final Pointer<Void> _mb_update_cache =
       resolveMethodBind('SyntaxHighlighter', 'update_cache', 3218959716);

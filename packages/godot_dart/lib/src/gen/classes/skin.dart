@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Skin extends Resource {
   Skin(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Skin instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Skin.create() {
+    return Skin(resolveClassConstructor('Skin'));
+  }
+
   static final Pointer<Void> _mb_set_bind_count =
       resolveMethodBind('Skin', 'set_bind_count', 1286410249);
 

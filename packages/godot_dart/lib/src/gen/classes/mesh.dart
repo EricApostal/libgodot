@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Mesh extends Resource {
   Mesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Mesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Mesh.create() {
+    return Mesh(resolveClassConstructor('Mesh'));
+  }
+
   static final Pointer<Void> _mb_set_lightmap_size_hint =
       resolveMethodBind('Mesh', 'set_lightmap_size_hint', 1130785943);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StyleBoxLine extends StyleBox {
   StyleBoxLine(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StyleBoxLine instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StyleBoxLine.create() {
+    return StyleBoxLine(resolveClassConstructor('StyleBoxLine'));
+  }
+
   static final Pointer<Void> _mb_set_color =
       resolveMethodBind('StyleBoxLine', 'set_color', 2920490490);
 

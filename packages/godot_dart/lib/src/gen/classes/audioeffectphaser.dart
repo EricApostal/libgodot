@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectPhaser extends AudioEffect {
   AudioEffectPhaser(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectPhaser instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectPhaser.create() {
+    return AudioEffectPhaser(resolveClassConstructor('AudioEffectPhaser'));
+  }
+
   static final Pointer<Void> _mb_set_range_min_hz =
       resolveMethodBind('AudioEffectPhaser', 'set_range_min_hz', 373806689);
 

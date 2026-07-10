@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MethodTweener extends Tweener {
   MethodTweener(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MethodTweener instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MethodTweener.create() {
+    return MethodTweener(resolveClassConstructor('MethodTweener'));
+  }
+
   static final Pointer<Void> _mb_set_delay =
       resolveMethodBind('MethodTweener', 'set_delay', 266477812);
 

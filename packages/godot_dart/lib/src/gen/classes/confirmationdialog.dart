@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ConfirmationDialog extends AcceptDialog {
   ConfirmationDialog(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ConfirmationDialog instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ConfirmationDialog.create() {
+    return ConfirmationDialog(resolveClassConstructor('ConfirmationDialog'));
+  }
+
   static final Pointer<Void> _mb_get_cancel_button =
       resolveMethodBind('ConfirmationDialog', 'get_cancel_button', 1856205918);
 

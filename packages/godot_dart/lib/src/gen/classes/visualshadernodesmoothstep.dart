@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeSmoothStep extends VisualShaderNode {
   VisualShaderNodeSmoothStep(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeSmoothStep instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeSmoothStep.create() {
+    return VisualShaderNodeSmoothStep(resolveClassConstructor('VisualShaderNodeSmoothStep'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeSmoothStep', 'set_op_type', 2427426148);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRHandModifier3D extends SkeletonModifier3D {
   XRHandModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRHandModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRHandModifier3D.create() {
+    return XRHandModifier3D(resolveClassConstructor('XRHandModifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_hand_tracker =
       resolveMethodBind('XRHandModifier3D', 'set_hand_tracker', 3304788590);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRPose extends RefCounted {
   XRPose(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRPose instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRPose.create() {
+    return XRPose(resolveClassConstructor('XRPose'));
+  }
+
   static final Pointer<Void> _mb_set_has_tracking_data =
       resolveMethodBind('XRPose', 'set_has_tracking_data', 2586408642);
 

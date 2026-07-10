@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialContextPersistenceConfig extends OpenXRStructureBase {
   OpenXRSpatialContextPersistenceConfig(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialContextPersistenceConfig instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialContextPersistenceConfig.create() {
+    return OpenXRSpatialContextPersistenceConfig(resolveClassConstructor('OpenXRSpatialContextPersistenceConfig'));
+  }
+
   // Skipped add_persistence_context(): an argument type is unsupported.
   // Skipped remove_persistence_context(): an argument type is unsupported.
   // Skipped get_persistence_contexts(): unsupported return type "Array".

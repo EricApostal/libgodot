@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ConvexPolygonShape2D extends Shape2D {
   ConvexPolygonShape2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ConvexPolygonShape2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ConvexPolygonShape2D.create() {
+    return ConvexPolygonShape2D(resolveClassConstructor('ConvexPolygonShape2D'));
+  }
+
   // Skipped set_point_cloud(): an argument type is unsupported.
   // Skipped set_points(): an argument type is unsupported.
   // Skipped get_points(): unsupported return type "PackedVector2Array".

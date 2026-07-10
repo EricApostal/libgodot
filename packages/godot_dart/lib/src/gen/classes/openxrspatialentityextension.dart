@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialEntityExtension extends OpenXRExtensionWrapper {
   OpenXRSpatialEntityExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialEntityExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialEntityExtension.create() {
+    return OpenXRSpatialEntityExtension(resolveClassConstructor('OpenXRSpatialEntityExtension'));
+  }
+
   static final Pointer<Void> _mb_supports_capability =
       resolveMethodBind('OpenXRSpatialEntityExtension', 'supports_capability', 1940837202);
 

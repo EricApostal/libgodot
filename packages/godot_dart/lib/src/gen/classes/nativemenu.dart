@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NativeMenu extends GodotObject {
   NativeMenu(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NativeMenu instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NativeMenu.create() {
+    return NativeMenu(resolveClassConstructor('NativeMenu'));
+  }
+
   static final Pointer<Void> _mb_has_feature =
       resolveMethodBind('NativeMenu', 'has_feature', 1708975490);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VirtualJoystick extends Control {
   VirtualJoystick(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VirtualJoystick instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VirtualJoystick.create() {
+    return VirtualJoystick(resolveClassConstructor('VirtualJoystick'));
+  }
+
   static final Pointer<Void> _mb_set_joystick_mode =
       resolveMethodBind('VirtualJoystick', 'set_joystick_mode', 1316760817);
 

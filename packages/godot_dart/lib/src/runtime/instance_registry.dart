@@ -9,6 +9,9 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 
+import 'proc_table.dart';
+import 'string_name_cache.dart';
+
 abstract final class InstanceRegistry {
   static final Map<int, Object> _instances = {};
 
@@ -26,5 +29,16 @@ abstract final class InstanceRegistry {
   static void unbind(Pointer<Void> token) {
     _instances.remove(token.address);
     malloc.free(token);
+  }
+
+  /// Dynamically constructs a new instance of a Dart-registered `@GodotClass`
+  /// by its engine class name (e.g. at runtime, from another Dart class's
+  /// `_ready()`), returning the Dart wrapper its own `create_instance_func`
+  /// bound via [bind] during construction — the same mechanism the engine
+  /// uses when GDScript does `SomeCustomClass.new()`.
+  static T? constructAndWrap<T>(String className) {
+    final ptr = GodotApi.classdbConstructObject3(StringNameCache.intern(className));
+    if (ptr.address == 0) return null;
+    return lookup<T>(ptr);
   }
 }

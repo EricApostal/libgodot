@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StreamPeerUDS extends StreamPeerSocket {
   StreamPeerUDS(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StreamPeerUDS instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StreamPeerUDS.create() {
+    return StreamPeerUDS(resolveClassConstructor('StreamPeerUDS'));
+  }
+
   static final Pointer<Void> _mb_bind =
       resolveMethodBind('StreamPeerUDS', 'bind', 166001499);
 

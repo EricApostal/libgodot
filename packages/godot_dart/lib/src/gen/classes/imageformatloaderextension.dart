@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ImageFormatLoaderExtension extends ImageFormatLoader {
   ImageFormatLoaderExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ImageFormatLoaderExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ImageFormatLoaderExtension.create() {
+    return ImageFormatLoaderExtension(resolveClassConstructor('ImageFormatLoaderExtension'));
+  }
+
   static final Pointer<Void> _mb_add_format_loader =
       resolveMethodBind('ImageFormatLoaderExtension', 'add_format_loader', 3218959716);
 

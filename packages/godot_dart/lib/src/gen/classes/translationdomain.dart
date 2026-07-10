@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TranslationDomain extends RefCounted {
   TranslationDomain(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TranslationDomain instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TranslationDomain.create() {
+    return TranslationDomain(resolveClassConstructor('TranslationDomain'));
+  }
+
   static final Pointer<Void> _mb_get_translation_object =
       resolveMethodBind('TranslationDomain', 'get_translation_object', 606768082);
 

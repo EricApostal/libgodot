@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeFloatOp extends VisualShaderNode {
   VisualShaderNodeFloatOp(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeFloatOp instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeFloatOp.create() {
+    return VisualShaderNodeFloatOp(resolveClassConstructor('VisualShaderNodeFloatOp'));
+  }
+
   static final Pointer<Void> _mb_set_operator =
       resolveMethodBind('VisualShaderNodeFloatOp', 'set_operator', 2488468047);
 

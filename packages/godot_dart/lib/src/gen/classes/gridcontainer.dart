@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GridContainer extends Container {
   GridContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GridContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GridContainer.create() {
+    return GridContainer(resolveClassConstructor('GridContainer'));
+  }
+
   static final Pointer<Void> _mb_set_columns =
       resolveMethodBind('GridContainer', 'set_columns', 1286410249);
 

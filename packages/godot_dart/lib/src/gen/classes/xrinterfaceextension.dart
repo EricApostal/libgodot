@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRInterfaceExtension extends XRInterface {
   XRInterfaceExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRInterfaceExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRInterfaceExtension.create() {
+    return XRInterfaceExtension(resolveClassConstructor('XRInterfaceExtension'));
+  }
+
   // Skipped get_color_texture(): unsupported return type "RID".
   // Skipped get_depth_texture(): unsupported return type "RID".
   // Skipped get_velocity_texture(): unsupported return type "RID".

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TileMapPattern extends Resource {
   TileMapPattern(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TileMapPattern instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TileMapPattern.create() {
+    return TileMapPattern(resolveClassConstructor('TileMapPattern'));
+  }
+
   static final Pointer<Void> _mb_set_cell =
       resolveMethodBind('TileMapPattern', 'set_cell', 2224802556);
 

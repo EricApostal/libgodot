@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeTransformVecMult extends VisualShaderNode {
   VisualShaderNodeTransformVecMult(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTransformVecMult instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTransformVecMult.create() {
+    return VisualShaderNodeTransformVecMult(resolveClassConstructor('VisualShaderNodeTransformVecMult'));
+  }
+
   static final Pointer<Void> _mb_set_operator =
       resolveMethodBind('VisualShaderNodeTransformVecMult', 'set_operator', 1785665912);
 

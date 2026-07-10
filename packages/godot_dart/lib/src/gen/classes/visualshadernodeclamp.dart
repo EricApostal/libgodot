@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeClamp extends VisualShaderNode {
   VisualShaderNodeClamp(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeClamp instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeClamp.create() {
+    return VisualShaderNodeClamp(resolveClassConstructor('VisualShaderNodeClamp'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeClamp', 'set_op_type', 405010749);
 

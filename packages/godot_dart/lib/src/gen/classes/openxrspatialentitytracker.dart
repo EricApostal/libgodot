@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialEntityTracker extends XRPositionalTracker {
   OpenXRSpatialEntityTracker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialEntityTracker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialEntityTracker.create() {
+    return OpenXRSpatialEntityTracker(resolveClassConstructor('OpenXRSpatialEntityTracker'));
+  }
+
   // Skipped set_spatial_context(): an argument type is unsupported.
   // Skipped get_spatial_context(): unsupported return type "RID".
   // Skipped set_entity(): an argument type is unsupported.

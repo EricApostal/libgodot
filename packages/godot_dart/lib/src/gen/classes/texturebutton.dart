@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TextureButton extends BaseButton {
   TextureButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextureButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextureButton.create() {
+    return TextureButton(resolveClassConstructor('TextureButton'));
+  }
+
   static final Pointer<Void> _mb_set_texture_normal =
       resolveMethodBind('TextureButton', 'set_texture_normal', 4051416890);
 

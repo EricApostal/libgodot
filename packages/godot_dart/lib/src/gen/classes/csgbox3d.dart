@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CSGBox3D extends CSGPrimitive3D {
   CSGBox3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CSGBox3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CSGBox3D.create() {
+    return CSGBox3D(resolveClassConstructor('CSGBox3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('CSGBox3D', 'set_size', 3460891852);
 

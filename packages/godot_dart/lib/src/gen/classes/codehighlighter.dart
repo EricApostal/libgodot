@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CodeHighlighter extends SyntaxHighlighter {
   CodeHighlighter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CodeHighlighter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CodeHighlighter.create() {
+    return CodeHighlighter(resolveClassConstructor('CodeHighlighter'));
+  }
+
   static final Pointer<Void> _mb_add_keyword_color =
       resolveMethodBind('CodeHighlighter', 'add_keyword_color', 1636512886);
 

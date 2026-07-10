@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Skeleton2D extends Node2D {
   Skeleton2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Skeleton2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Skeleton2D.create() {
+    return Skeleton2D(resolveClassConstructor('Skeleton2D'));
+  }
+
   static final Pointer<Void> _mb_get_bone_count =
       resolveMethodBind('Skeleton2D', 'get_bone_count', 3905245786);
 

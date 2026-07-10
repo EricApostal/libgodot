@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FlowContainer extends Container {
   FlowContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FlowContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FlowContainer.create() {
+    return FlowContainer(resolveClassConstructor('FlowContainer'));
+  }
+
   static final Pointer<Void> _mb_get_line_count =
       resolveMethodBind('FlowContainer', 'get_line_count', 3905245786);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RefCounted extends GodotObject {
   RefCounted(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RefCounted instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RefCounted.create() {
+    return RefCounted(resolveClassConstructor('RefCounted'));
+  }
+
   static final Pointer<Void> _mb_init_ref =
       resolveMethodBind('RefCounted', 'init_ref', 2240911060);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class PacketPeerExtension extends PacketPeer {
   PacketPeerExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PacketPeerExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PacketPeerExtension.create() {
+    return PacketPeerExtension(resolveClassConstructor('PacketPeerExtension'));
+  }
+
 }

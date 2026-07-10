@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PlaceholderTexture3D extends Texture3D {
   PlaceholderTexture3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PlaceholderTexture3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PlaceholderTexture3D.create() {
+    return PlaceholderTexture3D(resolveClassConstructor('PlaceholderTexture3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('PlaceholderTexture3D', 'set_size', 560364750);
 

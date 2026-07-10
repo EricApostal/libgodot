@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialAnchorCapability extends OpenXRExtensionWrapper {
   OpenXRSpatialAnchorCapability(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialAnchorCapability instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialAnchorCapability.create() {
+    return OpenXRSpatialAnchorCapability(resolveClassConstructor('OpenXRSpatialAnchorCapability'));
+  }
+
   static final Pointer<Void> _mb_is_spatial_anchor_supported =
       resolveMethodBind('OpenXRSpatialAnchorCapability', 'is_spatial_anchor_supported', 2240911060);
 

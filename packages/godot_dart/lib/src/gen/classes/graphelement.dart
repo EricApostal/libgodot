@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GraphElement extends Container {
   GraphElement(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GraphElement instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GraphElement.create() {
+    return GraphElement(resolveClassConstructor('GraphElement'));
+  }
+
   static final Pointer<Void> _mb_set_resizable =
       resolveMethodBind('GraphElement', 'set_resizable', 2586408642);
 

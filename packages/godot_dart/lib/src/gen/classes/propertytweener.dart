@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PropertyTweener extends Tweener {
   PropertyTweener(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PropertyTweener instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PropertyTweener.create() {
+    return PropertyTweener(resolveClassConstructor('PropertyTweener'));
+  }
+
   // Skipped from(): an argument type is unsupported.
   static final Pointer<Void> _mb_from_current =
       resolveMethodBind('PropertyTweener', 'from_current', 4279177709);

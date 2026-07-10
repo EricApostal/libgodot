@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SplineIK3D extends ChainIK3D {
   SplineIK3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SplineIK3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SplineIK3D.create() {
+    return SplineIK3D(resolveClassConstructor('SplineIK3D'));
+  }
+
   // Skipped set_path_3d(): an argument type is unsupported.
   // Skipped get_path_3d(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_set_tilt_enabled =

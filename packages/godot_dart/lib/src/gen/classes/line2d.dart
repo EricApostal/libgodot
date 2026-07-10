@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Line2D extends Node2D {
   Line2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Line2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Line2D.create() {
+    return Line2D(resolveClassConstructor('Line2D'));
+  }
+
   // Skipped set_points(): an argument type is unsupported.
   // Skipped get_points(): unsupported return type "PackedVector2Array".
   static final Pointer<Void> _mb_set_point_position =

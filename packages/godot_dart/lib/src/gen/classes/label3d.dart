@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Label3D extends GeometryInstance3D {
   Label3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Label3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Label3D.create() {
+    return Label3D(resolveClassConstructor('Label3D'));
+  }
+
   static final Pointer<Void> _mb_set_horizontal_alignment =
       resolveMethodBind('Label3D', 'set_horizontal_alignment', 2312603777);
 

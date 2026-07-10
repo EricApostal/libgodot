@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventPanGesture extends InputEventGesture {
   InputEventPanGesture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventPanGesture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventPanGesture.create() {
+    return InputEventPanGesture(resolveClassConstructor('InputEventPanGesture'));
+  }
+
   static final Pointer<Void> _mb_set_delta =
       resolveMethodBind('InputEventPanGesture', 'set_delta', 743155724);
 

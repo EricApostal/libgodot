@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PrismMesh extends PrimitiveMesh {
   PrismMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PrismMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PrismMesh.create() {
+    return PrismMesh(resolveClassConstructor('PrismMesh'));
+  }
+
   static final Pointer<Void> _mb_set_left_to_right =
       resolveMethodBind('PrismMesh', 'set_left_to_right', 373806689);
 

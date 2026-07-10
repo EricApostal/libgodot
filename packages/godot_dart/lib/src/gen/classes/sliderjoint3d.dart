@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SliderJoint3D extends Joint3D {
   SliderJoint3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SliderJoint3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SliderJoint3D.create() {
+    return SliderJoint3D(resolveClassConstructor('SliderJoint3D'));
+  }
+
   static final Pointer<Void> _mb_set_param =
       resolveMethodBind('SliderJoint3D', 'set_param', 918243683);
 

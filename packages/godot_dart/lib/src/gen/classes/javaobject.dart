@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class JavaObject extends RefCounted {
   JavaObject(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned JavaObject instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory JavaObject.create() {
+    return JavaObject(resolveClassConstructor('JavaObject'));
+  }
+
   static final Pointer<Void> _mb_get_java_class =
       resolveMethodBind('JavaObject', 'get_java_class', 541536347);
 

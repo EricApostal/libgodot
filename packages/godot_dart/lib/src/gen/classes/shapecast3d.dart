@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ShapeCast3D extends Node3D {
   ShapeCast3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ShapeCast3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ShapeCast3D.create() {
+    return ShapeCast3D(resolveClassConstructor('ShapeCast3D'));
+  }
+
   static final Pointer<Void> _mb_resource_changed =
       resolveMethodBind('ShapeCast3D', 'resource_changed', 968641751);
 

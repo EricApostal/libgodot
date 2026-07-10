@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeRemap extends VisualShaderNode {
   VisualShaderNodeRemap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeRemap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeRemap.create() {
+    return VisualShaderNodeRemap(resolveClassConstructor('VisualShaderNodeRemap'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeRemap', 'set_op_type', 1703697889);
 

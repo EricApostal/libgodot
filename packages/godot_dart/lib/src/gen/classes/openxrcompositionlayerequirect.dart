@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRCompositionLayerEquirect extends OpenXRCompositionLayer {
   OpenXRCompositionLayerEquirect(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRCompositionLayerEquirect instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRCompositionLayerEquirect.create() {
+    return OpenXRCompositionLayerEquirect(resolveClassConstructor('OpenXRCompositionLayerEquirect'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('OpenXRCompositionLayerEquirect', 'set_radius', 373806689);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeFresnel extends VisualShaderNode {
   VisualShaderNodeFresnel(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeFresnel instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeFresnel.create() {
+    return VisualShaderNodeFresnel(resolveClassConstructor('VisualShaderNodeFresnel'));
+  }
+
 }

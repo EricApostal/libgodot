@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Gradient extends Resource {
   Gradient(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Gradient instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Gradient.create() {
+    return Gradient(resolveClassConstructor('Gradient'));
+  }
+
   static final Pointer<Void> _mb_add_point =
       resolveMethodBind('Gradient', 'add_point', 3629403827);
 

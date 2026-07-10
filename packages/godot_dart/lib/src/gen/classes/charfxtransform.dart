@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CharFXTransform extends RefCounted {
   CharFXTransform(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CharFXTransform instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CharFXTransform.create() {
+    return CharFXTransform(resolveClassConstructor('CharFXTransform'));
+  }
+
   static final Pointer<Void> _mb_get_transform =
       resolveMethodBind('CharFXTransform', 'get_transform', 3761352769);
 

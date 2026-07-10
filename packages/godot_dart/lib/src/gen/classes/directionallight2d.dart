@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class DirectionalLight2D extends Light2D {
   DirectionalLight2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned DirectionalLight2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory DirectionalLight2D.create() {
+    return DirectionalLight2D(resolveClassConstructor('DirectionalLight2D'));
+  }
+
   static final Pointer<Void> _mb_set_max_distance =
       resolveMethodBind('DirectionalLight2D', 'set_max_distance', 373806689);
 

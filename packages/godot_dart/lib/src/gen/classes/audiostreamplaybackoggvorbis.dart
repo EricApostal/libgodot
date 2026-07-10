@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AudioStreamPlaybackOggVorbis extends AudioStreamPlaybackResampled {
   AudioStreamPlaybackOggVorbis(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamPlaybackOggVorbis instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamPlaybackOggVorbis.create() {
+    return AudioStreamPlaybackOggVorbis(resolveClassConstructor('AudioStreamPlaybackOggVorbis'));
+  }
+
 }

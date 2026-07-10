@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class CompressedTexture2DArray extends CompressedTextureLayered {
   CompressedTexture2DArray(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CompressedTexture2DArray instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CompressedTexture2DArray.create() {
+    return CompressedTexture2DArray(resolveClassConstructor('CompressedTexture2DArray'));
+  }
+
 }

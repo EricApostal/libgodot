@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ColorPicker extends VBoxContainer {
   ColorPicker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ColorPicker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ColorPicker.create() {
+    return ColorPicker(resolveClassConstructor('ColorPicker'));
+  }
+
   static final Pointer<Void> _mb_set_pick_color =
       resolveMethodBind('ColorPicker', 'set_pick_color', 2920490490);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class OfflineMultiplayerPeer extends MultiplayerPeer {
   OfflineMultiplayerPeer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OfflineMultiplayerPeer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OfflineMultiplayerPeer.create() {
+    return OfflineMultiplayerPeer(resolveClassConstructor('OfflineMultiplayerPeer'));
+  }
+
 }

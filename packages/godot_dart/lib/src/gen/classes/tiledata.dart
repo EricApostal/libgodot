@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TileData extends GodotObject {
   TileData(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TileData instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TileData.create() {
+    return TileData(resolveClassConstructor('TileData'));
+  }
+
   static final Pointer<Void> _mb_set_flip_h =
       resolveMethodBind('TileData', 'set_flip_h', 2586408642);
 

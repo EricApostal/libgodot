@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ArrayMesh extends Mesh {
   ArrayMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ArrayMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ArrayMesh.create() {
+    return ArrayMesh(resolveClassConstructor('ArrayMesh'));
+  }
+
   static final Pointer<Void> _mb_add_blend_shape =
       resolveMethodBind('ArrayMesh', 'add_blend_shape', 3304788590);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TabContainer extends Container {
   TabContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TabContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TabContainer.create() {
+    return TabContainer(resolveClassConstructor('TabContainer'));
+  }
+
   static final Pointer<Void> _mb_get_tab_count =
       resolveMethodBind('TabContainer', 'get_tab_count', 3905245786);
 

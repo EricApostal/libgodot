@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RibbonTrailMesh extends PrimitiveMesh {
   RibbonTrailMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RibbonTrailMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RibbonTrailMesh.create() {
+    return RibbonTrailMesh(resolveClassConstructor('RibbonTrailMesh'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('RibbonTrailMesh', 'set_size', 373806689);
 

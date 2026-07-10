@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeExpression extends VisualShaderNodeGroupBase {
   VisualShaderNodeExpression(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeExpression instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeExpression.create() {
+    return VisualShaderNodeExpression(resolveClassConstructor('VisualShaderNodeExpression'));
+  }
+
   static final Pointer<Void> _mb_set_expression =
       resolveMethodBind('VisualShaderNodeExpression', 'set_expression', 83702148);
 

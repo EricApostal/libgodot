@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ConcavePolygonShape3D extends Shape3D {
   ConcavePolygonShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ConcavePolygonShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ConcavePolygonShape3D.create() {
+    return ConcavePolygonShape3D(resolveClassConstructor('ConcavePolygonShape3D'));
+  }
+
   // Skipped set_faces(): an argument type is unsupported.
   // Skipped get_faces(): unsupported return type "PackedVector3Array".
   static final Pointer<Void> _mb_set_backface_collision_enabled =

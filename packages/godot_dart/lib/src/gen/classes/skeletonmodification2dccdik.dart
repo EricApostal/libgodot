@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonModification2DCCDIK extends SkeletonModification2D {
   SkeletonModification2DCCDIK(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonModification2DCCDIK instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonModification2DCCDIK.create() {
+    return SkeletonModification2DCCDIK(resolveClassConstructor('SkeletonModification2DCCDIK'));
+  }
+
   // Skipped set_target_node(): an argument type is unsupported.
   // Skipped get_target_node(): unsupported return type "NodePath".
   // Skipped set_tip_node(): an argument type is unsupported.

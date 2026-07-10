@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SceneReplicationConfig extends Resource {
   SceneReplicationConfig(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SceneReplicationConfig instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SceneReplicationConfig.create() {
+    return SceneReplicationConfig(resolveClassConstructor('SceneReplicationConfig'));
+  }
+
   // Skipped get_properties(): unsupported return type "typedarray::NodePath".
   // Skipped add_property(): an argument type is unsupported.
   // Skipped has_property(): an argument type is unsupported.

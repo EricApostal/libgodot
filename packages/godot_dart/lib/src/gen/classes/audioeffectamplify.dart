@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectAmplify extends AudioEffect {
   AudioEffectAmplify(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectAmplify instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectAmplify.create() {
+    return AudioEffectAmplify(resolveClassConstructor('AudioEffectAmplify'));
+  }
+
   static final Pointer<Void> _mb_set_volume_db =
       resolveMethodBind('AudioEffectAmplify', 'set_volume_db', 373806689);
 

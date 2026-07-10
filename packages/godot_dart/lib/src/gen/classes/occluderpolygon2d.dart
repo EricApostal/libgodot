@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OccluderPolygon2D extends Resource {
   OccluderPolygon2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OccluderPolygon2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OccluderPolygon2D.create() {
+    return OccluderPolygon2D(resolveClassConstructor('OccluderPolygon2D'));
+  }
+
   static final Pointer<Void> _mb_set_closed =
       resolveMethodBind('OccluderPolygon2D', 'set_closed', 2586408642);
 

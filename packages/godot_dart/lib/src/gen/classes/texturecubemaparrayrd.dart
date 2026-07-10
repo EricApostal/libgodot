@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class TextureCubemapArrayRD extends TextureLayeredRD {
   TextureCubemapArrayRD(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextureCubemapArrayRD instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextureCubemapArrayRD.create() {
+    return TextureCubemapArrayRD(resolveClassConstructor('TextureCubemapArrayRD'));
+  }
+
 }

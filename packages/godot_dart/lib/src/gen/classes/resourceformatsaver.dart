@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class ResourceFormatSaver extends RefCounted {
   ResourceFormatSaver(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ResourceFormatSaver instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ResourceFormatSaver.create() {
+    return ResourceFormatSaver(resolveClassConstructor('ResourceFormatSaver'));
+  }
+
 }

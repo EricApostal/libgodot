@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StreamPeerTCP extends StreamPeerSocket {
   StreamPeerTCP(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StreamPeerTCP instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StreamPeerTCP.create() {
+    return StreamPeerTCP(resolveClassConstructor('StreamPeerTCP'));
+  }
+
   static final Pointer<Void> _mb_bind =
       resolveMethodBind('StreamPeerTCP', 'bind', 3167955072);
 

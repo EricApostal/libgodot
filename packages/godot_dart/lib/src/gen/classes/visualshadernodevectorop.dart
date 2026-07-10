@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeVectorOp extends VisualShaderNodeVectorBase {
   VisualShaderNodeVectorOp(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeVectorOp instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeVectorOp.create() {
+    return VisualShaderNodeVectorOp(resolveClassConstructor('VisualShaderNodeVectorOp'));
+  }
+
   static final Pointer<Void> _mb_set_operator =
       resolveMethodBind('VisualShaderNodeVectorOp', 'set_operator', 3371507302);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RenderSceneBuffersRD extends RenderSceneBuffers {
   RenderSceneBuffersRD(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RenderSceneBuffersRD instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RenderSceneBuffersRD.create() {
+    return RenderSceneBuffersRD(resolveClassConstructor('RenderSceneBuffersRD'));
+  }
+
   static final Pointer<Void> _mb_has_texture =
       resolveMethodBind('RenderSceneBuffersRD', 'has_texture', 471820014);
 

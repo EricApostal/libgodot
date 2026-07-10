@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationAgent2D extends Node {
   NavigationAgent2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationAgent2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationAgent2D.create() {
+    return NavigationAgent2D(resolveClassConstructor('NavigationAgent2D'));
+  }
+
   // Skipped get_rid(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_avoidance_enabled =
       resolveMethodBind('NavigationAgent2D', 'set_avoidance_enabled', 2586408642);

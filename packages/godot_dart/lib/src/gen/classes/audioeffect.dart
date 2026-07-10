@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AudioEffect extends Resource {
   AudioEffect(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffect instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffect.create() {
+    return AudioEffect(resolveClassConstructor('AudioEffect'));
+  }
+
 }

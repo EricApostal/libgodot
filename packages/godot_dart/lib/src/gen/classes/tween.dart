@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Tween extends RefCounted {
   Tween(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Tween instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Tween.create() {
+    return Tween(resolveClassConstructor('Tween'));
+  }
+
   // Skipped tween_property(): an argument type is unsupported.
   static final Pointer<Void> _mb_tween_interval =
       resolveMethodBind('Tween', 'tween_interval', 413360199);

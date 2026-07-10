@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ImageTexture extends Texture2D {
   ImageTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ImageTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ImageTexture.create() {
+    return ImageTexture(resolveClassConstructor('ImageTexture'));
+  }
+
   static final Pointer<Void> _mb_set_image =
       resolveMethodBind('ImageTexture', 'set_image', 532598488);
 

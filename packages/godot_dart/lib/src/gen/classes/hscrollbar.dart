@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class HScrollBar extends ScrollBar {
   HScrollBar(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HScrollBar instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HScrollBar.create() {
+    return HScrollBar(resolveClassConstructor('HScrollBar'));
+  }
+
 }

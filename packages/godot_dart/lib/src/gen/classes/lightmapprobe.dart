@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class LightmapProbe extends Node3D {
   LightmapProbe(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LightmapProbe instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LightmapProbe.create() {
+    return LightmapProbe(resolveClassConstructor('LightmapProbe'));
+  }
+
 }

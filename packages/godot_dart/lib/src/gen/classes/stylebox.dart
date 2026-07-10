@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StyleBox extends Resource {
   StyleBox(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StyleBox instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StyleBox.create() {
+    return StyleBox(resolveClassConstructor('StyleBox'));
+  }
+
   static final Pointer<Void> _mb_get_minimum_size =
       resolveMethodBind('StyleBox', 'get_minimum_size', 3341600327);
 

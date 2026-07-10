@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StaticBody3D extends PhysicsBody3D {
   StaticBody3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StaticBody3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StaticBody3D.create() {
+    return StaticBody3D(resolveClassConstructor('StaticBody3D'));
+  }
+
   static final Pointer<Void> _mb_set_constant_linear_velocity =
       resolveMethodBind('StaticBody3D', 'set_constant_linear_velocity', 3460891852);
 

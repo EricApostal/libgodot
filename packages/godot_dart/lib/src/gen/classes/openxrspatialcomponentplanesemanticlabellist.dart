@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentPlaneSemanticLabelList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentPlaneSemanticLabelList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentPlaneSemanticLabelList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentPlaneSemanticLabelList.create() {
+    return OpenXRSpatialComponentPlaneSemanticLabelList(resolveClassConstructor('OpenXRSpatialComponentPlaneSemanticLabelList'));
+  }
+
   static final Pointer<Void> _mb_get_plane_semantic_label =
       resolveMethodBind('OpenXRSpatialComponentPlaneSemanticLabelList', 'get_plane_semantic_label', 1889332427);
 

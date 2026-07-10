@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectReverb extends AudioEffect {
   AudioEffectReverb(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectReverb instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectReverb.create() {
+    return AudioEffectReverb(resolveClassConstructor('AudioEffectReverb'));
+  }
+
   static final Pointer<Void> _mb_set_predelay_msec =
       resolveMethodBind('AudioEffectReverb', 'set_predelay_msec', 373806689);
 

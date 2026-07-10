@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Sprite3D extends SpriteBase3D {
   Sprite3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Sprite3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Sprite3D.create() {
+    return Sprite3D(resolveClassConstructor('Sprite3D'));
+  }
+
   static final Pointer<Void> _mb_set_texture =
       resolveMethodBind('Sprite3D', 'set_texture', 4051416890);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeUVPolarCoord extends VisualShaderNode {
   VisualShaderNodeUVPolarCoord(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeUVPolarCoord instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeUVPolarCoord.create() {
+    return VisualShaderNodeUVPolarCoord(resolveClassConstructor('VisualShaderNodeUVPolarCoord'));
+  }
+
 }

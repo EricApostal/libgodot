@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MeshLibrary extends Resource {
   MeshLibrary(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MeshLibrary instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MeshLibrary.create() {
+    return MeshLibrary(resolveClassConstructor('MeshLibrary'));
+  }
+
   static final Pointer<Void> _mb_create_item =
       resolveMethodBind('MeshLibrary', 'create_item', 1286410249);
 

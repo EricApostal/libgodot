@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class RichTextEffect extends Resource {
   RichTextEffect(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RichTextEffect instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RichTextEffect.create() {
+    return RichTextEffect(resolveClassConstructor('RichTextEffect'));
+  }
+
 }

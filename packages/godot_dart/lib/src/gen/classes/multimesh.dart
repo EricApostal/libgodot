@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MultiMesh extends Resource {
   MultiMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MultiMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MultiMesh.create() {
+    return MultiMesh(resolveClassConstructor('MultiMesh'));
+  }
+
   static final Pointer<Void> _mb_set_mesh =
       resolveMethodBind('MultiMesh', 'set_mesh', 194775623);
 

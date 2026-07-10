@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventScreenTouch extends InputEventFromWindow {
   InputEventScreenTouch(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventScreenTouch instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventScreenTouch.create() {
+    return InputEventScreenTouch(resolveClassConstructor('InputEventScreenTouch'));
+  }
+
   static final Pointer<Void> _mb_set_index =
       resolveMethodBind('InputEventScreenTouch', 'set_index', 1286410249);
 

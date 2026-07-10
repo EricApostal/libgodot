@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class StandardMaterial3D extends BaseMaterial3D {
   StandardMaterial3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StandardMaterial3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StandardMaterial3D.create() {
+    return StandardMaterial3D(resolveClassConstructor('StandardMaterial3D'));
+  }
+
 }

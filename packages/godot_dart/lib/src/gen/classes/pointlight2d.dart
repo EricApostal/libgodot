@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PointLight2D extends Light2D {
   PointLight2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PointLight2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PointLight2D.create() {
+    return PointLight2D(resolveClassConstructor('PointLight2D'));
+  }
+
   static final Pointer<Void> _mb_set_texture =
       resolveMethodBind('PointLight2D', 'set_texture', 4051416890);
 

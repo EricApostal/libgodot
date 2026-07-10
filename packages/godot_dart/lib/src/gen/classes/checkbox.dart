@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class CheckBox extends Button {
   CheckBox(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CheckBox instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CheckBox.create() {
+    return CheckBox(resolveClassConstructor('CheckBox'));
+  }
+
 }

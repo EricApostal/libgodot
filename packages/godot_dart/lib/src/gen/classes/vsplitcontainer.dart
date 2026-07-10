@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VSplitContainer extends SplitContainer {
   VSplitContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VSplitContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VSplitContainer.create() {
+    return VSplitContainer(resolveClassConstructor('VSplitContainer'));
+  }
+
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class World2D extends Resource {
   World2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned World2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory World2D.create() {
+    return World2D(resolveClassConstructor('World2D'));
+  }
+
   // Skipped get_canvas(): unsupported return type "RID".
   // Skipped get_navigation_map(): unsupported return type "RID".
   // Skipped get_space(): unsupported return type "RID".

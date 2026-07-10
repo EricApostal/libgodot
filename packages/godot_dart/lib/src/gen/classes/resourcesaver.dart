@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ResourceSaver extends GodotObject {
   ResourceSaver(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ResourceSaver instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ResourceSaver.create() {
+    return ResourceSaver(resolveClassConstructor('ResourceSaver'));
+  }
+
   static final Pointer<Void> _mb_save =
       resolveMethodBind('ResourceSaver', 'save', 2983274697);
 

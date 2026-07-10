@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Thread extends RefCounted {
   Thread(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Thread instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Thread.create() {
+    return Thread(resolveClassConstructor('Thread'));
+  }
+
   // Skipped start(): an argument type is unsupported.
   static final Pointer<Void> _mb_get_id =
       resolveMethodBind('Thread', 'get_id', 201670096);

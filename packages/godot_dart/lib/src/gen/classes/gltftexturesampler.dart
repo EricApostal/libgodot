@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFTextureSampler extends Resource {
   GLTFTextureSampler(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFTextureSampler instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFTextureSampler.create() {
+    return GLTFTextureSampler(resolveClassConstructor('GLTFTextureSampler'));
+  }
+
   static final Pointer<Void> _mb_get_mag_filter =
       resolveMethodBind('GLTFTextureSampler', 'get_mag_filter', 3905245786);
 

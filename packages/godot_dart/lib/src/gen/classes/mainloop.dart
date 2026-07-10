@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class MainLoop extends GodotObject {
   MainLoop(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MainLoop instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MainLoop.create() {
+    return MainLoop(resolveClassConstructor('MainLoop'));
+  }
+
 }

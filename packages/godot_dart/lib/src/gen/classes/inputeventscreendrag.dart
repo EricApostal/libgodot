@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventScreenDrag extends InputEventFromWindow {
   InputEventScreenDrag(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventScreenDrag instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventScreenDrag.create() {
+    return InputEventScreenDrag(resolveClassConstructor('InputEventScreenDrag'));
+  }
+
   static final Pointer<Void> _mb_set_index =
       resolveMethodBind('InputEventScreenDrag', 'set_index', 1286410249);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeProximityFade extends VisualShaderNode {
   VisualShaderNodeProximityFade(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeProximityFade instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeProximityFade.create() {
+    return VisualShaderNodeProximityFade(resolveClassConstructor('VisualShaderNodeProximityFade'));
+  }
+
 }

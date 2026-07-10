@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TextMesh extends PrimitiveMesh {
   TextMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextMesh.create() {
+    return TextMesh(resolveClassConstructor('TextMesh'));
+  }
+
   static final Pointer<Void> _mb_set_horizontal_alignment =
       resolveMethodBind('TextMesh', 'set_horizontal_alignment', 2312603777);
 

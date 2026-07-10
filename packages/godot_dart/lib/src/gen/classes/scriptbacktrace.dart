@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ScriptBacktrace extends RefCounted {
   ScriptBacktrace(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ScriptBacktrace instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ScriptBacktrace.create() {
+    return ScriptBacktrace(resolveClassConstructor('ScriptBacktrace'));
+  }
+
   static final Pointer<Void> _mb_get_language_name =
       resolveMethodBind('ScriptBacktrace', 'get_language_name', 201670096);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VScrollBar extends ScrollBar {
   VScrollBar(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VScrollBar instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VScrollBar.create() {
+    return VScrollBar(resolveClassConstructor('VScrollBar'));
+  }
+
 }

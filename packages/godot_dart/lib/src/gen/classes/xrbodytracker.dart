@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRBodyTracker extends XRPositionalTracker {
   XRBodyTracker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRBodyTracker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRBodyTracker.create() {
+    return XRBodyTracker(resolveClassConstructor('XRBodyTracker'));
+  }
+
   static final Pointer<Void> _mb_set_has_tracking_data =
       resolveMethodBind('XRBodyTracker', 'set_has_tracking_data', 2586408642);
 

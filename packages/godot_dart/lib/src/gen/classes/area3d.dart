@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Area3D extends CollisionObject3D {
   Area3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Area3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Area3D.create() {
+    return Area3D(resolveClassConstructor('Area3D'));
+  }
+
   static final Pointer<Void> _mb_set_gravity_space_override_mode =
       resolveMethodBind('Area3D', 'set_gravity_space_override_mode', 2311433571);
 

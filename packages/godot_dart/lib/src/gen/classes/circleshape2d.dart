@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CircleShape2D extends Shape2D {
   CircleShape2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CircleShape2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CircleShape2D.create() {
+    return CircleShape2D(resolveClassConstructor('CircleShape2D'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('CircleShape2D', 'set_radius', 373806689);
 

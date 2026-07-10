@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class LightmapGI extends VisualInstance3D {
   LightmapGI(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LightmapGI instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LightmapGI.create() {
+    return LightmapGI(resolveClassConstructor('LightmapGI'));
+  }
+
   static final Pointer<Void> _mb_set_light_data =
       resolveMethodBind('LightmapGI', 'set_light_data', 1790597277);
 

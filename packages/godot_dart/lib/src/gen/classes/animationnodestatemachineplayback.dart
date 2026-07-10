@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeStateMachinePlayback extends Resource {
   AnimationNodeStateMachinePlayback(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeStateMachinePlayback instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeStateMachinePlayback.create() {
+    return AnimationNodeStateMachinePlayback(resolveClassConstructor('AnimationNodeStateMachinePlayback'));
+  }
+
   static final Pointer<Void> _mb_travel =
       resolveMethodBind('AnimationNodeStateMachinePlayback', 'travel', 3823612587);
 

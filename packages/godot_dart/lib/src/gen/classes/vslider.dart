@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VSlider extends Slider {
   VSlider(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VSlider instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VSlider.create() {
+    return VSlider(resolveClassConstructor('VSlider'));
+  }
+
 }

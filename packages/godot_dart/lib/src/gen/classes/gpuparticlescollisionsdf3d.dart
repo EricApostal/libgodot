@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GPUParticlesCollisionSDF3D extends GPUParticlesCollision3D {
   GPUParticlesCollisionSDF3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GPUParticlesCollisionSDF3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GPUParticlesCollisionSDF3D.create() {
+    return GPUParticlesCollisionSDF3D(resolveClassConstructor('GPUParticlesCollisionSDF3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('GPUParticlesCollisionSDF3D', 'set_size', 3460891852);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StyleBoxTexture extends StyleBox {
   StyleBoxTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StyleBoxTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StyleBoxTexture.create() {
+    return StyleBoxTexture(resolveClassConstructor('StyleBoxTexture'));
+  }
+
   static final Pointer<Void> _mb_set_texture =
       resolveMethodBind('StyleBoxTexture', 'set_texture', 4051416890);
 

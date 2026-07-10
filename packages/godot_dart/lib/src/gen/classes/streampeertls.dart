@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StreamPeerTLS extends StreamPeer {
   StreamPeerTLS(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StreamPeerTLS instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StreamPeerTLS.create() {
+    return StreamPeerTLS(resolveClassConstructor('StreamPeerTLS'));
+  }
+
   static final Pointer<Void> _mb_poll =
       resolveMethodBind('StreamPeerTLS', 'poll', 3218959716);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ConvertTransformModifier3D extends BoneConstraint3D {
   ConvertTransformModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ConvertTransformModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ConvertTransformModifier3D.create() {
+    return ConvertTransformModifier3D(resolveClassConstructor('ConvertTransformModifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_apply_transform_mode =
       resolveMethodBind('ConvertTransformModifier3D', 'set_apply_transform_mode', 1386463405);
 

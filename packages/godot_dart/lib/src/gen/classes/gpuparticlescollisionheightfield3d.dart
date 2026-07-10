@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GPUParticlesCollisionHeightField3D extends GPUParticlesCollision3D {
   GPUParticlesCollisionHeightField3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GPUParticlesCollisionHeightField3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GPUParticlesCollisionHeightField3D.create() {
+    return GPUParticlesCollisionHeightField3D(resolveClassConstructor('GPUParticlesCollisionHeightField3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('GPUParticlesCollisionHeightField3D', 'set_size', 3460891852);
 

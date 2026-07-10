@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ArrayOccluder3D extends Occluder3D {
   ArrayOccluder3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ArrayOccluder3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ArrayOccluder3D.create() {
+    return ArrayOccluder3D(resolveClassConstructor('ArrayOccluder3D'));
+  }
+
   // Skipped set_arrays(): an argument type is unsupported.
   // Skipped set_vertices(): an argument type is unsupported.
   // Skipped set_indices(): an argument type is unsupported.

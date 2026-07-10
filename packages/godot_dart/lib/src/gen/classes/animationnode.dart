@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNode extends Resource {
   AnimationNode(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNode instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNode.create() {
+    return AnimationNode(resolveClassConstructor('AnimationNode'));
+  }
+
   static final Pointer<Void> _mb_add_input =
       resolveMethodBind('AnimationNode', 'add_input', 2323990056);
 

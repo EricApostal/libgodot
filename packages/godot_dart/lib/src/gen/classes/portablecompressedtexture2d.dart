@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PortableCompressedTexture2D extends Texture2D {
   PortableCompressedTexture2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PortableCompressedTexture2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PortableCompressedTexture2D.create() {
+    return PortableCompressedTexture2D(resolveClassConstructor('PortableCompressedTexture2D'));
+  }
+
   static final Pointer<Void> _mb_create_from_image =
       resolveMethodBind('PortableCompressedTexture2D', 'create_from_image', 3679243433);
 

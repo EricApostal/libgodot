@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationLink2D extends Node2D {
   NavigationLink2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationLink2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationLink2D.create() {
+    return NavigationLink2D(resolveClassConstructor('NavigationLink2D'));
+  }
+
   // Skipped get_rid(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_enabled =
       resolveMethodBind('NavigationLink2D', 'set_enabled', 2586408642);

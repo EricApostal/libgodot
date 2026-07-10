@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class MarginContainer extends Container {
   MarginContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MarginContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MarginContainer.create() {
+    return MarginContainer(resolveClassConstructor('MarginContainer'));
+  }
+
 }

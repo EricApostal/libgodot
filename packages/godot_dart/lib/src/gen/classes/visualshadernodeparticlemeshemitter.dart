@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeParticleMeshEmitter extends VisualShaderNodeParticleEmitter {
   VisualShaderNodeParticleMeshEmitter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParticleMeshEmitter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParticleMeshEmitter.create() {
+    return VisualShaderNodeParticleMeshEmitter(resolveClassConstructor('VisualShaderNodeParticleMeshEmitter'));
+  }
+
   static final Pointer<Void> _mb_set_mesh =
       resolveMethodBind('VisualShaderNodeParticleMeshEmitter', 'set_mesh', 194775623);
 

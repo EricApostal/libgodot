@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Geometry3D extends GodotObject {
   Geometry3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Geometry3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Geometry3D.create() {
+    return Geometry3D(resolveClassConstructor('Geometry3D'));
+  }
+
   // Skipped compute_convex_mesh_points(): unsupported return type "PackedVector3Array".
   // Skipped build_box_planes(): unsupported return type "typedarray::Plane".
   // Skipped build_cylinder_planes(): unsupported return type "typedarray::Plane".

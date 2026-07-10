@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeParticleAccelerator extends VisualShaderNode {
   VisualShaderNodeParticleAccelerator(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParticleAccelerator instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParticleAccelerator.create() {
+    return VisualShaderNodeParticleAccelerator(resolveClassConstructor('VisualShaderNodeParticleAccelerator'));
+  }
+
   static final Pointer<Void> _mb_set_mode =
       resolveMethodBind('VisualShaderNodeParticleAccelerator', 'set_mode', 3457585749);
 

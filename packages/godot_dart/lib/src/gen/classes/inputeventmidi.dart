@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventMIDI extends InputEvent {
   InputEventMIDI(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventMIDI instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventMIDI.create() {
+    return InputEventMIDI(resolveClassConstructor('InputEventMIDI'));
+  }
+
   static final Pointer<Void> _mb_set_channel =
       resolveMethodBind('InputEventMIDI', 'set_channel', 1286410249);
 

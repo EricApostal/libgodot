@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRActionMap extends Resource {
   OpenXRActionMap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRActionMap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRActionMap.create() {
+    return OpenXRActionMap(resolveClassConstructor('OpenXRActionMap'));
+  }
+
   // Skipped set_action_sets(): an argument type is unsupported.
   // Skipped get_action_sets(): unsupported return type "Array".
   static final Pointer<Void> _mb_get_action_set_count =

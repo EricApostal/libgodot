@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsPointQueryParameters2D extends RefCounted {
   PhysicsPointQueryParameters2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsPointQueryParameters2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsPointQueryParameters2D.create() {
+    return PhysicsPointQueryParameters2D(resolveClassConstructor('PhysicsPointQueryParameters2D'));
+  }
+
   static final Pointer<Void> _mb_set_position =
       resolveMethodBind('PhysicsPointQueryParameters2D', 'set_position', 743155724);
 

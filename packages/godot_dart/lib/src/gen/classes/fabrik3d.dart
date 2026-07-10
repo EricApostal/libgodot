@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class FABRIK3D extends IterateIK3D {
   FABRIK3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FABRIK3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FABRIK3D.create() {
+    return FABRIK3D(resolveClassConstructor('FABRIK3D'));
+  }
+
 }

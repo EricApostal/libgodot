@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationPlayer extends AnimationMixer {
   AnimationPlayer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationPlayer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationPlayer.create() {
+    return AnimationPlayer(resolveClassConstructor('AnimationPlayer'));
+  }
+
   static final Pointer<Void> _mb_animation_set_next =
       resolveMethodBind('AnimationPlayer', 'animation_set_next', 3740211285);
 

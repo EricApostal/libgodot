@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class UPNPDevice extends RefCounted {
   UPNPDevice(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned UPNPDevice instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory UPNPDevice.create() {
+    return UPNPDevice(resolveClassConstructor('UPNPDevice'));
+  }
+
   static final Pointer<Void> _mb_is_valid_gateway =
       resolveMethodBind('UPNPDevice', 'is_valid_gateway', 36873697);
 

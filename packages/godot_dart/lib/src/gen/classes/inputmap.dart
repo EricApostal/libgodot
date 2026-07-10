@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputMap extends GodotObject {
   InputMap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputMap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputMap.create() {
+    return InputMap(resolveClassConstructor('InputMap'));
+  }
+
   static final Pointer<Void> _mb_has_action =
       resolveMethodBind('InputMap', 'has_action', 2619796661);
 

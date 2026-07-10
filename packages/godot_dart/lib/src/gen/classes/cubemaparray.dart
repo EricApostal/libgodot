@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CubemapArray extends ImageTextureLayered {
   CubemapArray(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CubemapArray instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CubemapArray.create() {
+    return CubemapArray(resolveClassConstructor('CubemapArray'));
+  }
+
   static final Pointer<Void> _mb_create_placeholder =
       resolveMethodBind('CubemapArray', 'create_placeholder', 121922552);
 

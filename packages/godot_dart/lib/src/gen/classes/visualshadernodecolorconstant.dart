@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeColorConstant extends VisualShaderNodeConstant {
   VisualShaderNodeColorConstant(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeColorConstant instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeColorConstant.create() {
+    return VisualShaderNodeColorConstant(resolveClassConstructor('VisualShaderNodeColorConstant'));
+  }
+
   static final Pointer<Void> _mb_set_constant =
       resolveMethodBind('VisualShaderNodeColorConstant', 'set_constant', 2920490490);
 

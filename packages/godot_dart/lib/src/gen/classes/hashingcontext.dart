@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class HashingContext extends RefCounted {
   HashingContext(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HashingContext instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HashingContext.create() {
+    return HashingContext(resolveClassConstructor('HashingContext'));
+  }
+
   static final Pointer<Void> _mb_start =
       resolveMethodBind('HashingContext', 'start', 3940338335);
 

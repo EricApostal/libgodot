@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class RenderDataRD extends RenderData {
   RenderDataRD(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RenderDataRD instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RenderDataRD.create() {
+    return RenderDataRD(resolveClassConstructor('RenderDataRD'));
+  }
+
 }

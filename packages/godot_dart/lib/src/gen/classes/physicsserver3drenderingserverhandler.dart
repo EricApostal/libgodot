@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsServer3DRenderingServerHandler extends GodotObject {
   PhysicsServer3DRenderingServerHandler(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsServer3DRenderingServerHandler instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsServer3DRenderingServerHandler.create() {
+    return PhysicsServer3DRenderingServerHandler(resolveClassConstructor('PhysicsServer3DRenderingServerHandler'));
+  }
+
   static final Pointer<Void> _mb_set_vertex =
       resolveMethodBind('PhysicsServer3DRenderingServerHandler', 'set_vertex', 1530502735);
 

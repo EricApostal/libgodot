@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CompositorEffect extends Resource {
   CompositorEffect(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CompositorEffect instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CompositorEffect.create() {
+    return CompositorEffect(resolveClassConstructor('CompositorEffect'));
+  }
+
   static final Pointer<Void> _mb_set_enabled =
       resolveMethodBind('CompositorEffect', 'set_enabled', 2586408642);
 

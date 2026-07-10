@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class DampedSpringJoint2D extends Joint2D {
   DampedSpringJoint2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned DampedSpringJoint2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory DampedSpringJoint2D.create() {
+    return DampedSpringJoint2D(resolveClassConstructor('DampedSpringJoint2D'));
+  }
+
   static final Pointer<Void> _mb_set_length =
       resolveMethodBind('DampedSpringJoint2D', 'set_length', 373806689);
 

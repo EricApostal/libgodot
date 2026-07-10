@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Camera3D extends Node3D {
   Camera3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Camera3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Camera3D.create() {
+    return Camera3D(resolveClassConstructor('Camera3D'));
+  }
+
   static final Pointer<Void> _mb_project_ray_normal =
       resolveMethodBind('Camera3D', 'project_ray_normal', 1718073306);
 

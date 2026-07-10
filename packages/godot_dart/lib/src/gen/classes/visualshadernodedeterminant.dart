@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeDeterminant extends VisualShaderNode {
   VisualShaderNodeDeterminant(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeDeterminant instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeDeterminant.create() {
+    return VisualShaderNodeDeterminant(resolveClassConstructor('VisualShaderNodeDeterminant'));
+  }
+
 }

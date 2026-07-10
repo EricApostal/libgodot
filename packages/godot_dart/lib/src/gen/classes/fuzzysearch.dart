@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FuzzySearch extends RefCounted {
   FuzzySearch(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FuzzySearch instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FuzzySearch.create() {
+    return FuzzySearch(resolveClassConstructor('FuzzySearch'));
+  }
+
   static final Pointer<Void> _mb_set_start_offset =
       resolveMethodBind('FuzzySearch', 'set_start_offset', 1286410249);
 

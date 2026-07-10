@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ImmediateMesh extends Mesh {
   ImmediateMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ImmediateMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ImmediateMesh.create() {
+    return ImmediateMesh(resolveClassConstructor('ImmediateMesh'));
+  }
+
   static final Pointer<Void> _mb_surface_begin =
       resolveMethodBind('ImmediateMesh', 'surface_begin', 2794442543);
 

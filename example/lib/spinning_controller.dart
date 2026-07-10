@@ -6,28 +6,22 @@ import 'package:godot_dart/godot_dart.dart';
 part 'spinning_controller.g.dart';
 
 /// A Dart-authored GDExtension class: registered with the engine as a real
-/// class (parent "MeshInstance3D", inherited from extending the generated
-/// [MeshInstance3D] wrapper), instantiable from a `.tscn` via
-/// `type="SpinningController"`, with `_process` called by the engine every
-/// frame exactly like a GDScript `_process` override would be.
-///
-/// This replaces the demo project's GDScript-driven spin (see
-/// assets/godot_project/main.tscn) to prove the round trip: Dart code
-/// driving a live node in the embedded scene tree.
+/// class (parent "MeshInstance3D"), instantiable both from a `.tscn` via
+/// `type="SpinningController"` and dynamically at runtime from other Dart
+/// code (see `InstanceRegistry.constructAndWrap`, used by [SceneRoot] to
+/// spawn several of these). `_process` is called by the engine every frame
+/// exactly like a GDScript `_process` override would be.
 @GodotClass()
 class SpinningController extends MeshInstance3D {
   SpinningController(super.nativePtr);
 
-  int _frameCount = 0;
+  /// Radians/second around Y; settable by whoever constructs this (e.g.
+  /// [SceneRoot]) right after creation, since it's a plain Dart field.
+  double yawSpeed = 1.0;
+  double rollSpeed = 0.6;
 
   void _process(double delta) {
-    rotateY(delta);
-    rotateX(delta * 0.6);
-
-    _frameCount++;
-    if (_frameCount % 60 == 0) {
-      // ignore: avoid_print
-      print('SpinningController._process: frame $_frameCount, delta=$delta');
-    }
+    rotateY(delta * yawSpeed);
+    rotateX(delta * rollSpeed);
   }
 }

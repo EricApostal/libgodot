@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeBillboard extends VisualShaderNode {
   VisualShaderNodeBillboard(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeBillboard instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeBillboard.create() {
+    return VisualShaderNodeBillboard(resolveClassConstructor('VisualShaderNodeBillboard'));
+  }
+
   static final Pointer<Void> _mb_set_billboard_type =
       resolveMethodBind('VisualShaderNodeBillboard', 'set_billboard_type', 1227463289);
 

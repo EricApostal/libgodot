@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GPUParticlesAttractorVectorField3D extends GPUParticlesAttractor3D {
   GPUParticlesAttractorVectorField3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GPUParticlesAttractorVectorField3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GPUParticlesAttractorVectorField3D.create() {
+    return GPUParticlesAttractorVectorField3D(resolveClassConstructor('GPUParticlesAttractorVectorField3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('GPUParticlesAttractorVectorField3D', 'set_size', 3460891852);
 

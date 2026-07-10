@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventShortcut extends InputEvent {
   InputEventShortcut(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventShortcut instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventShortcut.create() {
+    return InputEventShortcut(resolveClassConstructor('InputEventShortcut'));
+  }
+
   static final Pointer<Void> _mb_set_shortcut =
       resolveMethodBind('InputEventShortcut', 'set_shortcut', 857163497);
 

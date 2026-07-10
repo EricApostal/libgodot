@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeIntParameter extends VisualShaderNodeParameter {
   VisualShaderNodeIntParameter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeIntParameter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeIntParameter.create() {
+    return VisualShaderNodeIntParameter(resolveClassConstructor('VisualShaderNodeIntParameter'));
+  }
+
   static final Pointer<Void> _mb_set_hint =
       resolveMethodBind('VisualShaderNodeIntParameter', 'set_hint', 2540512075);
 

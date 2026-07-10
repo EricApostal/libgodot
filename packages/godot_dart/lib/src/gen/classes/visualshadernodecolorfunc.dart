@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeColorFunc extends VisualShaderNode {
   VisualShaderNodeColorFunc(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeColorFunc instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeColorFunc.create() {
+    return VisualShaderNodeColorFunc(resolveClassConstructor('VisualShaderNodeColorFunc'));
+  }
+
   static final Pointer<Void> _mb_set_function =
       resolveMethodBind('VisualShaderNodeColorFunc', 'set_function', 3973396138);
 

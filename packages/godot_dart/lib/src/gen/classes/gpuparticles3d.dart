@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GPUParticles3D extends GeometryInstance3D {
   GPUParticles3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GPUParticles3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GPUParticles3D.create() {
+    return GPUParticles3D(resolveClassConstructor('GPUParticles3D'));
+  }
+
   static final Pointer<Void> _mb_set_emitting =
       resolveMethodBind('GPUParticles3D', 'set_emitting', 2586408642);
 

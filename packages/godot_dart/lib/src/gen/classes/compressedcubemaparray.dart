@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class CompressedCubemapArray extends CompressedTextureLayered {
   CompressedCubemapArray(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CompressedCubemapArray instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CompressedCubemapArray.create() {
+    return CompressedCubemapArray(resolveClassConstructor('CompressedCubemapArray'));
+  }
+
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonModifier3D extends Node3D {
   SkeletonModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonModifier3D.create() {
+    return SkeletonModifier3D(resolveClassConstructor('SkeletonModifier3D'));
+  }
+
   static final Pointer<Void> _mb_get_skeleton =
       resolveMethodBind('SkeletonModifier3D', 'get_skeleton', 1488626673);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GradientTexture2D extends Texture2D {
   GradientTexture2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GradientTexture2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GradientTexture2D.create() {
+    return GradientTexture2D(resolveClassConstructor('GradientTexture2D'));
+  }
+
   static final Pointer<Void> _mb_set_gradient =
       resolveMethodBind('GradientTexture2D', 'set_gradient', 2756054477);
 

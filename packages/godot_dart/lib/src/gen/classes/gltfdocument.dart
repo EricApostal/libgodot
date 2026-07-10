@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFDocument extends Resource {
   GLTFDocument(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFDocument instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFDocument.create() {
+    return GLTFDocument(resolveClassConstructor('GLTFDocument'));
+  }
+
   static final Pointer<Void> _mb_set_image_format =
       resolveMethodBind('GLTFDocument', 'set_image_format', 83702148);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRInteractionProfile extends Resource {
   OpenXRInteractionProfile(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRInteractionProfile instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRInteractionProfile.create() {
+    return OpenXRInteractionProfile(resolveClassConstructor('OpenXRInteractionProfile'));
+  }
+
   static final Pointer<Void> _mb_set_interaction_profile_path =
       resolveMethodBind('OpenXRInteractionProfile', 'set_interaction_profile_path', 83702148);
 

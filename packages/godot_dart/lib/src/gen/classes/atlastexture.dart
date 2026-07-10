@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AtlasTexture extends Texture2D {
   AtlasTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AtlasTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AtlasTexture.create() {
+    return AtlasTexture(resolveClassConstructor('AtlasTexture'));
+  }
+
   static final Pointer<Void> _mb_set_atlas =
       resolveMethodBind('AtlasTexture', 'set_atlas', 4051416890);
 

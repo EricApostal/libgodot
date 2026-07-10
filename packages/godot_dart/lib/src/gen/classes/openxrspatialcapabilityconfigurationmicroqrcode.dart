@@ -14,5 +14,11 @@ import '../classes.g.dart';
 class OpenXRSpatialCapabilityConfigurationMicroQrCode extends OpenXRSpatialCapabilityConfigurationBaseHeader {
   OpenXRSpatialCapabilityConfigurationMicroQrCode(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialCapabilityConfigurationMicroQrCode instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialCapabilityConfigurationMicroQrCode.create() {
+    return OpenXRSpatialCapabilityConfigurationMicroQrCode(resolveClassConstructor('OpenXRSpatialCapabilityConfigurationMicroQrCode'));
+  }
+
   // Skipped get_enabled_components(): unsupported return type "PackedInt64Array".
 }

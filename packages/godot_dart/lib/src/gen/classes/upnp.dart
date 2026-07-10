@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class UPNP extends RefCounted {
   UPNP(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned UPNP instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory UPNP.create() {
+    return UPNP(resolveClassConstructor('UPNP'));
+  }
+
   static final Pointer<Void> _mb_get_device_count =
       resolveMethodBind('UPNP', 'get_device_count', 3905245786);
 

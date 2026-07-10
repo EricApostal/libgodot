@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CapsuleMesh extends PrimitiveMesh {
   CapsuleMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CapsuleMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CapsuleMesh.create() {
+    return CapsuleMesh(resolveClassConstructor('CapsuleMesh'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('CapsuleMesh', 'set_radius', 373806689);
 

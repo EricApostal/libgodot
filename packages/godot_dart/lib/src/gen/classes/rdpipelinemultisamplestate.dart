@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDPipelineMultisampleState extends RefCounted {
   RDPipelineMultisampleState(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDPipelineMultisampleState instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDPipelineMultisampleState.create() {
+    return RDPipelineMultisampleState(resolveClassConstructor('RDPipelineMultisampleState'));
+  }
+
   static final Pointer<Void> _mb_set_sample_count =
       resolveMethodBind('RDPipelineMultisampleState', 'set_sample_count', 3774171498);
 

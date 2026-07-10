@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BitMap extends Resource {
   BitMap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BitMap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BitMap.create() {
+    return BitMap(resolveClassConstructor('BitMap'));
+  }
+
   static final Pointer<Void> _mb_create =
       resolveMethodBind('BitMap', 'create', 1130785943);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CapsuleShape3D extends Shape3D {
   CapsuleShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CapsuleShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CapsuleShape3D.create() {
+    return CapsuleShape3D(resolveClassConstructor('CapsuleShape3D'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('CapsuleShape3D', 'set_radius', 373806689);
 

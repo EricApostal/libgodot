@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RegExMatch extends RefCounted {
   RegExMatch(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RegExMatch instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RegExMatch.create() {
+    return RegExMatch(resolveClassConstructor('RegExMatch'));
+  }
+
   static final Pointer<Void> _mb_get_subject =
       resolveMethodBind('RegExMatch', 'get_subject', 201670096);
 

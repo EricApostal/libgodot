@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SceneMultiplayer extends MultiplayerAPI {
   SceneMultiplayer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SceneMultiplayer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SceneMultiplayer.create() {
+    return SceneMultiplayer(resolveClassConstructor('SceneMultiplayer'));
+  }
+
   // Skipped set_root_path(): an argument type is unsupported.
   // Skipped get_root_path(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_clear =

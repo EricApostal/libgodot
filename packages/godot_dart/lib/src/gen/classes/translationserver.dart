@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TranslationServer extends GodotObject {
   TranslationServer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TranslationServer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TranslationServer.create() {
+    return TranslationServer(resolveClassConstructor('TranslationServer'));
+  }
+
   static final Pointer<Void> _mb_set_locale =
       resolveMethodBind('TranslationServer', 'set_locale', 83702148);
 

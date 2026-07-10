@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonModification2DFABRIK extends SkeletonModification2D {
   SkeletonModification2DFABRIK(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonModification2DFABRIK instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonModification2DFABRIK.create() {
+    return SkeletonModification2DFABRIK(resolveClassConstructor('SkeletonModification2DFABRIK'));
+  }
+
   // Skipped set_target_node(): an argument type is unsupported.
   // Skipped get_target_node(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_set_fabrik_data_chain_length =

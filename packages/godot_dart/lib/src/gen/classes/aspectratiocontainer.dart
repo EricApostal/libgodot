@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AspectRatioContainer extends Container {
   AspectRatioContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AspectRatioContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AspectRatioContainer.create() {
+    return AspectRatioContainer(resolveClassConstructor('AspectRatioContainer'));
+  }
+
   static final Pointer<Void> _mb_set_ratio =
       resolveMethodBind('AspectRatioContainer', 'set_ratio', 373806689);
 

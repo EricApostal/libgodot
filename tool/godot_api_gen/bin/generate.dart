@@ -318,6 +318,15 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib) {
   buffer.writeln('  $className(super.nativePtr);');
   buffer.writeln();
 
+  if (classJson['is_instantiable'] == true) {
+    buffer.writeln('  /// Constructs a brand-new engine-owned $className instance');
+    buffer.writeln('  /// (via classdb_construct_object3), not an existing one.');
+    buffer.writeln('  factory $className.create() {');
+    buffer.writeln("    return $className(resolveClassConstructor('$className'));");
+    buffer.writeln('  }');
+    buffer.writeln();
+  }
+
   var emitted = 0, skipped = 0;
   for (final method in methods) {
     final methodName = method['name'] as String;

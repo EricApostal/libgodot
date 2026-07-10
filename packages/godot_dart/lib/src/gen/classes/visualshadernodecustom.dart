@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeCustom extends VisualShaderNode {
   VisualShaderNodeCustom(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeCustom instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeCustom.create() {
+    return VisualShaderNodeCustom(resolveClassConstructor('VisualShaderNodeCustom'));
+  }
+
   static final Pointer<Void> _mb_get_option_index =
       resolveMethodBind('VisualShaderNodeCustom', 'get_option_index', 923996154);
 

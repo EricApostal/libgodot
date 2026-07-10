@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VBoxContainer extends BoxContainer {
   VBoxContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VBoxContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VBoxContainer.create() {
+    return VBoxContainer(resolveClassConstructor('VBoxContainer'));
+  }
+
 }

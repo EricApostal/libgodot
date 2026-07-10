@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeBooleanParameter extends VisualShaderNodeParameter {
   VisualShaderNodeBooleanParameter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeBooleanParameter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeBooleanParameter.create() {
+    return VisualShaderNodeBooleanParameter(resolveClassConstructor('VisualShaderNodeBooleanParameter'));
+  }
+
   static final Pointer<Void> _mb_set_default_value_enabled =
       resolveMethodBind('VisualShaderNodeBooleanParameter', 'set_default_value_enabled', 2586408642);
 

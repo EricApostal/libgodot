@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRFutureExtension extends OpenXRExtensionWrapper {
   OpenXRFutureExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRFutureExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRFutureExtension.create() {
+    return OpenXRFutureExtension(resolveClassConstructor('OpenXRFutureExtension'));
+  }
+
   static final Pointer<Void> _mb_is_active =
       resolveMethodBind('OpenXRFutureExtension', 'is_active', 36873697);
 

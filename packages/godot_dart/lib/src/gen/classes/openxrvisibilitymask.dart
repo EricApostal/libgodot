@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class OpenXRVisibilityMask extends VisualInstance3D {
   OpenXRVisibilityMask(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRVisibilityMask instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRVisibilityMask.create() {
+    return OpenXRVisibilityMask(resolveClassConstructor('OpenXRVisibilityMask'));
+  }
+
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SpriteFrames extends Resource {
   SpriteFrames(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SpriteFrames instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SpriteFrames.create() {
+    return SpriteFrames(resolveClassConstructor('SpriteFrames'));
+  }
+
   static final Pointer<Void> _mb_add_animation =
       resolveMethodBind('SpriteFrames', 'add_animation', 3304788590);
 

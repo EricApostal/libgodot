@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicalBone3D extends PhysicsBody3D {
   PhysicalBone3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicalBone3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicalBone3D.create() {
+    return PhysicalBone3D(resolveClassConstructor('PhysicalBone3D'));
+  }
+
   static final Pointer<Void> _mb_apply_central_impulse =
       resolveMethodBind('PhysicalBone3D', 'apply_central_impulse', 3460891852);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NoiseTexture3D extends Texture3D {
   NoiseTexture3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NoiseTexture3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NoiseTexture3D.create() {
+    return NoiseTexture3D(resolveClassConstructor('NoiseTexture3D'));
+  }
+
   static final Pointer<Void> _mb_set_width =
       resolveMethodBind('NoiseTexture3D', 'set_width', 1286410249);
 

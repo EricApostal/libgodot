@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeVec2Parameter extends VisualShaderNodeParameter {
   VisualShaderNodeVec2Parameter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeVec2Parameter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeVec2Parameter.create() {
+    return VisualShaderNodeVec2Parameter(resolveClassConstructor('VisualShaderNodeVec2Parameter'));
+  }
+
   static final Pointer<Void> _mb_set_default_value_enabled =
       resolveMethodBind('VisualShaderNodeVec2Parameter', 'set_default_value_enabled', 2586408642);
 

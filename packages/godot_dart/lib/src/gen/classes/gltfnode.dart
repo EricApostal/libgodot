@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFNode extends Resource {
   GLTFNode(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFNode instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFNode.create() {
+    return GLTFNode(resolveClassConstructor('GLTFNode'));
+  }
+
   static final Pointer<Void> _mb_get_original_name =
       resolveMethodBind('GLTFNode', 'get_original_name', 2841200299);
 

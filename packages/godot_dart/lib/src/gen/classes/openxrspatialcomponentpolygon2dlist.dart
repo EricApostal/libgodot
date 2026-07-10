@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentPolygon2DList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentPolygon2DList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentPolygon2DList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentPolygon2DList.create() {
+    return OpenXRSpatialComponentPolygon2DList(resolveClassConstructor('OpenXRSpatialComponentPolygon2DList'));
+  }
+
   static final Pointer<Void> _mb_get_transform =
       resolveMethodBind('OpenXRSpatialComponentPolygon2DList', 'get_transform', 1965739696);
 

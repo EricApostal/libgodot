@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OccluderInstance3D extends VisualInstance3D {
   OccluderInstance3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OccluderInstance3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OccluderInstance3D.create() {
+    return OccluderInstance3D(resolveClassConstructor('OccluderInstance3D'));
+  }
+
   static final Pointer<Void> _mb_set_bake_mask =
       resolveMethodBind('OccluderInstance3D', 'set_bake_mask', 1286410249);
 

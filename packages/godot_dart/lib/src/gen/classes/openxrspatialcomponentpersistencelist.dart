@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentPersistenceList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentPersistenceList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentPersistenceList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentPersistenceList.create() {
+    return OpenXRSpatialComponentPersistenceList(resolveClassConstructor('OpenXRSpatialComponentPersistenceList'));
+  }
+
   static final Pointer<Void> _mb_get_persistent_uuid =
       resolveMethodBind('OpenXRSpatialComponentPersistenceList', 'get_persistent_uuid', 844755477);
 

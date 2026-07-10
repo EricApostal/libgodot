@@ -27,6 +27,14 @@ Pointer<Void> resolveMethodBind(String className, String methodName, int hash) {
   );
 }
 
+/// Constructs a brand-new instance of a stock (non-Dart-authored) engine
+/// class by name, e.g. `resolveClassConstructor('BoxMesh')` — used by each
+/// generated class's `.create()` factory for classes flagged
+/// `is_instantiable` in extension_api.json.
+Pointer<Void> resolveClassConstructor(String className) {
+  return GodotApi.classdbConstructObject3(StringNameCache.intern(className));
+}
+
 /// Calls a resolved method bind via ptrcall with up to a handful of
 /// pre-marshaled raw argument pointers, ignoring any return value.
 void ptrcallVoid(Pointer<Void> methodBind, Pointer<Void> instance, List<Pointer<Void>> args) {

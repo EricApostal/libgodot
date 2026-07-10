@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CollisionPolygon3D extends Node3D {
   CollisionPolygon3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CollisionPolygon3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CollisionPolygon3D.create() {
+    return CollisionPolygon3D(resolveClassConstructor('CollisionPolygon3D'));
+  }
+
   static final Pointer<Void> _mb_set_depth =
       resolveMethodBind('CollisionPolygon3D', 'set_depth', 373806689);
 

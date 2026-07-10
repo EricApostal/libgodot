@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeBlendTree extends AnimationRootNode {
   AnimationNodeBlendTree(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeBlendTree instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeBlendTree.create() {
+    return AnimationNodeBlendTree(resolveClassConstructor('AnimationNodeBlendTree'));
+  }
+
   static final Pointer<Void> _mb_add_node =
       resolveMethodBind('AnimationNodeBlendTree', 'add_node', 1980270704);
 

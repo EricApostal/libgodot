@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectFilter extends AudioEffect {
   AudioEffectFilter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectFilter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectFilter.create() {
+    return AudioEffectFilter(resolveClassConstructor('AudioEffectFilter'));
+  }
+
   static final Pointer<Void> _mb_set_cutoff =
       resolveMethodBind('AudioEffectFilter', 'set_cutoff', 373806689);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TorusMesh extends PrimitiveMesh {
   TorusMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TorusMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TorusMesh.create() {
+    return TorusMesh(resolveClassConstructor('TorusMesh'));
+  }
+
   static final Pointer<Void> _mb_set_inner_radius =
       resolveMethodBind('TorusMesh', 'set_inner_radius', 373806689);
 

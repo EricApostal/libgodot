@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AudioSamplePlayback extends RefCounted {
   AudioSamplePlayback(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioSamplePlayback instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioSamplePlayback.create() {
+    return AudioSamplePlayback(resolveClassConstructor('AudioSamplePlayback'));
+  }
+
 }

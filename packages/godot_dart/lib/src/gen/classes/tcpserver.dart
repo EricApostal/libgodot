@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TCPServer extends SocketServer {
   TCPServer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TCPServer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TCPServer.create() {
+    return TCPServer(resolveClassConstructor('TCPServer'));
+  }
+
   static final Pointer<Void> _mb_listen =
       resolveMethodBind('TCPServer', 'listen', 3167955072);
 

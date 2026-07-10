@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeParticleOutput extends VisualShaderNodeOutput {
   VisualShaderNodeParticleOutput(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParticleOutput instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParticleOutput.create() {
+    return VisualShaderNodeParticleOutput(resolveClassConstructor('VisualShaderNodeParticleOutput'));
+  }
+
 }

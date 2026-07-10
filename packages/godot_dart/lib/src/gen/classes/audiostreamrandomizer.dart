@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamRandomizer extends AudioStream {
   AudioStreamRandomizer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamRandomizer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamRandomizer.create() {
+    return AudioStreamRandomizer(resolveClassConstructor('AudioStreamRandomizer'));
+  }
+
   static final Pointer<Void> _mb_add_stream =
       resolveMethodBind('AudioStreamRandomizer', 'add_stream', 1892018854);
 

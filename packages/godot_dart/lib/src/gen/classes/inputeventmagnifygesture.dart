@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventMagnifyGesture extends InputEventGesture {
   InputEventMagnifyGesture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventMagnifyGesture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventMagnifyGesture.create() {
+    return InputEventMagnifyGesture(resolveClassConstructor('InputEventMagnifyGesture'));
+  }
+
   static final Pointer<Void> _mb_set_factor =
       resolveMethodBind('InputEventMagnifyGesture', 'set_factor', 373806689);
 

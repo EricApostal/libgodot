@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class MultiplayerAPIExtension extends MultiplayerAPI {
   MultiplayerAPIExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MultiplayerAPIExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MultiplayerAPIExtension.create() {
+    return MultiplayerAPIExtension(resolveClassConstructor('MultiplayerAPIExtension'));
+  }
+
 }

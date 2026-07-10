@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeMultiplyAdd extends VisualShaderNode {
   VisualShaderNodeMultiplyAdd(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeMultiplyAdd instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeMultiplyAdd.create() {
+    return VisualShaderNodeMultiplyAdd(resolveClassConstructor('VisualShaderNodeMultiplyAdd'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeMultiplyAdd', 'set_op_type', 1409862380);
 

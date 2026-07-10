@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRHand extends Node3D {
   OpenXRHand(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRHand instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRHand.create() {
+    return OpenXRHand(resolveClassConstructor('OpenXRHand'));
+  }
+
   static final Pointer<Void> _mb_set_hand =
       resolveMethodBind('OpenXRHand', 'set_hand', 1849328560);
 

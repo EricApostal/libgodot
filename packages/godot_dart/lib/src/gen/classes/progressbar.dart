@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ProgressBar extends Range {
   ProgressBar(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ProgressBar instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ProgressBar.create() {
+    return ProgressBar(resolveClassConstructor('ProgressBar'));
+  }
+
   static final Pointer<Void> _mb_set_fill_mode =
       resolveMethodBind('ProgressBar', 'set_fill_mode', 1286410249);
 

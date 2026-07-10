@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentPlaneAlignmentList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentPlaneAlignmentList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentPlaneAlignmentList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentPlaneAlignmentList.create() {
+    return OpenXRSpatialComponentPlaneAlignmentList(resolveClassConstructor('OpenXRSpatialComponentPlaneAlignmentList'));
+  }
+
   static final Pointer<Void> _mb_get_plane_alignment =
       resolveMethodBind('OpenXRSpatialComponentPlaneAlignmentList', 'get_plane_alignment', 3340200270);
 

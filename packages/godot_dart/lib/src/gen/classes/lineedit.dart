@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class LineEdit extends Control {
   LineEdit(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LineEdit instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LineEdit.create() {
+    return LineEdit(resolveClassConstructor('LineEdit'));
+  }
+
   static final Pointer<Void> _mb_has_ime_text =
       resolveMethodBind('LineEdit', 'has_ime_text', 36873697);
 

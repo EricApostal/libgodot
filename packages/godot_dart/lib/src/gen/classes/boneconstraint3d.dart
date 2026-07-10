@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BoneConstraint3D extends SkeletonModifier3D {
   BoneConstraint3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BoneConstraint3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BoneConstraint3D.create() {
+    return BoneConstraint3D(resolveClassConstructor('BoneConstraint3D'));
+  }
+
   static final Pointer<Void> _mb_set_amount =
       resolveMethodBind('BoneConstraint3D', 'set_amount', 1602489585);
 

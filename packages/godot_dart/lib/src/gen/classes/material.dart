@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Material extends Resource {
   Material(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Material instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Material.create() {
+    return Material(resolveClassConstructor('Material'));
+  }
+
   static final Pointer<Void> _mb_set_next_pass =
       resolveMethodBind('Material', 'set_next_pass', 2757459619);
 

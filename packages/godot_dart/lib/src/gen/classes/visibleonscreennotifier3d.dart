@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisibleOnScreenNotifier3D extends VisualInstance3D {
   VisibleOnScreenNotifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisibleOnScreenNotifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisibleOnScreenNotifier3D.create() {
+    return VisibleOnScreenNotifier3D(resolveClassConstructor('VisibleOnScreenNotifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_aabb =
       resolveMethodBind('VisibleOnScreenNotifier3D', 'set_aabb', 259215842);
 

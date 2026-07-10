@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Range extends Control {
   Range(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Range instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Range.create() {
+    return Range(resolveClassConstructor('Range'));
+  }
+
   static final Pointer<Void> _mb_get_value =
       resolveMethodBind('Range', 'get_value', 1740695150);
 

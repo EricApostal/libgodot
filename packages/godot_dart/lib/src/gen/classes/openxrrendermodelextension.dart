@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRRenderModelExtension extends OpenXRExtensionWrapper {
   OpenXRRenderModelExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRRenderModelExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRRenderModelExtension.create() {
+    return OpenXRRenderModelExtension(resolveClassConstructor('OpenXRRenderModelExtension'));
+  }
+
   static final Pointer<Void> _mb_is_active =
       resolveMethodBind('OpenXRRenderModelExtension', 'is_active', 36873697);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationRegion3D extends Node3D {
   NavigationRegion3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationRegion3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationRegion3D.create() {
+    return NavigationRegion3D(resolveClassConstructor('NavigationRegion3D'));
+  }
+
   // Skipped get_rid(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_navigation_mesh =
       resolveMethodBind('NavigationRegion3D', 'set_navigation_mesh', 2923361153);

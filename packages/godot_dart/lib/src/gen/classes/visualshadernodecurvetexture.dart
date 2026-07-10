@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeCurveTexture extends VisualShaderNodeResizableBase {
   VisualShaderNodeCurveTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeCurveTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeCurveTexture.create() {
+    return VisualShaderNodeCurveTexture(resolveClassConstructor('VisualShaderNodeCurveTexture'));
+  }
+
   static final Pointer<Void> _mb_set_texture =
       resolveMethodBind('VisualShaderNodeCurveTexture', 'set_texture', 181872837);
 

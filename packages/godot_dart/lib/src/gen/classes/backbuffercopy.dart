@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BackBufferCopy extends Node2D {
   BackBufferCopy(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BackBufferCopy instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BackBufferCopy.create() {
+    return BackBufferCopy(resolveClassConstructor('BackBufferCopy'));
+  }
+
   static final Pointer<Void> _mb_set_rect =
       resolveMethodBind('BackBufferCopy', 'set_rect', 2046264180);
 

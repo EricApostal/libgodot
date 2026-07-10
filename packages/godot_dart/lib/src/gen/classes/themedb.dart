@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ThemeDB extends GodotObject {
   ThemeDB(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ThemeDB instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ThemeDB.create() {
+    return ThemeDB(resolveClassConstructor('ThemeDB'));
+  }
+
   static final Pointer<Void> _mb_get_default_theme =
       resolveMethodBind('ThemeDB', 'get_default_theme', 754276358);
 

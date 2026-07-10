@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRController3D extends XRNode3D {
   XRController3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRController3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRController3D.create() {
+    return XRController3D(resolveClassConstructor('XRController3D'));
+  }
+
   static final Pointer<Void> _mb_is_button_pressed =
       resolveMethodBind('XRController3D', 'is_button_pressed', 2619796661);
 

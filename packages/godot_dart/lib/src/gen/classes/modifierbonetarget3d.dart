@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ModifierBoneTarget3D extends SkeletonModifier3D {
   ModifierBoneTarget3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ModifierBoneTarget3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ModifierBoneTarget3D.create() {
+    return ModifierBoneTarget3D(resolveClassConstructor('ModifierBoneTarget3D'));
+  }
+
   static final Pointer<Void> _mb_set_bone_name =
       resolveMethodBind('ModifierBoneTarget3D', 'set_bone_name', 83702148);
 

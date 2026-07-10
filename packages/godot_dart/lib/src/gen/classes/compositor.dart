@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Compositor extends Resource {
   Compositor(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Compositor instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Compositor.create() {
+    return Compositor(resolveClassConstructor('Compositor'));
+  }
+
   // Skipped set_compositor_effects(): an argument type is unsupported.
   // Skipped get_compositor_effects(): unsupported return type "typedarray::CompositorEffect".
 }

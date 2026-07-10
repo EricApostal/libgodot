@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeCompare extends VisualShaderNode {
   VisualShaderNodeCompare(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeCompare instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeCompare.create() {
+    return VisualShaderNodeCompare(resolveClassConstructor('VisualShaderNodeCompare'));
+  }
+
   static final Pointer<Void> _mb_set_comparison_type =
       resolveMethodBind('VisualShaderNodeCompare', 'set_comparison_type', 516558320);
 

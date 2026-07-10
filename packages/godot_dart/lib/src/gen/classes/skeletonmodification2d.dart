@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonModification2D extends Resource {
   SkeletonModification2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonModification2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonModification2D.create() {
+    return SkeletonModification2D(resolveClassConstructor('SkeletonModification2D'));
+  }
+
   static final Pointer<Void> _mb_set_enabled =
       resolveMethodBind('SkeletonModification2D', 'set_enabled', 2586408642);
 

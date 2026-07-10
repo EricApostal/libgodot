@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AudioEffectNotchFilter extends AudioEffectFilter {
   AudioEffectNotchFilter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectNotchFilter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectNotchFilter.create() {
+    return AudioEffectNotchFilter(resolveClassConstructor('AudioEffectNotchFilter'));
+  }
+
 }

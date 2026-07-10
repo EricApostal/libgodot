@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Decal extends VisualInstance3D {
   Decal(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Decal instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Decal.create() {
+    return Decal(resolveClassConstructor('Decal'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('Decal', 'set_size', 3460891852);
 

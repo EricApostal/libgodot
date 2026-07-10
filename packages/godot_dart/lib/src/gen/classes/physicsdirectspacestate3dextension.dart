@@ -14,5 +14,11 @@ import '../classes.g.dart';
 class PhysicsDirectSpaceState3DExtension extends PhysicsDirectSpaceState3D {
   PhysicsDirectSpaceState3DExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsDirectSpaceState3DExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsDirectSpaceState3DExtension.create() {
+    return PhysicsDirectSpaceState3DExtension(resolveClassConstructor('PhysicsDirectSpaceState3DExtension'));
+  }
+
   // Skipped is_body_excluded_from_query(): an argument type is unsupported.
 }

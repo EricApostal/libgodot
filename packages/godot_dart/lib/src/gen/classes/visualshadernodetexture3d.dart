@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeTexture3D extends VisualShaderNodeSample3D {
   VisualShaderNodeTexture3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTexture3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTexture3D.create() {
+    return VisualShaderNodeTexture3D(resolveClassConstructor('VisualShaderNodeTexture3D'));
+  }
+
   static final Pointer<Void> _mb_set_texture =
       resolveMethodBind('VisualShaderNodeTexture3D', 'set_texture', 1188404210);
 

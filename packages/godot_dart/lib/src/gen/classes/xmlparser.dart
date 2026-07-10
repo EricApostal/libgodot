@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XMLParser extends RefCounted {
   XMLParser(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XMLParser instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XMLParser.create() {
+    return XMLParser(resolveClassConstructor('XMLParser'));
+  }
+
   static final Pointer<Void> _mb_read =
       resolveMethodBind('XMLParser', 'read', 166280745);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VideoStreamPlayer extends Control {
   VideoStreamPlayer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VideoStreamPlayer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VideoStreamPlayer.create() {
+    return VideoStreamPlayer(resolveClassConstructor('VideoStreamPlayer'));
+  }
+
   static final Pointer<Void> _mb_set_stream =
       resolveMethodBind('VideoStreamPlayer', 'set_stream', 2317102564);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class JointLimitationCone3D extends JointLimitation3D {
   JointLimitationCone3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned JointLimitationCone3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory JointLimitationCone3D.create() {
+    return JointLimitationCone3D(resolveClassConstructor('JointLimitationCone3D'));
+  }
+
   static final Pointer<Void> _mb_set_angle =
       resolveMethodBind('JointLimitationCone3D', 'set_angle', 373806689);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SpringArm3D extends Node3D {
   SpringArm3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SpringArm3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SpringArm3D.create() {
+    return SpringArm3D(resolveClassConstructor('SpringArm3D'));
+  }
+
   static final Pointer<Void> _mb_get_hit_length =
       resolveMethodBind('SpringArm3D', 'get_hit_length', 191475506);
 

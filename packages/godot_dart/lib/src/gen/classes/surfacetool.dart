@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SurfaceTool extends RefCounted {
   SurfaceTool(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SurfaceTool instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SurfaceTool.create() {
+    return SurfaceTool(resolveClassConstructor('SurfaceTool'));
+  }
+
   static final Pointer<Void> _mb_set_skin_weight_count =
       resolveMethodBind('SurfaceTool', 'set_skin_weight_count', 618679515);
 

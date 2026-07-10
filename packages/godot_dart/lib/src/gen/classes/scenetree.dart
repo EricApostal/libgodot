@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SceneTree extends MainLoop {
   SceneTree(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SceneTree instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SceneTree.create() {
+    return SceneTree(resolveClassConstructor('SceneTree'));
+  }
+
   static final Pointer<Void> _mb_get_root =
       resolveMethodBind('SceneTree', 'get_root', 1757182445);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CanvasModulate extends Node2D {
   CanvasModulate(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CanvasModulate instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CanvasModulate.create() {
+    return CanvasModulate(resolveClassConstructor('CanvasModulate'));
+  }
+
   static final Pointer<Void> _mb_set_color =
       resolveMethodBind('CanvasModulate', 'set_color', 2920490490);
 

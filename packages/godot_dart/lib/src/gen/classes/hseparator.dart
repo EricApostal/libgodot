@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class HSeparator extends Separator {
   HSeparator(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HSeparator instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HSeparator.create() {
+    return HSeparator(resolveClassConstructor('HSeparator'));
+  }
+
 }

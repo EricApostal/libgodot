@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectLimiter extends AudioEffect {
   AudioEffectLimiter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectLimiter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectLimiter.create() {
+    return AudioEffectLimiter(resolveClassConstructor('AudioEffectLimiter'));
+  }
+
   static final Pointer<Void> _mb_set_ceiling_db =
       resolveMethodBind('AudioEffectLimiter', 'set_ceiling_db', 373806689);
 

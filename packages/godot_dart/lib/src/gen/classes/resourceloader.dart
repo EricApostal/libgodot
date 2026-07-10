@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ResourceLoader extends GodotObject {
   ResourceLoader(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ResourceLoader instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ResourceLoader.create() {
+    return ResourceLoader(resolveClassConstructor('ResourceLoader'));
+  }
+
   static final Pointer<Void> _mb_load_threaded_request =
       resolveMethodBind('ResourceLoader', 'load_threaded_request', 3614384323);
 

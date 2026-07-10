@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CSGMesh3D extends CSGPrimitive3D {
   CSGMesh3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CSGMesh3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CSGMesh3D.create() {
+    return CSGMesh3D(resolveClassConstructor('CSGMesh3D'));
+  }
+
   static final Pointer<Void> _mb_set_mesh =
       resolveMethodBind('CSGMesh3D', 'set_mesh', 194775623);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ZIPReader extends RefCounted {
   ZIPReader(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ZIPReader instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ZIPReader.create() {
+    return ZIPReader(resolveClassConstructor('ZIPReader'));
+  }
+
   static final Pointer<Void> _mb_open =
       resolveMethodBind('ZIPReader', 'open', 166001499);
 

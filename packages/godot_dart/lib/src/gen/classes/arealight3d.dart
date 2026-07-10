@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AreaLight3D extends Light3D {
   AreaLight3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AreaLight3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AreaLight3D.create() {
+    return AreaLight3D(resolveClassConstructor('AreaLight3D'));
+  }
+
   static final Pointer<Void> _mb_set_area_texture =
       resolveMethodBind('AreaLight3D', 'set_area_texture', 4051416890);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamPlayer3D extends Node3D {
   AudioStreamPlayer3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamPlayer3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamPlayer3D.create() {
+    return AudioStreamPlayer3D(resolveClassConstructor('AudioStreamPlayer3D'));
+  }
+
   static final Pointer<Void> _mb_set_stream =
       resolveMethodBind('AudioStreamPlayer3D', 'set_stream', 2210767741);
 

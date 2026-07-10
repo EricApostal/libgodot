@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GPUParticlesCollisionSphere3D extends GPUParticlesCollision3D {
   GPUParticlesCollisionSphere3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GPUParticlesCollisionSphere3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GPUParticlesCollisionSphere3D.create() {
+    return GPUParticlesCollisionSphere3D(resolveClassConstructor('GPUParticlesCollisionSphere3D'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('GPUParticlesCollisionSphere3D', 'set_radius', 373806689);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeParticleBoxEmitter extends VisualShaderNodeParticleEmitter {
   VisualShaderNodeParticleBoxEmitter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParticleBoxEmitter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParticleBoxEmitter.create() {
+    return VisualShaderNodeParticleBoxEmitter(resolveClassConstructor('VisualShaderNodeParticleBoxEmitter'));
+  }
+
 }

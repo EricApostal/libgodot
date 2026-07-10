@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AwaitTweener extends Tweener {
   AwaitTweener(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AwaitTweener instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AwaitTweener.create() {
+    return AwaitTweener(resolveClassConstructor('AwaitTweener'));
+  }
+
   static final Pointer<Void> _mb_set_timeout =
       resolveMethodBind('AwaitTweener', 'set_timeout', 3123469156);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class WebSocketMultiplayerPeer extends MultiplayerPeer {
   WebSocketMultiplayerPeer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned WebSocketMultiplayerPeer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory WebSocketMultiplayerPeer.create() {
+    return WebSocketMultiplayerPeer(resolveClassConstructor('WebSocketMultiplayerPeer'));
+  }
+
   static final Pointer<Void> _mb_create_client =
       resolveMethodBind('WebSocketMultiplayerPeer', 'create_client', 1966198364);
 

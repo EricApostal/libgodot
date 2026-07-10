@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CryptoKey extends Resource {
   CryptoKey(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CryptoKey instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CryptoKey.create() {
+    return CryptoKey(resolveClassConstructor('CryptoKey'));
+  }
+
   static final Pointer<Void> _mb_save =
       resolveMethodBind('CryptoKey', 'save', 885841341);
 

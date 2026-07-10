@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BlitMaterial extends Material {
   BlitMaterial(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BlitMaterial instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BlitMaterial.create() {
+    return BlitMaterial(resolveClassConstructor('BlitMaterial'));
+  }
+
   static final Pointer<Void> _mb_set_blend_mode =
       resolveMethodBind('BlitMaterial', 'set_blend_mode', 80206916);
 

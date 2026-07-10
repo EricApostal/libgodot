@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentAnchorList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentAnchorList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentAnchorList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentAnchorList.create() {
+    return OpenXRSpatialComponentAnchorList(resolveClassConstructor('OpenXRSpatialComponentAnchorList'));
+  }
+
   static final Pointer<Void> _mb_get_entity_pose =
       resolveMethodBind('OpenXRSpatialComponentAnchorList', 'get_entity_pose', 1965739696);
 

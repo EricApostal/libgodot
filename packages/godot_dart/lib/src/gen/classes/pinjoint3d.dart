@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PinJoint3D extends Joint3D {
   PinJoint3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PinJoint3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PinJoint3D.create() {
+    return PinJoint3D(resolveClassConstructor('PinJoint3D'));
+  }
+
   static final Pointer<Void> _mb_set_param =
       resolveMethodBind('PinJoint3D', 'set_param', 2059913726);
 

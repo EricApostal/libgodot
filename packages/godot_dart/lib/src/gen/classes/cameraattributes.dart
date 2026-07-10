@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CameraAttributes extends Resource {
   CameraAttributes(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CameraAttributes instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CameraAttributes.create() {
+    return CameraAttributes(resolveClassConstructor('CameraAttributes'));
+  }
+
   static final Pointer<Void> _mb_set_exposure_multiplier =
       resolveMethodBind('CameraAttributes', 'set_exposure_multiplier', 373806689);
 

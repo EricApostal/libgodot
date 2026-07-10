@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PlaneMesh extends PrimitiveMesh {
   PlaneMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PlaneMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PlaneMesh.create() {
+    return PlaneMesh(resolveClassConstructor('PlaneMesh'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('PlaneMesh', 'set_size', 743155724);
 

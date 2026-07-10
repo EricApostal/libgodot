@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamInteractive extends AudioStream {
   AudioStreamInteractive(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamInteractive instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamInteractive.create() {
+    return AudioStreamInteractive(resolveClassConstructor('AudioStreamInteractive'));
+  }
+
   static final Pointer<Void> _mb_set_clip_count =
       resolveMethodBind('AudioStreamInteractive', 'set_clip_count', 1286410249);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FastNoiseLite extends Noise {
   FastNoiseLite(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FastNoiseLite instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FastNoiseLite.create() {
+    return FastNoiseLite(resolveClassConstructor('FastNoiseLite'));
+  }
+
   static final Pointer<Void> _mb_set_noise_type =
       resolveMethodBind('FastNoiseLite', 'set_noise_type', 2624461392);
 

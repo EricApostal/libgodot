@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FuzzySearchMatch extends RefCounted {
   FuzzySearchMatch(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FuzzySearchMatch instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FuzzySearchMatch.create() {
+    return FuzzySearchMatch(resolveClassConstructor('FuzzySearchMatch'));
+  }
+
   static final Pointer<Void> _mb_set_target =
       resolveMethodBind('FuzzySearchMatch', 'set_target', 83702148);
 

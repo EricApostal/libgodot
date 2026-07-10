@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRAnchorTracker extends OpenXRSpatialEntityTracker {
   OpenXRAnchorTracker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRAnchorTracker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRAnchorTracker.create() {
+    return OpenXRAnchorTracker(resolveClassConstructor('OpenXRAnchorTracker'));
+  }
+
   static final Pointer<Void> _mb_has_uuid =
       resolveMethodBind('OpenXRAnchorTracker', 'has_uuid', 36873697);
 

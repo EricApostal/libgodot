@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CameraServer extends GodotObject {
   CameraServer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CameraServer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CameraServer.create() {
+    return CameraServer(resolveClassConstructor('CameraServer'));
+  }
+
   static final Pointer<Void> _mb_set_monitoring_feeds =
       resolveMethodBind('CameraServer', 'set_monitoring_feeds', 2586408642);
 

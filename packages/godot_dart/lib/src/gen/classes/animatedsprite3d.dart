@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimatedSprite3D extends SpriteBase3D {
   AnimatedSprite3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimatedSprite3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimatedSprite3D.create() {
+    return AnimatedSprite3D(resolveClassConstructor('AnimatedSprite3D'));
+  }
+
   static final Pointer<Void> _mb_set_sprite_frames =
       resolveMethodBind('AnimatedSprite3D', 'set_sprite_frames', 905781144);
 

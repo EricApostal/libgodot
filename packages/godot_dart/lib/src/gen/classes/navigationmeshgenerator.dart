@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationMeshGenerator extends GodotObject {
   NavigationMeshGenerator(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationMeshGenerator instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationMeshGenerator.create() {
+    return NavigationMeshGenerator(resolveClassConstructor('NavigationMeshGenerator'));
+  }
+
   static final Pointer<Void> _mb_bake =
       resolveMethodBind('NavigationMeshGenerator', 'bake', 1401173477);
 

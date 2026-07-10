@@ -36,12 +36,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('libgodot: rotating cube')),
+        appBar: AppBar(title: const Text('libgodot: all-Dart scene')),
         body: Center(
           child: GodotView(
             projectPath: _godotProjectPath,
-            width: 480,
-            height: 270,
+            width: 640,
+            height: 360,
             initFunctionAddress: GodotDartEntryPoint.nativeFunctionPointer.address,
           ),
         ),

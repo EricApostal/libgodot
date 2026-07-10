@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRRenderModel extends Node3D {
   OpenXRRenderModel(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRRenderModel instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRRenderModel.create() {
+    return OpenXRRenderModel(resolveClassConstructor('OpenXRRenderModel'));
+  }
+
   static final Pointer<Void> _mb_get_top_level_path =
       resolveMethodBind('OpenXRRenderModel', 'get_top_level_path', 201670096);
 

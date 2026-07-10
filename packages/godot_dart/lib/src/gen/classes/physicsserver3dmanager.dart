@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsServer3DManager extends GodotObject {
   PhysicsServer3DManager(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsServer3DManager instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsServer3DManager.create() {
+    return PhysicsServer3DManager(resolveClassConstructor('PhysicsServer3DManager'));
+  }
+
   // Skipped register_server(): an argument type is unsupported.
   static final Pointer<Void> _mb_set_default_server =
       resolveMethodBind('PhysicsServer3DManager', 'set_default_server', 2956805083);

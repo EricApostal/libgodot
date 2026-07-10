@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeWorldPositionFromDepth extends VisualShaderNode {
   VisualShaderNodeWorldPositionFromDepth(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeWorldPositionFromDepth instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeWorldPositionFromDepth.create() {
+    return VisualShaderNodeWorldPositionFromDepth(resolveClassConstructor('VisualShaderNodeWorldPositionFromDepth'));
+  }
+
 }

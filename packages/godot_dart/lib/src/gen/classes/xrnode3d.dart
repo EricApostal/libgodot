@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRNode3D extends Node3D {
   XRNode3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRNode3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRNode3D.create() {
+    return XRNode3D(resolveClassConstructor('XRNode3D'));
+  }
+
   static final Pointer<Void> _mb_set_tracker =
       resolveMethodBind('XRNode3D', 'set_tracker', 3304788590);
 

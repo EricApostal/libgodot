@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SphereMesh extends PrimitiveMesh {
   SphereMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SphereMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SphereMesh.create() {
+    return SphereMesh(resolveClassConstructor('SphereMesh'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('SphereMesh', 'set_radius', 373806689);
 

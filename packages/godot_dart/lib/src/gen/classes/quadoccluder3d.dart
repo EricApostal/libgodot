@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class QuadOccluder3D extends Occluder3D {
   QuadOccluder3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned QuadOccluder3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory QuadOccluder3D.create() {
+    return QuadOccluder3D(resolveClassConstructor('QuadOccluder3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('QuadOccluder3D', 'set_size', 743155724);
 

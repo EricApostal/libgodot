@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventJoypadButton extends InputEvent {
   InputEventJoypadButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventJoypadButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventJoypadButton.create() {
+    return InputEventJoypadButton(resolveClassConstructor('InputEventJoypadButton'));
+  }
+
   static final Pointer<Void> _mb_set_button_index =
       resolveMethodBind('InputEventJoypadButton', 'set_button_index', 1466368136);
 

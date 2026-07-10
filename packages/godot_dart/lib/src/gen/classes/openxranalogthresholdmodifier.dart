@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRAnalogThresholdModifier extends OpenXRActionBindingModifier {
   OpenXRAnalogThresholdModifier(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRAnalogThresholdModifier instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRAnalogThresholdModifier.create() {
+    return OpenXRAnalogThresholdModifier(resolveClassConstructor('OpenXRAnalogThresholdModifier'));
+  }
+
   static final Pointer<Void> _mb_set_on_threshold =
       resolveMethodBind('OpenXRAnalogThresholdModifier', 'set_on_threshold', 373806689);
 

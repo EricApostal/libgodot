@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StaticBody2D extends PhysicsBody2D {
   StaticBody2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StaticBody2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StaticBody2D.create() {
+    return StaticBody2D(resolveClassConstructor('StaticBody2D'));
+  }
+
   static final Pointer<Void> _mb_set_constant_linear_velocity =
       resolveMethodBind('StaticBody2D', 'set_constant_linear_velocity', 743155724);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TextureProgressBar extends Range {
   TextureProgressBar(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextureProgressBar instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextureProgressBar.create() {
+    return TextureProgressBar(resolveClassConstructor('TextureProgressBar'));
+  }
+
   static final Pointer<Void> _mb_set_under_texture =
       resolveMethodBind('TextureProgressBar', 'set_under_texture', 4051416890);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Path3D extends Node3D {
   Path3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Path3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Path3D.create() {
+    return Path3D(resolveClassConstructor('Path3D'));
+  }
+
   static final Pointer<Void> _mb_set_curve =
       resolveMethodBind('Path3D', 'set_curve', 408955118);
 

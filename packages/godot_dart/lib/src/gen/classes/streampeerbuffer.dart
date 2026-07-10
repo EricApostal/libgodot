@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StreamPeerBuffer extends StreamPeer {
   StreamPeerBuffer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StreamPeerBuffer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StreamPeerBuffer.create() {
+    return StreamPeerBuffer(resolveClassConstructor('StreamPeerBuffer'));
+  }
+
   static final Pointer<Void> _mb_seek =
       resolveMethodBind('StreamPeerBuffer', 'seek', 1286410249);
 

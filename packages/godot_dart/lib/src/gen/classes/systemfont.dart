@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SystemFont extends Font {
   SystemFont(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SystemFont instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SystemFont.create() {
+    return SystemFont(resolveClassConstructor('SystemFont'));
+  }
+
   static final Pointer<Void> _mb_set_antialiasing =
       resolveMethodBind('SystemFont', 'set_antialiasing', 1669900);
 

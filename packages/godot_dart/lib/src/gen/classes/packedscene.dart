@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PackedScene extends Resource {
   PackedScene(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PackedScene instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PackedScene.create() {
+    return PackedScene(resolveClassConstructor('PackedScene'));
+  }
+
   static final Pointer<Void> _mb_pack =
       resolveMethodBind('PackedScene', 'pack', 2584678054);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationRegion2D extends Node2D {
   NavigationRegion2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationRegion2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationRegion2D.create() {
+    return NavigationRegion2D(resolveClassConstructor('NavigationRegion2D'));
+  }
+
   // Skipped get_rid(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_navigation_polygon =
       resolveMethodBind('NavigationRegion2D', 'set_navigation_polygon', 1515040758);

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TileMapLayer extends Node2D {
   TileMapLayer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TileMapLayer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TileMapLayer.create() {
+    return TileMapLayer(resolveClassConstructor('TileMapLayer'));
+  }
+
   static final Pointer<Void> _mb_set_cell =
       resolveMethodBind('TileMapLayer', 'set_cell', 2428518503);
 

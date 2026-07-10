@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CSGTorus3D extends CSGPrimitive3D {
   CSGTorus3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CSGTorus3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CSGTorus3D.create() {
+    return CSGTorus3D(resolveClassConstructor('CSGTorus3D'));
+  }
+
   static final Pointer<Void> _mb_set_inner_radius =
       resolveMethodBind('CSGTorus3D', 'set_inner_radius', 373806689);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDPipelineSpecializationConstant extends RefCounted {
   RDPipelineSpecializationConstant(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDPipelineSpecializationConstant instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDPipelineSpecializationConstant.create() {
+    return RDPipelineSpecializationConstant(resolveClassConstructor('RDPipelineSpecializationConstant'));
+  }
+
   // Skipped set_value(): an argument type is unsupported.
   // Skipped get_value(): unsupported return type "Variant".
   static final Pointer<Void> _mb_set_constant_id =

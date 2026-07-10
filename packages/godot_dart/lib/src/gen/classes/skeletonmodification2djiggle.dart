@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonModification2DJiggle extends SkeletonModification2D {
   SkeletonModification2DJiggle(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonModification2DJiggle instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonModification2DJiggle.create() {
+    return SkeletonModification2DJiggle(resolveClassConstructor('SkeletonModification2DJiggle'));
+  }
+
   // Skipped set_target_node(): an argument type is unsupported.
   // Skipped get_target_node(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_set_jiggle_data_chain_length =

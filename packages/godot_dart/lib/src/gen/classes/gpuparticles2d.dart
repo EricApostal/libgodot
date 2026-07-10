@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GPUParticles2D extends Node2D {
   GPUParticles2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GPUParticles2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GPUParticles2D.create() {
+    return GPUParticles2D(resolveClassConstructor('GPUParticles2D'));
+  }
+
   static final Pointer<Void> _mb_set_emitting =
       resolveMethodBind('GPUParticles2D', 'set_emitting', 2586408642);
 

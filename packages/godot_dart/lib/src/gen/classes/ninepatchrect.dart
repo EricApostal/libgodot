@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NinePatchRect extends Control {
   NinePatchRect(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NinePatchRect instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NinePatchRect.create() {
+    return NinePatchRect(resolveClassConstructor('NinePatchRect'));
+  }
+
   static final Pointer<Void> _mb_set_texture =
       resolveMethodBind('NinePatchRect', 'set_texture', 4051416890);
 

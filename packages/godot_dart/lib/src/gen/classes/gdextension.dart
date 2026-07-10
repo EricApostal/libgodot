@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GDExtension extends Resource {
   GDExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GDExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GDExtension.create() {
+    return GDExtension(resolveClassConstructor('GDExtension'));
+  }
+
   static final Pointer<Void> _mb_is_library_open =
       resolveMethodBind('GDExtension', 'is_library_open', 36873697);
 

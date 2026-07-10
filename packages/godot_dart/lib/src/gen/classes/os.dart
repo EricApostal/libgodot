@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OS extends GodotObject {
   OS(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OS instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OS.create() {
+    return OS(resolveClassConstructor('OS'));
+  }
+
   // Skipped get_entropy(): unsupported return type "PackedByteArray".
   static final Pointer<Void> _mb_get_system_ca_certificates =
       resolveMethodBind('OS', 'get_system_ca_certificates', 2841200299);

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationLink3D extends Node3D {
   NavigationLink3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationLink3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationLink3D.create() {
+    return NavigationLink3D(resolveClassConstructor('NavigationLink3D'));
+  }
+
   // Skipped get_rid(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_enabled =
       resolveMethodBind('NavigationLink3D', 'set_enabled', 2586408642);

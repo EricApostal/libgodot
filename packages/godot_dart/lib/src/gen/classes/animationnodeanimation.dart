@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeAnimation extends AnimationRootNode {
   AnimationNodeAnimation(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeAnimation instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeAnimation.create() {
+    return AnimationNodeAnimation(resolveClassConstructor('AnimationNodeAnimation'));
+  }
+
   static final Pointer<Void> _mb_set_animation =
       resolveMethodBind('AnimationNodeAnimation', 'set_animation', 3304788590);
 

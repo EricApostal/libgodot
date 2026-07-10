@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class ShaderIncludeDB extends GodotObject {
   ShaderIncludeDB(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ShaderIncludeDB instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ShaderIncludeDB.create() {
+    return ShaderIncludeDB(resolveClassConstructor('ShaderIncludeDB'));
+  }
+
 }

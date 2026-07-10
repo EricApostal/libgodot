@@ -14,5 +14,11 @@ import '../classes.g.dart';
 class VideoStreamPlayback extends Resource {
   VideoStreamPlayback(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VideoStreamPlayback instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VideoStreamPlayback.create() {
+    return VideoStreamPlayback(resolveClassConstructor('VideoStreamPlayback'));
+  }
+
   // Skipped mix_audio(): an argument type is unsupported.
 }

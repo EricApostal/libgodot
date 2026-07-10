@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AStar2D extends RefCounted {
   AStar2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AStar2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AStar2D.create() {
+    return AStar2D(resolveClassConstructor('AStar2D'));
+  }
+
   static final Pointer<Void> _mb_get_available_point_id =
       resolveMethodBind('AStar2D', 'get_available_point_id', 3905245786);
 

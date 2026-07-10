@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CameraAttributesPhysical extends CameraAttributes {
   CameraAttributesPhysical(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CameraAttributesPhysical instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CameraAttributesPhysical.create() {
+    return CameraAttributesPhysical(resolveClassConstructor('CameraAttributesPhysical'));
+  }
+
   static final Pointer<Void> _mb_set_aperture =
       resolveMethodBind('CameraAttributesPhysical', 'set_aperture', 373806689);
 

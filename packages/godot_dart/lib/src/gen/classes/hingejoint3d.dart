@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class HingeJoint3D extends Joint3D {
   HingeJoint3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HingeJoint3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HingeJoint3D.create() {
+    return HingeJoint3D(resolveClassConstructor('HingeJoint3D'));
+  }
+
   static final Pointer<Void> _mb_set_param =
       resolveMethodBind('HingeJoint3D', 'set_param', 3082977519);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDAccelerationStructureInstance extends RefCounted {
   RDAccelerationStructureInstance(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDAccelerationStructureInstance instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDAccelerationStructureInstance.create() {
+    return RDAccelerationStructureInstance(resolveClassConstructor('RDAccelerationStructureInstance'));
+  }
+
   static final Pointer<Void> _mb_set_transform =
       resolveMethodBind('RDAccelerationStructureInstance', 'set_transform', 2952846383);
 

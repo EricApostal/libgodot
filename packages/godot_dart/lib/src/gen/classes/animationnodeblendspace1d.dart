@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeBlendSpace1D extends AnimationRootNode {
   AnimationNodeBlendSpace1D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeBlendSpace1D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeBlendSpace1D.create() {
+    return AnimationNodeBlendSpace1D(resolveClassConstructor('AnimationNodeBlendSpace1D'));
+  }
+
   static final Pointer<Void> _mb_add_blend_point =
       resolveMethodBind('AnimationNodeBlendSpace1D', 'add_blend_point', 398361042);
 

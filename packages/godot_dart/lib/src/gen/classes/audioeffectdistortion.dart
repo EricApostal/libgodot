@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectDistortion extends AudioEffect {
   AudioEffectDistortion(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectDistortion instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectDistortion.create() {
+    return AudioEffectDistortion(resolveClassConstructor('AudioEffectDistortion'));
+  }
+
   static final Pointer<Void> _mb_set_mode =
       resolveMethodBind('AudioEffectDistortion', 'set_mode', 1314744793);
 

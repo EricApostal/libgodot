@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDVertexAttribute extends RefCounted {
   RDVertexAttribute(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDVertexAttribute instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDVertexAttribute.create() {
+    return RDVertexAttribute(resolveClassConstructor('RDVertexAttribute'));
+  }
+
   static final Pointer<Void> _mb_set_binding =
       resolveMethodBind('RDVertexAttribute', 'set_binding', 1286410249);
 

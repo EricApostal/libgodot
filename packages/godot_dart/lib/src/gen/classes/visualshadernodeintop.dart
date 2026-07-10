@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeIntOp extends VisualShaderNode {
   VisualShaderNodeIntOp(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeIntOp instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeIntOp.create() {
+    return VisualShaderNodeIntOp(resolveClassConstructor('VisualShaderNodeIntOp'));
+  }
+
   static final Pointer<Void> _mb_set_operator =
       resolveMethodBind('VisualShaderNodeIntOp', 'set_operator', 1677909323);
 

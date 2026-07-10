@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationObstacle2D extends Node2D {
   NavigationObstacle2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationObstacle2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationObstacle2D.create() {
+    return NavigationObstacle2D(resolveClassConstructor('NavigationObstacle2D'));
+  }
+
   // Skipped get_rid(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_avoidance_enabled =
       resolveMethodBind('NavigationObstacle2D', 'set_avoidance_enabled', 2586408642);

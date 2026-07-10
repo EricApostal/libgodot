@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FoldableContainer extends Container {
   FoldableContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FoldableContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FoldableContainer.create() {
+    return FoldableContainer(resolveClassConstructor('FoldableContainer'));
+  }
+
   static final Pointer<Void> _mb_fold =
       resolveMethodBind('FoldableContainer', 'fold', 3218959716);
 

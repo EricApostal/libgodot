@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationLibrary extends Resource {
   AnimationLibrary(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationLibrary instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationLibrary.create() {
+    return AnimationLibrary(resolveClassConstructor('AnimationLibrary'));
+  }
+
   static final Pointer<Void> _mb_add_animation =
       resolveMethodBind('AnimationLibrary', 'add_animation', 1811855551);
 

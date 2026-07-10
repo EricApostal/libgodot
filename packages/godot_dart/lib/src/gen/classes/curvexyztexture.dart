@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CurveXYZTexture extends Texture2D {
   CurveXYZTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CurveXYZTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CurveXYZTexture.create() {
+    return CurveXYZTexture(resolveClassConstructor('CurveXYZTexture'));
+  }
+
   static final Pointer<Void> _mb_set_width =
       resolveMethodBind('CurveXYZTexture', 'set_width', 1286410249);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamWAV extends AudioStream {
   AudioStreamWAV(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamWAV instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamWAV.create() {
+    return AudioStreamWAV(resolveClassConstructor('AudioStreamWAV'));
+  }
+
   // Skipped set_data(): an argument type is unsupported.
   // Skipped get_data(): unsupported return type "PackedByteArray".
   static final Pointer<Void> _mb_set_format =

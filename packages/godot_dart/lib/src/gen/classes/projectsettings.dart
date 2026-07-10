@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ProjectSettings extends GodotObject {
   ProjectSettings(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ProjectSettings instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ProjectSettings.create() {
+    return ProjectSettings(resolveClassConstructor('ProjectSettings'));
+  }
+
   static final Pointer<Void> _mb_has_setting =
       resolveMethodBind('ProjectSettings', 'has_setting', 3927539163);
 

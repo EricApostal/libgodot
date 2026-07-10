@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialCapabilityConfigurationAruco extends OpenXRSpatialCapabilityConfigurationBaseHeader {
   OpenXRSpatialCapabilityConfigurationAruco(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialCapabilityConfigurationAruco instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialCapabilityConfigurationAruco.create() {
+    return OpenXRSpatialCapabilityConfigurationAruco(resolveClassConstructor('OpenXRSpatialCapabilityConfigurationAruco'));
+  }
+
   // Skipped get_enabled_components(): unsupported return type "PackedInt64Array".
   static final Pointer<Void> _mb_set_aruco_dict =
       resolveMethodBind('OpenXRSpatialCapabilityConfigurationAruco', 'set_aruco_dict', 2268055963);

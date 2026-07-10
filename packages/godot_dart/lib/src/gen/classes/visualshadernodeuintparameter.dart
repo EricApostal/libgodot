@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeUIntParameter extends VisualShaderNodeParameter {
   VisualShaderNodeUIntParameter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeUIntParameter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeUIntParameter.create() {
+    return VisualShaderNodeUIntParameter(resolveClassConstructor('VisualShaderNodeUIntParameter'));
+  }
+
   static final Pointer<Void> _mb_set_default_value_enabled =
       resolveMethodBind('VisualShaderNodeUIntParameter', 'set_default_value_enabled', 2586408642);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ColorPickerButton extends Button {
   ColorPickerButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ColorPickerButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ColorPickerButton.create() {
+    return ColorPickerButton(resolveClassConstructor('ColorPickerButton'));
+  }
+
   static final Pointer<Void> _mb_set_pick_color =
       resolveMethodBind('ColorPickerButton', 'set_pick_color', 2920490490);
 

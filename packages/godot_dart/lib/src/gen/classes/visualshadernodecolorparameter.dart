@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeColorParameter extends VisualShaderNodeParameter {
   VisualShaderNodeColorParameter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeColorParameter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeColorParameter.create() {
+    return VisualShaderNodeColorParameter(resolveClassConstructor('VisualShaderNodeColorParameter'));
+  }
+
   static final Pointer<Void> _mb_set_default_value_enabled =
       resolveMethodBind('VisualShaderNodeColorParameter', 'set_default_value_enabled', 2586408642);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BoxShape3D extends Shape3D {
   BoxShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BoxShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BoxShape3D.create() {
+    return BoxShape3D(resolveClassConstructor('BoxShape3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('BoxShape3D', 'set_size', 3460891852);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GraphNode extends GraphElement {
   GraphNode(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GraphNode instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GraphNode.create() {
+    return GraphNode(resolveClassConstructor('GraphNode'));
+  }
+
   static final Pointer<Void> _mb_set_title =
       resolveMethodBind('GraphNode', 'set_title', 83702148);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFState extends Resource {
   GLTFState(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFState instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFState.create() {
+    return GLTFState(resolveClassConstructor('GLTFState'));
+  }
+
   static final Pointer<Void> _mb_add_used_extension =
       resolveMethodBind('GLTFState', 'add_used_extension', 2678287736);
 

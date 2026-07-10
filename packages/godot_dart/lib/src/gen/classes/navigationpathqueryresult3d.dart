@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationPathQueryResult3D extends RefCounted {
   NavigationPathQueryResult3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationPathQueryResult3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationPathQueryResult3D.create() {
+    return NavigationPathQueryResult3D(resolveClassConstructor('NavigationPathQueryResult3D'));
+  }
+
   // Skipped set_path(): an argument type is unsupported.
   // Skipped get_path(): unsupported return type "PackedVector3Array".
   // Skipped set_path_types(): an argument type is unsupported.

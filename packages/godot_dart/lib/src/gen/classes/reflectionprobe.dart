@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ReflectionProbe extends VisualInstance3D {
   ReflectionProbe(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ReflectionProbe instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ReflectionProbe.create() {
+    return ReflectionProbe(resolveClassConstructor('ReflectionProbe'));
+  }
+
   static final Pointer<Void> _mb_set_intensity =
       resolveMethodBind('ReflectionProbe', 'set_intensity', 373806689);
 

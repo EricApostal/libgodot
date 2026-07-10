@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeIs extends VisualShaderNode {
   VisualShaderNodeIs(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeIs instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeIs.create() {
+    return VisualShaderNodeIs(resolveClassConstructor('VisualShaderNodeIs'));
+  }
+
   static final Pointer<Void> _mb_set_function =
       resolveMethodBind('VisualShaderNodeIs', 'set_function', 1438374690);
 

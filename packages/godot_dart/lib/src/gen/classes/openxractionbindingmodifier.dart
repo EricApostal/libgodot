@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class OpenXRActionBindingModifier extends OpenXRBindingModifier {
   OpenXRActionBindingModifier(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRActionBindingModifier instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRActionBindingModifier.create() {
+    return OpenXRActionBindingModifier(resolveClassConstructor('OpenXRActionBindingModifier'));
+  }
+
 }

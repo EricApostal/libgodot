@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ShapeCast2D extends Node2D {
   ShapeCast2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ShapeCast2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ShapeCast2D.create() {
+    return ShapeCast2D(resolveClassConstructor('ShapeCast2D'));
+  }
+
   static final Pointer<Void> _mb_set_enabled =
       resolveMethodBind('ShapeCast2D', 'set_enabled', 2586408642);
 

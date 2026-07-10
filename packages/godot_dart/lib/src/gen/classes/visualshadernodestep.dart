@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeStep extends VisualShaderNode {
   VisualShaderNodeStep(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeStep instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeStep.create() {
+    return VisualShaderNodeStep(resolveClassConstructor('VisualShaderNodeStep'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeStep', 'set_op_type', 715172489);
 

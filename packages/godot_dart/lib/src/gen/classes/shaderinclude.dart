@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ShaderInclude extends Resource {
   ShaderInclude(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ShaderInclude instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ShaderInclude.create() {
+    return ShaderInclude(resolveClassConstructor('ShaderInclude'));
+  }
+
   static final Pointer<Void> _mb_set_code =
       resolveMethodBind('ShaderInclude', 'set_code', 83702148);
 

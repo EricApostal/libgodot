@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OggPacketSequence extends Resource {
   OggPacketSequence(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OggPacketSequence instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OggPacketSequence.create() {
+    return OggPacketSequence(resolveClassConstructor('OggPacketSequence'));
+  }
+
   // Skipped set_packet_data(): an argument type is unsupported.
   // Skipped get_packet_data(): unsupported return type "typedarray::Array".
   // Skipped set_packet_granule_positions(): an argument type is unsupported.

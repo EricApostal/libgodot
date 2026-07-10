@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisibleOnScreenEnabler2D extends VisibleOnScreenNotifier2D {
   VisibleOnScreenEnabler2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisibleOnScreenEnabler2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisibleOnScreenEnabler2D.create() {
+    return VisibleOnScreenEnabler2D(resolveClassConstructor('VisibleOnScreenEnabler2D'));
+  }
+
   static final Pointer<Void> _mb_set_enable_mode =
       resolveMethodBind('VisibleOnScreenEnabler2D', 'set_enable_mode', 2961788752);
 

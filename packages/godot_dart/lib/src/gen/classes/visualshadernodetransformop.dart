@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeTransformOp extends VisualShaderNode {
   VisualShaderNodeTransformOp(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTransformOp instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTransformOp.create() {
+    return VisualShaderNodeTransformOp(resolveClassConstructor('VisualShaderNodeTransformOp'));
+  }
+
   static final Pointer<Void> _mb_set_operator =
       resolveMethodBind('VisualShaderNodeTransformOp', 'set_operator', 2287310733);
 

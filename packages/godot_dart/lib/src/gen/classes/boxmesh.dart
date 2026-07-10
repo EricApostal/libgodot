@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BoxMesh extends PrimitiveMesh {
   BoxMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BoxMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BoxMesh.create() {
+    return BoxMesh(resolveClassConstructor('BoxMesh'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('BoxMesh', 'set_size', 3460891852);
 

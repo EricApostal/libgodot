@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeSDFToScreenUV extends VisualShaderNode {
   VisualShaderNodeSDFToScreenUV(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeSDFToScreenUV instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeSDFToScreenUV.create() {
+    return VisualShaderNodeSDFToScreenUV(resolveClassConstructor('VisualShaderNodeSDFToScreenUV'));
+  }
+
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ConvexPolygonShape3D extends Shape3D {
   ConvexPolygonShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ConvexPolygonShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ConvexPolygonShape3D.create() {
+    return ConvexPolygonShape3D(resolveClassConstructor('ConvexPolygonShape3D'));
+  }
+
   // Skipped set_points(): an argument type is unsupported.
   // Skipped get_points(): unsupported return type "PackedVector3Array".
 }

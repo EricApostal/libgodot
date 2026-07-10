@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BoxOccluder3D extends Occluder3D {
   BoxOccluder3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BoxOccluder3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BoxOccluder3D.create() {
+    return BoxOccluder3D(resolveClassConstructor('BoxOccluder3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('BoxOccluder3D', 'set_size', 3460891852);
 

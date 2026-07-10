@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeTransformDecompose extends VisualShaderNode {
   VisualShaderNodeTransformDecompose(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTransformDecompose instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTransformDecompose.create() {
+    return VisualShaderNodeTransformDecompose(resolveClassConstructor('VisualShaderNodeTransformDecompose'));
+  }
+
 }

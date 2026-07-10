@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class HTTPRequest extends Node {
   HTTPRequest(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HTTPRequest instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HTTPRequest.create() {
+    return HTTPRequest(resolveClassConstructor('HTTPRequest'));
+  }
+
   // Skipped request(): an argument type is unsupported.
   // Skipped request_raw(): an argument type is unsupported.
   static final Pointer<Void> _mb_cancel_request =

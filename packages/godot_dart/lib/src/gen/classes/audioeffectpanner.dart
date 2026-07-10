@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectPanner extends AudioEffect {
   AudioEffectPanner(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectPanner instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectPanner.create() {
+    return AudioEffectPanner(resolveClassConstructor('AudioEffectPanner'));
+  }
+
   static final Pointer<Void> _mb_set_pan =
       resolveMethodBind('AudioEffectPanner', 'set_pan', 373806689);
 

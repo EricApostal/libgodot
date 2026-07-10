@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GPUParticlesAttractorBox3D extends GPUParticlesAttractor3D {
   GPUParticlesAttractorBox3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GPUParticlesAttractorBox3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GPUParticlesAttractorBox3D.create() {
+    return GPUParticlesAttractorBox3D(resolveClassConstructor('GPUParticlesAttractorBox3D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('GPUParticlesAttractorBox3D', 'set_size', 3460891852);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsServer3DExtension extends PhysicsServer3D {
   PhysicsServer3DExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsServer3DExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsServer3DExtension.create() {
+    return PhysicsServer3DExtension(resolveClassConstructor('PhysicsServer3DExtension'));
+  }
+
   // Skipped body_test_motion_is_excluding_body(): an argument type is unsupported.
   static final Pointer<Void> _mb_body_test_motion_is_excluding_object =
       resolveMethodBind('PhysicsServer3DExtension', 'body_test_motion_is_excluding_object', 1116898809);

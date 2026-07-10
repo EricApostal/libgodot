@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeTextureSDFNormal extends VisualShaderNode {
   VisualShaderNodeTextureSDFNormal(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTextureSDFNormal instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTextureSDFNormal.create() {
+    return VisualShaderNodeTextureSDFNormal(resolveClassConstructor('VisualShaderNodeTextureSDFNormal'));
+  }
+
 }

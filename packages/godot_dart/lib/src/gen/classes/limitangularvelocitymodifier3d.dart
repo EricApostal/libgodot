@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class LimitAngularVelocityModifier3D extends SkeletonModifier3D {
   LimitAngularVelocityModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LimitAngularVelocityModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LimitAngularVelocityModifier3D.create() {
+    return LimitAngularVelocityModifier3D(resolveClassConstructor('LimitAngularVelocityModifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_root_bone_name =
       resolveMethodBind('LimitAngularVelocityModifier3D', 'set_root_bone_name', 501894301);
 

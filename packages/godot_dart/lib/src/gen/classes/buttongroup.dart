@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ButtonGroup extends Resource {
   ButtonGroup(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ButtonGroup instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ButtonGroup.create() {
+    return ButtonGroup(resolveClassConstructor('ButtonGroup'));
+  }
+
   static final Pointer<Void> _mb_get_pressed_button =
       resolveMethodBind('ButtonGroup', 'get_pressed_button', 3886434893);
 

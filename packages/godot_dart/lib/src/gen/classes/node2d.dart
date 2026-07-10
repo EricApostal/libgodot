@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Node2D extends CanvasItem {
   Node2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Node2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Node2D.create() {
+    return Node2D(resolveClassConstructor('Node2D'));
+  }
+
   static final Pointer<Void> _mb_set_position =
       resolveMethodBind('Node2D', 'set_position', 743155724);
 

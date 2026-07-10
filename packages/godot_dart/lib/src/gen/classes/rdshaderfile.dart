@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDShaderFile extends Resource {
   RDShaderFile(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDShaderFile instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDShaderFile.create() {
+    return RDShaderFile(resolveClassConstructor('RDShaderFile'));
+  }
+
   static final Pointer<Void> _mb_set_bytecode =
       resolveMethodBind('RDShaderFile', 'set_bytecode', 1526857008);
 

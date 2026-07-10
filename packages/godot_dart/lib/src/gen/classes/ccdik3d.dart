@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class CCDIK3D extends IterateIK3D {
   CCDIK3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CCDIK3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CCDIK3D.create() {
+    return CCDIK3D(resolveClassConstructor('CCDIK3D'));
+  }
+
 }

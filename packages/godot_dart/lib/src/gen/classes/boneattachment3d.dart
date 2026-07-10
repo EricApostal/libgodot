@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BoneAttachment3D extends Node3D {
   BoneAttachment3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BoneAttachment3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BoneAttachment3D.create() {
+    return BoneAttachment3D(resolveClassConstructor('BoneAttachment3D'));
+  }
+
   static final Pointer<Void> _mb_get_skeleton =
       resolveMethodBind('BoneAttachment3D', 'get_skeleton', 1814733083);
 

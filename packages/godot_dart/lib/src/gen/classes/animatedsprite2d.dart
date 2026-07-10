@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimatedSprite2D extends Node2D {
   AnimatedSprite2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimatedSprite2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimatedSprite2D.create() {
+    return AnimatedSprite2D(resolveClassConstructor('AnimatedSprite2D'));
+  }
+
   static final Pointer<Void> _mb_set_sprite_frames =
       resolveMethodBind('AnimatedSprite2D', 'set_sprite_frames', 905781144);
 

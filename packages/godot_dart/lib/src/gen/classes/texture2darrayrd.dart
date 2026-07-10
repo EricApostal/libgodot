@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class Texture2DArrayRD extends TextureLayeredRD {
   Texture2DArrayRD(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Texture2DArrayRD instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Texture2DArrayRD.create() {
+    return Texture2DArrayRD(resolveClassConstructor('Texture2DArrayRD'));
+  }
+
 }

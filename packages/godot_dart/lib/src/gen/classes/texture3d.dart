@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Texture3D extends Texture {
   Texture3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Texture3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Texture3D.create() {
+    return Texture3D(resolveClassConstructor('Texture3D'));
+  }
+
   static final Pointer<Void> _mb_get_format =
       resolveMethodBind('Texture3D', 'get_format', 3847873762);
 

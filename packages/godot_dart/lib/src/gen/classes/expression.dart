@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Expression extends RefCounted {
   Expression(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Expression instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Expression.create() {
+    return Expression(resolveClassConstructor('Expression'));
+  }
+
   // Skipped parse(): an argument type is unsupported.
   // Skipped execute(): unsupported return type "Variant".
   static final Pointer<Void> _mb_has_execute_failed =

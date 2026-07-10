@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Timer extends Node {
   Timer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Timer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Timer.create() {
+    return Timer(resolveClassConstructor('Timer'));
+  }
+
   static final Pointer<Void> _mb_set_wait_time =
       resolveMethodBind('Timer', 'set_wait_time', 373806689);
 

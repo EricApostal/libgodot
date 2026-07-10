@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OptionButton extends Button {
   OptionButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OptionButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OptionButton.create() {
+    return OptionButton(resolveClassConstructor('OptionButton'));
+  }
+
   static final Pointer<Void> _mb_add_item =
       resolveMethodBind('OptionButton', 'add_item', 2697778442);
 

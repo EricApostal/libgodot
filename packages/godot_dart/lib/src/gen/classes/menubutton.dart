@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MenuButton extends Button {
   MenuButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MenuButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MenuButton.create() {
+    return MenuButton(resolveClassConstructor('MenuButton'));
+  }
+
   static final Pointer<Void> _mb_get_popup =
       resolveMethodBind('MenuButton', 'get_popup', 229722558);
 

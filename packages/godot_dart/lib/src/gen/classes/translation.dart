@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Translation extends Resource {
   Translation(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Translation instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Translation.create() {
+    return Translation(resolveClassConstructor('Translation'));
+  }
+
   static final Pointer<Void> _mb_set_locale =
       resolveMethodBind('Translation', 'set_locale', 83702148);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class UDSServer extends SocketServer {
   UDSServer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned UDSServer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory UDSServer.create() {
+    return UDSServer(resolveClassConstructor('UDSServer'));
+  }
+
   static final Pointer<Void> _mb_listen =
       resolveMethodBind('UDSServer', 'listen', 166001499);
 

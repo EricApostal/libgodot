@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisibleOnScreenNotifier2D extends Node2D {
   VisibleOnScreenNotifier2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisibleOnScreenNotifier2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisibleOnScreenNotifier2D.create() {
+    return VisibleOnScreenNotifier2D(resolveClassConstructor('VisibleOnScreenNotifier2D'));
+  }
+
   static final Pointer<Void> _mb_set_rect =
       resolveMethodBind('VisibleOnScreenNotifier2D', 'set_rect', 2046264180);
 

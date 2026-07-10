@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ScrollContainer extends Container {
   ScrollContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ScrollContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ScrollContainer.create() {
+    return ScrollContainer(resolveClassConstructor('ScrollContainer'));
+  }
+
   static final Pointer<Void> _mb_set_h_scroll =
       resolveMethodBind('ScrollContainer', 'set_h_scroll', 1286410249);
 

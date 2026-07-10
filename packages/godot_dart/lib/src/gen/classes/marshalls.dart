@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Marshalls extends GodotObject {
   Marshalls(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Marshalls instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Marshalls.create() {
+    return Marshalls(resolveClassConstructor('Marshalls'));
+  }
+
   // Skipped variant_to_base64(): an argument type is unsupported.
   // Skipped base64_to_variant(): unsupported return type "Variant".
   // Skipped raw_to_base64(): an argument type is unsupported.

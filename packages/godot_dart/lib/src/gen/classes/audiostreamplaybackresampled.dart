@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamPlaybackResampled extends AudioStreamPlayback {
   AudioStreamPlaybackResampled(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamPlaybackResampled instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamPlaybackResampled.create() {
+    return AudioStreamPlaybackResampled(resolveClassConstructor('AudioStreamPlaybackResampled'));
+  }
+
   static final Pointer<Void> _mb_begin_resample =
       resolveMethodBind('AudioStreamPlaybackResampled', 'begin_resample', 3218959716);
 

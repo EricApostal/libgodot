@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class HMACContext extends RefCounted {
   HMACContext(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HMACContext instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HMACContext.create() {
+    return HMACContext(resolveClassConstructor('HMACContext'));
+  }
+
   // Skipped start(): an argument type is unsupported.
   // Skipped update(): an argument type is unsupported.
   // Skipped finish(): unsupported return type "PackedByteArray".

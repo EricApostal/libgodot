@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventMouseButton extends InputEventMouse {
   InputEventMouseButton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventMouseButton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventMouseButton.create() {
+    return InputEventMouseButton(resolveClassConstructor('InputEventMouseButton'));
+  }
+
   static final Pointer<Void> _mb_set_factor =
       resolveMethodBind('InputEventMouseButton', 'set_factor', 373806689);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PopupMenu extends Popup {
   PopupMenu(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PopupMenu instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PopupMenu.create() {
+    return PopupMenu(resolveClassConstructor('PopupMenu'));
+  }
+
   static final Pointer<Void> _mb_activate_item_by_event =
       resolveMethodBind('PopupMenu', 'activate_item_by_event', 3716412023);
 

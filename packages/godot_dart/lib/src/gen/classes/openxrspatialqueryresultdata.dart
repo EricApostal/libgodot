@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialQueryResultData extends OpenXRSpatialComponentData {
   OpenXRSpatialQueryResultData(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialQueryResultData instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialQueryResultData.create() {
+    return OpenXRSpatialQueryResultData(resolveClassConstructor('OpenXRSpatialQueryResultData'));
+  }
+
   static final Pointer<Void> _mb_get_capacity =
       resolveMethodBind('OpenXRSpatialQueryResultData', 'get_capacity', 3905245786);
 

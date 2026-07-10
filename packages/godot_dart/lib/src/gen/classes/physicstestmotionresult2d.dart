@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsTestMotionResult2D extends RefCounted {
   PhysicsTestMotionResult2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsTestMotionResult2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsTestMotionResult2D.create() {
+    return PhysicsTestMotionResult2D(resolveClassConstructor('PhysicsTestMotionResult2D'));
+  }
+
   static final Pointer<Void> _mb_get_travel =
       resolveMethodBind('PhysicsTestMotionResult2D', 'get_travel', 3341600327);
 

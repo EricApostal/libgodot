@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VideoStream extends Resource {
   VideoStream(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VideoStream instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VideoStream.create() {
+    return VideoStream(resolveClassConstructor('VideoStream'));
+  }
+
   static final Pointer<Void> _mb_set_file =
       resolveMethodBind('VideoStream', 'set_file', 83702148);
 

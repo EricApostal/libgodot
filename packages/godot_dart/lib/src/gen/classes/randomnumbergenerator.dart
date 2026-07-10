@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RandomNumberGenerator extends RefCounted {
   RandomNumberGenerator(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RandomNumberGenerator instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RandomNumberGenerator.create() {
+    return RandomNumberGenerator(resolveClassConstructor('RandomNumberGenerator'));
+  }
+
   static final Pointer<Void> _mb_set_seed =
       resolveMethodBind('RandomNumberGenerator', 'set_seed', 1286410249);
 

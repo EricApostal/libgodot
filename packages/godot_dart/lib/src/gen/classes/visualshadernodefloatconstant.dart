@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeFloatConstant extends VisualShaderNodeConstant {
   VisualShaderNodeFloatConstant(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeFloatConstant instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeFloatConstant.create() {
+    return VisualShaderNodeFloatConstant(resolveClassConstructor('VisualShaderNodeFloatConstant'));
+  }
+
   static final Pointer<Void> _mb_set_constant =
       resolveMethodBind('VisualShaderNodeFloatConstant', 'set_constant', 373806689);
 

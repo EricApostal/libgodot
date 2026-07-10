@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRServer extends GodotObject {
   XRServer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRServer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRServer.create() {
+    return XRServer(resolveClassConstructor('XRServer'));
+  }
+
   static final Pointer<Void> _mb_get_world_scale =
       resolveMethodBind('XRServer', 'get_world_scale', 1740695150);
 

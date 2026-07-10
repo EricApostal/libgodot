@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimatableBody2D extends StaticBody2D {
   AnimatableBody2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimatableBody2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimatableBody2D.create() {
+    return AnimatableBody2D(resolveClassConstructor('AnimatableBody2D'));
+  }
+
   static final Pointer<Void> _mb_set_sync_to_physics =
       resolveMethodBind('AnimatableBody2D', 'set_sync_to_physics', 2586408642);
 

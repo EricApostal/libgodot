@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeSync extends AnimationNode {
   AnimationNodeSync(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeSync instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeSync.create() {
+    return AnimationNodeSync(resolveClassConstructor('AnimationNodeSync'));
+  }
+
   static final Pointer<Void> _mb_set_use_sync =
       resolveMethodBind('AnimationNodeSync', 'set_use_sync', 2586408642);
 

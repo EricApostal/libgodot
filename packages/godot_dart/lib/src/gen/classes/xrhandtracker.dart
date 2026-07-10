@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRHandTracker extends XRPositionalTracker {
   XRHandTracker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRHandTracker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRHandTracker.create() {
+    return XRHandTracker(resolveClassConstructor('XRHandTracker'));
+  }
+
   static final Pointer<Void> _mb_set_has_tracking_data =
       resolveMethodBind('XRHandTracker', 'set_has_tracking_data', 2586408642);
 

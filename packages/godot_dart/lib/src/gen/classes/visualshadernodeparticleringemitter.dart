@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeParticleRingEmitter extends VisualShaderNodeParticleEmitter {
   VisualShaderNodeParticleRingEmitter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParticleRingEmitter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParticleRingEmitter.create() {
+    return VisualShaderNodeParticleRingEmitter(resolveClassConstructor('VisualShaderNodeParticleRingEmitter'));
+  }
+
 }

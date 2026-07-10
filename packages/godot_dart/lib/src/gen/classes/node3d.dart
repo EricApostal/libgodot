@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Node3D extends Node {
   Node3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Node3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Node3D.create() {
+    return Node3D(resolveClassConstructor('Node3D'));
+  }
+
   static final Pointer<Void> _mb_set_transform =
       resolveMethodBind('Node3D', 'set_transform', 2952846383);
 

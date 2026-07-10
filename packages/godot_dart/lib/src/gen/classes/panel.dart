@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class Panel extends Control {
   Panel(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Panel instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Panel.create() {
+    return Panel(resolveClassConstructor('Panel'));
+  }
+
 }

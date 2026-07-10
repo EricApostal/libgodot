@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FogVolume extends VisualInstance3D {
   FogVolume(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FogVolume instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FogVolume.create() {
+    return FogVolume(resolveClassConstructor('FogVolume'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('FogVolume', 'set_size', 3460891852);
 

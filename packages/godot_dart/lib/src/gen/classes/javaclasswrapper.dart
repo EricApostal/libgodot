@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class JavaClassWrapper extends GodotObject {
   JavaClassWrapper(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned JavaClassWrapper instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory JavaClassWrapper.create() {
+    return JavaClassWrapper(resolveClassConstructor('JavaClassWrapper'));
+  }
+
   static final Pointer<Void> _mb_wrap =
       resolveMethodBind('JavaClassWrapper', 'wrap', 1124367868);
 

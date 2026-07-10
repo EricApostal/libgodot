@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioListener3D extends Node3D {
   AudioListener3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioListener3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioListener3D.create() {
+    return AudioListener3D(resolveClassConstructor('AudioListener3D'));
+  }
+
   static final Pointer<Void> _mb_make_current =
       resolveMethodBind('AudioListener3D', 'make_current', 3218959716);
 

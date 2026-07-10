@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class LightOccluder2D extends Node2D {
   LightOccluder2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LightOccluder2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LightOccluder2D.create() {
+    return LightOccluder2D(resolveClassConstructor('LightOccluder2D'));
+  }
+
   static final Pointer<Void> _mb_set_occluder_polygon =
       resolveMethodBind('LightOccluder2D', 'set_occluder_polygon', 3258315893);
 

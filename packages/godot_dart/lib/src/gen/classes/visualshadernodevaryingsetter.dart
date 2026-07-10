@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeVaryingSetter extends VisualShaderNodeVarying {
   VisualShaderNodeVaryingSetter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeVaryingSetter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeVaryingSetter.create() {
+    return VisualShaderNodeVaryingSetter(resolveClassConstructor('VisualShaderNodeVaryingSetter'));
+  }
+
 }

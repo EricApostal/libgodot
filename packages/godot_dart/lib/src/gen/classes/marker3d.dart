@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Marker3D extends Node3D {
   Marker3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Marker3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Marker3D.create() {
+    return Marker3D(resolveClassConstructor('Marker3D'));
+  }
+
   static final Pointer<Void> _mb_set_gizmo_extents =
       resolveMethodBind('Marker3D', 'set_gizmo_extents', 373806689);
 

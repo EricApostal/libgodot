@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PackedDataContainer extends Resource {
   PackedDataContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PackedDataContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PackedDataContainer.create() {
+    return PackedDataContainer(resolveClassConstructor('PackedDataContainer'));
+  }
+
   // Skipped pack(): an argument type is unsupported.
   static final Pointer<Void> _mb_size =
       resolveMethodBind('PackedDataContainer', 'size', 3905245786);

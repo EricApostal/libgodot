@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MissingNode extends Node {
   MissingNode(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MissingNode instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MissingNode.create() {
+    return MissingNode(resolveClassConstructor('MissingNode'));
+  }
+
   static final Pointer<Void> _mb_set_original_class =
       resolveMethodBind('MissingNode', 'set_original_class', 83702148);
 

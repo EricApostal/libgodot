@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationTree extends AnimationMixer {
   AnimationTree(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationTree instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationTree.create() {
+    return AnimationTree(resolveClassConstructor('AnimationTree'));
+  }
+
   static final Pointer<Void> _mb_set_tree_root =
       resolveMethodBind('AnimationTree', 'set_tree_root', 2581683800);
 

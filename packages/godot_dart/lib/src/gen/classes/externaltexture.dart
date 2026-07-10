@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ExternalTexture extends Texture2D {
   ExternalTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ExternalTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ExternalTexture.create() {
+    return ExternalTexture(resolveClassConstructor('ExternalTexture'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('ExternalTexture', 'set_size', 743155724);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamPlayer extends Node {
   AudioStreamPlayer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamPlayer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamPlayer.create() {
+    return AudioStreamPlayer(resolveClassConstructor('AudioStreamPlayer'));
+  }
+
   static final Pointer<Void> _mb_set_stream =
       resolveMethodBind('AudioStreamPlayer', 'set_stream', 2210767741);
 

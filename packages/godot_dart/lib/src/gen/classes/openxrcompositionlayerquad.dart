@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRCompositionLayerQuad extends OpenXRCompositionLayer {
   OpenXRCompositionLayerQuad(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRCompositionLayerQuad instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRCompositionLayerQuad.create() {
+    return OpenXRCompositionLayerQuad(resolveClassConstructor('OpenXRCompositionLayerQuad'));
+  }
+
   static final Pointer<Void> _mb_set_quad_size =
       resolveMethodBind('OpenXRCompositionLayerQuad', 'set_quad_size', 743155724);
 

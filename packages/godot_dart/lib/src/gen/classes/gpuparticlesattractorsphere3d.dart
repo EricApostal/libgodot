@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GPUParticlesAttractorSphere3D extends GPUParticlesAttractor3D {
   GPUParticlesAttractorSphere3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GPUParticlesAttractorSphere3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GPUParticlesAttractorSphere3D.create() {
+    return GPUParticlesAttractorSphere3D(resolveClassConstructor('GPUParticlesAttractorSphere3D'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('GPUParticlesAttractorSphere3D', 'set_radius', 373806689);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualInstance3D extends Node3D {
   VisualInstance3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualInstance3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualInstance3D.create() {
+    return VisualInstance3D(resolveClassConstructor('VisualInstance3D'));
+  }
+
   // Skipped set_base(): an argument type is unsupported.
   // Skipped get_base(): unsupported return type "RID".
   // Skipped get_instance(): unsupported return type "RID".

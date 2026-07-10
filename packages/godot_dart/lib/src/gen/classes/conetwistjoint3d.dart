@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ConeTwistJoint3D extends Joint3D {
   ConeTwistJoint3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ConeTwistJoint3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ConeTwistJoint3D.create() {
+    return ConeTwistJoint3D(resolveClassConstructor('ConeTwistJoint3D'));
+  }
+
   static final Pointer<Void> _mb_set_param =
       resolveMethodBind('ConeTwistJoint3D', 'set_param', 1062470226);
 

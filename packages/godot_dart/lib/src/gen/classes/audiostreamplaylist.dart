@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamPlaylist extends AudioStream {
   AudioStreamPlaylist(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamPlaylist instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamPlaylist.create() {
+    return AudioStreamPlaylist(resolveClassConstructor('AudioStreamPlaylist'));
+  }
+
   static final Pointer<Void> _mb_set_stream_count =
       resolveMethodBind('AudioStreamPlaylist', 'set_stream_count', 1286410249);
 

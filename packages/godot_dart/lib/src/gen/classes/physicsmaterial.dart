@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsMaterial extends Resource {
   PhysicsMaterial(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsMaterial instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsMaterial.create() {
+    return PhysicsMaterial(resolveClassConstructor('PhysicsMaterial'));
+  }
+
   static final Pointer<Void> _mb_set_friction =
       resolveMethodBind('PhysicsMaterial', 'set_friction', 373806689);
 

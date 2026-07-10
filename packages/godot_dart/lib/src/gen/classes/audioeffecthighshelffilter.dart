@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AudioEffectHighShelfFilter extends AudioEffectFilter {
   AudioEffectHighShelfFilter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectHighShelfFilter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectHighShelfFilter.create() {
+    return AudioEffectHighShelfFilter(resolveClassConstructor('AudioEffectHighShelfFilter'));
+  }
+
 }

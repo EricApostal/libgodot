@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeTimeSeek extends AnimationNode {
   AnimationNodeTimeSeek(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeTimeSeek instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeTimeSeek.create() {
+    return AnimationNodeTimeSeek(resolveClassConstructor('AnimationNodeTimeSeek'));
+  }
+
   static final Pointer<Void> _mb_set_explicit_elapse =
       resolveMethodBind('AnimationNodeTimeSeek', 'set_explicit_elapse', 2586408642);
 

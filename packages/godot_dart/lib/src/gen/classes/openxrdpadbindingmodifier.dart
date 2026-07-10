@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRDpadBindingModifier extends OpenXRIPBindingModifier {
   OpenXRDpadBindingModifier(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRDpadBindingModifier instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRDpadBindingModifier.create() {
+    return OpenXRDpadBindingModifier(resolveClassConstructor('OpenXRDpadBindingModifier'));
+  }
+
   static final Pointer<Void> _mb_set_action_set =
       resolveMethodBind('OpenXRDpadBindingModifier', 'set_action_set', 2093310581);
 

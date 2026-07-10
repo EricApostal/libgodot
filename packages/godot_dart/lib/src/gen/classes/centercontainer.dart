@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CenterContainer extends Container {
   CenterContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CenterContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CenterContainer.create() {
+    return CenterContainer(resolveClassConstructor('CenterContainer'));
+  }
+
   static final Pointer<Void> _mb_set_use_top_left =
       resolveMethodBind('CenterContainer', 'set_use_top_left', 2586408642);
 

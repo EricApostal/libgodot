@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimatedTexture extends Texture2D {
   AnimatedTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimatedTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimatedTexture.create() {
+    return AnimatedTexture(resolveClassConstructor('AnimatedTexture'));
+  }
+
   static final Pointer<Void> _mb_set_frames =
       resolveMethodBind('AnimatedTexture', 'set_frames', 1286410249);
 

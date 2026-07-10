@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ViewportTexture extends Texture2D {
   ViewportTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ViewportTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ViewportTexture.create() {
+    return ViewportTexture(resolveClassConstructor('ViewportTexture'));
+  }
+
   // Skipped set_viewport_path_in_scene(): an argument type is unsupported.
   // Skipped get_viewport_path_in_scene(): unsupported return type "NodePath".
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRRenderModelManager extends Node3D {
   OpenXRRenderModelManager(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRRenderModelManager instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRRenderModelManager.create() {
+    return OpenXRRenderModelManager(resolveClassConstructor('OpenXRRenderModelManager'));
+  }
+
   static final Pointer<Void> _mb_get_tracker =
       resolveMethodBind('OpenXRRenderModelManager', 'get_tracker', 2456466356);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsServer2DExtension extends PhysicsServer2D {
   PhysicsServer2DExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsServer2DExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsServer2DExtension.create() {
+    return PhysicsServer2DExtension(resolveClassConstructor('PhysicsServer2DExtension'));
+  }
+
   // Skipped body_test_motion_is_excluding_body(): an argument type is unsupported.
   static final Pointer<Void> _mb_body_test_motion_is_excluding_object =
       resolveMethodBind('PhysicsServer2DExtension', 'body_test_motion_is_excluding_object', 1116898809);

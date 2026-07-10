@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OptimizedTranslation extends Translation {
   OptimizedTranslation(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OptimizedTranslation instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OptimizedTranslation.create() {
+    return OptimizedTranslation(resolveClassConstructor('OptimizedTranslation'));
+  }
+
   static final Pointer<Void> _mb_generate =
       resolveMethodBind('OptimizedTranslation', 'generate', 2141509306);
 

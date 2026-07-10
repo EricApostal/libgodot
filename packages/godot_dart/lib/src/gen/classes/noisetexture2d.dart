@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NoiseTexture2D extends Texture2D {
   NoiseTexture2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NoiseTexture2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NoiseTexture2D.create() {
+    return NoiseTexture2D(resolveClassConstructor('NoiseTexture2D'));
+  }
+
   static final Pointer<Void> _mb_set_width =
       resolveMethodBind('NoiseTexture2D', 'set_width', 1286410249);
 

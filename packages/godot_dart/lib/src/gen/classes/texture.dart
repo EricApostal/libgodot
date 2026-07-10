@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class Texture extends Resource {
   Texture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Texture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Texture.create() {
+    return Texture(resolveClassConstructor('Texture'));
+  }
+
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MeshDataTool extends RefCounted {
   MeshDataTool(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MeshDataTool instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MeshDataTool.create() {
+    return MeshDataTool(resolveClassConstructor('MeshDataTool'));
+  }
+
   static final Pointer<Void> _mb_clear =
       resolveMethodBind('MeshDataTool', 'clear', 3218959716);
 

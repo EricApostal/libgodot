@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GeometryInstance3D extends VisualInstance3D {
   GeometryInstance3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GeometryInstance3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GeometryInstance3D.create() {
+    return GeometryInstance3D(resolveClassConstructor('GeometryInstance3D'));
+  }
+
   static final Pointer<Void> _mb_set_material_override =
       resolveMethodBind('GeometryInstance3D', 'set_material_override', 2757459619);
 

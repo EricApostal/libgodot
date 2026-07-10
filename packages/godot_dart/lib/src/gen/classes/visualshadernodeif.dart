@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeIf extends VisualShaderNode {
   VisualShaderNodeIf(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeIf instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeIf.create() {
+    return VisualShaderNodeIf(resolveClassConstructor('VisualShaderNodeIf'));
+  }
+
 }

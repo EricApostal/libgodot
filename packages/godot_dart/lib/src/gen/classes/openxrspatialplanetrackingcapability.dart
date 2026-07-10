@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialPlaneTrackingCapability extends OpenXRExtensionWrapper {
   OpenXRSpatialPlaneTrackingCapability(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialPlaneTrackingCapability instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialPlaneTrackingCapability.create() {
+    return OpenXRSpatialPlaneTrackingCapability(resolveClassConstructor('OpenXRSpatialPlaneTrackingCapability'));
+  }
+
   static final Pointer<Void> _mb_is_supported =
       resolveMethodBind('OpenXRSpatialPlaneTrackingCapability', 'is_supported', 2240911060);
 

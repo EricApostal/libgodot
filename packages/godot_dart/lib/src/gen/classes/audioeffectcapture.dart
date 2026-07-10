@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectCapture extends AudioEffect {
   AudioEffectCapture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectCapture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectCapture.create() {
+    return AudioEffectCapture(resolveClassConstructor('AudioEffectCapture'));
+  }
+
   static final Pointer<Void> _mb_can_get_buffer =
       resolveMethodBind('AudioEffectCapture', 'can_get_buffer', 1116898809);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class EncodedObjectAsID extends RefCounted {
   EncodedObjectAsID(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned EncodedObjectAsID instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory EncodedObjectAsID.create() {
+    return EncodedObjectAsID(resolveClassConstructor('EncodedObjectAsID'));
+  }
+
   static final Pointer<Void> _mb_set_object_id =
       resolveMethodBind('EncodedObjectAsID', 'set_object_id', 1286410249);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeDerivativeFunc extends VisualShaderNode {
   VisualShaderNodeDerivativeFunc(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeDerivativeFunc instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeDerivativeFunc.create() {
+    return VisualShaderNodeDerivativeFunc(resolveClassConstructor('VisualShaderNodeDerivativeFunc'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeDerivativeFunc', 'set_op_type', 377800221);
 

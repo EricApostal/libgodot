@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeFrame extends VisualShaderNodeResizableBase {
   VisualShaderNodeFrame(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeFrame instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeFrame.create() {
+    return VisualShaderNodeFrame(resolveClassConstructor('VisualShaderNodeFrame'));
+  }
+
   static final Pointer<Void> _mb_set_title =
       resolveMethodBind('VisualShaderNodeFrame', 'set_title', 83702148);
 

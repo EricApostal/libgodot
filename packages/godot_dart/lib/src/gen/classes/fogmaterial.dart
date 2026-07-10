@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class FogMaterial extends Material {
   FogMaterial(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FogMaterial instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FogMaterial.create() {
+    return FogMaterial(resolveClassConstructor('FogMaterial'));
+  }
+
   static final Pointer<Void> _mb_set_density =
       resolveMethodBind('FogMaterial', 'set_density', 373806689);
 

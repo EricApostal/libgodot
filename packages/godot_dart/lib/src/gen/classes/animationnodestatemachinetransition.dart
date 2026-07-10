@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeStateMachineTransition extends Resource {
   AnimationNodeStateMachineTransition(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeStateMachineTransition instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeStateMachineTransition.create() {
+    return AnimationNodeStateMachineTransition(resolveClassConstructor('AnimationNodeStateMachineTransition'));
+  }
+
   static final Pointer<Void> _mb_set_switch_mode =
       resolveMethodBind('AnimationNodeStateMachineTransition', 'set_switch_mode', 2074906633);
 

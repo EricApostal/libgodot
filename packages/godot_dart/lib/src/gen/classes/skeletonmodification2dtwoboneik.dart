@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonModification2DTwoBoneIK extends SkeletonModification2D {
   SkeletonModification2DTwoBoneIK(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonModification2DTwoBoneIK instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonModification2DTwoBoneIK.create() {
+    return SkeletonModification2DTwoBoneIK(resolveClassConstructor('SkeletonModification2DTwoBoneIK'));
+  }
+
   // Skipped set_target_node(): an argument type is unsupported.
   // Skipped get_target_node(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_set_target_minimum_distance =

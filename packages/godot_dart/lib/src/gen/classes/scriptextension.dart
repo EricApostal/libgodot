@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class ScriptExtension extends Script {
   ScriptExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ScriptExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ScriptExtension.create() {
+    return ScriptExtension(resolveClassConstructor('ScriptExtension'));
+  }
+
 }

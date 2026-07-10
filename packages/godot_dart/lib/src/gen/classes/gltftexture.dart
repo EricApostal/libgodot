@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFTexture extends Resource {
   GLTFTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFTexture.create() {
+    return GLTFTexture(resolveClassConstructor('GLTFTexture'));
+  }
+
   static final Pointer<Void> _mb_get_src_image =
       resolveMethodBind('GLTFTexture', 'get_src_image', 3905245786);
 

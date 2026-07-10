@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RemoteTransform2D extends Node2D {
   RemoteTransform2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RemoteTransform2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RemoteTransform2D.create() {
+    return RemoteTransform2D(resolveClassConstructor('RemoteTransform2D'));
+  }
+
   // Skipped set_remote_node(): an argument type is unsupported.
   // Skipped get_remote_node(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_force_update_cache =

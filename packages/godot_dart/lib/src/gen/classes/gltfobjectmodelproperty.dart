@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFObjectModelProperty extends RefCounted {
   GLTFObjectModelProperty(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFObjectModelProperty instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFObjectModelProperty.create() {
+    return GLTFObjectModelProperty(resolveClassConstructor('GLTFObjectModelProperty'));
+  }
+
   // Skipped append_node_path(): an argument type is unsupported.
   // Skipped append_path_to_property(): an argument type is unsupported.
   static final Pointer<Void> _mb_get_accessor_type =

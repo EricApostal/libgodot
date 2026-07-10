@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRFaceTracker extends XRTracker {
   XRFaceTracker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRFaceTracker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRFaceTracker.create() {
+    return XRFaceTracker(resolveClassConstructor('XRFaceTracker'));
+  }
+
   static final Pointer<Void> _mb_get_blend_shape =
       resolveMethodBind('XRFaceTracker', 'get_blend_shape', 330010046);
 

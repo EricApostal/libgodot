@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class DirectionalLight3D extends Light3D {
   DirectionalLight3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned DirectionalLight3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory DirectionalLight3D.create() {
+    return DirectionalLight3D(resolveClassConstructor('DirectionalLight3D'));
+  }
+
   static final Pointer<Void> _mb_set_shadow_mode =
       resolveMethodBind('DirectionalLight3D', 'set_shadow_mode', 1261211726);
 

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class ResourceFormatLoader extends RefCounted {
   ResourceFormatLoader(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ResourceFormatLoader instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ResourceFormatLoader.create() {
+    return ResourceFormatLoader(resolveClassConstructor('ResourceFormatLoader'));
+  }
+
 }

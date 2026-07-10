@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TextParagraph extends RefCounted {
   TextParagraph(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextParagraph instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextParagraph.create() {
+    return TextParagraph(resolveClassConstructor('TextParagraph'));
+  }
+
   static final Pointer<Void> _mb_clear =
       resolveMethodBind('TextParagraph', 'clear', 3218959716);
 

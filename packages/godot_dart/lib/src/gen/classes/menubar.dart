@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MenuBar extends Control {
   MenuBar(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MenuBar instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MenuBar.create() {
+    return MenuBar(resolveClassConstructor('MenuBar'));
+  }
+
   static final Pointer<Void> _mb_set_switch_on_hover =
       resolveMethodBind('MenuBar', 'set_switch_on_hover', 2586408642);
 

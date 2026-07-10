@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentData extends RefCounted {
   OpenXRSpatialComponentData(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentData instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentData.create() {
+    return OpenXRSpatialComponentData(resolveClassConstructor('OpenXRSpatialComponentData'));
+  }
+
   static final Pointer<Void> _mb_set_capacity =
       resolveMethodBind('OpenXRSpatialComponentData', 'set_capacity', 1286410249);
 

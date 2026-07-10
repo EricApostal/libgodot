@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MobileVRInterface extends XRInterface {
   MobileVRInterface(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MobileVRInterface instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MobileVRInterface.create() {
+    return MobileVRInterface(resolveClassConstructor('MobileVRInterface'));
+  }
+
   static final Pointer<Void> _mb_set_eye_height =
       resolveMethodBind('MobileVRInterface', 'set_eye_height', 373806689);
 

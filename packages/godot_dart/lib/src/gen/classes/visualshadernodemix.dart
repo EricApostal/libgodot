@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeMix extends VisualShaderNode {
   VisualShaderNodeMix(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeMix instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeMix.create() {
+    return VisualShaderNodeMix(resolveClassConstructor('VisualShaderNodeMix'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeMix', 'set_op_type', 3397501671);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRFaceModifier3D extends Node3D {
   XRFaceModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRFaceModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRFaceModifier3D.create() {
+    return XRFaceModifier3D(resolveClassConstructor('XRFaceModifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_face_tracker =
       resolveMethodBind('XRFaceModifier3D', 'set_face_tracker', 3304788590);
 

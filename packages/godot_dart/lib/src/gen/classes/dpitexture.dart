@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class DPITexture extends Texture2D {
   DPITexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned DPITexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory DPITexture.create() {
+    return DPITexture(resolveClassConstructor('DPITexture'));
+  }
+
   static final Pointer<Void> _mb_set_source =
       resolveMethodBind('DPITexture', 'set_source', 83702148);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationMesh extends Resource {
   NavigationMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationMesh.create() {
+    return NavigationMesh(resolveClassConstructor('NavigationMesh'));
+  }
+
   static final Pointer<Void> _mb_set_sample_partition_type =
       resolveMethodBind('NavigationMesh', 'set_sample_partition_type', 2472437533);
 

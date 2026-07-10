@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class HTTPClient extends RefCounted {
   HTTPClient(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HTTPClient instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HTTPClient.create() {
+    return HTTPClient(resolveClassConstructor('HTTPClient'));
+  }
+
   static final Pointer<Void> _mb_connect_to_host =
       resolveMethodBind('HTTPClient', 'connect_to_host', 504540374);
 

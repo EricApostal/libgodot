@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationMeshSourceGeometryData2D extends Resource {
   NavigationMeshSourceGeometryData2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationMeshSourceGeometryData2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationMeshSourceGeometryData2D.create() {
+    return NavigationMeshSourceGeometryData2D(resolveClassConstructor('NavigationMeshSourceGeometryData2D'));
+  }
+
   static final Pointer<Void> _mb_clear =
       resolveMethodBind('NavigationMeshSourceGeometryData2D', 'clear', 3218959716);
 

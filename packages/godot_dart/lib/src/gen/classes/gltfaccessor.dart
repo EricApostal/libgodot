@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFAccessor extends Resource {
   GLTFAccessor(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFAccessor instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFAccessor.create() {
+    return GLTFAccessor(resolveClassConstructor('GLTFAccessor'));
+  }
+
   // Skipped to_dictionary(): unsupported return type "Dictionary".
   static final Pointer<Void> _mb_get_buffer_view =
       resolveMethodBind('GLTFAccessor', 'get_buffer_view', 3905245786);

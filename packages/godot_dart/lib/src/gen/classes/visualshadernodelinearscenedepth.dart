@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeLinearSceneDepth extends VisualShaderNode {
   VisualShaderNodeLinearSceneDepth(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeLinearSceneDepth instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeLinearSceneDepth.create() {
+    return VisualShaderNodeLinearSceneDepth(resolveClassConstructor('VisualShaderNodeLinearSceneDepth'));
+  }
+
 }

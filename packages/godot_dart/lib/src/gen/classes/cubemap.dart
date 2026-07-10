@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Cubemap extends ImageTextureLayered {
   Cubemap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Cubemap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Cubemap.create() {
+    return Cubemap(resolveClassConstructor('Cubemap'));
+  }
+
   static final Pointer<Void> _mb_create_placeholder =
       resolveMethodBind('Cubemap', 'create_placeholder', 121922552);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisibleOnScreenEnabler3D extends VisibleOnScreenNotifier3D {
   VisibleOnScreenEnabler3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisibleOnScreenEnabler3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisibleOnScreenEnabler3D.create() {
+    return VisibleOnScreenEnabler3D(resolveClassConstructor('VisibleOnScreenEnabler3D'));
+  }
+
   static final Pointer<Void> _mb_set_enable_mode =
       resolveMethodBind('VisibleOnScreenEnabler3D', 'set_enable_mode', 320303646);
 

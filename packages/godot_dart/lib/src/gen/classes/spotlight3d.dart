@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class SpotLight3D extends Light3D {
   SpotLight3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SpotLight3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SpotLight3D.create() {
+    return SpotLight3D(resolveClassConstructor('SpotLight3D'));
+  }
+
 }

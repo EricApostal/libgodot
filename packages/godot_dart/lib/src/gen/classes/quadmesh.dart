@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class QuadMesh extends PlaneMesh {
   QuadMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned QuadMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory QuadMesh.create() {
+    return QuadMesh(resolveClassConstructor('QuadMesh'));
+  }
+
 }

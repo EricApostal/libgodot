@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicsPointQueryParameters3D extends RefCounted {
   PhysicsPointQueryParameters3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsPointQueryParameters3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsPointQueryParameters3D.create() {
+    return PhysicsPointQueryParameters3D(resolveClassConstructor('PhysicsPointQueryParameters3D'));
+  }
+
   static final Pointer<Void> _mb_set_position =
       resolveMethodBind('PhysicsPointQueryParameters3D', 'set_position', 3460891852);
 

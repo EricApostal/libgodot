@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VehicleBody3D extends RigidBody3D {
   VehicleBody3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VehicleBody3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VehicleBody3D.create() {
+    return VehicleBody3D(resolveClassConstructor('VehicleBody3D'));
+  }
+
   static final Pointer<Void> _mb_set_engine_force =
       resolveMethodBind('VehicleBody3D', 'set_engine_force', 373806689);
 

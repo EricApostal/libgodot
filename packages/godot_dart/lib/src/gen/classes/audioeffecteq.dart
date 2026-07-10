@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectEQ extends AudioEffect {
   AudioEffectEQ(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectEQ instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectEQ.create() {
+    return AudioEffectEQ(resolveClassConstructor('AudioEffectEQ'));
+  }
+
   static final Pointer<Void> _mb_set_band_gain_db =
       resolveMethodBind('AudioEffectEQ', 'set_band_gain_db', 1602489585);
 

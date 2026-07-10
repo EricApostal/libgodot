@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRVRS extends GodotObject {
   XRVRS(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRVRS instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRVRS.create() {
+    return XRVRS(resolveClassConstructor('XRVRS'));
+  }
+
   static final Pointer<Void> _mb_get_vrs_min_radius =
       resolveMethodBind('XRVRS', 'get_vrs_min_radius', 1740695150);
 

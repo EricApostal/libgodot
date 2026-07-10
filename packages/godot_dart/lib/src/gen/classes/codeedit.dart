@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CodeEdit extends TextEdit {
   CodeEdit(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CodeEdit instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CodeEdit.create() {
+    return CodeEdit(resolveClassConstructor('CodeEdit'));
+  }
+
   static final Pointer<Void> _mb_set_indent_size =
       resolveMethodBind('CodeEdit', 'set_indent_size', 1286410249);
 

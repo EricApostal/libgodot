@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicalBone2D extends RigidBody2D {
   PhysicalBone2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicalBone2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicalBone2D.create() {
+    return PhysicalBone2D(resolveClassConstructor('PhysicalBone2D'));
+  }
+
   static final Pointer<Void> _mb_get_joint =
       resolveMethodBind('PhysicalBone2D', 'get_joint', 3582132112);
 

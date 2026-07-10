@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class LightmapperRD extends Lightmapper {
   LightmapperRD(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned LightmapperRD instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory LightmapperRD.create() {
+    return LightmapperRD(resolveClassConstructor('LightmapperRD'));
+  }
+
 }

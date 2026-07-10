@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Sky extends Resource {
   Sky(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Sky instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Sky.create() {
+    return Sky(resolveClassConstructor('Sky'));
+  }
+
   static final Pointer<Void> _mb_set_radiance_size =
       resolveMethodBind('Sky', 'set_radiance_size', 1512957179);
 

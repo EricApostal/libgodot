@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class JNISingleton extends GodotObject {
   JNISingleton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned JNISingleton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory JNISingleton.create() {
+    return JNISingleton(resolveClassConstructor('JNISingleton'));
+  }
+
   static final Pointer<Void> _mb_has_java_method =
       resolveMethodBind('JNISingleton', 'has_java_method', 2619796661);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SpringBoneCollision3D extends Node3D {
   SpringBoneCollision3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SpringBoneCollision3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SpringBoneCollision3D.create() {
+    return SpringBoneCollision3D(resolveClassConstructor('SpringBoneCollision3D'));
+  }
+
   static final Pointer<Void> _mb_get_skeleton =
       resolveMethodBind('SpringBoneCollision3D', 'get_skeleton', 1488626673);
 

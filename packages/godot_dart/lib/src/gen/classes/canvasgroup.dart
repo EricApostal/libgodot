@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CanvasGroup extends Node2D {
   CanvasGroup(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CanvasGroup instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CanvasGroup.create() {
+    return CanvasGroup(resolveClassConstructor('CanvasGroup'));
+  }
+
   static final Pointer<Void> _mb_set_fit_margin =
       resolveMethodBind('CanvasGroup', 'set_fit_margin', 373806689);
 

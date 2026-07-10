@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDAttachmentFormat extends RefCounted {
   RDAttachmentFormat(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDAttachmentFormat instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDAttachmentFormat.create() {
+    return RDAttachmentFormat(resolveClassConstructor('RDAttachmentFormat'));
+  }
+
   static final Pointer<Void> _mb_set_format =
       resolveMethodBind('RDAttachmentFormat', 'set_format', 565531219);
 

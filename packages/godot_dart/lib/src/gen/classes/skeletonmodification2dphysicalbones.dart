@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonModification2DPhysicalBones extends SkeletonModification2D {
   SkeletonModification2DPhysicalBones(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonModification2DPhysicalBones instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonModification2DPhysicalBones.create() {
+    return SkeletonModification2DPhysicalBones(resolveClassConstructor('SkeletonModification2DPhysicalBones'));
+  }
+
   static final Pointer<Void> _mb_set_physical_bone_chain_length =
       resolveMethodBind('SkeletonModification2DPhysicalBones', 'set_physical_bone_chain_length', 1286410249);
 

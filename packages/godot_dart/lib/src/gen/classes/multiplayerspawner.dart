@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MultiplayerSpawner extends Node {
   MultiplayerSpawner(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MultiplayerSpawner instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MultiplayerSpawner.create() {
+    return MultiplayerSpawner(resolveClassConstructor('MultiplayerSpawner'));
+  }
+
   static final Pointer<Void> _mb_add_spawnable_scene =
       resolveMethodBind('MultiplayerSpawner', 'add_spawnable_scene', 83702148);
 

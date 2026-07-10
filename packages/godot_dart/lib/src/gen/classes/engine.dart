@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Engine extends GodotObject {
   Engine(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Engine instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Engine.create() {
+    return Engine(resolveClassConstructor('Engine'));
+  }
+
   static final Pointer<Void> _mb_set_physics_ticks_per_second =
       resolveMethodBind('Engine', 'set_physics_ticks_per_second', 1286410249);
 

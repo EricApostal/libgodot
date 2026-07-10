@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PacketPeerStream extends PacketPeer {
   PacketPeerStream(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PacketPeerStream instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PacketPeerStream.create() {
+    return PacketPeerStream(resolveClassConstructor('PacketPeerStream'));
+  }
+
   static final Pointer<Void> _mb_set_stream_peer =
       resolveMethodBind('PacketPeerStream', 'set_stream_peer', 3281897016);
 

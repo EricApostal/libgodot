@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDPipelineDepthStencilState extends RefCounted {
   RDPipelineDepthStencilState(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDPipelineDepthStencilState instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDPipelineDepthStencilState.create() {
+    return RDPipelineDepthStencilState(resolveClassConstructor('RDPipelineDepthStencilState'));
+  }
+
   static final Pointer<Void> _mb_set_enable_depth_test =
       resolveMethodBind('RDPipelineDepthStencilState', 'set_enable_depth_test', 2586408642);
 

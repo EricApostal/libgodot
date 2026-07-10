@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GraphEdit extends Control {
   GraphEdit(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GraphEdit instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GraphEdit.create() {
+    return GraphEdit(resolveClassConstructor('GraphEdit'));
+  }
+
   static final Pointer<Void> _mb_connect_node =
       resolveMethodBind('GraphEdit', 'connect_node', 1376144231);
 

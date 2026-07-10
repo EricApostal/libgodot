@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeRandomRange extends VisualShaderNode {
   VisualShaderNodeRandomRange(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeRandomRange instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeRandomRange.create() {
+    return VisualShaderNodeRandomRange(resolveClassConstructor('VisualShaderNodeRandomRange'));
+  }
+
 }

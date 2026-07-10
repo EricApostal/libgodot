@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VSeparator extends Separator {
   VSeparator(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VSeparator instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VSeparator.create() {
+    return VSeparator(resolveClassConstructor('VSeparator'));
+  }
+
 }

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AnimationNodeTimeScale extends AnimationNode {
   AnimationNodeTimeScale(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeTimeScale instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeTimeScale.create() {
+    return AnimationNodeTimeScale(resolveClassConstructor('AnimationNodeTimeScale'));
+  }
+
 }

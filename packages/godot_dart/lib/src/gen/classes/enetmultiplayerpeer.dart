@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ENetMultiplayerPeer extends MultiplayerPeer {
   ENetMultiplayerPeer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ENetMultiplayerPeer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ENetMultiplayerPeer.create() {
+    return ENetMultiplayerPeer(resolveClassConstructor('ENetMultiplayerPeer'));
+  }
+
   static final Pointer<Void> _mb_create_server =
       resolveMethodBind('ENetMultiplayerPeer', 'create_server', 2917761309);
 

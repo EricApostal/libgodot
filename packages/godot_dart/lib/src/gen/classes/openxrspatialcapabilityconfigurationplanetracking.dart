@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialCapabilityConfigurationPlaneTracking extends OpenXRSpatialCapabilityConfigurationBaseHeader {
   OpenXRSpatialCapabilityConfigurationPlaneTracking(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialCapabilityConfigurationPlaneTracking instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialCapabilityConfigurationPlaneTracking.create() {
+    return OpenXRSpatialCapabilityConfigurationPlaneTracking(resolveClassConstructor('OpenXRSpatialCapabilityConfigurationPlaneTracking'));
+  }
+
   static final Pointer<Void> _mb_supports_mesh_2d =
       resolveMethodBind('OpenXRSpatialCapabilityConfigurationPlaneTracking', 'supports_mesh_2d', 2240911060);
 

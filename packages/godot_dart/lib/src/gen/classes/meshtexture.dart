@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MeshTexture extends Texture2D {
   MeshTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MeshTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MeshTexture.create() {
+    return MeshTexture(resolveClassConstructor('MeshTexture'));
+  }
+
   static final Pointer<Void> _mb_set_mesh =
       resolveMethodBind('MeshTexture', 'set_mesh', 194775623);
 

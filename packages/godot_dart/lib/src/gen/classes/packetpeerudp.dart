@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PacketPeerUDP extends PacketPeer {
   PacketPeerUDP(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PacketPeerUDP instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PacketPeerUDP.create() {
+    return PacketPeerUDP(resolveClassConstructor('PacketPeerUDP'));
+  }
+
   static final Pointer<Void> _mb_bind =
       resolveMethodBind('PacketPeerUDP', 'bind', 4051239242);
 

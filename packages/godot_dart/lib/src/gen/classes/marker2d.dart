@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Marker2D extends Node2D {
   Marker2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Marker2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Marker2D.create() {
+    return Marker2D(resolveClassConstructor('Marker2D'));
+  }
+
   static final Pointer<Void> _mb_set_gizmo_extents =
       resolveMethodBind('Marker2D', 'set_gizmo_extents', 373806689);
 

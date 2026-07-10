@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AnimationNodeTransition extends AnimationNodeSync {
   AnimationNodeTransition(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeTransition instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeTransition.create() {
+    return AnimationNodeTransition(resolveClassConstructor('AnimationNodeTransition'));
+  }
+
   static final Pointer<Void> _mb_set_input_count =
       resolveMethodBind('AnimationNodeTransition', 'set_input_count', 1286410249);
 

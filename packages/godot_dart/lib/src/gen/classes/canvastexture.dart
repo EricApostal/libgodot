@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CanvasTexture extends Texture2D {
   CanvasTexture(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CanvasTexture instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CanvasTexture.create() {
+    return CanvasTexture(resolveClassConstructor('CanvasTexture'));
+  }
+
   static final Pointer<Void> _mb_set_diffuse_texture =
       resolveMethodBind('CanvasTexture', 'set_diffuse_texture', 4051416890);
 

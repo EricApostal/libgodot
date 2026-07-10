@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CameraFeed extends RefCounted {
   CameraFeed(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CameraFeed instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CameraFeed.create() {
+    return CameraFeed(resolveClassConstructor('CameraFeed'));
+  }
+
   static final Pointer<Void> _mb_get_id =
       resolveMethodBind('CameraFeed', 'get_id', 3905245786);
 

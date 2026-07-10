@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GrooveJoint2D extends Joint2D {
   GrooveJoint2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GrooveJoint2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GrooveJoint2D.create() {
+    return GrooveJoint2D(resolveClassConstructor('GrooveJoint2D'));
+  }
+
   static final Pointer<Void> _mb_set_length =
       resolveMethodBind('GrooveJoint2D', 'set_length', 373806689);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RetargetModifier3D extends SkeletonModifier3D {
   RetargetModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RetargetModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RetargetModifier3D.create() {
+    return RetargetModifier3D(resolveClassConstructor('RetargetModifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_profile =
       resolveMethodBind('RetargetModifier3D', 'set_profile', 3870374136);
 

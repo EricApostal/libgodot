@@ -14,5 +14,11 @@ import '../classes.g.dart';
 class OpenXRSpatialCapabilityConfigurationAnchor extends OpenXRSpatialCapabilityConfigurationBaseHeader {
   OpenXRSpatialCapabilityConfigurationAnchor(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialCapabilityConfigurationAnchor instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialCapabilityConfigurationAnchor.create() {
+    return OpenXRSpatialCapabilityConfigurationAnchor(resolveClassConstructor('OpenXRSpatialCapabilityConfigurationAnchor'));
+  }
+
   // Skipped get_enabled_components(): unsupported return type "PackedInt64Array".
 }

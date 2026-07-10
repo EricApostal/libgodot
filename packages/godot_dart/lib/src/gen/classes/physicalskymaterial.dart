@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicalSkyMaterial extends Material {
   PhysicalSkyMaterial(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicalSkyMaterial instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicalSkyMaterial.create() {
+    return PhysicalSkyMaterial(resolveClassConstructor('PhysicalSkyMaterial'));
+  }
+
   static final Pointer<Void> _mb_set_rayleigh_coefficient =
       resolveMethodBind('PhysicalSkyMaterial', 'set_rayleigh_coefficient', 373806689);
 

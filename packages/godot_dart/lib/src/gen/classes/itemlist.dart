@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ItemList extends Control {
   ItemList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ItemList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ItemList.create() {
+    return ItemList(resolveClassConstructor('ItemList'));
+  }
+
   static final Pointer<Void> _mb_add_item =
       resolveMethodBind('ItemList', 'add_item', 359861678);
 

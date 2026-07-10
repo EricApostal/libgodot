@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ImporterMeshInstance3D extends Node3D {
   ImporterMeshInstance3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ImporterMeshInstance3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ImporterMeshInstance3D.create() {
+    return ImporterMeshInstance3D(resolveClassConstructor('ImporterMeshInstance3D'));
+  }
+
   static final Pointer<Void> _mb_set_mesh =
       resolveMethodBind('ImporterMeshInstance3D', 'set_mesh', 2255166972);
 

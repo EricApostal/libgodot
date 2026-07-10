@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MultiMeshInstance3D extends GeometryInstance3D {
   MultiMeshInstance3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MultiMeshInstance3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MultiMeshInstance3D.create() {
+    return MultiMeshInstance3D(resolveClassConstructor('MultiMeshInstance3D'));
+  }
+
   static final Pointer<Void> _mb_set_multimesh =
       resolveMethodBind('MultiMeshInstance3D', 'set_multimesh', 2246127404);
 

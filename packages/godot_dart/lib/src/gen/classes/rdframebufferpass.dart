@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDFramebufferPass extends RefCounted {
   RDFramebufferPass(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDFramebufferPass instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDFramebufferPass.create() {
+    return RDFramebufferPass(resolveClassConstructor('RDFramebufferPass'));
+  }
+
   // Skipped set_color_attachments(): an argument type is unsupported.
   // Skipped get_color_attachments(): unsupported return type "PackedInt32Array".
   // Skipped set_input_attachments(): an argument type is unsupported.

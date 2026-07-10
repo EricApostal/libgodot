@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CharacterBody2D extends PhysicsBody2D {
   CharacterBody2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CharacterBody2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CharacterBody2D.create() {
+    return CharacterBody2D(resolveClassConstructor('CharacterBody2D'));
+  }
+
   static final Pointer<Void> _mb_move_and_slide =
       resolveMethodBind('CharacterBody2D', 'move_and_slide', 2240911060);
 

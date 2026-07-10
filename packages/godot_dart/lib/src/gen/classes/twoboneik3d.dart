@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TwoBoneIK3D extends IKModifier3D {
   TwoBoneIK3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TwoBoneIK3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TwoBoneIK3D.create() {
+    return TwoBoneIK3D(resolveClassConstructor('TwoBoneIK3D'));
+  }
+
   // Skipped set_target_node(): an argument type is unsupported.
   // Skipped get_target_node(): unsupported return type "NodePath".
   // Skipped set_pole_node(): an argument type is unsupported.

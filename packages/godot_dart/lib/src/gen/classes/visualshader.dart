@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShader extends Shader {
   VisualShader(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShader instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShader.create() {
+    return VisualShader(resolveClassConstructor('VisualShader'));
+  }
+
   static final Pointer<Void> _mb_set_mode =
       resolveMethodBind('VisualShader', 'set_mode', 3978014962);
 

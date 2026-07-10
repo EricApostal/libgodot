@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRStructureBase extends RefCounted {
   OpenXRStructureBase(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRStructureBase instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRStructureBase.create() {
+    return OpenXRStructureBase(resolveClassConstructor('OpenXRStructureBase'));
+  }
+
   static final Pointer<Void> _mb_get_structure_type =
       resolveMethodBind('OpenXRStructureBase', 'get_structure_type', 2455072627);
 

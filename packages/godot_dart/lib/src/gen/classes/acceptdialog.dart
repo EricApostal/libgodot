@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AcceptDialog extends Window {
   AcceptDialog(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AcceptDialog instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AcceptDialog.create() {
+    return AcceptDialog(resolveClassConstructor('AcceptDialog'));
+  }
+
   static final Pointer<Void> _mb_get_ok_button =
       resolveMethodBind('AcceptDialog', 'get_ok_button', 1856205918);
 

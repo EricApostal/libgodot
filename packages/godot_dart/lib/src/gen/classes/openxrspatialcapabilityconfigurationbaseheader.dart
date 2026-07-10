@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialCapabilityConfigurationBaseHeader extends RefCounted {
   OpenXRSpatialCapabilityConfigurationBaseHeader(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialCapabilityConfigurationBaseHeader instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialCapabilityConfigurationBaseHeader.create() {
+    return OpenXRSpatialCapabilityConfigurationBaseHeader(resolveClassConstructor('OpenXRSpatialCapabilityConfigurationBaseHeader'));
+  }
+
   static final Pointer<Void> _mb_has_valid_configuration =
       resolveMethodBind('OpenXRSpatialCapabilityConfigurationBaseHeader', 'has_valid_configuration', 36873697);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ImporterMesh extends Resource {
   ImporterMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ImporterMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ImporterMesh.create() {
+    return ImporterMesh(resolveClassConstructor('ImporterMesh'));
+  }
+
   static final Pointer<Void> _mb_add_blend_shape =
       resolveMethodBind('ImporterMesh', 'add_blend_shape', 83702148);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class EngineDebugger extends GodotObject {
   EngineDebugger(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned EngineDebugger instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory EngineDebugger.create() {
+    return EngineDebugger(resolveClassConstructor('EngineDebugger'));
+  }
+
   static final Pointer<Void> _mb_is_active =
       resolveMethodBind('EngineDebugger', 'is_active', 2240911060);
 

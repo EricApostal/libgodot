@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RectangleShape2D extends Shape2D {
   RectangleShape2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RectangleShape2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RectangleShape2D.create() {
+    return RectangleShape2D(resolveClassConstructor('RectangleShape2D'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('RectangleShape2D', 'set_size', 743155724);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRMarkerTracker extends OpenXRSpatialEntityTracker {
   OpenXRMarkerTracker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRMarkerTracker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRMarkerTracker.create() {
+    return OpenXRMarkerTracker(resolveClassConstructor('OpenXRMarkerTracker'));
+  }
+
   static final Pointer<Void> _mb_set_bounds_size =
       resolveMethodBind('OpenXRMarkerTracker', 'set_bounds_size', 743155724);
 

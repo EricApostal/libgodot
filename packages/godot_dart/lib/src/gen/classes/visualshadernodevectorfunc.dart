@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeVectorFunc extends VisualShaderNodeVectorBase {
   VisualShaderNodeVectorFunc(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeVectorFunc instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeVectorFunc.create() {
+    return VisualShaderNodeVectorFunc(resolveClassConstructor('VisualShaderNodeVectorFunc'));
+  }
+
   static final Pointer<Void> _mb_set_function =
       resolveMethodBind('VisualShaderNodeVectorFunc', 'set_function', 629964457);
 

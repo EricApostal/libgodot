@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeParticleEmit extends VisualShaderNode {
   VisualShaderNodeParticleEmit(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParticleEmit instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParticleEmit.create() {
+    return VisualShaderNodeParticleEmit(resolveClassConstructor('VisualShaderNodeParticleEmit'));
+  }
+
   static final Pointer<Void> _mb_set_flags =
       resolveMethodBind('VisualShaderNodeParticleEmit', 'set_flags', 3960756792);
 

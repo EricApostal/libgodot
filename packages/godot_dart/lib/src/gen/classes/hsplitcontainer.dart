@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class HSplitContainer extends SplitContainer {
   HSplitContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned HSplitContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory HSplitContainer.create() {
+    return HSplitContainer(resolveClassConstructor('HSplitContainer'));
+  }
+
 }

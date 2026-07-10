@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class FramebufferCacheRD extends GodotObject {
   FramebufferCacheRD(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned FramebufferCacheRD instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory FramebufferCacheRD.create() {
+    return FramebufferCacheRD(resolveClassConstructor('FramebufferCacheRD'));
+  }
+
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ParallaxBackground extends CanvasLayer {
   ParallaxBackground(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ParallaxBackground instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ParallaxBackground.create() {
+    return ParallaxBackground(resolveClassConstructor('ParallaxBackground'));
+  }
+
   static final Pointer<Void> _mb_set_scroll_offset =
       resolveMethodBind('ParallaxBackground', 'set_scroll_offset', 743155724);
 

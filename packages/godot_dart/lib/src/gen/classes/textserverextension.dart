@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class TextServerExtension extends TextServer {
   TextServerExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextServerExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextServerExtension.create() {
+    return TextServerExtension(resolveClassConstructor('TextServerExtension'));
+  }
+
 }

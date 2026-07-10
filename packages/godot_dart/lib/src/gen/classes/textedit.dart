@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TextEdit extends Control {
   TextEdit(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextEdit instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextEdit.create() {
+    return TextEdit(resolveClassConstructor('TextEdit'));
+  }
+
   static final Pointer<Void> _mb_has_ime_text =
       resolveMethodBind('TextEdit', 'has_ime_text', 36873697);
 

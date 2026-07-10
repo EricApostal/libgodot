@@ -14,5 +14,11 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentParentList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentParentList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentParentList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentParentList.create() {
+    return OpenXRSpatialComponentParentList(resolveClassConstructor('OpenXRSpatialComponentParentList'));
+  }
+
   // Skipped get_parent(): unsupported return type "RID".
 }

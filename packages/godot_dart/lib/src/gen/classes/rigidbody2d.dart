@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RigidBody2D extends PhysicsBody2D {
   RigidBody2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RigidBody2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RigidBody2D.create() {
+    return RigidBody2D(resolveClassConstructor('RigidBody2D'));
+  }
+
   static final Pointer<Void> _mb_set_mass =
       resolveMethodBind('RigidBody2D', 'set_mass', 373806689);
 

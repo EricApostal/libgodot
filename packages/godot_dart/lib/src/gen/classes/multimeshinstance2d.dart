@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MultiMeshInstance2D extends Node2D {
   MultiMeshInstance2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MultiMeshInstance2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MultiMeshInstance2D.create() {
+    return MultiMeshInstance2D(resolveClassConstructor('MultiMeshInstance2D'));
+  }
+
   static final Pointer<Void> _mb_set_multimesh =
       resolveMethodBind('MultiMeshInstance2D', 'set_multimesh', 2246127404);
 

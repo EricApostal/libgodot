@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeDistanceFade extends VisualShaderNode {
   VisualShaderNodeDistanceFade(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeDistanceFade instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeDistanceFade.create() {
+    return VisualShaderNodeDistanceFade(resolveClassConstructor('VisualShaderNodeDistanceFade'));
+  }
+
 }

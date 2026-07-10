@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFCamera extends Resource {
   GLTFCamera(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFCamera instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFCamera.create() {
+    return GLTFCamera(resolveClassConstructor('GLTFCamera'));
+  }
+
   static final Pointer<Void> _mb_to_node =
       resolveMethodBind('GLTFCamera', 'to_node', 2285090890);
 

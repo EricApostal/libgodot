@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeTexture2DParameter extends VisualShaderNodeTextureParameter {
   VisualShaderNodeTexture2DParameter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTexture2DParameter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTexture2DParameter.create() {
+    return VisualShaderNodeTexture2DParameter(resolveClassConstructor('VisualShaderNodeTexture2DParameter'));
+  }
+
 }

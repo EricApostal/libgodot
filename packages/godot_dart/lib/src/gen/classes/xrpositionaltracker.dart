@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XRPositionalTracker extends XRTracker {
   XRPositionalTracker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XRPositionalTracker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XRPositionalTracker.create() {
+    return XRPositionalTracker(resolveClassConstructor('XRPositionalTracker'));
+  }
+
   static final Pointer<Void> _mb_get_tracker_profile =
       resolveMethodBind('XRPositionalTracker', 'get_tracker_profile', 201670096);
 

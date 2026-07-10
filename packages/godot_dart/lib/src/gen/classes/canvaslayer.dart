@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CanvasLayer extends Node {
   CanvasLayer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CanvasLayer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CanvasLayer.create() {
+    return CanvasLayer(resolveClassConstructor('CanvasLayer'));
+  }
+
   static final Pointer<Void> _mb_set_layer =
       resolveMethodBind('CanvasLayer', 'set_layer', 1286410249);
 

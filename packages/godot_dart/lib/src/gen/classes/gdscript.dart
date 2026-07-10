@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class GDScript extends Script {
   GDScript(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GDScript instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GDScript.create() {
+    return GDScript(resolveClassConstructor('GDScript'));
+  }
+
 }

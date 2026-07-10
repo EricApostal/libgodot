@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TileSetAtlasSource extends TileSetSource {
   TileSetAtlasSource(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TileSetAtlasSource instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TileSetAtlasSource.create() {
+    return TileSetAtlasSource(resolveClassConstructor('TileSetAtlasSource'));
+  }
+
   static final Pointer<Void> _mb_set_texture =
       resolveMethodBind('TileSetAtlasSource', 'set_texture', 4051416890);
 

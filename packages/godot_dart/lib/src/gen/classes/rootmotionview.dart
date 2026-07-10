@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RootMotionView extends VisualInstance3D {
   RootMotionView(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RootMotionView instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RootMotionView.create() {
+    return RootMotionView(resolveClassConstructor('RootMotionView'));
+  }
+
   // Skipped set_animation_path(): an argument type is unsupported.
   // Skipped get_animation_path(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_set_color =

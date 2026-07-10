@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialComponentMesh2DList extends OpenXRSpatialComponentData {
   OpenXRSpatialComponentMesh2DList(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialComponentMesh2DList instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialComponentMesh2DList.create() {
+    return OpenXRSpatialComponentMesh2DList(resolveClassConstructor('OpenXRSpatialComponentMesh2DList'));
+  }
+
   static final Pointer<Void> _mb_get_transform =
       resolveMethodBind('OpenXRSpatialComponentMesh2DList', 'get_transform', 1965739696);
 

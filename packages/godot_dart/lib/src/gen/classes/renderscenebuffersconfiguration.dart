@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RenderSceneBuffersConfiguration extends RefCounted {
   RenderSceneBuffersConfiguration(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RenderSceneBuffersConfiguration instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RenderSceneBuffersConfiguration.create() {
+    return RenderSceneBuffersConfiguration(resolveClassConstructor('RenderSceneBuffersConfiguration'));
+  }
+
   // Skipped get_render_target(): unsupported return type "RID".
   // Skipped set_render_target(): an argument type is unsupported.
   static final Pointer<Void> _mb_get_internal_size =

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CSGPolygon3D extends CSGPrimitive3D {
   CSGPolygon3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CSGPolygon3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CSGPolygon3D.create() {
+    return CSGPolygon3D(resolveClassConstructor('CSGPolygon3D'));
+  }
+
   // Skipped set_polygon(): an argument type is unsupported.
   // Skipped get_polygon(): unsupported return type "PackedVector2Array".
   static final Pointer<Void> _mb_set_mode =

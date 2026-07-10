@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRHapticVibration extends OpenXRHapticBase {
   OpenXRHapticVibration(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRHapticVibration instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRHapticVibration.create() {
+    return OpenXRHapticVibration(resolveClassConstructor('OpenXRHapticVibration'));
+  }
+
   static final Pointer<Void> _mb_set_duration =
       resolveMethodBind('OpenXRHapticVibration', 'set_duration', 1286410249);
 

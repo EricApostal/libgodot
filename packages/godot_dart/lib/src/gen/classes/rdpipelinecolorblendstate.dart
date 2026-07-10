@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDPipelineColorBlendState extends RefCounted {
   RDPipelineColorBlendState(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDPipelineColorBlendState instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDPipelineColorBlendState.create() {
+    return RDPipelineColorBlendState(resolveClassConstructor('RDPipelineColorBlendState'));
+  }
+
   static final Pointer<Void> _mb_set_enable_logic_op =
       resolveMethodBind('RDPipelineColorBlendState', 'set_enable_logic_op', 2586408642);
 

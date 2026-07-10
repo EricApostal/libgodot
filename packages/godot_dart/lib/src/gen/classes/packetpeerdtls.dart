@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PacketPeerDTLS extends PacketPeer {
   PacketPeerDTLS(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PacketPeerDTLS instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PacketPeerDTLS.create() {
+    return PacketPeerDTLS(resolveClassConstructor('PacketPeerDTLS'));
+  }
+
   static final Pointer<Void> _mb_poll =
       resolveMethodBind('PacketPeerDTLS', 'poll', 3218959716);
 

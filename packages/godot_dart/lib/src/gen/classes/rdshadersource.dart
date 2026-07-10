@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDShaderSource extends RefCounted {
   RDShaderSource(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDShaderSource instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDShaderSource.create() {
+    return RDShaderSource(resolveClassConstructor('RDShaderSource'));
+  }
+
   static final Pointer<Void> _mb_set_stage_source =
       resolveMethodBind('RDShaderSource', 'set_stage_source', 620821314);
 

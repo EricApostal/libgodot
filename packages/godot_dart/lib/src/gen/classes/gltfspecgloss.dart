@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFSpecGloss extends Resource {
   GLTFSpecGloss(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFSpecGloss instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFSpecGloss.create() {
+    return GLTFSpecGloss(resolveClassConstructor('GLTFSpecGloss'));
+  }
+
   static final Pointer<Void> _mb_get_diffuse_img =
       resolveMethodBind('GLTFSpecGloss', 'get_diffuse_img', 564927088);
 

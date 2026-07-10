@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Texture2DArray extends ImageTextureLayered {
   Texture2DArray(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Texture2DArray instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Texture2DArray.create() {
+    return Texture2DArray(resolveClassConstructor('Texture2DArray'));
+  }
+
   static final Pointer<Void> _mb_create_placeholder =
       resolveMethodBind('Texture2DArray', 'create_placeholder', 121922552);
 

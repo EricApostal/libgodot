@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PolygonPathFinder extends Resource {
   PolygonPathFinder(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PolygonPathFinder instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PolygonPathFinder.create() {
+    return PolygonPathFinder(resolveClassConstructor('PolygonPathFinder'));
+  }
+
   // Skipped setup(): an argument type is unsupported.
   // Skipped find_path(): unsupported return type "PackedVector2Array".
   // Skipped get_intersections(): unsupported return type "PackedVector2Array".

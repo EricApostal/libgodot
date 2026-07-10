@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SoftBody3D extends MeshInstance3D {
   SoftBody3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SoftBody3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SoftBody3D.create() {
+    return SoftBody3D(resolveClassConstructor('SoftBody3D'));
+  }
+
   // Skipped get_physics_rid(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_collision_mask =
       resolveMethodBind('SoftBody3D', 'set_collision_mask', 1286410249);

@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class AnimationNodeAdd2 extends AnimationNodeSync {
   AnimationNodeAdd2(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AnimationNodeAdd2 instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AnimationNodeAdd2.create() {
+    return AnimationNodeAdd2(resolveClassConstructor('AnimationNodeAdd2'));
+  }
+
 }

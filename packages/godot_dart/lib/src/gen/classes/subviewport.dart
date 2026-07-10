@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SubViewport extends Viewport {
   SubViewport(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SubViewport instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SubViewport.create() {
+    return SubViewport(resolveClassConstructor('SubViewport'));
+  }
+
   static final Pointer<Void> _mb_set_size =
       resolveMethodBind('SubViewport', 'set_size', 1130785943);
 

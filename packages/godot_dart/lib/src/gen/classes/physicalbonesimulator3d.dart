@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PhysicalBoneSimulator3D extends SkeletonModifier3D {
   PhysicalBoneSimulator3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicalBoneSimulator3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicalBoneSimulator3D.create() {
+    return PhysicalBoneSimulator3D(resolveClassConstructor('PhysicalBoneSimulator3D'));
+  }
+
   static final Pointer<Void> _mb_is_simulating_physics =
       resolveMethodBind('PhysicalBoneSimulator3D', 'is_simulating_physics', 36873697);
 

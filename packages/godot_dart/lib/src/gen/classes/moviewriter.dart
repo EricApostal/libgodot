@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class MovieWriter extends GodotObject {
   MovieWriter(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MovieWriter instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MovieWriter.create() {
+    return MovieWriter(resolveClassConstructor('MovieWriter'));
+  }
+
 }

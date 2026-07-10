@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class Logger extends RefCounted {
   Logger(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Logger instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Logger.create() {
+    return Logger(resolveClassConstructor('Logger'));
+  }
+
 }

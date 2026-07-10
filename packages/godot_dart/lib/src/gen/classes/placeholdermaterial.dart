@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class PlaceholderMaterial extends Material {
   PlaceholderMaterial(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PlaceholderMaterial instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PlaceholderMaterial.create() {
+    return PlaceholderMaterial(resolveClassConstructor('PlaceholderMaterial'));
+  }
+
 }

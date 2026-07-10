@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventAction extends InputEvent {
   InputEventAction(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventAction instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventAction.create() {
+    return InputEventAction(resolveClassConstructor('InputEventAction'));
+  }
+
   static final Pointer<Void> _mb_set_action =
       resolveMethodBind('InputEventAction', 'set_action', 3304788590);
 

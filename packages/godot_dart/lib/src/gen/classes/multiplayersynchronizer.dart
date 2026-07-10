@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MultiplayerSynchronizer extends Node {
   MultiplayerSynchronizer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MultiplayerSynchronizer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MultiplayerSynchronizer.create() {
+    return MultiplayerSynchronizer(resolveClassConstructor('MultiplayerSynchronizer'));
+  }
+
   // Skipped set_root_path(): an argument type is unsupported.
   // Skipped get_root_path(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_set_replication_interval =

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TextureLayered extends Texture {
   TextureLayered(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextureLayered instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextureLayered.create() {
+    return TextureLayered(resolveClassConstructor('TextureLayered'));
+  }
+
   static final Pointer<Void> _mb_get_format =
       resolveMethodBind('TextureLayered', 'get_format', 3847873762);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectSpectrumAnalyzer extends AudioEffect {
   AudioEffectSpectrumAnalyzer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectSpectrumAnalyzer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectSpectrumAnalyzer.create() {
+    return AudioEffectSpectrumAnalyzer(resolveClassConstructor('AudioEffectSpectrumAnalyzer'));
+  }
+
   static final Pointer<Void> _mb_set_buffer_length =
       resolveMethodBind('AudioEffectSpectrumAnalyzer', 'set_buffer_length', 373806689);
 

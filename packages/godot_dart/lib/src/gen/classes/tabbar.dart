@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TabBar extends Control {
   TabBar(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TabBar instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TabBar.create() {
+    return TabBar(resolveClassConstructor('TabBar'));
+  }
+
   static final Pointer<Void> _mb_set_tab_count =
       resolveMethodBind('TabBar', 'set_tab_count', 1286410249);
 

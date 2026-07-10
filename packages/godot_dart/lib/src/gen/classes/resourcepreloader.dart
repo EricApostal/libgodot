@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ResourcePreloader extends Node {
   ResourcePreloader(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ResourcePreloader instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ResourcePreloader.create() {
+    return ResourcePreloader(resolveClassConstructor('ResourcePreloader'));
+  }
+
   static final Pointer<Void> _mb_add_resource =
       resolveMethodBind('ResourcePreloader', 'add_resource', 1168801743);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ColorRect extends Control {
   ColorRect(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ColorRect instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ColorRect.create() {
+    return ColorRect(resolveClassConstructor('ColorRect'));
+  }
+
   static final Pointer<Void> _mb_set_color =
       resolveMethodBind('ColorRect', 'set_color', 2920490490);
 

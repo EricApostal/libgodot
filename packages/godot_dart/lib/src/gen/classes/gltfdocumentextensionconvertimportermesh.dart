@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class GLTFDocumentExtensionConvertImporterMesh extends GLTFDocumentExtension {
   GLTFDocumentExtensionConvertImporterMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFDocumentExtensionConvertImporterMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFDocumentExtensionConvertImporterMesh.create() {
+    return GLTFDocumentExtensionConvertImporterMesh(resolveClassConstructor('GLTFDocumentExtensionConvertImporterMesh'));
+  }
+
 }

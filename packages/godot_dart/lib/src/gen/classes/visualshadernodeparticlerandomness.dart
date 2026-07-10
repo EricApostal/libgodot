@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeParticleRandomness extends VisualShaderNode {
   VisualShaderNodeParticleRandomness(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeParticleRandomness instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeParticleRandomness.create() {
+    return VisualShaderNodeParticleRandomness(resolveClassConstructor('VisualShaderNodeParticleRandomness'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeParticleRandomness', 'set_op_type', 2060089061);
 

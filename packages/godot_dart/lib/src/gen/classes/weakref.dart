@@ -14,5 +14,11 @@ import '../classes.g.dart';
 class WeakRef extends RefCounted {
   WeakRef(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned WeakRef instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory WeakRef.create() {
+    return WeakRef(resolveClassConstructor('WeakRef'));
+  }
+
   // Skipped get_ref(): unsupported return type "Variant".
 }

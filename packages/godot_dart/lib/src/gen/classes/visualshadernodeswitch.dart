@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeSwitch extends VisualShaderNode {
   VisualShaderNodeSwitch(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeSwitch instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeSwitch.create() {
+    return VisualShaderNodeSwitch(resolveClassConstructor('VisualShaderNodeSwitch'));
+  }
+
   static final Pointer<Void> _mb_set_op_type =
       resolveMethodBind('VisualShaderNodeSwitch', 'set_op_type', 510471861);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectCompressor extends AudioEffect {
   AudioEffectCompressor(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectCompressor instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectCompressor.create() {
+    return AudioEffectCompressor(resolveClassConstructor('AudioEffectCompressor'));
+  }
+
   static final Pointer<Void> _mb_set_threshold =
       resolveMethodBind('AudioEffectCompressor', 'set_threshold', 373806689);
 

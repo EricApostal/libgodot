@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CollisionShape2D extends Node2D {
   CollisionShape2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CollisionShape2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CollisionShape2D.create() {
+    return CollisionShape2D(resolveClassConstructor('CollisionShape2D'));
+  }
+
   static final Pointer<Void> _mb_set_shape =
       resolveMethodBind('CollisionShape2D', 'set_shape', 771364740);
 

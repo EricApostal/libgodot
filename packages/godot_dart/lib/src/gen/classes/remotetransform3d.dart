@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RemoteTransform3D extends Node3D {
   RemoteTransform3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RemoteTransform3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RemoteTransform3D.create() {
+    return RemoteTransform3D(resolveClassConstructor('RemoteTransform3D'));
+  }
+
   // Skipped set_remote_node(): an argument type is unsupported.
   // Skipped get_remote_node(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_force_update_cache =

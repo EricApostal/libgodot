@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class BoxContainer extends Container {
   BoxContainer(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned BoxContainer instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory BoxContainer.create() {
+    return BoxContainer(resolveClassConstructor('BoxContainer'));
+  }
+
   static final Pointer<Void> _mb_add_spacer =
       resolveMethodBind('BoxContainer', 'add_spacer', 1326660695);
 

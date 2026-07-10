@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationServer3DManager extends GodotObject {
   NavigationServer3DManager(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationServer3DManager instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationServer3DManager.create() {
+    return NavigationServer3DManager(resolveClassConstructor('NavigationServer3DManager'));
+  }
+
   // Skipped register_server(): an argument type is unsupported.
   static final Pointer<Void> _mb_set_default_server =
       resolveMethodBind('NavigationServer3DManager', 'set_default_server', 2956805083);

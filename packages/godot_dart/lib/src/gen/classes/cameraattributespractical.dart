@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CameraAttributesPractical extends CameraAttributes {
   CameraAttributesPractical(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CameraAttributesPractical instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CameraAttributesPractical.create() {
+    return CameraAttributesPractical(resolveClassConstructor('CameraAttributesPractical'));
+  }
+
   static final Pointer<Void> _mb_set_dof_blur_far_enabled =
       resolveMethodBind('CameraAttributesPractical', 'set_dof_blur_far_enabled', 2586408642);
 

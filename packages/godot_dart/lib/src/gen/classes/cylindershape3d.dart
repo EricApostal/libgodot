@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class CylinderShape3D extends Shape3D {
   CylinderShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned CylinderShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory CylinderShape3D.create() {
+    return CylinderShape3D(resolveClassConstructor('CylinderShape3D'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('CylinderShape3D', 'set_radius', 373806689);
 

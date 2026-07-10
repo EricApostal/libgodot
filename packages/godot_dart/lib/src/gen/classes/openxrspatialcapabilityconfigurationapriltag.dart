@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRSpatialCapabilityConfigurationAprilTag extends OpenXRSpatialCapabilityConfigurationBaseHeader {
   OpenXRSpatialCapabilityConfigurationAprilTag(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRSpatialCapabilityConfigurationAprilTag instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRSpatialCapabilityConfigurationAprilTag.create() {
+    return OpenXRSpatialCapabilityConfigurationAprilTag(resolveClassConstructor('OpenXRSpatialCapabilityConfigurationAprilTag'));
+  }
+
   // Skipped get_enabled_components(): unsupported return type "PackedInt64Array".
   static final Pointer<Void> _mb_set_april_dict =
       resolveMethodBind('OpenXRSpatialCapabilityConfigurationAprilTag', 'set_april_dict', 3902905799);

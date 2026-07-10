@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonModification2DLookAt extends SkeletonModification2D {
   SkeletonModification2DLookAt(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonModification2DLookAt instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonModification2DLookAt.create() {
+    return SkeletonModification2DLookAt(resolveClassConstructor('SkeletonModification2DLookAt'));
+  }
+
   // Skipped set_bone2d_node(): an argument type is unsupported.
   // Skipped get_bone2d_node(): unsupported return type "NodePath".
   static final Pointer<Void> _mb_set_bone_index =

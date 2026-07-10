@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeReroute extends VisualShaderNode {
   VisualShaderNodeReroute(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeReroute instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeReroute.create() {
+    return VisualShaderNodeReroute(resolveClassConstructor('VisualShaderNodeReroute'));
+  }
+
   static final Pointer<Void> _mb_get_port_type =
       resolveMethodBind('VisualShaderNodeReroute', 'get_port_type', 1287173294);
 

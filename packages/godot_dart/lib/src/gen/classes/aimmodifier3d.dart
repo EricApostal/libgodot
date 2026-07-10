@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AimModifier3D extends BoneConstraint3D {
   AimModifier3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AimModifier3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AimModifier3D.create() {
+    return AimModifier3D(resolveClassConstructor('AimModifier3D'));
+  }
+
   static final Pointer<Void> _mb_set_forward_axis =
       resolveMethodBind('AimModifier3D', 'set_forward_axis', 2496831085);
 

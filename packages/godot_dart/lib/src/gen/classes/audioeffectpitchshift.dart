@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioEffectPitchShift extends AudioEffect {
   AudioEffectPitchShift(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioEffectPitchShift instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioEffectPitchShift.create() {
+    return AudioEffectPitchShift(resolveClassConstructor('AudioEffectPitchShift'));
+  }
+
   static final Pointer<Void> _mb_set_pitch_scale =
       resolveMethodBind('AudioEffectPitchShift', 'set_pitch_scale', 373806689);
 

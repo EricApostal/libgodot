@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDHitGroup extends RefCounted {
   RDHitGroup(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDHitGroup instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDHitGroup.create() {
+    return RDHitGroup(resolveClassConstructor('RDHitGroup'));
+  }
+
   static final Pointer<Void> _mb_set_closest_hit_shader =
       resolveMethodBind('RDHitGroup', 'set_closest_hit_shader', 2556777288);
 

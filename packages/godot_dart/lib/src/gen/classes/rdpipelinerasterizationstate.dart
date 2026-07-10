@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RDPipelineRasterizationState extends RefCounted {
   RDPipelineRasterizationState(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RDPipelineRasterizationState instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RDPipelineRasterizationState.create() {
+    return RDPipelineRasterizationState(resolveClassConstructor('RDPipelineRasterizationState'));
+  }
+
   static final Pointer<Void> _mb_set_enable_depth_clamp =
       resolveMethodBind('RDPipelineRasterizationState', 'set_enable_depth_clamp', 2586408642);
 

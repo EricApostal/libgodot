@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class RichTextLabel extends Control {
   RichTextLabel(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned RichTextLabel instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory RichTextLabel.create() {
+    return RichTextLabel(resolveClassConstructor('RichTextLabel'));
+  }
+
   static final Pointer<Void> _mb_get_parsed_text =
       resolveMethodBind('RichTextLabel', 'get_parsed_text', 201670096);
 

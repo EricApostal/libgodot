@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class StreamPeerGZIP extends StreamPeer {
   StreamPeerGZIP(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StreamPeerGZIP instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StreamPeerGZIP.create() {
+    return StreamPeerGZIP(resolveClassConstructor('StreamPeerGZIP'));
+  }
+
   static final Pointer<Void> _mb_start_compression =
       resolveMethodBind('StreamPeerGZIP', 'start_compression', 781582770);
 

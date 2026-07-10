@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class WorldBoundaryShape2D extends Shape2D {
   WorldBoundaryShape2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned WorldBoundaryShape2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory WorldBoundaryShape2D.create() {
+    return WorldBoundaryShape2D(resolveClassConstructor('WorldBoundaryShape2D'));
+  }
+
   static final Pointer<Void> _mb_set_normal =
       resolveMethodBind('WorldBoundaryShape2D', 'set_normal', 743155724);
 

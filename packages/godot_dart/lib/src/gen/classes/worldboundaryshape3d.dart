@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class WorldBoundaryShape3D extends Shape3D {
   WorldBoundaryShape3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned WorldBoundaryShape3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory WorldBoundaryShape3D.create() {
+    return WorldBoundaryShape3D(resolveClassConstructor('WorldBoundaryShape3D'));
+  }
+
   static final Pointer<Void> _mb_set_plane =
       resolveMethodBind('WorldBoundaryShape3D', 'set_plane', 3505987427);
 

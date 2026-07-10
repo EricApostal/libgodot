@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRPlaneTracker extends OpenXRSpatialEntityTracker {
   OpenXRPlaneTracker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRPlaneTracker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRPlaneTracker.create() {
+    return OpenXRPlaneTracker(resolveClassConstructor('OpenXRPlaneTracker'));
+  }
+
   static final Pointer<Void> _mb_set_bounds_size =
       resolveMethodBind('OpenXRPlaneTracker', 'set_bounds_size', 743155724);
 

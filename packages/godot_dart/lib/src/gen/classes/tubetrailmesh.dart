@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TubeTrailMesh extends PrimitiveMesh {
   TubeTrailMesh(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TubeTrailMesh instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TubeTrailMesh.create() {
+    return TubeTrailMesh(resolveClassConstructor('TubeTrailMesh'));
+  }
+
   static final Pointer<Void> _mb_set_radius =
       resolveMethodBind('TubeTrailMesh', 'set_radius', 373806689);
 

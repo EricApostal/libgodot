@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeVectorDecompose extends VisualShaderNodeVectorBase {
   VisualShaderNodeVectorDecompose(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeVectorDecompose instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeVectorDecompose.create() {
+    return VisualShaderNodeVectorDecompose(resolveClassConstructor('VisualShaderNodeVectorDecompose'));
+  }
+
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRExtensionWrapper extends GodotObject {
   OpenXRExtensionWrapper(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRExtensionWrapper instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRExtensionWrapper.create() {
+    return OpenXRExtensionWrapper(resolveClassConstructor('OpenXRExtensionWrapper'));
+  }
+
   static final Pointer<Void> _mb_get_openxr_api =
       resolveMethodBind('OpenXRExtensionWrapper', 'get_openxr_api', 1637791613);
 

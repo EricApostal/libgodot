@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Label extends Control {
   Label(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Label instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Label.create() {
+    return Label(resolveClassConstructor('Label'));
+  }
+
   static final Pointer<Void> _mb_set_horizontal_alignment =
       resolveMethodBind('Label', 'set_horizontal_alignment', 2312603777);
 

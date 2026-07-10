@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ReferenceRect extends Control {
   ReferenceRect(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ReferenceRect instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ReferenceRect.create() {
+    return ReferenceRect(resolveClassConstructor('ReferenceRect'));
+  }
+
   static final Pointer<Void> _mb_get_border_color =
       resolveMethodBind('ReferenceRect', 'get_border_color', 3444240500);
 

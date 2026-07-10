@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class SkeletonProfile extends Resource {
   SkeletonProfile(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned SkeletonProfile instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory SkeletonProfile.create() {
+    return SkeletonProfile(resolveClassConstructor('SkeletonProfile'));
+  }
+
   static final Pointer<Void> _mb_set_root_bone =
       resolveMethodBind('SkeletonProfile', 'set_root_bone', 3304788590);
 

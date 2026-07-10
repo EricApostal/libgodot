@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ProceduralSkyMaterial extends Material {
   ProceduralSkyMaterial(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ProceduralSkyMaterial instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ProceduralSkyMaterial.create() {
+    return ProceduralSkyMaterial(resolveClassConstructor('ProceduralSkyMaterial'));
+  }
+
   static final Pointer<Void> _mb_set_sky_top_color =
       resolveMethodBind('ProceduralSkyMaterial', 'set_sky_top_color', 2920490490);
 

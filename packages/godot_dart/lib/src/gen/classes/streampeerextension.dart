@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class StreamPeerExtension extends StreamPeer {
   StreamPeerExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned StreamPeerExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory StreamPeerExtension.create() {
+    return StreamPeerExtension(resolveClassConstructor('StreamPeerExtension'));
+  }
+
 }

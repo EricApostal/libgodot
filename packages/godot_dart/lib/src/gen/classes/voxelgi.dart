@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VoxelGI extends VisualInstance3D {
   VoxelGI(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VoxelGI instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VoxelGI.create() {
+    return VoxelGI(resolveClassConstructor('VoxelGI'));
+  }
+
   static final Pointer<Void> _mb_set_probe_data =
       resolveMethodBind('VoxelGI', 'set_probe_data', 1637849675);
 

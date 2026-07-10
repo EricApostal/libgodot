@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class OpenXRFrameSynthesisExtension extends OpenXRExtensionWrapper {
   OpenXRFrameSynthesisExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned OpenXRFrameSynthesisExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory OpenXRFrameSynthesisExtension.create() {
+    return OpenXRFrameSynthesisExtension(resolveClassConstructor('OpenXRFrameSynthesisExtension'));
+  }
+
   static final Pointer<Void> _mb_is_available =
       resolveMethodBind('OpenXRFrameSynthesisExtension', 'is_available', 36873697);
 

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PathFollow2D extends Node2D {
   PathFollow2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PathFollow2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PathFollow2D.create() {
+    return PathFollow2D(resolveClassConstructor('PathFollow2D'));
+  }
+
   static final Pointer<Void> _mb_set_progress =
       resolveMethodBind('PathFollow2D', 'set_progress', 373806689);
 

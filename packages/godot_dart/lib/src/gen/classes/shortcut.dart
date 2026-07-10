@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Shortcut extends Resource {
   Shortcut(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Shortcut instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Shortcut.create() {
+    return Shortcut(resolveClassConstructor('Shortcut'));
+  }
+
   // Skipped set_events(): an argument type is unsupported.
   // Skipped get_events(): unsupported return type "Array".
   static final Pointer<Void> _mb_has_valid_event =

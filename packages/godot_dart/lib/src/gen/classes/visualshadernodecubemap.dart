@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeCubemap extends VisualShaderNode {
   VisualShaderNodeCubemap(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeCubemap instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeCubemap.create() {
+    return VisualShaderNodeCubemap(resolveClassConstructor('VisualShaderNodeCubemap'));
+  }
+
   static final Pointer<Void> _mb_set_source =
       resolveMethodBind('VisualShaderNodeCubemap', 'set_source', 1625400621);
 

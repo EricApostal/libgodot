@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeTexture2DArray extends VisualShaderNodeSample3D {
   VisualShaderNodeTexture2DArray(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTexture2DArray instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTexture2DArray.create() {
+    return VisualShaderNodeTexture2DArray(resolveClassConstructor('VisualShaderNodeTexture2DArray'));
+  }
+
   static final Pointer<Void> _mb_set_texture_array =
       resolveMethodBind('VisualShaderNodeTexture2DArray', 'set_texture_array', 1278366092);
 

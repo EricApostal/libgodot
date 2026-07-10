@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class VisualShaderNodeInput extends VisualShaderNode {
   VisualShaderNodeInput(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeInput instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeInput.create() {
+    return VisualShaderNodeInput(resolveClassConstructor('VisualShaderNodeInput'));
+  }
+
   static final Pointer<Void> _mb_set_input_name =
       resolveMethodBind('VisualShaderNodeInput', 'set_input_name', 83702148);
 

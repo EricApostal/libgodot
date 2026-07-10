@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeVectorDistance extends VisualShaderNodeVectorBase {
   VisualShaderNodeVectorDistance(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeVectorDistance instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeVectorDistance.create() {
+    return VisualShaderNodeVectorDistance(resolveClassConstructor('VisualShaderNodeVectorDistance'));
+  }
+
 }

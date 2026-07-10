@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Animation extends Resource {
   Animation(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Animation instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Animation.create() {
+    return Animation(resolveClassConstructor('Animation'));
+  }
+
   static final Pointer<Void> _mb_add_track =
       resolveMethodBind('Animation', 'add_track', 3843682357);
 

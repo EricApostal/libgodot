@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class PhysicsDirectBodyState3DExtension extends PhysicsDirectBodyState3D {
   PhysicsDirectBodyState3DExtension(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PhysicsDirectBodyState3DExtension instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PhysicsDirectBodyState3DExtension.create() {
+    return PhysicsDirectBodyState3DExtension(resolveClassConstructor('PhysicsDirectBodyState3DExtension'));
+  }
+
 }

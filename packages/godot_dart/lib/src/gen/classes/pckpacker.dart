@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PCKPacker extends RefCounted {
   PCKPacker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PCKPacker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PCKPacker.create() {
+    return PCKPacker(resolveClassConstructor('PCKPacker'));
+  }
+
   static final Pointer<Void> _mb_pck_start =
       resolveMethodBind('PCKPacker', 'pck_start', 508410629);
 

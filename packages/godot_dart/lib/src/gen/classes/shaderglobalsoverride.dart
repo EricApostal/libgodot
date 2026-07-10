@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class ShaderGlobalsOverride extends Node {
   ShaderGlobalsOverride(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ShaderGlobalsOverride instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ShaderGlobalsOverride.create() {
+    return ShaderGlobalsOverride(resolveClassConstructor('ShaderGlobalsOverride'));
+  }
+
 }

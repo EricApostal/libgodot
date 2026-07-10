@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Camera2D extends Node2D {
   Camera2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Camera2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Camera2D.create() {
+    return Camera2D(resolveClassConstructor('Camera2D'));
+  }
+
   static final Pointer<Void> _mb_set_offset =
       resolveMethodBind('Camera2D', 'set_offset', 743155724);
 

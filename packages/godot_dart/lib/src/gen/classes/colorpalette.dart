@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ColorPalette extends Resource {
   ColorPalette(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ColorPalette instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ColorPalette.create() {
+    return ColorPalette(resolveClassConstructor('ColorPalette'));
+  }
+
   // Skipped set_colors(): an argument type is unsupported.
   // Skipped get_colors(): unsupported return type "PackedColorArray".
 }

@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Resource extends RefCounted {
   Resource(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Resource instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Resource.create() {
+    return Resource(resolveClassConstructor('Resource'));
+  }
+
   static final Pointer<Void> _mb_set_path =
       resolveMethodBind('Resource', 'set_path', 83702148);
 

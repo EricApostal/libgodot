@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Time extends GodotObject {
   Time(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Time instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Time.create() {
+    return Time(resolveClassConstructor('Time'));
+  }
+
   // Skipped get_datetime_dict_from_unix_time(): unsupported return type "Dictionary".
   // Skipped get_date_dict_from_unix_time(): unsupported return type "Dictionary".
   // Skipped get_time_dict_from_unix_time(): unsupported return type "Dictionary".

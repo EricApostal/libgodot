@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class XROrigin3D extends Node3D {
   XROrigin3D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned XROrigin3D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory XROrigin3D.create() {
+    return XROrigin3D(resolveClassConstructor('XROrigin3D'));
+  }
+
   static final Pointer<Void> _mb_set_world_scale =
       resolveMethodBind('XROrigin3D', 'set_world_scale', 373806689);
 

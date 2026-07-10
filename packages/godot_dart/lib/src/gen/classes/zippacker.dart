@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class ZIPPacker extends RefCounted {
   ZIPPacker(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned ZIPPacker instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory ZIPPacker.create() {
+    return ZIPPacker(resolveClassConstructor('ZIPPacker'));
+  }
+
   static final Pointer<Void> _mb_open =
       resolveMethodBind('ZIPPacker', 'open', 1936816515);
 

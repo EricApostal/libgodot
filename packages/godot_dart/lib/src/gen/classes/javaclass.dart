@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class JavaClass extends RefCounted {
   JavaClass(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned JavaClass instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory JavaClass.create() {
+    return JavaClass(resolveClassConstructor('JavaClass'));
+  }
+
   static final Pointer<Void> _mb_get_java_class_name =
       resolveMethodBind('JavaClass', 'get_java_class_name', 201670096);
 

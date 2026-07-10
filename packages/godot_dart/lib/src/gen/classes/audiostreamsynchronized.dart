@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class AudioStreamSynchronized extends AudioStream {
   AudioStreamSynchronized(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned AudioStreamSynchronized instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory AudioStreamSynchronized.create() {
+    return AudioStreamSynchronized(resolveClassConstructor('AudioStreamSynchronized'));
+  }
+
   static final Pointer<Void> _mb_set_stream_count =
       resolveMethodBind('AudioStreamSynchronized', 'set_stream_count', 1286410249);
 

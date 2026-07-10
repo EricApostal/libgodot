@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class MissingResource extends Resource {
   MissingResource(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned MissingResource instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory MissingResource.create() {
+    return MissingResource(resolveClassConstructor('MissingResource'));
+  }
+
   static final Pointer<Void> _mb_set_original_class =
       resolveMethodBind('MissingResource', 'set_original_class', 83702148);
 

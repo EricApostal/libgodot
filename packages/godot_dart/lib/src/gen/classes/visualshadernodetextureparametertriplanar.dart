@@ -14,4 +14,10 @@ import '../classes.g.dart';
 class VisualShaderNodeTextureParameterTriplanar extends VisualShaderNodeTextureParameter {
   VisualShaderNodeTextureParameterTriplanar(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned VisualShaderNodeTextureParameterTriplanar instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory VisualShaderNodeTextureParameterTriplanar.create() {
+    return VisualShaderNodeTextureParameterTriplanar(resolveClassConstructor('VisualShaderNodeTextureParameterTriplanar'));
+  }
+
 }

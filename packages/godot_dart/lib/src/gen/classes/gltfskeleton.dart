@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class GLTFSkeleton extends Resource {
   GLTFSkeleton(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned GLTFSkeleton instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory GLTFSkeleton.create() {
+    return GLTFSkeleton(resolveClassConstructor('GLTFSkeleton'));
+  }
+
   // Skipped get_joints(): unsupported return type "PackedInt32Array".
   // Skipped set_joints(): an argument type is unsupported.
   // Skipped get_roots(): unsupported return type "PackedInt32Array".

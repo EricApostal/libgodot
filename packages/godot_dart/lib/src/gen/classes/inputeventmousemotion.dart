@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class InputEventMouseMotion extends InputEventMouse {
   InputEventMouseMotion(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned InputEventMouseMotion instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory InputEventMouseMotion.create() {
+    return InputEventMouseMotion(resolveClassConstructor('InputEventMouseMotion'));
+  }
+
   static final Pointer<Void> _mb_set_tilt =
       resolveMethodBind('InputEventMouseMotion', 'set_tilt', 743155724);
 

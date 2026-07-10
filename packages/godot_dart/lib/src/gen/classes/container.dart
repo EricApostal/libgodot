@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class Container extends Control {
   Container(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned Container instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory Container.create() {
+    return Container(resolveClassConstructor('Container'));
+  }
+
   static final Pointer<Void> _mb_queue_sort =
       resolveMethodBind('Container', 'queue_sort', 3218959716);
 

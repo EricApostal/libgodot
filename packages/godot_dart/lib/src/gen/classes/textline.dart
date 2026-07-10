@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class TextLine extends RefCounted {
   TextLine(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned TextLine instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory TextLine.create() {
+    return TextLine(resolveClassConstructor('TextLine'));
+  }
+
   static final Pointer<Void> _mb_clear =
       resolveMethodBind('TextLine', 'clear', 3218959716);
 

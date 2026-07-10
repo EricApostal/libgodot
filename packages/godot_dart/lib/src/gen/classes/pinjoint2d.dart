@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class PinJoint2D extends Joint2D {
   PinJoint2D(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned PinJoint2D instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory PinJoint2D.create() {
+    return PinJoint2D(resolveClassConstructor('PinJoint2D'));
+  }
+
   static final Pointer<Void> _mb_set_softness =
       resolveMethodBind('PinJoint2D', 'set_softness', 373806689);
 

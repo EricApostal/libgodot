@@ -14,6 +14,12 @@ import '../classes.g.dart';
 class NavigationPolygon extends Resource {
   NavigationPolygon(super.nativePtr);
 
+  /// Constructs a brand-new engine-owned NavigationPolygon instance
+  /// (via classdb_construct_object3), not an existing one.
+  factory NavigationPolygon.create() {
+    return NavigationPolygon(resolveClassConstructor('NavigationPolygon'));
+  }
+
   // Skipped set_vertices(): an argument type is unsupported.
   // Skipped get_vertices(): unsupported return type "PackedVector2Array".
   // Skipped add_polygon(): an argument type is unsupported.
