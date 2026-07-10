@@ -29,6 +29,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # Used to extract the bundled Godot project out of the APK's assets and onto a real
+  # filesystem directory on Android, since (unlike Linux's flutter_assets) it isn't already one.
+  path_provider: ^2.1.5
+
 dev_dependencies:
   integration_test:
     sdk: flutter
