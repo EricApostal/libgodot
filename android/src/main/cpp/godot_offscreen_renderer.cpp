@@ -33,6 +33,7 @@
 #include <jni.h>
 
 #include <cstring>
+#include <mutex>
 
 #include "godot_core.h"
 
@@ -91,7 +92,7 @@ struct GodotOffscreenRenderer {
 	EGLContext context = EGL_NO_CONTEXT;
 	EGLConfig config = nullptr;
 
-	// Only valid between nativeSetSurface() and the next nativeClearSurface()/nativeSetSurface().
+	// Only valid between the pending change below being applied and the next one.
 	ANativeWindow *window = nullptr;
 	EGLSurface surface = EGL_NO_SURFACE;
 
@@ -107,6 +108,23 @@ struct GodotOffscreenRenderer {
 	GLuint vbo = 0;
 
 	uint64_t frame_count = 0;
+
+	// nativeSetSurface()/nativeClearSurface() run on the main thread (Flutter's
+	// SurfaceProducer.Callback and LibgodotPlugin.handleResizeInstance/handleDestroyInstance),
+	// while submit_frame() runs on whatever thread the engine's frame callback fires from and
+	// is the *only* thread that ever calls eglMakeCurrent() with this renderer's context (every
+	// call, including the very first, leaves the context current on that thread until the next
+	// call switches it to a different surface -- EGL never implicitly releases it). Actually
+	// destroying/recreating the EGLSurface from nativeSetSurface() directly, on the main thread,
+	// fails with EGL_BAD_ACCESS: a context can only be current on one thread at a time, and the
+	// render thread is still holding it. So the actual ANativeWindow swap is deferred here and
+	// applied at the top of submit_frame() instead, on the thread that's actually allowed to
+	// touch the context. Guarded by pending_mutex, since nativeSetSurface()/nativeClearSurface()
+	// can race each other (both run on the main thread, but SurfaceProducer.Callback isn't
+	// documented as single-threaded) as well as submit_frame() reading them.
+	std::mutex pending_mutex;
+	bool has_pending_surface_change = false;
+	ANativeWindow *pending_window = nullptr; // nullptr means "clear" if has_pending_surface_change.
 
 	PFNEGLGETNATIVECLIENTBUFFERANDROIDPROC eglGetNativeClientBufferANDROID_ = nullptr;
 	PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR_ = nullptr;
@@ -175,6 +193,9 @@ bool init_gl_resources(GodotOffscreenRenderer *renderer) {
 	return true;
 }
 
+// Only ever called from the thread that owns this renderer's EGL context at the time (see the
+// struct's pending_mutex/pending_window comment) -- never directly from nativeSetSurface()/
+// nativeClearSurface() themselves.
 void destroy_surface_locked(GodotOffscreenRenderer *renderer) {
 	if (renderer->surface != EGL_NO_SURFACE) {
 		eglMakeCurrent(renderer->display, EGL_NO_SURFACE, EGL_NO_SURFACE, renderer->context);
@@ -187,10 +208,41 @@ void destroy_surface_locked(GodotOffscreenRenderer *renderer) {
 	}
 }
 
+// Applies a pending ANativeWindow swap queued by nativeSetSurface()/nativeClearSurface(), if any.
+// Must be called from submit_frame()'s thread, before touching renderer->surface for the current
+// frame -- see the struct's pending_mutex/pending_window comment for why this can't happen
+// directly on the main thread instead.
+void apply_pending_surface_change_locked(GodotOffscreenRenderer *renderer) {
+	ANativeWindow *new_window;
+	{
+		std::lock_guard<std::mutex> lock(renderer->pending_mutex);
+		if (!renderer->has_pending_surface_change) {
+			return;
+		}
+		new_window = renderer->pending_window;
+		renderer->pending_window = nullptr;
+		renderer->has_pending_surface_change = false;
+	}
+
+	destroy_surface_locked(renderer);
+	if (new_window == nullptr) {
+		return;
+	}
+	renderer->window = new_window;
+	renderer->surface = eglCreateWindowSurface(renderer->display, renderer->config, renderer->window, nullptr);
+	if (renderer->surface == EGL_NO_SURFACE) {
+		LOGE("eglCreateWindowSurface failed (0x%x)", eglGetError());
+		ANativeWindow_release(renderer->window);
+		renderer->window = nullptr;
+	}
+}
+
 // Called (via the trampoline below) from whatever thread the engine's renderer/completion
 // handler uses; must not touch JNI at all, since that thread isn't guaranteed to be attached to
 // the JVM.
 void submit_frame(GodotOffscreenRenderer *renderer, AHardwareBuffer *buffer, uint32_t width, uint32_t height) {
+	apply_pending_surface_change_locked(renderer);
+
 	renderer->frame_count++;
 	bool should_log = renderer->frame_count <= 5 || (renderer->frame_count % 120) == 0;
 
@@ -357,6 +409,9 @@ Java_com_example_libgodot_GodotOffscreenRenderer_nativeCreate(JNIEnv *env, jobje
 	return reinterpret_cast<jlong>(renderer);
 }
 
+// Queues the ANativeWindow swap; does not touch EGL directly (see the struct's pending_mutex/
+// pending_window comment for why -- this runs on the main thread, but the EGL context can only be
+// safely destroyed/recreated on submit_frame()'s thread).
 JNIEXPORT void JNICALL
 Java_com_example_libgodot_GodotOffscreenRenderer_nativeSetSurface(JNIEnv *env, jobject /* thiz */, jlong handle, jobject surface) {
 	auto *renderer = reinterpret_cast<GodotOffscreenRenderer *>(handle);
@@ -364,29 +419,37 @@ Java_com_example_libgodot_GodotOffscreenRenderer_nativeSetSurface(JNIEnv *env, j
 		return;
 	}
 
-	destroy_surface_locked(renderer);
-
-	renderer->window = ANativeWindow_fromSurface(env, surface);
-	if (renderer->window == nullptr) {
+	ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
+	if (window == nullptr) {
 		LOGE("ANativeWindow_fromSurface failed");
 		return;
 	}
 
-	renderer->surface = eglCreateWindowSurface(renderer->display, renderer->config, renderer->window, nullptr);
-	if (renderer->surface == EGL_NO_SURFACE) {
-		LOGE("eglCreateWindowSurface failed (0x%x)", eglGetError());
-		ANativeWindow_release(renderer->window);
-		renderer->window = nullptr;
+	std::lock_guard<std::mutex> lock(renderer->pending_mutex);
+	if (renderer->has_pending_surface_change && renderer->pending_window != nullptr) {
+		// A previous pending change was never applied (e.g. two setSurface calls in a row); don't
+		// leak it.
+		ANativeWindow_release(renderer->pending_window);
 	}
+	renderer->pending_window = window;
+	renderer->has_pending_surface_change = true;
 }
 
+// Queues clearing the surface; see nativeSetSurface above for why this can't call destroy_surface_
+// locked() directly.
 JNIEXPORT void JNICALL
 Java_com_example_libgodot_GodotOffscreenRenderer_nativeClearSurface(JNIEnv *env, jobject /* thiz */, jlong handle) {
 	auto *renderer = reinterpret_cast<GodotOffscreenRenderer *>(handle);
 	if (renderer == nullptr) {
 		return;
 	}
-	destroy_surface_locked(renderer);
+
+	std::lock_guard<std::mutex> lock(renderer->pending_mutex);
+	if (renderer->has_pending_surface_change && renderer->pending_window != nullptr) {
+		ANativeWindow_release(renderer->pending_window);
+	}
+	renderer->pending_window = nullptr;
+	renderer->has_pending_surface_change = true;
 }
 
 // Registers this renderer to receive frames from the Godot instance at `godot_instance_handle`
@@ -418,6 +481,18 @@ Java_com_example_libgodot_GodotOffscreenRenderer_nativeDestroy(JNIEnv *env, jobj
 	if (renderer->godot_instance != nullptr) {
 		godot_core_set_frame_callback(renderer->godot_instance, nullptr, nullptr);
 		renderer->godot_instance = nullptr;
+	}
+
+	// The frame callback is unregistered above, so submit_frame() won't be entered again after
+	// this point; called from the main thread, same as nativeCreate(), so it's safe to touch EGL
+	// directly here (unlike nativeSetSurface()/nativeClearSurface() above).
+	{
+		std::lock_guard<std::mutex> lock(renderer->pending_mutex);
+		if (renderer->has_pending_surface_change && renderer->pending_window != nullptr) {
+			ANativeWindow_release(renderer->pending_window);
+		}
+		renderer->pending_window = nullptr;
+		renderer->has_pending_surface_change = false;
 	}
 
 	destroy_surface_locked(renderer);

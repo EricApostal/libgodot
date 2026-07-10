@@ -237,7 +237,8 @@ class LibgodotPlugin :
     private fun handleResizeInstance(call: MethodCall, result: Result) {
         val producer = surfaceProducer
         val handle = godotInstanceHandle
-        if (producer == null || handle == 0L) {
+        val engine = godot
+        if (producer == null || handle == 0L || engine == null) {
             result.error("invalid_texture_id", "No instance is currently registered.", null)
             return
         }
@@ -252,9 +253,31 @@ class LibgodotPlugin :
         // Update Flutter's own consumer-side expectation first, then kick off the engine's
         // reallocation -- see GodotOffscreenRenderer's class doc for why this can't just be a
         // direct FFI call into godot_core_resize from Dart the way every other platform does it.
+        //
+        // producer.setSize() alone isn't enough: EGL_WIDTH/EGL_HEIGHT on the EGLSurface
+        // nativeSetSurface() created are fixed at eglCreateWindowSurface() time on this device/
+        // driver, not tracked live off the underlying ANativeWindow -- confirmed by
+        // eglQuerySurface() still reporting the old size frames after producer.setSize() and
+        // godot_core_resize() both succeeded. Re-fetching the Surface and calling setSurface()
+        // again forces the renderer to tear down and recreate its EGLSurface at the new size.
         producer.setSize(width, height)
-        val resized = GodotOffscreenRenderer.resize(handle, width, height)
-        result.success(resized)
+        offscreenRenderer?.setSurface(producer.surface)
+
+        // GodotOffscreenRenderer.resize() calls godot_core_resize(), which reaches
+        // DisplayServer.window_set_size() via a ClassDB reflection call -- not thread-safe, and
+        // only ever meant to run on the same thread that drives Main::iteration() (Godot's own
+        // Vulkan render thread, see VkThread.kt's GodotLib.step() loop), not whatever thread
+        // Flutter happens to dispatch this MethodChannel call on (the main thread). Calling it
+        // directly from here raced the render thread's own concurrent use of Window/Viewport
+        // state and left the Viewport's render target stuck at its pre-resize size -- visible as
+        // the new, correctly-sized buffer only having content drawn into a corner matching the
+        // old size, the rest left black. Godot.runOnRenderThread() queues the call onto that
+        // thread instead (mirrors how VkThread.onSurfaceChanged()/queueEvent already handle
+        // every other cross-thread call into engine state).
+        engine.runOnRenderThread {
+            val resized = GodotOffscreenRenderer.resize(handle, width, height)
+            mainHandler.post { result.success(resized) }
+        }
     }
 
     // MARK: - GodotHost
