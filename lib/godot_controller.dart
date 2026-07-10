@@ -8,13 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'libgodot_platform_interface.dart';
 import 'src/godot_core_bindings.g.dart';
 
-// Not opened on Android at all: every godot_core_* call Android would otherwise make (create/
-// start/destroy/resize) goes through a MethodChannel instead -- see GodotController's class doc.
 ffi.DynamicLibrary _openGodotCoreLibrary() {
-  // native/godot_core/godot_core.cpp is compiled directly into each platform's own plugin
-  // library (see macos/libgodot.podspec, linux/CMakeLists.txt), so this opens that same library
-  // rather than a separate one -- there's nothing extra to bundle beyond what the plugin already
-  // ships.
   if (Platform.isMacOS || Platform.isIOS) {
     return ffi.DynamicLibrary.open('libgodot.framework/libgodot');
   }
@@ -27,29 +21,8 @@ ffi.DynamicLibrary _openGodotCoreLibrary() {
   );
 }
 
-// Lazily initialized (Dart top-level finals aren't evaluated until first accessed), so this
-// never actually runs on Android, where nothing below touches it.
 final GodotCoreBindings _bindings = GodotCoreBindings(_openGodotCoreLibrary());
 
-/// Owns a single embedded Godot instance end to end: booting it, resizing it to match whatever
-/// space a [GodotView] reports via [reportConstraints], and tearing it down. Talks to the engine
-/// directly via the `godot_core_*` FFI calls in [_bindings] (see native/godot_core/godot_core.h)
-/// rather than a `MethodChannel` -- the one exception is texture registration
-/// ([LibgodotPlatform.registerTexture]/`unregisterTexture`), which only native platform code can
-/// do (it needs a `FlutterTextureRegistrar`/`FlTextureRegistrar`, which isn't reachable from Dart
-/// FFI).
-///
-/// Android is a further exception, for everything: it has no `godot_core_create`/`_start`
-/// equivalent at all, so its whole boot sequence goes through
-/// [LibgodotPlatform.createAndroidInstance]/`destroyAndroidInstance` instead (see [attach]'s
-/// `Platform.isAndroid` branch), and resize goes through [LibgodotPlatform.resizeAndroidInstance]
-/// rather than a bare FFI call (see [_requestResize]): Flutter's `TextureRegistry.SurfaceProducer`
-/// needs an explicit `setSize()` alongside `godot_core_resize`, and only native platform code owns
-/// that producer.
-///
-/// Not `final`: subclass to customize behavior (react to [error], forward input, expose extra
-/// native calls) -- the same customization point each platform's own plugin class plays
-/// natively.
 class GodotController extends ChangeNotifier {
   GodotController({
     required this.projectPath,
@@ -59,8 +32,6 @@ class GodotController extends ChangeNotifier {
   }) : _renderWidth = _alignTo4(initialWidth),
        _renderHeight = _alignTo4(initialHeight);
 
-  /// Absolute filesystem path to a Godot project directory (the folder
-  /// containing `project.godot`).
   final String projectPath;
 
   /// Native address of a `GDExtensionInitializationFunction` (e.g. a Dart-supplied
@@ -68,17 +39,6 @@ class GodotController extends ChangeNotifier {
   /// place of the built-in no-op init function so Dart-authored GDExtension classes get
   /// registered with this instance.
   final int? initFunctionAddress;
-
-  // A continuous window drag can fire many layout changes per second; wait
-  // for things to settle before asking the engine to reallocate.
-  static const _resizeDebounce = Duration(milliseconds: 200);
-
-  // The engine reallocates its offscreen surface lazily, over the next few rendered frames
-  // after window_set_size() is called - there's no signal back to Dart for "the new size is now
-  // actually visible on screen", so this is a pragmatic heuristic delay before switching the
-  // reported render size to match the requested one. Too short and a brief stretch can show
-  // through; too long and the letterboxing lingers after the resize is actually done.
-  static const _resizeSettleDelay = Duration(milliseconds: 100);
 
   ffi.Pointer<ffi.Void> _handle = ffi.nullptr;
   int? _textureId;
@@ -89,7 +49,6 @@ class GodotController extends ChangeNotifier {
   int _renderHeight;
   int? _pendingWidth;
   int? _pendingHeight;
-  Timer? _resizeTimer;
 
   /// The Flutter texture id to render, once available.
   int? get textureId => _textureId;
@@ -113,12 +72,13 @@ class GodotController extends ChangeNotifier {
       // whole boot sequence happens natively in one channel call rather than via FFI. Resize
       // afterward still goes through FFI (see _requestResize), same as every other platform.
       try {
-        final (:textureId, :handleAddress) = await LibgodotPlatform.instance.createAndroidInstance(
-          projectPath: projectPath,
-          width: _renderWidth,
-          height: _renderHeight,
-          initFunctionAddress: initFunctionAddress,
-        );
+        final (:textureId, :handleAddress) = await LibgodotPlatform.instance
+            .createAndroidInstance(
+              projectPath: projectPath,
+              width: _renderWidth,
+              height: _renderHeight,
+              initFunctionAddress: initFunctionAddress,
+            );
         if (!_attached) {
           // detach() ran while this was in flight; tear down what was just created.
           await LibgodotPlatform.instance.destroyAndroidInstance(textureId);
@@ -144,7 +104,8 @@ class GodotController extends ChangeNotifier {
       if (Platform.isLinux) ...['--rendering-driver', 'vulkan'],
     ];
 
-    final GDExtensionInitializationFunction initFunc = initFunctionAddress != null
+    final GDExtensionInitializationFunction initFunc =
+        initFunctionAddress != null
         ? ffi.Pointer.fromAddress(initFunctionAddress!)
         : ffi.nullptr;
 
@@ -163,21 +124,27 @@ class GodotController extends ChangeNotifier {
     }
 
     if (handle == ffi.nullptr) {
-      _error = StateError('godot_core_create() failed; see stderr for engine log.');
+      _error = StateError(
+        'godot_core_create() failed; see stderr for engine log.',
+      );
       notifyListeners();
       return;
     }
 
     if (!_bindings.godot_core_start(handle)) {
       _bindings.godot_core_destroy(handle);
-      _error = StateError('Godot instance failed to start; see stderr for engine log.');
+      _error = StateError(
+        'Godot instance failed to start; see stderr for engine log.',
+      );
       notifyListeners();
       return;
     }
 
     _handle = handle;
     try {
-      final textureId = await LibgodotPlatform.instance.registerTexture(handle.address);
+      final textureId = await LibgodotPlatform.instance.registerTexture(
+        handle.address,
+      );
       if (!_attached) {
         // detach() ran while this was in flight; tear down what was just registered.
         await LibgodotPlatform.instance.unregisterTexture(textureId);
@@ -196,29 +163,31 @@ class GodotController extends ChangeNotifier {
   /// Reports the space a [GodotView] has available, debouncing and requesting the engine
   /// actually re-render at the new resolution (via `godot_core_resize`) rather than just
   /// visually scaling a fixed-resolution texture.
-  void reportConstraints(BoxConstraints constraints) {
+  void reportConstraints(BoxConstraints constraints, double density) {
     if (_textureId == null) return;
     if (!constraints.maxWidth.isFinite || !constraints.maxHeight.isFinite) {
-      // Can't compute a bounded target size (e.g. inside an unconstrained Row/Column); keep
-      // whatever resolution is already in use.
       return;
     }
+
+    // TODO: Apparently AI was right and that it has to be a multiple of 4
+    // this has some annoying consequences on resize
+    // I think the native layer sucks
 
     // Metal requires an IOSurface's bytes-per-row (width * 4 for RGBA8) to be 16-byte aligned,
     // i.e. width must be a multiple of 4 - an arbitrary layout-derived width crashes with a
     // Metal validation assertion otherwise. Round both dimensions up to a multiple of 4 for
     // safety and to keep width/height alignment consistent across platforms.
-    final targetWidth = _alignTo4(constraints.maxWidth.round());
-    final targetHeight = _alignTo4(constraints.maxHeight.round());
+    final targetWidth = _alignTo4((constraints.maxWidth).round());
+    final targetHeight = _alignTo4((constraints.maxHeight).round());
     if (targetWidth <= 0 || targetHeight <= 0) return;
-    if (targetWidth == (_pendingWidth ?? _renderWidth) && targetHeight == (_pendingHeight ?? _renderHeight)) {
+    if (targetWidth == (_pendingWidth ?? _renderWidth) &&
+        targetHeight == (_pendingHeight ?? _renderHeight)) {
       return;
     }
 
     _pendingWidth = targetWidth;
     _pendingHeight = targetHeight;
-    _resizeTimer?.cancel();
-    _resizeTimer = Timer(_resizeDebounce, () => _requestResize(targetWidth, targetHeight));
+    _requestResize(targetWidth, targetHeight);
   }
 
   Future<void> _requestResize(int width, int height) async {
@@ -226,17 +195,17 @@ class GodotController extends ChangeNotifier {
 
     final bool resized;
     if (Platform.isAndroid) {
-      // Not a bare godot_core_resize FFI call like every other platform -- Flutter's
-      // TextureRegistry.SurfaceProducer needs an explicit setSize() alongside it, and only
-      // native platform code owns that producer. See resizeAndroidInstance's doc comment.
-      resized = await LibgodotPlatform.instance.resizeAndroidInstance(_textureId!, width, height);
+      resized = await LibgodotPlatform.instance.resizeAndroidInstance(
+        _textureId!,
+        width,
+        height,
+      );
     } else {
       if (_handle == ffi.nullptr) return;
       resized = _bindings.godot_core_resize(_handle, width, height);
     }
     if (!resized) return;
 
-    await Future<void>.delayed(_resizeSettleDelay);
     if (_textureId == null) return;
     // If a newer resize has been requested in the meantime, let that one (already in flight via
     // its own _requestResize call) be the one that eventually updates the reported size instead.
@@ -254,9 +223,6 @@ class GodotController extends ChangeNotifier {
   Future<void> detach() async {
     if (!_attached) return;
     _attached = false;
-
-    _resizeTimer?.cancel();
-    _resizeTimer = null;
 
     final textureId = _textureId;
     _textureId = null;

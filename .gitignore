@@ -38,3 +38,4 @@ migrate_working_dir/
 # actually compiles -- native/godot_core/ is the one to edit).
 /macos/Classes/godot_core.h
 /macos/Classes/godot_core.cpp
+/macos/Classes/godot_core_desktop.cpp

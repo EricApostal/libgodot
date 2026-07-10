@@ -7,12 +7,6 @@
 #include <unistd.h>
 #endif
 
-// MARK: - Trivial GDExtension init function.
-//
-// libgodot hands the host straight into the engine's GDExtension loading machinery, but this
-// plugin doesn't register any custom classes of its own, so this just satisfies the required
-// shape, unless the caller supplied its own init function (see godot_core_prepare_init_func).
-
 static void trivial_initialize(void *, GDExtensionInitializationLevel) {}
 static void trivial_deinitialize(void *, GDExtensionInitializationLevel) {}
 

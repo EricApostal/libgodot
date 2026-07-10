@@ -51,8 +51,9 @@ class _GodotViewState extends State<GodotView> {
 
         return LayoutBuilder(
           builder: (context, constraints) {
+            final density = MediaQuery.devicePixelRatioOf(context);
             WidgetsBinding.instance.addPostFrameCallback(
-              (_) => widget.controller.reportConstraints(constraints),
+              (_) => widget.controller.reportConstraints(constraints, density),
             );
             return FittedBox(
               fit: BoxFit.contain,
