@@ -14,7 +14,25 @@ set(PLUGIN_NAME "libgodot_plugin")
 # Any new source files that you add to the plugin should be added here.
 list(APPEND PLUGIN_SOURCES
   "libgodot_plugin.cc"
+  "godot_texture.cc"
 )
+
+# libgodot shared library, built separately via:
+#   scons platform=linuxbsd target=template_debug library_type=shared_library \
+#       arch=x86_64 disable_path_overrides=no
+# from third_party/godot (see third_party/godot/tests/offscreen_embed_test/README.md
+# for background on the offscreen display driver this plugin drives).
+set(GODOT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/godot")
+file(GLOB LIBGODOT_SHARED_LIB "${GODOT_SOURCE_DIR}/bin/libgodot*.so")
+list(LENGTH LIBGODOT_SHARED_LIB LIBGODOT_SHARED_LIB_COUNT)
+if(LIBGODOT_SHARED_LIB_COUNT EQUAL 0)
+  message(FATAL_ERROR
+    "No libgodot*.so found in ${GODOT_SOURCE_DIR}/bin. Build it first with:\n"
+    "  cd ${GODOT_SOURCE_DIR} && scons platform=linuxbsd target=template_debug "
+    "library_type=shared_library arch=x86_64 disable_path_overrides=no")
+endif()
+list(GET LIBGODOT_SHARED_LIB 0 LIBGODOT_SHARED_LIB)
+message(STATUS "libgodot: linking against ${LIBGODOT_SHARED_LIB}")
 
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
@@ -38,14 +56,28 @@ target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 # dependencies here.
 target_include_directories(${PLUGIN_NAME} INTERFACE
   "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(${PLUGIN_NAME} PRIVATE
+  "${GODOT_SOURCE_DIR}")
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(EPOXY REQUIRED IMPORTED_TARGET epoxy)
+target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::EPOXY)
+target_link_libraries(${PLUGIN_NAME} PRIVATE "${LIBGODOT_SHARED_LIB}")
+
+# libgodot.so is bundled alongside this plugin's own .so (see
+# libgodot_bundled_libraries below) rather than installed to a system
+# library directory, so this plugin needs its own rpath to find it at
+# runtime; the executable's rpath is not inherited by libraries it links.
+set_target_properties(${PLUGIN_NAME} PROPERTIES
+  BUILD_RPATH "$ORIGIN")
 
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
 set(libgodot_bundled_libraries
-  ""
+  "${LIBGODOT_SHARED_LIB}"
   PARENT_SCOPE
 )
 
@@ -82,9 +114,13 @@ add_executable(${TEST_RUNNER}
 )
 apply_standard_settings(${TEST_RUNNER})
 target_include_directories(${TEST_RUNNER} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(${TEST_RUNNER} PRIVATE "${GODOT_SOURCE_DIR}")
 target_link_libraries(${TEST_RUNNER} PRIVATE flutter)
 target_link_libraries(${TEST_RUNNER} PRIVATE PkgConfig::GTK)
+target_link_libraries(${TEST_RUNNER} PRIVATE PkgConfig::EPOXY)
+target_link_libraries(${TEST_RUNNER} PRIVATE "${LIBGODOT_SHARED_LIB}")
 target_link_libraries(${TEST_RUNNER} PRIVATE gtest_main gmock)
+set_target_properties(${TEST_RUNNER} PROPERTIES BUILD_RPATH "$ORIGIN")
 
 # Enable automatic test discovery.
 include(GoogleTest)

@@ -16,4 +16,31 @@ class MethodChannelLibgodot extends LibgodotPlatform {
     );
     return version;
   }
+
+  @override
+  Future<int> createInstance({
+    required String projectPath,
+    int width = 480,
+    int height = 270,
+  }) async {
+    final textureId = await methodChannel.invokeMethod<int>('createInstance', {
+      'projectPath': projectPath,
+      'width': width,
+      'height': height,
+    });
+    if (textureId == null) {
+      throw PlatformException(
+        code: 'create_instance_failed',
+        message: 'Native side did not return a texture id.',
+      );
+    }
+    return textureId;
+  }
+
+  @override
+  Future<void> destroyInstance(int textureId) async {
+    await methodChannel.invokeMethod<void>('destroyInstance', {
+      'textureId': textureId,
+    });
+  }
 }

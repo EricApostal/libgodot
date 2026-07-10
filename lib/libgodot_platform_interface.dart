@@ -26,4 +26,22 @@ abstract class LibgodotPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  /// Boots a Godot instance running the project at [projectPath] using the
+  /// "offscreen" display driver, and registers a Flutter texture that its
+  /// rendered frames are streamed into.
+  ///
+  /// Returns the Flutter texture id to pass to a [Texture] widget.
+  Future<int> createInstance({
+    required String projectPath,
+    int width = 480,
+    int height = 270,
+  }) {
+    throw UnimplementedError('createInstance() has not been implemented.');
+  }
+
+  /// Stops the Godot instance backing [textureId] and unregisters its texture.
+  Future<void> destroyInstance(int textureId) {
+    throw UnimplementedError('destroyInstance() has not been implemented.');
+  }
 }

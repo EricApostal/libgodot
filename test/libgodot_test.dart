@@ -9,6 +9,16 @@ class MockLibgodotPlatform
     implements LibgodotPlatform {
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<int> createInstance({
+    required String projectPath,
+    int width = 480,
+    int height = 270,
+  }) => Future.value(0);
+
+  @override
+  Future<void> destroyInstance(int textureId) => Future.value();
 }
 
 void main() {

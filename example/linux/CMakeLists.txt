@@ -70,7 +70,10 @@ set_target_properties(${BINARY_NAME}
 )
 
 # Enable the test target.
-set(include_libgodot_tests TRUE)
+# Disabled: the googletest release pinned in linux/CMakeLists.txt predates
+# CMake's removal of compatibility with cmake_minimum_required < 3.5, which
+# breaks FetchContent on current CMake. Not needed to build/run the example.
+set(include_libgodot_tests FALSE)
 
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.

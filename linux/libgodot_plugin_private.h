@@ -8,3 +8,11 @@
 
 // Handles the getPlatformVersion method call.
 FlMethodResponse *get_platform_version();
+
+// Handles the createInstance method call: boots a Godot instance for the
+// requested project and registers a texture for its rendered frames.
+FlMethodResponse *handle_create_instance(LibgodotPlugin *self, FlMethodCall *method_call);
+
+// Handles the destroyInstance method call: stops the Godot instance backing
+// a previously created texture and unregisters it.
+FlMethodResponse *handle_destroy_instance(LibgodotPlugin *self, FlMethodCall *method_call);
