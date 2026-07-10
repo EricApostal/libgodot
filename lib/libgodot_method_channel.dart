@@ -65,4 +65,14 @@ class MethodChannelLibgodot extends LibgodotPlatform {
   Future<void> destroyAndroidInstance(int textureId) async {
     await methodChannel.invokeMethod<void>('destroyInstance', textureId);
   }
+
+  @override
+  Future<bool> resizeAndroidInstance(int textureId, int width, int height) async {
+    final resized = await methodChannel.invokeMethod<bool>('resizeInstance', {
+      'textureId': textureId,
+      'width': width,
+      'height': height,
+    });
+    return resized ?? false;
+  }
 }

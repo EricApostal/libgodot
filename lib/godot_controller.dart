@@ -8,6 +8,8 @@ import 'package:flutter/widgets.dart';
 import 'libgodot_platform_interface.dart';
 import 'src/godot_core_bindings.g.dart';
 
+// Not opened on Android at all: every godot_core_* call Android would otherwise make (create/
+// start/destroy/resize) goes through a MethodChannel instead -- see GodotController's class doc.
 ffi.DynamicLibrary _openGodotCoreLibrary() {
   // native/godot_core/godot_core.cpp is compiled directly into each platform's own plugin
   // library (see macos/libgodot.podspec, linux/CMakeLists.txt), so this opens that same library
@@ -19,19 +21,14 @@ ffi.DynamicLibrary _openGodotCoreLibrary() {
   if (Platform.isLinux) {
     return ffi.DynamicLibrary.open('liblibgodot_plugin.so');
   }
-  if (Platform.isAndroid) {
-    // godot_offscreen_renderer.so (see android/CMakeLists.txt) -- Android's boot sequence itself
-    // still goes through a MethodChannel (see attach()'s Platform.isAndroid branch below), but
-    // this same library exports godot_core_resize with default visibility, same as every other
-    // platform, so resize doesn't need to round-trip through Kotlin either.
-    return ffi.DynamicLibrary.open('libgodot_offscreen_renderer.so');
-  }
   throw UnsupportedError(
     'GodotController does not support ${Platform.operatingSystem} yet -- '
-    'only macos/, linux/, and android/ currently compile native/godot_core into their plugin build.',
+    'only macos/ and linux/ currently compile native/godot_core into their plugin build.',
   );
 }
 
+// Lazily initialized (Dart top-level finals aren't evaluated until first accessed), so this
+// never actually runs on Android, where nothing below touches it.
 final GodotCoreBindings _bindings = GodotCoreBindings(_openGodotCoreLibrary());
 
 /// Owns a single embedded Godot instance end to end: booting it, resizing it to match whatever
@@ -40,10 +37,15 @@ final GodotCoreBindings _bindings = GodotCoreBindings(_openGodotCoreLibrary());
 /// rather than a `MethodChannel` -- the one exception is texture registration
 /// ([LibgodotPlatform.registerTexture]/`unregisterTexture`), which only native platform code can
 /// do (it needs a `FlutterTextureRegistrar`/`FlTextureRegistrar`, which isn't reachable from Dart
-/// FFI). Android is a further exception: it has no `godot_core_create`/`_start` equivalent at
-/// all, so its whole boot sequence goes through
-/// [LibgodotPlatform.createAndroidInstance]/`destroyAndroidInstance` instead -- see [attach]'s
-/// `Platform.isAndroid` branch.
+/// FFI).
+///
+/// Android is a further exception, for everything: it has no `godot_core_create`/`_start`
+/// equivalent at all, so its whole boot sequence goes through
+/// [LibgodotPlatform.createAndroidInstance]/`destroyAndroidInstance` instead (see [attach]'s
+/// `Platform.isAndroid` branch), and resize goes through [LibgodotPlatform.resizeAndroidInstance]
+/// rather than a bare FFI call (see [_requestResize]): Flutter's `TextureRegistry.SurfaceProducer`
+/// needs an explicit `setSize()` alongside `godot_core_resize`, and only native platform code owns
+/// that producer.
 ///
 /// Not `final`: subclass to customize behavior (react to [error], forward input, expose extra
 /// native calls) -- the same customization point each platform's own plugin class plays
@@ -220,12 +222,22 @@ class GodotController extends ChangeNotifier {
   }
 
   Future<void> _requestResize(int width, int height) async {
-    if (_handle == ffi.nullptr) return;
-    final resized = _bindings.godot_core_resize(_handle, width, height);
+    if (_textureId == null) return;
+
+    final bool resized;
+    if (Platform.isAndroid) {
+      // Not a bare godot_core_resize FFI call like every other platform -- Flutter's
+      // TextureRegistry.SurfaceProducer needs an explicit setSize() alongside it, and only
+      // native platform code owns that producer. See resizeAndroidInstance's doc comment.
+      resized = await LibgodotPlatform.instance.resizeAndroidInstance(_textureId!, width, height);
+    } else {
+      if (_handle == ffi.nullptr) return;
+      resized = _bindings.godot_core_resize(_handle, width, height);
+    }
     if (!resized) return;
 
     await Future<void>.delayed(_resizeSettleDelay);
-    if (_handle == ffi.nullptr) return;
+    if (_textureId == null) return;
     // If a newer resize has been requested in the meantime, let that one (already in flight via
     // its own _requestResize call) be the one that eventually updates the reported size instead.
     if (_pendingWidth != width || _pendingHeight != height) return;

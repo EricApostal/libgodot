@@ -5,9 +5,13 @@ import android.view.Surface
 /**
  * Thin JNI wrapper around godot_offscreen_renderer.cpp, which imports the AHardwareBuffer frames
  * produced by Godot's "offscreen" Android display driver into a [Surface] via EGL, and drives the
- * shared native/godot_core/godot_core.h init-func-combining/frame-callback-registration logic via
- * the companion functions below. (Resize is called directly from Dart via FFI against this same
- * native library instead -- see lib/godot_controller.dart.)
+ * shared native/godot_core/godot_core.h init-func-combining/resize/frame-callback-registration
+ * logic via the companion functions below.
+ *
+ * Unlike every other platform, resize goes through here (from
+ * [LibgodotPlugin.handleResizeInstance]) rather than Dart calling `godot_core_resize` directly via
+ * FFI: Flutter's `TextureRegistry.SurfaceProducer` needs an explicit `setSize()` call to match, and
+ * only Kotlin owns that producer, so driving both from the same call keeps them from racing.
  *
  * Not thread-safe on its own; callers are responsible for not calling [setGodotInstance] or the
  * surface lifecycle methods concurrently. See [LibgodotPlugin] for how these are coordinated.
@@ -78,5 +82,14 @@ class GodotOffscreenRenderer {
          */
         @JvmStatic
         external fun getInstanceHandle(): Long
+
+        /**
+         * Requests the Godot instance at [godotInstanceHandle] resize its offscreen surface to
+         * [width]x[height] (see native/godot_core/godot_core.h's godot_core_resize). Not
+         * immediate: the engine reallocates its surface ring over the next few rendered frames.
+         * Returns false if the resize API isn't available yet.
+         */
+        @JvmStatic
+        external fun resize(godotInstanceHandle: Long, width: Int, height: Int): Boolean
     }
 }

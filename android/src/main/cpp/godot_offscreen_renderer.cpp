@@ -106,6 +106,8 @@ struct GodotOffscreenRenderer {
 	GLuint external_texture = 0;
 	GLuint vbo = 0;
 
+	uint64_t frame_count = 0;
+
 	PFNEGLGETNATIVECLIENTBUFFERANDROIDPROC eglGetNativeClientBufferANDROID_ = nullptr;
 	PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR_ = nullptr;
 	PFNEGLDESTROYIMAGEKHRPROC eglDestroyImageKHR_ = nullptr;
@@ -189,11 +191,25 @@ void destroy_surface_locked(GodotOffscreenRenderer *renderer) {
 // handler uses; must not touch JNI at all, since that thread isn't guaranteed to be attached to
 // the JVM.
 void submit_frame(GodotOffscreenRenderer *renderer, AHardwareBuffer *buffer, uint32_t width, uint32_t height) {
+	renderer->frame_count++;
+	bool should_log = renderer->frame_count <= 5 || (renderer->frame_count % 120) == 0;
+
 	if (renderer->surface == EGL_NO_SURFACE) {
 		// No destination surface yet (or the Surface was torn down, e.g. app backgrounded);
 		// drop the frame, matching how the other offscreen platforms drop frames the host isn't
 		// ready to consume.
+		if (should_log) {
+			LOGE("submit_frame #%llu: dropped, no surface (%ux%u)", (unsigned long long)renderer->frame_count, width, height);
+		}
 		return;
+	}
+
+	AHardwareBuffer_Desc desc;
+	AHardwareBuffer_describe(buffer, &desc);
+	if (should_log) {
+		LOGE("submit_frame #%llu: frame=%ux%u buffer=%ux%u format=0x%x usage=0x%llx stride=%u",
+				(unsigned long long)renderer->frame_count, width, height, desc.width, desc.height, desc.format,
+				(unsigned long long)desc.usage, desc.stride);
 	}
 
 	if (eglMakeCurrent(renderer->display, renderer->surface, renderer->surface, renderer->context) != EGL_TRUE) {
@@ -216,8 +232,22 @@ void submit_frame(GodotOffscreenRenderer *renderer, AHardwareBuffer *buffer, uin
 
 	glBindTexture(GL_TEXTURE_EXTERNAL_OES, renderer->external_texture);
 	renderer->glEGLImageTargetTexture2DOES_(GL_TEXTURE_EXTERNAL_OES, image);
+	GLenum gl_err = glGetError();
+	if (gl_err != GL_NO_ERROR) {
+		LOGE("glEGLImageTargetTexture2DOES failed (0x%x)", gl_err);
+	}
 
-	glViewport(0, 0, width, height);
+	// EGLSurface dimensions are pinned to whatever size the Surface had when eglCreateWindowSurface
+	// ran (nativeSetSurface); if the buffer's actual size doesn't match, letterbox/scale within it
+	// rather than assuming they're equal.
+	EGLint surface_width = 0, surface_height = 0;
+	eglQuerySurface(renderer->display, renderer->surface, EGL_WIDTH, &surface_width);
+	eglQuerySurface(renderer->display, renderer->surface, EGL_HEIGHT, &surface_height);
+	if (should_log) {
+		LOGE("submit_frame #%llu: egl surface=%dx%d", (unsigned long long)renderer->frame_count, surface_width, surface_height);
+	}
+
+	glViewport(0, 0, surface_width, surface_height);
 	glUseProgram(renderer->program);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_EXTERNAL_OES, renderer->external_texture);
@@ -413,9 +443,12 @@ Java_com_example_libgodot_GodotOffscreenRenderer_nativeDestroy(JNIEnv *env, jobj
 // Wraps godot_core_prepare_init_func(): combines `delegate_init_func` (0 for none, e.g. no
 // package:godot_dart entry point) with this plugin's own init logic, returning the address of
 // the resulting function to pass as GodotLib.setup()'s new p_init_func parameter. Must be called
-// before Godot.initEngine()/GodotLib.setup().
+// before Godot.initEngine()/GodotLib.setup() -- and always is, since LibgodotPlugin.kt only calls
+// this from handleCreateInstance, which Flutter always dispatches on the main thread, which is
+// also exactly the thread godot_core_android_init_main_thread_dispatch() needs to be called from.
 JNIEXPORT jlong JNICALL
 Java_com_example_libgodot_GodotOffscreenRenderer_prepareInitFunc(JNIEnv *env, jclass /* clazz */, jlong delegate_init_func) {
+	godot_core_android_init_main_thread_dispatch();
 	auto delegate = delegate_init_func != 0
 			? reinterpret_cast<GDExtensionInitializationFunction>(delegate_init_func)
 			: nullptr;
@@ -424,11 +457,6 @@ Java_com_example_libgodot_GodotOffscreenRenderer_prepareInitFunc(JNIEnv *env, jc
 
 // Wraps libgodot_android_get_godot_instance(): only meaningful after GodotLib.setup() has
 // completed with a non-zero init func (see prepareInitFunc above). Returns 0 otherwise.
-//
-// Note there's no JNI wrapper for godot_core_resize() here: Dart's GodotController calls it
-// directly via FFI against this same library (DynamicLibrary.open("libgodot_offscreen_renderer.so")),
-// same as it does on macOS/Linux against their own plugin libraries -- no need to round-trip
-// through Kotlin for that.
 JNIEXPORT jlong JNICALL
 Java_com_example_libgodot_GodotOffscreenRenderer_getInstanceHandle(JNIEnv *env, jclass /* clazz */) {
 	LibgodotAndroidGetGodotInstanceFn fn = resolve_get_godot_instance();
@@ -437,6 +465,17 @@ Java_com_example_libgodot_GodotOffscreenRenderer_getInstanceHandle(JNIEnv *env, 
 		return 0;
 	}
 	return reinterpret_cast<jlong>(fn());
+}
+
+// Wraps godot_core_resize(). Called from Kotlin (LibgodotPlugin.handleResizeInstance) rather than
+// directly via FFI from Dart, unlike every other platform: Android's Flutter TextureRegistry.
+// SurfaceProducer needs an explicit setSize() call to match, and only Kotlin owns that producer
+// -- so the resize request has to pass through it anyway, and driving godot_core_resize from the
+// same place keeps both updates atomic instead of racing each other.
+JNIEXPORT jboolean JNICALL
+Java_com_example_libgodot_GodotOffscreenRenderer_resize(JNIEnv *env, jclass /* clazz */, jlong godot_instance_handle, jint width, jint height) {
+	auto handle = reinterpret_cast<GodotCoreHandle>(static_cast<intptr_t>(godot_instance_handle));
+	return godot_core_resize(handle, width, height) ? JNI_TRUE : JNI_FALSE;
 }
 
 } // extern "C"

@@ -63,8 +63,18 @@ typedef void *GodotCoreHandle;
 // godot_core_create() below already calls this internally; the only reason to call it directly
 // is a bootstrap that doesn't go through godot_core_create() at all, i.e. Android's
 // GodotLib.setup(), which takes an init function pointer of its own (see
-// android/src/main/cpp/godot_core_android_bridge.cpp).
+// android/src/main/cpp/godot_offscreen_renderer.cpp).
 GODOT_CORE_API GDExtensionInitializationFunction godot_core_prepare_init_func(GDExtensionInitializationFunction p_delegate_init_func);
+
+#if defined(__ANDROID__)
+// Must be called once, on the Android main thread (e.g. from LibgodotPlugin.handleCreateInstance,
+// which Flutter always dispatches there), before GodotLib.setup(). Lets combined_init_func (see
+// godot_core_prepare_init_func) safely invoke a Dart-backed delegate init function (e.g.
+// package:godot_dart's GodotDartEntryPoint) even though it actually runs on Android's VkThread --
+// see godot_core.cpp's "Android main-thread dispatch for Dart callbacks" section for why that's
+// otherwise unsafe. A no-op if called more than once, or from a thread that can't host a Looper.
+GODOT_CORE_API void godot_core_android_init_main_thread_dispatch(void);
+#endif
 
 // Creates and starts a Godot instance running the "offscreen" display driver (see
 // godot_core_prepare_init_func for the init-func-combining this does internally). `p_argv[0]` is

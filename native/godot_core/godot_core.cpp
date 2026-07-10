@@ -1,7 +1,10 @@
 #include "godot_core.h"
 
 #if defined(__ANDROID__)
+#include <android/looper.h>
 #include <dlfcn.h>
+#include <pthread.h>
+#include <unistd.h>
 #endif
 
 // MARK: - Trivial GDExtension init function.
@@ -67,13 +70,182 @@ static void resolve_resize_api() {
   g_variant_get_ptr_destructor = (VariantGetPtrDestructorFn)(void *)g_get_proc_address("variant_get_ptr_destructor");
 }
 
+#if defined(__ANDROID__)
+// MARK: - Android main-thread dispatch for Dart callbacks.
+//
+// A Dart Pointer.fromFunction callback (what package:godot_dart's GodotDartEntryPoint, and every
+// generated @GodotClass's create/free/call_virtual/get_virtual functions, are built from) can
+// only be invoked from the Dart isolate's own OS thread -- calling one from any other thread
+// crashes with "Cannot invoke native callback outside an isolate." On every other platform this
+// is a non-issue: godot_core_create()/_start() are called directly from Dart via FFI, so
+// Main::setup2() (which is what ends up calling the init function, and eventually per-class
+// virtual methods) runs synchronously on that same calling thread.
+//
+// Android is different: GodotLib.step() (which drives Main::iteration(), and on the very first
+// call, Main::setup2()) always runs on the engine's own dedicated VkThread (see
+// platform/android/java/lib/src/main/java/org/godotengine/godot/vulkan/VkThread.kt), never on
+// Android's main thread where Dart's isolate actually lives -- and there's no reasonable way to
+// change that without risking the real (non-offscreen) Android embedding this thread is also
+// responsible for. So instead, the *init function* is dispatched from here to the main thread
+// and blocked on, using a self-pipe registered with the main thread's ALooper (the standard NDK
+// pattern for waking up a specific thread's event loop from another thread).
+//
+// This only covers godot_dart's bootstrap entry point (init/initialize/deinitialize) -- enough
+// for GodotClassRegistry.registerAll() (i.e. class *registration*) to run safely. Per-instance
+// virtual method dispatch (e.g. a @GodotClass's _process override) goes through separate
+// callback pointers generated per class by package:godot_dart_builder, which aren't wrapped by
+// this and would need the same treatment to be safe to call from VkThread.
+namespace {
+
+int g_dispatch_write_fd = -1;
+pthread_t g_main_thread_id;
+
+struct MainThreadTask {
+  void (*fn)(void *) = nullptr;
+  void *context = nullptr;
+  pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+  pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+  bool done = false;
+};
+
+int on_dispatch_pipe_event(int fd, int, void *) {
+  MainThreadTask *task = nullptr;
+  if (read(fd, &task, sizeof(task)) == sizeof(task) && task != nullptr) {
+    task->fn(task->context);
+    pthread_mutex_lock(&task->mutex);
+    task->done = true;
+    pthread_cond_signal(&task->cond);
+    pthread_mutex_unlock(&task->mutex);
+  }
+  return 1; // Keep the fd registered for subsequent tasks.
+}
+
+} // namespace
+
+void godot_core_android_init_main_thread_dispatch() {
+  if (g_dispatch_write_fd != -1) {
+    return;
+  }
+  int fds[2];
+  if (pipe(fds) != 0) {
+    return;
+  }
+  // Only succeeds if called from a thread that has (or can have) a Looper prepared -- true for
+  // Android's main thread automatically.
+  ALooper *looper = ALooper_forThread();
+  if (looper == nullptr) {
+    close(fds[0]);
+    close(fds[1]);
+    return;
+  }
+  ALooper_acquire(looper);
+  ALooper_addFd(looper, fds[0], ALOOPER_POLL_CALLBACK, ALOOPER_EVENT_INPUT, on_dispatch_pipe_event, nullptr);
+  g_main_thread_id = pthread_self();
+  g_dispatch_write_fd = fds[1];
+}
+
+// Runs fn(context) on the Android main thread and blocks the calling thread until it completes.
+// Falls back to calling fn(context) directly if godot_core_android_init_main_thread_dispatch()
+// was never called successfully, OR if the calling thread already *is* the main thread --
+// critically the latter isn't just an optimization: some of this header's callbacks (the
+// top-level init function, invoked synchronously from GodotLib.setup() on the main thread, via
+// platform/android/java_godot_lib_jni.cpp's GodotInstance::initialize()) already run on the main
+// thread, and posting-then-blocking-for a message to the *same* thread that's doing the blocking
+// deadlocks forever: the main thread's Looper can't process the queued event while this JNI call
+// is still on its stack synchronously waiting for it.
+static void run_on_android_main_thread(void (*fn)(void *), void *context) {
+  if (g_dispatch_write_fd == -1 || pthread_equal(pthread_self(), g_main_thread_id)) {
+    fn(context);
+    return;
+  }
+  MainThreadTask task;
+  task.fn = fn;
+  task.context = context;
+  MainThreadTask *task_ptr = &task;
+  if (write(g_dispatch_write_fd, &task_ptr, sizeof(task_ptr)) != sizeof(task_ptr)) {
+    fn(context);
+    return;
+  }
+  pthread_mutex_lock(&task.mutex);
+  while (!task.done) {
+    pthread_cond_wait(&task.cond, &task.mutex);
+  }
+  pthread_mutex_unlock(&task.mutex);
+}
+
+namespace {
+
+struct InitFuncCallArgs {
+  GDExtensionInitializationFunction delegate;
+  GDExtensionInterfaceGetProcAddress get_proc_address;
+  GDExtensionClassLibraryPtr library;
+  GDExtensionInitialization *r_initialization;
+  GDExtensionBool result = false;
+};
+
+void call_init_func(void *context) {
+  auto *args = static_cast<InitFuncCallArgs *>(context);
+  args->result = args->delegate(args->get_proc_address, args->library, args->r_initialization);
+}
+
+// The real (possibly Dart) callbacks combined_init_func's delegate installed, captured so the
+// trampolines below can dispatch to them instead of the engine calling them directly.
+GDExtensionInitializeCallback g_real_initialize = nullptr;
+GDExtensionDeinitializeCallback g_real_deinitialize = nullptr;
+
+struct LevelCallArgs {
+  void *userdata;
+  GDExtensionInitializationLevel level;
+};
+
+void call_real_initialize(void *context) {
+  auto *args = static_cast<LevelCallArgs *>(context);
+  if (g_real_initialize != nullptr) {
+    g_real_initialize(args->userdata, args->level);
+  }
+}
+
+void call_real_deinitialize(void *context) {
+  auto *args = static_cast<LevelCallArgs *>(context);
+  if (g_real_deinitialize != nullptr) {
+    g_real_deinitialize(args->userdata, args->level);
+  }
+}
+
+void android_initialize_trampoline(void *p_userdata, GDExtensionInitializationLevel p_level) {
+  LevelCallArgs args{ p_userdata, p_level };
+  run_on_android_main_thread(&call_real_initialize, &args);
+}
+
+void android_deinitialize_trampoline(void *p_userdata, GDExtensionInitializationLevel p_level) {
+  LevelCallArgs args{ p_userdata, p_level };
+  run_on_android_main_thread(&call_real_deinitialize, &args);
+}
+
+} // namespace
+#endif // defined(__ANDROID__)
+
 static GDExtensionBool combined_init_func(GDExtensionInterfaceGetProcAddress p_get_proc_address,
                                           GDExtensionClassLibraryPtr p_library,
                                           GDExtensionInitialization *r_initialization) {
   g_get_proc_address = p_get_proc_address;
   resolve_resize_api();
   GDExtensionInitializationFunction delegate = g_delegate_init_func != nullptr ? g_delegate_init_func : trivial_init_func;
+#if defined(__ANDROID__)
+  InitFuncCallArgs args{ delegate, p_get_proc_address, p_library, r_initialization };
+  run_on_android_main_thread(&call_init_func, &args);
+  // r_initialization->initialize/deinitialize may themselves be Dart callbacks (e.g.
+  // package:godot_dart's GodotClassRegistry.registerAll() runs from `initialize`) that the
+  // engine will call later from whatever thread it likes -- capture and replace them with
+  // trampolines that dispatch to the main thread too.
+  g_real_initialize = r_initialization->initialize;
+  g_real_deinitialize = r_initialization->deinitialize;
+  r_initialization->initialize = g_real_initialize != nullptr ? &android_initialize_trampoline : nullptr;
+  r_initialization->deinitialize = g_real_deinitialize != nullptr ? &android_deinitialize_trampoline : nullptr;
+  return args.result;
+#else
   return delegate(p_get_proc_address, p_library, r_initialization);
+#endif
 }
 
 GDExtensionInitializationFunction godot_core_prepare_init_func(GDExtensionInitializationFunction p_delegate_init_func) {

@@ -57,9 +57,9 @@ abstract class LibgodotPlatform extends PlatformInterface {
   /// [projectPath] is validated but otherwise unused: Godot's Android build always loads the
   /// project bundled into the APK's own assets (see [GodotController]'s doc comment).
   ///
-  /// Returns the Flutter texture id, plus the native `GodotCoreHandle` address so
-  /// [GodotController] can still resize via FFI (`godot_core_resize`) afterward, same as the
-  /// other platforms.
+  /// Returns the Flutter texture id, plus the native `GodotCoreHandle` address (kept for
+  /// reference; unlike the other platforms it's not used for an FFI resize call -- see
+  /// [resizeAndroidInstance]).
   Future<({int textureId, int handleAddress})> createAndroidInstance({
     required String projectPath,
     required int width,
@@ -72,5 +72,19 @@ abstract class LibgodotPlatform extends PlatformInterface {
   /// Android only: stops the Godot instance backing [textureId] and unregisters its texture.
   Future<void> destroyAndroidInstance(int textureId) {
     throw UnimplementedError('destroyAndroidInstance() has not been implemented.');
+  }
+
+  /// Android only: requests the Godot instance backing [textureId] resize its offscreen surface
+  /// to [width]x[height].
+  ///
+  /// Unlike [GodotController]'s FFI-driven `godot_core_resize` call on every other platform, this
+  /// has to be a platform channel call on Android: Flutter's `TextureRegistry.SurfaceProducer`
+  /// needs an explicit `setSize()` to match the engine's new render resolution, and only native
+  /// platform code owns that producer (see `LibgodotPlugin.handleResizeInstance`) -- a bare FFI
+  /// call reaching `godot_core_resize` directly would resize the engine's render target while
+  /// leaving Flutter's consumer-side surface at its original size, showing only a cropped corner
+  /// of the new content.
+  Future<bool> resizeAndroidInstance(int textureId, int width, int height) {
+    throw UnimplementedError('resizeAndroidInstance() has not been implemented.');
   }
 }

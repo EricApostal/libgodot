@@ -26,6 +26,9 @@ class MockLibgodotPlatform
 
   @override
   Future<void> destroyAndroidInstance(int textureId) => Future.value();
+
+  @override
+  Future<bool> resizeAndroidInstance(int textureId, int width, int height) => Future.value(true);
 }
 
 void main() {

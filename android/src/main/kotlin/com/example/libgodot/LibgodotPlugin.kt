@@ -49,8 +49,10 @@ import org.godotengine.godot.GodotHost
  * the `registerTexture`/`unregisterTexture` pair macOS/Linux use: those platforms have Dart create
  * the instance directly via FFI and only need a channel call to register the resulting handle as
  * a texture, but Android has to do both steps together, natively. `createInstance` returns both
- * the texture id and the instance's native handle address, so Dart's GodotController can still
- * resize via FFI (`godot_core_resize`) afterward, the same way it does on every other platform.
+ * the texture id and the instance's native handle address for reference, but resize is a
+ * `resizeInstance` channel call too (see [handleResizeInstance]), not FFI: Flutter's
+ * `TextureRegistry.SurfaceProducer` needs an explicit `setSize()` alongside `godot_core_resize`,
+ * and only this plugin owns that producer.
  *
  * Only one Godot instance may be created per process: [Godot] is a process-wide singleton and,
  * same as the other platforms' libgodot_create_godot_instance(), does not support
@@ -82,6 +84,7 @@ class LibgodotPlugin :
     private var containerLayout: FrameLayout? = null
     private var surfaceProducer: TextureRegistry.SurfaceProducer? = null
     private var offscreenRenderer: GodotOffscreenRenderer? = null
+    private var godotInstanceHandle: Long = 0L
 
     // Set by handleCreateInstance while waiting for onGodotMainLoopStarted(); cleared once that
     // fires (or the instance is torn down before it does).
@@ -122,6 +125,7 @@ class LibgodotPlugin :
             "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
             "createInstance" -> handleCreateInstance(call, result)
             "destroyInstance" -> handleDestroyInstance(call, result)
+            "resizeInstance" -> handleResizeInstance(call, result)
             else -> result.notImplemented()
         }
     }
@@ -223,9 +227,34 @@ class LibgodotPlugin :
         containerLayout?.let { layout -> (layout.parent as? ViewGroup)?.removeView(layout) }
         containerLayout = null
 
+        godotInstanceHandle = 0L
+
         engine.onDestroy(this)
 
         result.success(null)
+    }
+
+    private fun handleResizeInstance(call: MethodCall, result: Result) {
+        val producer = surfaceProducer
+        val handle = godotInstanceHandle
+        if (producer == null || handle == 0L) {
+            result.error("invalid_texture_id", "No instance is currently registered.", null)
+            return
+        }
+
+        val width = call.argument<Int>("width") ?: 0
+        val height = call.argument<Int>("height") ?: 0
+        if (width <= 0 || height <= 0) {
+            result.error("invalid_args", "resizeInstance requires positive \"width\"/\"height\" arguments.", null)
+            return
+        }
+
+        // Update Flutter's own consumer-side expectation first, then kick off the engine's
+        // reallocation -- see GodotOffscreenRenderer's class doc for why this can't just be a
+        // direct FFI call into godot_core_resize from Dart the way every other platform does it.
+        producer.setSize(width, height)
+        val resized = GodotOffscreenRenderer.resize(handle, width, height)
+        result.success(resized)
     }
 
     // MARK: - GodotHost
@@ -249,8 +278,8 @@ class LibgodotPlugin :
                 return@post
             }
 
-            val godotInstanceHandle = GodotOffscreenRenderer.getInstanceHandle()
-            if (godotInstanceHandle == 0L) {
+            val handle = GodotOffscreenRenderer.getInstanceHandle()
+            if (handle == 0L) {
                 result.error(
                     "create_instance_failed",
                     "libgodot_android_get_godot_instance() returned null after the engine's main loop started.",
@@ -258,13 +287,14 @@ class LibgodotPlugin :
                 )
                 return@post
             }
+            godotInstanceHandle = handle
 
             val renderer = GodotOffscreenRenderer()
             if (!renderer.isValid) {
                 result.error("create_instance_failed", "Failed to initialize the EGL renderer.", null)
                 return@post
             }
-            renderer.setGodotInstance(godotInstanceHandle)
+            renderer.setGodotInstance(handle)
             offscreenRenderer = renderer
 
             val producer = registry.createSurfaceProducer()
