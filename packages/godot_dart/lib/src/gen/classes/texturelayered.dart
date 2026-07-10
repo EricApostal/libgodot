@@ -20,6 +20,13 @@ class TextureLayered extends Texture {
     return TextureLayered(resolveClassConstructor('TextureLayered'));
   }
 
+  // Skipped virtual _get_format(): dart name "getFormat" collides with an existing member.
+  // Skipped virtual _get_layered_type(): dart name "getLayeredType" collides with an existing member.
+  // Skipped virtual _get_width(): dart name "getWidth" collides with an existing member.
+  // Skipped virtual _get_height(): dart name "getHeight" collides with an existing member.
+  // Skipped virtual _get_layers(): dart name "getLayers" collides with an existing member.
+  // Skipped virtual _has_mipmaps(): dart name "hasMipmaps" collides with an existing member.
+  // Skipped virtual _get_layer_data(): dart name "getLayerData" collides with an existing member.
   static final Pointer<Void> _mb_get_format =
       resolveMethodBind('TextureLayered', 'get_format', 3847873762);
 

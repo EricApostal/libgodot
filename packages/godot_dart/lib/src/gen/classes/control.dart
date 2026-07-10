@@ -20,6 +20,30 @@ class Control extends CanvasItem {
     return Control(resolveClassConstructor('Control'));
   }
 
+  /// Override to hook into Godot's `_has_point` virtual.
+  bool hasPoint(Vector2 point) => false;
+
+  // Skipped virtual _structured_text_parser(): unsupported return type "typedarray::Vector3i".
+  // Skipped virtual _get_maximum_size(): dart name "getMaximumSize" collides with an existing member.
+  // Skipped virtual _get_minimum_size(): dart name "getMinimumSize" collides with an existing member.
+  // Skipped virtual _get_tooltip(): dart name "getTooltip" collides with an existing member.
+  /// Override to hook into Godot's `_get_tooltip_auto_translate_mode_at` virtual.
+  int getTooltipAutoTranslateModeAt(Vector2 atPosition) => 0;
+
+  // Skipped virtual _get_drag_data(): unsupported return type "Variant".
+  // Skipped virtual _can_drop_data(): an argument type is unsupported ("Variant").
+  // Skipped virtual _drop_data(): an argument type is unsupported ("Variant").
+  // Skipped virtual _make_custom_tooltip(): unsupported return type "Object".
+  // Skipped virtual _get_cursor_shape(): dart name "getCursorShape" collides with an existing member.
+  /// Override to hook into Godot's `_accessibility_get_contextual_info` virtual.
+  String accessibilityGetContextualInfo() => '';
+
+  /// Override to hook into Godot's `_get_accessibility_container_name` virtual.
+  String getAccessibilityContainerName(Node node) => '';
+
+  /// Override to hook into Godot's `_gui_input` virtual.
+  void guiInput(InputEvent event) {}
+
   static final Pointer<Void> _mb_accept_event =
       resolveMethodBind('Control', 'accept_event', 3218959716);
 

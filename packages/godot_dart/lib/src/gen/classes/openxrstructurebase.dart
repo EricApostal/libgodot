@@ -20,6 +20,9 @@ class OpenXRStructureBase extends RefCounted {
     return OpenXRStructureBase(resolveClassConstructor('OpenXRStructureBase'));
   }
 
+  /// Override to hook into Godot's `_get_header` virtual.
+  int getHeader(int next) => 0;
+
   static final Pointer<Void> _mb_get_structure_type =
       resolveMethodBind('OpenXRStructureBase', 'get_structure_type', 2455072627);
 

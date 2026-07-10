@@ -20,4 +20,21 @@ class MovieWriter extends GodotObject {
     return MovieWriter(resolveClassConstructor('MovieWriter'));
   }
 
+  /// Override to hook into Godot's `_get_audio_mix_rate` virtual.
+  int getAudioMixRate() => 0;
+
+  /// Override to hook into Godot's `_get_audio_speaker_mode` virtual.
+  int getAudioSpeakerMode() => 0;
+
+  /// Override to hook into Godot's `_handles_file` virtual.
+  bool handlesFile(String path) => false;
+
+  // Skipped virtual _get_supported_extensions(): unsupported return type "PackedStringArray".
+  /// Override to hook into Godot's `_write_begin` virtual.
+  int writeBegin(Vector2i movieSize, int fps, String basePath) => 0;
+
+  // Skipped virtual _write_frame(): an argument type is unsupported ("const void*").
+  /// Override to hook into Godot's `_write_end` virtual.
+  void writeEnd() {}
+
 }

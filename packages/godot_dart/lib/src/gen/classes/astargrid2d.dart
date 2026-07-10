@@ -20,6 +20,12 @@ class AStarGrid2D extends RefCounted {
     return AStarGrid2D(resolveClassConstructor('AStarGrid2D'));
   }
 
+  /// Override to hook into Godot's `_estimate_cost` virtual.
+  double estimateCost(Vector2i fromId, Vector2i endId) => 0.0;
+
+  /// Override to hook into Godot's `_compute_cost` virtual.
+  double computeCost(Vector2i fromId, Vector2i toId) => 0.0;
+
   static final Pointer<Void> _mb_set_region =
       resolveMethodBind('AStarGrid2D', 'set_region', 1763793166);
 

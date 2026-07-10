@@ -20,6 +20,10 @@ class Resource extends RefCounted {
     return Resource(resolveClassConstructor('Resource'));
   }
 
+  // Skipped virtual _setup_local_to_scene(): dart name "setupLocalToScene" collides with an existing member.
+  // Skipped virtual _get_rid(): unsupported return type "RID".
+  // Skipped virtual _reset_state(): dart name "resetState" collides with an existing member.
+  // Skipped virtual _set_path_cache(): dart name "setPathCache" collides with an existing member.
   static final Pointer<Void> _mb_set_path =
       resolveMethodBind('Resource', 'set_path', 83702148);
 

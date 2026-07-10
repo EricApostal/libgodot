@@ -20,6 +20,14 @@ class TextEdit extends Control {
     return TextEdit(resolveClassConstructor('TextEdit'));
   }
 
+  /// Override to hook into Godot's `_handle_unicode_input` virtual.
+  void handleUnicodeInput(int unicodeChar, int caretIndex) {}
+
+  // Skipped virtual _backspace(): dart name "backspace" collides with an existing member.
+  // Skipped virtual _cut(): dart name "cut" collides with an existing member.
+  // Skipped virtual _copy(): dart name "copy" collides with an existing member.
+  // Skipped virtual _paste(): dart name "paste" collides with an existing member.
+  // Skipped virtual _paste_primary_clipboard(): dart name "pastePrimaryClipboard" collides with an existing member.
   static final Pointer<Void> _mb_has_ime_text =
       resolveMethodBind('TextEdit', 'has_ime_text', 36873697);
 

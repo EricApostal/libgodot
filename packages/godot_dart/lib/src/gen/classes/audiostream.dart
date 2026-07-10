@@ -20,6 +20,26 @@ class AudioStream extends Resource {
     return AudioStream(resolveClassConstructor('AudioStream'));
   }
 
+  // Skipped virtual _instantiate_playback(): dart name "instantiatePlayback" collides with an existing member.
+  /// Override to hook into Godot's `_get_stream_name` virtual.
+  String getStreamName() => '';
+
+  // Skipped virtual _get_length(): dart name "getLength" collides with an existing member.
+  // Skipped virtual _is_monophonic(): dart name "isMonophonic" collides with an existing member.
+  /// Override to hook into Godot's `_get_bpm` virtual.
+  double getBpm() => 0.0;
+
+  /// Override to hook into Godot's `_get_beat_count` virtual.
+  int getBeatCount() => 0;
+
+  // Skipped virtual _get_tags(): unsupported return type "Dictionary".
+  // Skipped virtual _get_parameter_list(): unsupported return type "typedarray::Dictionary".
+  /// Override to hook into Godot's `_has_loop` virtual.
+  bool hasLoop() => false;
+
+  /// Override to hook into Godot's `_get_bar_beats` virtual.
+  int getBarBeats() => 0;
+
   static final Pointer<Void> _mb_get_length =
       resolveMethodBind('AudioStream', 'get_length', 1740695150);
 

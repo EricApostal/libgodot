@@ -20,6 +20,9 @@ class VideoStream extends Resource {
     return VideoStream(resolveClassConstructor('VideoStream'));
   }
 
+  /// Override to hook into Godot's `_instantiate_playback` virtual.
+  VideoStreamPlayback? instantiatePlayback() => null;
+
   static final Pointer<Void> _mb_set_file =
       resolveMethodBind('VideoStream', 'set_file', 83702148);
 

@@ -20,4 +20,19 @@ class RenderSceneBuffersExtension extends RenderSceneBuffers {
     return RenderSceneBuffersExtension(resolveClassConstructor('RenderSceneBuffersExtension'));
   }
 
+  /// Override to hook into Godot's `_configure` virtual.
+  void configure(RenderSceneBuffersConfiguration config) {}
+
+  /// Override to hook into Godot's `_set_fsr_sharpness` virtual.
+  void setFsrSharpness(double fsrSharpness) {}
+
+  /// Override to hook into Godot's `_set_texture_mipmap_bias` virtual.
+  void setTextureMipmapBias(double textureMipmapBias) {}
+
+  /// Override to hook into Godot's `_set_anisotropic_filtering_level` virtual.
+  void setAnisotropicFilteringLevel(int anisotropicFilteringLevel) {}
+
+  /// Override to hook into Godot's `_set_use_debanding` virtual.
+  void setUseDebanding(bool useDebanding) {}
+
 }

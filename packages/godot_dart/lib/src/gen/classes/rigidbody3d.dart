@@ -20,6 +20,9 @@ class RigidBody3D extends PhysicsBody3D {
     return RigidBody3D(resolveClassConstructor('RigidBody3D'));
   }
 
+  /// Override to hook into Godot's `_integrate_forces` virtual.
+  void integrateForces(PhysicsDirectBodyState3D state) {}
+
   static final Pointer<Void> _mb_set_mass =
       resolveMethodBind('RigidBody3D', 'set_mass', 373806689);
 

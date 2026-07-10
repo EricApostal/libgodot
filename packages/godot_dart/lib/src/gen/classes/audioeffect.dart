@@ -20,4 +20,7 @@ class AudioEffect extends Resource {
     return AudioEffect(resolveClassConstructor('AudioEffect'));
   }
 
+  /// Override to hook into Godot's `_instantiate` virtual.
+  AudioEffectInstance? instantiate() => null;
+
 }

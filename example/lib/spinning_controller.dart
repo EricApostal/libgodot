@@ -9,8 +9,9 @@ part 'spinning_controller.g.dart';
 /// class (parent "MeshInstance3D"), instantiable both from a `.tscn` via
 /// `type="SpinningController"` and dynamically at runtime from other Dart
 /// code (see `InstanceRegistry.constructAndWrap`, used by [SceneRoot] to
-/// spawn several of these). `_process` is called by the engine every frame
-/// exactly like a GDScript `_process` override would be.
+/// spawn several of these). `process` overrides Node's virtual and is
+/// called by the engine every frame exactly like a GDScript `_process`
+/// override would be.
 @GodotClass()
 class SpinningController extends MeshInstance3D {
   SpinningController(super.nativePtr);
@@ -20,7 +21,8 @@ class SpinningController extends MeshInstance3D {
   double yawSpeed = 1.0;
   double rollSpeed = 0.6;
 
-  void _process(double delta) {
+  @override
+  void process(double delta) {
     rotateY(delta * yawSpeed);
     rotateX(delta * rollSpeed);
   }

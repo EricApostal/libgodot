@@ -20,6 +20,162 @@ class PhysicsServer2DExtension extends PhysicsServer2D {
     return PhysicsServer2DExtension(resolveClassConstructor('PhysicsServer2DExtension'));
   }
 
+  // Skipped virtual _world_boundary_shape_create(): unsupported return type "RID".
+  // Skipped virtual _separation_ray_shape_create(): unsupported return type "RID".
+  // Skipped virtual _segment_shape_create(): unsupported return type "RID".
+  // Skipped virtual _circle_shape_create(): unsupported return type "RID".
+  // Skipped virtual _rectangle_shape_create(): unsupported return type "RID".
+  // Skipped virtual _capsule_shape_create(): unsupported return type "RID".
+  // Skipped virtual _convex_polygon_shape_create(): unsupported return type "RID".
+  // Skipped virtual _concave_polygon_shape_create(): unsupported return type "RID".
+  // Skipped virtual _shape_set_data(): an argument type is unsupported ("RID").
+  // Skipped virtual _shape_set_custom_solver_bias(): an argument type is unsupported ("RID").
+  // Skipped virtual _shape_get_type(): an argument type is unsupported ("RID").
+  // Skipped virtual _shape_get_data(): unsupported return type "Variant".
+  // Skipped virtual _shape_get_custom_solver_bias(): an argument type is unsupported ("RID").
+  // Skipped virtual _shape_collide(): an argument type is unsupported ("RID").
+  // Skipped virtual _space_create(): unsupported return type "RID".
+  // Skipped virtual _space_set_active(): an argument type is unsupported ("RID").
+  // Skipped virtual _space_is_active(): an argument type is unsupported ("RID").
+  // Skipped virtual _space_set_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _space_get_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _space_get_direct_state(): an argument type is unsupported ("RID").
+  // Skipped virtual _space_set_debug_contacts(): an argument type is unsupported ("RID").
+  // Skipped virtual _space_get_contacts(): unsupported return type "PackedVector2Array".
+  // Skipped virtual _space_get_contact_count(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_create(): unsupported return type "RID".
+  // Skipped virtual _area_set_space(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_get_space(): unsupported return type "RID".
+  // Skipped virtual _area_add_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_shape_transform(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_shape_disabled(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_get_shape_count(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_get_shape(): unsupported return type "RID".
+  // Skipped virtual _area_get_shape_transform(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_remove_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_clear_shapes(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_attach_object_instance_id(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_get_object_instance_id(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_attach_canvas_instance_id(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_get_canvas_instance_id(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_transform(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_get_param(): unsupported return type "Variant".
+  // Skipped virtual _area_get_transform(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_collision_layer(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_get_collision_layer(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_collision_mask(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_get_collision_mask(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_monitorable(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_pickable(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_monitor_callback(): an argument type is unsupported ("RID").
+  // Skipped virtual _area_set_area_monitor_callback(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_create(): unsupported return type "RID".
+  // Skipped virtual _body_set_space(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_space(): unsupported return type "RID".
+  // Skipped virtual _body_set_mode(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_mode(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_add_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_shape_transform(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_shape_count(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_shape(): unsupported return type "RID".
+  // Skipped virtual _body_get_shape_transform(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_shape_disabled(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_shape_as_one_way_collision(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_remove_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_clear_shapes(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_attach_object_instance_id(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_object_instance_id(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_attach_canvas_instance_id(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_canvas_instance_id(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_continuous_collision_detection_mode(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_continuous_collision_detection_mode(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_collision_layer(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_collision_layer(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_collision_mask(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_collision_mask(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_collision_priority(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_collision_priority(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_param(): unsupported return type "Variant".
+  // Skipped virtual _body_reset_mass_properties(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_state(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_state(): unsupported return type "Variant".
+  // Skipped virtual _body_apply_central_impulse(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_apply_torque_impulse(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_apply_impulse(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_apply_central_force(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_apply_force(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_apply_torque(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_add_constant_central_force(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_add_constant_force(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_add_constant_torque(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_constant_force(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_constant_force(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_constant_torque(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_constant_torque(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_axis_velocity(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_add_collision_exception(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_remove_collision_exception(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_collision_exceptions(): unsupported return type "typedarray::RID".
+  // Skipped virtual _body_set_max_contacts_reported(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_max_contacts_reported(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_contacts_reported_depth_threshold(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_contacts_reported_depth_threshold(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_omit_force_integration(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_is_omitting_force_integration(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_state_sync_callback(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_force_integration_callback(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_collide_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_set_pickable(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_get_direct_state(): an argument type is unsupported ("RID").
+  // Skipped virtual _body_test_motion(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_create(): unsupported return type "RID".
+  // Skipped virtual _joint_clear(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_set_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_get_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_disable_collisions_between_bodies(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_is_disabled_collisions_between_bodies(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_make_pin(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_make_groove(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_make_damped_spring(): an argument type is unsupported ("RID").
+  // Skipped virtual _pin_joint_set_flag(): an argument type is unsupported ("RID").
+  // Skipped virtual _pin_joint_get_flag(): an argument type is unsupported ("RID").
+  // Skipped virtual _pin_joint_set_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _pin_joint_get_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _damped_spring_joint_set_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _damped_spring_joint_get_param(): an argument type is unsupported ("RID").
+  // Skipped virtual _joint_get_type(): an argument type is unsupported ("RID").
+  // Skipped virtual _free_rid(): an argument type is unsupported ("RID").
+  /// Override to hook into Godot's `_set_active` virtual.
+  void setActive(bool active) {}
+
+  /// Override to hook into Godot's `_init` virtual.
+  void init() {}
+
+  /// Override to hook into Godot's `_step` virtual.
+  void step(double step) {}
+
+  /// Override to hook into Godot's `_sync` virtual.
+  void sync_() {}
+
+  /// Override to hook into Godot's `_flush_queries` virtual.
+  void flushQueries() {}
+
+  /// Override to hook into Godot's `_end_sync` virtual.
+  void endSync() {}
+
+  /// Override to hook into Godot's `_finish` virtual.
+  void finish() {}
+
+  /// Override to hook into Godot's `_is_flushing_queries` virtual.
+  bool isFlushingQueries() => false;
+
+  /// Override to hook into Godot's `_get_process_info` virtual.
+  int getProcessInfo(int processInfo) => 0;
+
   // Skipped body_test_motion_is_excluding_body(): an argument type is unsupported.
   static final Pointer<Void> _mb_body_test_motion_is_excluding_object =
       resolveMethodBind('PhysicsServer2DExtension', 'body_test_motion_is_excluding_object', 1116898809);

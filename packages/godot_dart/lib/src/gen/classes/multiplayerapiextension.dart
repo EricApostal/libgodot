@@ -20,4 +20,23 @@ class MultiplayerAPIExtension extends MultiplayerAPI {
     return MultiplayerAPIExtension(resolveClassConstructor('MultiplayerAPIExtension'));
   }
 
+  /// Override to hook into Godot's `_poll` virtual.
+  int poll() => 0;
+
+  /// Override to hook into Godot's `_set_multiplayer_peer` virtual.
+  void setMultiplayerPeer(MultiplayerPeer multiplayerPeer) {}
+
+  /// Override to hook into Godot's `_get_multiplayer_peer` virtual.
+  MultiplayerPeer? getMultiplayerPeer() => null;
+
+  /// Override to hook into Godot's `_get_unique_id` virtual.
+  int getUniqueId() => 0;
+
+  // Skipped virtual _get_peer_ids(): unsupported return type "PackedInt32Array".
+  // Skipped virtual _rpc(): an argument type is unsupported ("Object").
+  /// Override to hook into Godot's `_get_remote_sender_id` virtual.
+  int getRemoteSenderId() => 0;
+
+  // Skipped virtual _object_configuration_add(): an argument type is unsupported ("Object").
+  // Skipped virtual _object_configuration_remove(): an argument type is unsupported ("Object").
 }

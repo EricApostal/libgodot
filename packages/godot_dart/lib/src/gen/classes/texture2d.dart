@@ -20,6 +20,19 @@ class Texture2D extends Texture {
     return Texture2D(resolveClassConstructor('Texture2D'));
   }
 
+  // Skipped virtual _get_image(): dart name "getImage" collides with an existing member.
+  // Skipped virtual _get_format(): dart name "getFormat" collides with an existing member.
+  // Skipped virtual _get_mipmap_count(): dart name "getMipmapCount" collides with an existing member.
+  // Skipped virtual _get_width(): dart name "getWidth" collides with an existing member.
+  // Skipped virtual _get_height(): dart name "getHeight" collides with an existing member.
+  /// Override to hook into Godot's `_is_pixel_opaque` virtual.
+  bool isPixelOpaque(int x, int y) => false;
+
+  // Skipped virtual _has_alpha(): dart name "hasAlpha" collides with an existing member.
+  // Skipped virtual _has_mipmaps(): dart name "hasMipmaps" collides with an existing member.
+  // Skipped virtual _draw(): an argument type is unsupported ("RID").
+  // Skipped virtual _draw_rect(): an argument type is unsupported ("RID").
+  // Skipped virtual _draw_rect_region(): an argument type is unsupported ("RID").
   static final Pointer<Void> _mb_get_format =
       resolveMethodBind('Texture2D', 'get_format', 3847873762);
 

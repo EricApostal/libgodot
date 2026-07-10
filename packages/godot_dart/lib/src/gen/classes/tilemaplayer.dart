@@ -20,6 +20,13 @@ class TileMapLayer extends Node2D {
     return TileMapLayer(resolveClassConstructor('TileMapLayer'));
   }
 
+  /// Override to hook into Godot's `_use_tile_data_runtime_update` virtual.
+  bool useTileDataRuntimeUpdate(Vector2i coords) => false;
+
+  /// Override to hook into Godot's `_tile_data_runtime_update` virtual.
+  void tileDataRuntimeUpdate(Vector2i coords, TileData tileData) {}
+
+  // Skipped virtual _update_cells(): an argument type is unsupported ("typedarray::Vector2i").
   static final Pointer<Void> _mb_set_cell =
       resolveMethodBind('TileMapLayer', 'set_cell', 2428518503);
 

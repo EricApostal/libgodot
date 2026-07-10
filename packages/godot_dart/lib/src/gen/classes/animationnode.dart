@@ -20,6 +20,24 @@ class AnimationNode extends Resource {
     return AnimationNode(resolveClassConstructor('AnimationNode'));
   }
 
+  // Skipped virtual _get_child_nodes(): unsupported return type "Dictionary".
+  // Skipped virtual _get_parameter_list(): unsupported return type "Array".
+  /// Override to hook into Godot's `_get_child_by_name` virtual.
+  AnimationNode? getChildByName(String name) => null;
+
+  // Skipped virtual _get_parameter_default_value(): unsupported return type "Variant".
+  /// Override to hook into Godot's `_is_parameter_read_only` virtual.
+  bool isParameterReadOnly(String parameter) => false;
+
+  /// Override to hook into Godot's `_process` virtual.
+  double process(double time, bool seek, bool isExternalSeeking, bool testOnly) => 0.0;
+
+  /// Override to hook into Godot's `_get_caption` virtual.
+  String getCaption() => '';
+
+  /// Override to hook into Godot's `_has_filter` virtual.
+  bool hasFilter() => false;
+
   static final Pointer<Void> _mb_add_input =
       resolveMethodBind('AnimationNode', 'add_input', 2323990056);
 

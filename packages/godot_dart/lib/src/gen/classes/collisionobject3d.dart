@@ -14,6 +14,15 @@ import '../classes.g.dart';
 class CollisionObject3D extends Node3D {
   CollisionObject3D(super.nativePtr);
 
+  /// Override to hook into Godot's `_input_event` virtual.
+  void inputEvent(Camera3D camera, InputEvent event, Vector3 eventPosition, Vector3 normal, int shapeIdx) {}
+
+  /// Override to hook into Godot's `_mouse_enter` virtual.
+  void mouseEnter() {}
+
+  /// Override to hook into Godot's `_mouse_exit` virtual.
+  void mouseExit() {}
+
   static final Pointer<Void> _mb_set_collision_layer =
       resolveMethodBind('CollisionObject3D', 'set_collision_layer', 1286410249);
 

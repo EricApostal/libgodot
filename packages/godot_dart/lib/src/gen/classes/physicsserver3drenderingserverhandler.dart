@@ -20,6 +20,9 @@ class PhysicsServer3DRenderingServerHandler extends GodotObject {
     return PhysicsServer3DRenderingServerHandler(resolveClassConstructor('PhysicsServer3DRenderingServerHandler'));
   }
 
+  // Skipped virtual _set_vertex(): dart name "setVertex" collides with an existing member.
+  // Skipped virtual _set_normal(): dart name "setNormal" collides with an existing member.
+  // Skipped virtual _set_aabb(): dart name "setAabb" collides with an existing member.
   static final Pointer<Void> _mb_set_vertex =
       resolveMethodBind('PhysicsServer3DRenderingServerHandler', 'set_vertex', 1530502735);
 

@@ -20,6 +20,36 @@ class Node extends GodotObject {
     return Node(resolveClassConstructor('Node'));
   }
 
+  /// Override to hook into Godot's `_process` virtual.
+  void process(double delta) {}
+
+  /// Override to hook into Godot's `_physics_process` virtual.
+  void physicsProcess(double delta) {}
+
+  /// Override to hook into Godot's `_enter_tree` virtual.
+  void enterTree() {}
+
+  /// Override to hook into Godot's `_exit_tree` virtual.
+  void exitTree() {}
+
+  /// Override to hook into Godot's `_ready` virtual.
+  void ready() {}
+
+  // Skipped virtual _get_configuration_warnings(): unsupported return type "PackedStringArray".
+  // Skipped virtual _get_accessibility_configuration_warnings(): unsupported return type "PackedStringArray".
+  /// Override to hook into Godot's `_input` virtual.
+  void input(InputEvent event) {}
+
+  /// Override to hook into Godot's `_shortcut_input` virtual.
+  void shortcutInput(InputEvent event) {}
+
+  /// Override to hook into Godot's `_unhandled_input` virtual.
+  void unhandledInput(InputEvent event) {}
+
+  /// Override to hook into Godot's `_unhandled_key_input` virtual.
+  void unhandledKeyInput(InputEvent event) {}
+
+  // Skipped virtual _get_focused_accessibility_element(): unsupported return type "RID".
   static final Pointer<Void> _mb_add_sibling =
       resolveMethodBind('Node', 'add_sibling', 2570952461);
 

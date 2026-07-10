@@ -20,4 +20,12 @@ class RenderDataExtension extends RenderData {
     return RenderDataExtension(resolveClassConstructor('RenderDataExtension'));
   }
 
+  /// Override to hook into Godot's `_get_render_scene_buffers` virtual.
+  RenderSceneBuffers? getRenderSceneBuffers() => null;
+
+  /// Override to hook into Godot's `_get_render_scene_data` virtual.
+  RenderSceneData? getRenderSceneData() => null;
+
+  // Skipped virtual _get_environment(): unsupported return type "RID".
+  // Skipped virtual _get_camera_attributes(): unsupported return type "RID".
 }

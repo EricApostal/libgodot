@@ -20,6 +20,9 @@ class Range extends Control {
     return Range(resolveClassConstructor('Range'));
   }
 
+  /// Override to hook into Godot's `_value_changed` virtual.
+  void valueChanged(double newValue) {}
+
   static final Pointer<Void> _mb_get_value =
       resolveMethodBind('Range', 'get_value', 1740695150);
 

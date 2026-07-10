@@ -23,13 +23,14 @@ void _callVirtualReady_SceneRoot(Pointer<Void> instanceToken,
     Pointer<Pointer<Void>> args, Pointer<Void> rRet) {
   final self = InstanceRegistry.lookup<SceneRoot>(instanceToken);
   if (self == null) return;
-  self._ready();
+  self.ready();
 }
 
 Pointer<NativeFunction<GDExtensionClassCallVirtualNative>>
     _getVirtual_SceneRoot(
         Pointer<Void> classUserdata, Pointer<Void> name, int hash) {
-  if (StringNameCache.identical(name, StringNameCache.intern('_ready'))) {
+  if (StringNameCache.identical(name, StringNameCache.intern('_ready')) &&
+      hash == 3218959716) {
     return Pointer.fromFunction<GDExtensionClassCallVirtualNative>(
         _callVirtualReady_SceneRoot);
   }

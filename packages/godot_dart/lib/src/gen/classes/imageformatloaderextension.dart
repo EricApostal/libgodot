@@ -20,6 +20,10 @@ class ImageFormatLoaderExtension extends ImageFormatLoader {
     return ImageFormatLoaderExtension(resolveClassConstructor('ImageFormatLoaderExtension'));
   }
 
+  // Skipped virtual _get_recognized_extensions(): unsupported return type "PackedStringArray".
+  /// Override to hook into Godot's `_load_image` virtual.
+  int loadImage(Image image, FileAccess fileaccess, int flags, double scale) => 0;
+
   static final Pointer<Void> _mb_add_format_loader =
       resolveMethodBind('ImageFormatLoaderExtension', 'add_format_loader', 3218959716);
 

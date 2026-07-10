@@ -20,4 +20,9 @@ class EngineProfiler extends RefCounted {
     return EngineProfiler(resolveClassConstructor('EngineProfiler'));
   }
 
+  // Skipped virtual _toggle(): an argument type is unsupported ("Array").
+  // Skipped virtual _add_frame(): an argument type is unsupported ("Array").
+  /// Override to hook into Godot's `_tick` virtual.
+  void tick(double frameTime, double processTime, double physicsTime, double physicsFrameTime) {}
+
 }

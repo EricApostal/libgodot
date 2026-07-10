@@ -20,6 +20,9 @@ class SyntaxHighlighter extends Resource {
     return SyntaxHighlighter(resolveClassConstructor('SyntaxHighlighter'));
   }
 
+  // Skipped virtual _get_line_syntax_highlighting(): unsupported return type "Dictionary".
+  // Skipped virtual _clear_highlighting_cache(): dart name "clearHighlightingCache" collides with an existing member.
+  // Skipped virtual _update_cache(): dart name "updateCache" collides with an existing member.
   // Skipped get_line_syntax_highlighting(): unsupported return type "Dictionary".
   static final Pointer<Void> _mb_update_cache =
       resolveMethodBind('SyntaxHighlighter', 'update_cache', 3218959716);

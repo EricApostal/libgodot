@@ -14,6 +14,7 @@ import '../classes.g.dart';
 class AnimationMixer extends Node {
   AnimationMixer(super.nativePtr);
 
+  // Skipped virtual _post_process_key_value(): unsupported return type "Variant".
   static final Pointer<Void> _mb_add_animation_library =
       resolveMethodBind('AnimationMixer', 'add_animation_library', 618909818);
 

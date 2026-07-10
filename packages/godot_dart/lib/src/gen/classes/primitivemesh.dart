@@ -20,6 +20,7 @@ class PrimitiveMesh extends Mesh {
     return PrimitiveMesh(resolveClassConstructor('PrimitiveMesh'));
   }
 
+  // Skipped virtual _create_mesh_array(): unsupported return type "Array".
   static final Pointer<Void> _mb_set_material =
       resolveMethodBind('PrimitiveMesh', 'set_material', 2757459619);
 

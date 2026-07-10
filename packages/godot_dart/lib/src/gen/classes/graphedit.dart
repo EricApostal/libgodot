@@ -20,6 +20,12 @@ class GraphEdit extends Control {
     return GraphEdit(resolveClassConstructor('GraphEdit'));
   }
 
+  // Skipped virtual _is_in_input_hotzone(): an argument type is unsupported ("Object").
+  // Skipped virtual _is_in_output_hotzone(): an argument type is unsupported ("Object").
+  // Skipped virtual _get_connection_line(): unsupported return type "PackedVector2Array".
+  /// Override to hook into Godot's `_is_node_hover_valid` virtual.
+  bool isNodeHoverValid(String fromNode, int fromPort, String toNode, int toPort) => false;
+
   static final Pointer<Void> _mb_connect_node =
       resolveMethodBind('GraphEdit', 'connect_node', 1376144231);
 

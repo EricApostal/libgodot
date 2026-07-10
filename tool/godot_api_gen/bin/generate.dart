@@ -23,6 +23,18 @@
 // (no instance to bind against in this generator's calling convention), and
 // methods with no stable hash. Default argument values are not modeled -
 // every generated parameter is required.
+//
+// Engine *virtual* methods (is_virtual: true, e.g. Node's `_process`) get the
+// same type-coverage treatment as regular methods, applied in the other
+// direction: each one whose args/return classify as supported is stubbed as
+// a real, public, no-op overridable Dart method on its declaring class (see
+// `_tryEmitVirtualStub`), renamed off Godot's leading-underscore convention
+// because a leading `_` would make it library-private and un-overridable
+// from a consumer's own library. The per-virtual hash and marshaling shape
+// needed to actually wire an override at runtime is written out to
+// gen/virtuals.g.dart for godot_dart_builder's GodotClassGenerator to read -
+// that table is the only place this data lives; nothing about which
+// virtuals exist is hand-curated anywhere.
 library;
 
 import 'dart:convert';
@@ -56,20 +68,25 @@ void main(List<String> args) {
 
   final godotDartLib = '$scriptDir/../../../packages/godot_dart/lib/src/gen';
   _generateBuiltins(api, godotDartLib);
-  _generateClasses(api, godotDartLib);
+  final podZeroLiterals = _computePodZeroLiterals(_builtinClassesByName(api));
+  _generateClasses(api, godotDartLib, podZeroLiterals);
 }
 
 // =============================================================================
 // MARK: - POD builtins
 // =============================================================================
 
-void _generateBuiltins(Map<String, dynamic> api, String godotDartLib) {
+Map<String, Map<String, dynamic>> _builtinClassesByName(Map<String, dynamic> api) {
   final offsetsEntry = (api['builtin_class_member_offsets'] as List)
       .cast<Map<String, dynamic>>()
       .firstWhere((e) => e['build_configuration'] == 'float_64');
-  final classesByName = <String, Map<String, dynamic>>{
+  return {
     for (final c in (offsetsEntry['classes'] as List).cast<Map<String, dynamic>>()) c['name'] as String: c,
   };
+}
+
+void _generateBuiltins(Map<String, dynamic> api, String godotDartLib) {
+  final classesByName = _builtinClassesByName(api);
 
   final outDir = Directory('$godotDartLib/builtins')..createSync(recursive: true);
   final barrel = StringBuffer();
@@ -91,6 +108,37 @@ void _generateBuiltins(Map<String, dynamic> api, String godotDartLib) {
 
   File('$godotDartLib/builtins.g.dart').writeAsStringSync(barrel.toString());
   stdout.writeln('godot_api_gen: wrote ${_podBuiltins.length} builtins + builtins.g.dart barrel');
+}
+
+/// A zero-valued Dart const-expression literal for each POD builtin (e.g.
+/// `'Vector2': 'const Vector2(0.0, 0.0)'`), built recursively from each
+/// type's own member list so nested builtins (Transform2D -> Vector2, ...)
+/// resolve correctly. Used only as the auto-generated body of a virtual
+/// method's no-op base-class stub (see `_tryEmitVirtualStub`) - never
+/// observed at runtime unless a consumer's own override explicitly calls
+/// `super.someVirtual()`.
+Map<String, String> _computePodZeroLiterals(Map<String, Map<String, dynamic>> classesByName) {
+  final result = <String, String>{};
+  String literalFor(String typeName) {
+    final cached = result[typeName];
+    if (cached != null) return cached;
+    final classJson = classesByName[typeName]!;
+    final members = (classJson['members'] as List).cast<Map<String, dynamic>>();
+    final fieldLiterals = members.map((m) {
+      final meta = m['meta'] as String;
+      if (meta == 'float') return '0.0';
+      if (meta == 'int32') return '0';
+      return literalFor(meta);
+    }).join(', ');
+    final literal = 'const $typeName($fieldLiterals)';
+    result[typeName] = literal;
+    return literal;
+  }
+
+  for (final name in _podBuiltins) {
+    if (classesByName.containsKey(name)) literalFor(name);
+  }
+  return result;
 }
 
 /// Maps a member's `meta` type to (Dart field type, native FFI pointer type
@@ -228,7 +276,25 @@ _TypeInfo? _classify(String godotType, Set<String> classNames) {
   return null;
 }
 
-void _generateClasses(Map<String, dynamic> api, String godotDartLib) {
+/// A virtual method whose args/return classified as fully supported and was
+/// stubbed on its declaring class - the data godot_dart_builder needs to
+/// wire an override at runtime, once extracted into gen/virtuals.g.dart.
+class _VirtualSpec {
+  const _VirtualSpec({
+    required this.godotName,
+    required this.dartName,
+    required this.hash,
+    required this.args,
+    required this.returnInfo,
+  });
+  final String godotName;
+  final String dartName;
+  final int hash;
+  final List<_TypeInfo> args;
+  final _TypeInfo? returnInfo;
+}
+
+void _generateClasses(Map<String, dynamic> api, String godotDartLib, Map<String, String> podZeroLiterals) {
   final allClasses = (api['classes'] as List).cast<Map<String, dynamic>>();
   final selected = allClasses.where((c) => c['api_type'] != 'editor' && c['name'] != _rootClassName).toList();
   final classNames = {for (final c in selected) c['name'] as String};
@@ -270,6 +336,8 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib) {
   barrel.writeln();
 
   var totalMethods = 0, skippedMethods = 0, emptyClasses = 0;
+  var totalVirtuals = 0, skippedVirtuals = 0;
+  final virtualsByClass = <String, List<_VirtualSpec>>{};
 
   for (final classJson in ordered) {
     final className = classJson['name'] as String;
@@ -278,24 +346,31 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib) {
         ? 'GodotObject'
         : parentName;
 
-    final (code, emitted, skipped) = _generateClass(classJson, dartSuper, classNames);
+    final (code, emitted, skipped, virtualsEmitted, virtualsSkipped) =
+        _generateClass(classJson, dartSuper, classNames, podZeroLiterals, virtualsByClass);
     totalMethods += emitted;
     skippedMethods += skipped;
-    if (emitted == 0) emptyClasses++;
+    totalVirtuals += virtualsEmitted;
+    skippedVirtuals += virtualsSkipped;
+    if (emitted == 0 && virtualsEmitted == 0) emptyClasses++;
 
     File('${outDir.path}/${className.toLowerCase()}.dart').writeAsStringSync(code);
     barrel.writeln("export 'classes/${className.toLowerCase()}.dart';");
   }
 
   File('$godotDartLib/classes.g.dart').writeAsStringSync(barrel.toString());
+  _writeVirtualsFile(godotDartLib, virtualsByClass);
   stdout.writeln('godot_api_gen: wrote ${ordered.length} classes '
-      '($totalMethods methods emitted, $skippedMethods skipped, $emptyClasses classes with zero eligible methods)');
+      '($totalMethods methods emitted, $skippedMethods skipped, $emptyClasses classes with zero eligible methods; '
+      '$totalVirtuals virtuals stubbed, $skippedVirtuals skipped)');
 }
 
-(String, int, int) _generateClass(
+(String, int, int, int, int) _generateClass(
   Map<String, dynamic> classJson,
   String dartSuper,
   Set<String> classNames,
+  Map<String, String> podZeroLiterals,
+  Map<String, List<_VirtualSpec>> virtualsByClass,
 ) {
   final className = classJson['name'] as String;
   final methods = (classJson['methods'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
@@ -327,10 +402,36 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib) {
     buffer.writeln();
   }
 
-  var emitted = 0, skipped = 0;
+  // Precompute which regular (non-virtual) methods will actually be emitted
+  // below, so a virtual method's Dart name (stripped of its leading `_`) can
+  // be checked against them - Godot's virtual and regular API surfaces
+  // aren't disjoint after stripping (e.g. AudioStream declares both
+  // `get_length()` and `_get_length()`), and a single class obviously can't
+  // have two members with the same name.
+  final regularDartNames = <String>{
+    for (final m in methods)
+      if (!(m['name'] as String).startsWith('_') &&
+          m['is_vararg'] != true &&
+          m['is_static'] != true &&
+          m['hash'] != null)
+        _sanitizeIdentifier(_camelCase(m['name'] as String)),
+  };
+
+  var emitted = 0, skipped = 0, virtualsEmitted = 0, virtualsSkipped = 0;
+  final usedVirtualNames = <String>{};
   for (final method in methods) {
     final methodName = method['name'] as String;
-    if (methodName.startsWith('_')) continue; // virtuals: overridden by consumers, not called directly here.
+    if (methodName.startsWith('_')) {
+      final spec = _tryEmitVirtualStub(
+          buffer, method, methodName, classNames, podZeroLiterals, regularDartNames, usedVirtualNames);
+      if (spec != null) {
+        virtualsByClass.putIfAbsent(className, () => []).add(spec);
+        virtualsEmitted++;
+      } else {
+        virtualsSkipped++;
+      }
+      continue;
+    }
     if (method['is_vararg'] == true) continue; // no fixed ptrcall signature.
     if (method['is_static'] == true) continue; // no instance to bind against in this generator.
     final hash = method['hash'];
@@ -367,7 +468,102 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib) {
   }
 
   buffer.writeln('}');
-  return (buffer.toString(), emitted, skipped);
+  return (buffer.toString(), emitted, skipped, virtualsEmitted, virtualsSkipped);
+}
+
+/// Tries to stub [methodName] (an `is_virtual` method, still carrying its
+/// leading `_`) as a real, public, no-op overridable Dart method on the
+/// class currently being generated - written straight into [buffer] like
+/// every other member. Returns the `_VirtualSpec` godot_dart_builder needs
+/// to wire an override at runtime, or null (having written a `// Skipped`
+/// comment explaining why) if the virtual can't be supported: an
+/// unsupported arg/return type, no stable hash, vararg, or a Dart-name
+/// collision with a member that's already claimed the name.
+_VirtualSpec? _tryEmitVirtualStub(
+  StringBuffer buffer,
+  Map<String, dynamic> method,
+  String methodName,
+  Set<String> classNames,
+  Map<String, String> podZeroLiterals,
+  Set<String> regularDartNames,
+  Set<String> usedVirtualNames,
+) {
+  if (method['is_vararg'] == true) {
+    buffer.writeln('  // Skipped virtual $methodName(): vararg has no fixed ptrcall signature.');
+    return null;
+  }
+  final hash = method['hash'] as int?;
+  if (hash == null) {
+    buffer.writeln('  // Skipped virtual $methodName(): no stable hash.');
+    return null;
+  }
+
+  final returnInfo = method['return_value'] as Map<String, dynamic>?;
+  final returnGodotType = returnInfo?['type'] as String?;
+  final returnTypeInfo = returnGodotType == null ? null : _classify(returnGodotType, classNames);
+  if (returnGodotType != null && returnTypeInfo == null) {
+    buffer.writeln('  // Skipped virtual $methodName(): unsupported return type "$returnGodotType".');
+    return null;
+  }
+
+  final arguments = (method['arguments'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
+  final argTypeInfos = <_TypeInfo>[];
+  for (final arg in arguments) {
+    final info = _classify(arg['type'] as String, classNames);
+    if (info == null) {
+      buffer.writeln('  // Skipped virtual $methodName(): an argument type is unsupported ("${arg['type']}").');
+      return null;
+    }
+    argTypeInfos.add(info);
+  }
+
+  final dartName = _sanitizeIdentifier(_camelCase(methodName.replaceFirst(RegExp('^_+'), '')));
+  if (regularDartNames.contains(dartName) || !usedVirtualNames.add(dartName)) {
+    buffer.writeln('  // Skipped virtual $methodName(): dart name "$dartName" collides with an existing member.');
+    return null;
+  }
+
+  final paramNames = <String>[];
+  final paramList = StringBuffer();
+  for (var i = 0; i < arguments.length; i++) {
+    final pname = _sanitizeIdentifier(_camelCase(arguments[i]['name'] as String));
+    paramNames.add(pname);
+    if (i > 0) paramList.write(', ');
+    paramList.write('${argTypeInfos[i].dartType} $pname');
+  }
+
+  final isObjectReturn = returnTypeInfo?.category == 'object';
+  final dartReturnType =
+      returnTypeInfo == null ? 'void' : (isObjectReturn ? '${returnTypeInfo.dartType}?' : returnTypeInfo.dartType);
+
+  buffer.writeln("  /// Override to hook into Godot's `$methodName` virtual.");
+  buffer.write('  $dartReturnType $dartName($paramList) ');
+  if (returnTypeInfo == null) {
+    buffer.writeln('{}');
+  } else if (isObjectReturn) {
+    buffer.writeln('=> null;');
+  } else {
+    // Non-nullable return: the auto-generated no-op body needs *some* value
+    // of the right type to compile, only actually observed if a consumer's
+    // own override explicitly calls `super.$dartName(...)`.
+    final zeroLiteral = switch (returnTypeInfo.category) {
+      'pod' => podZeroLiterals[returnTypeInfo.dartType]!,
+      'string' || 'stringName' => "''",
+      'bool' => 'false',
+      'double' => '0.0',
+      _ => '0',
+    };
+    buffer.writeln('=> $zeroLiteral;');
+  }
+  buffer.writeln();
+
+  return _VirtualSpec(
+    godotName: methodName,
+    dartName: dartName,
+    hash: hash,
+    args: argTypeInfos,
+    returnInfo: returnTypeInfo,
+  );
 }
 
 void _emitMethod(
@@ -491,6 +687,81 @@ void _emitMethod(
   buffer.writeln('    }');
   buffer.writeln('  }');
   buffer.writeln();
+}
+
+/// Writes gen/virtuals.g.dart: the machine-derived (never hand-curated)
+/// table godot_dart_builder's GodotClassGenerator reads to know, for a
+/// virtual some consumer class actually overrides, the wire hash and native
+/// ptrcall marshaling shape for its arguments/return.
+void _writeVirtualsFile(String godotDartLib, Map<String, List<_VirtualSpec>> virtualsByClass) {
+  final buffer = StringBuffer();
+  buffer.writeln('// GENERATED CODE - do not edit by hand.');
+  buffer.writeln('// Produced by tool/godot_api_gen/bin/generate.dart from extension_api.json.');
+  buffer.writeln('//');
+  buffer.writeln('// Per-class metadata for engine virtual methods stubbed as real,');
+  buffer.writeln('// overridable Dart methods on their declaring class in gen/classes/ (see');
+  buffer.writeln('// the matching no-op method there). Consumed by godot_dart_builder\'s');
+  buffer.writeln('// GodotClassGenerator to find, for a virtual some consumer class actually');
+  buffer.writeln('// overrides, the wire hash and native ptrcall marshaling shape for its');
+  buffer.writeln('// arguments/return - this table is the only place that data lives.');
+  buffer.writeln('library;');
+  buffer.writeln();
+  buffer.writeln('/// Native ptrcall marshaling category for one virtual argument or return');
+  buffer.writeln('/// value.');
+  buffer.writeln('enum VirtualValueKind { double_, int_, bool_, pod, object, string, stringName }');
+  buffer.writeln();
+  buffer.writeln('/// One virtual argument or return value: its marshaling [kind], plus');
+  buffer.writeln('/// [dartType] (the pod builtin or engine class name) for [VirtualValueKind.pod]');
+  buffer.writeln('/// and [VirtualValueKind.object] - unused (empty) otherwise.');
+  buffer.writeln('class VirtualValueSpec {');
+  buffer.writeln("  const VirtualValueSpec(this.kind, [this.dartType = '']);");
+  buffer.writeln('  final VirtualValueKind kind;');
+  buffer.writeln('  final String dartType;');
+  buffer.writeln('}');
+  buffer.writeln();
+  buffer.writeln('/// One engine virtual method: its Godot-side name (for StringName matching');
+  buffer.writeln('/// against get_virtual_func), the public Dart method name it was renamed to,');
+  buffer.writeln('/// its extension_api.json hash, and its marshaling shape.');
+  buffer.writeln('class VirtualInfo {');
+  buffer.writeln('  const VirtualInfo(this.godotName, this.dartName, this.hash, this.args, this.returnSpec);');
+  buffer.writeln('  final String godotName;');
+  buffer.writeln('  final String dartName;');
+  buffer.writeln('  final int hash;');
+  buffer.writeln('  final List<VirtualValueSpec> args;');
+  buffer.writeln('  final VirtualValueSpec? returnSpec;');
+  buffer.writeln('}');
+  buffer.writeln();
+  buffer.writeln('/// Engine class name -> the virtuals it declares (only its own, not');
+  buffer.writeln('/// inherited ones - the generated class hierarchy in gen/classes/ already');
+  buffer.writeln('/// carries those through normal Dart inheritance).');
+  buffer.writeln('const Map<String, List<VirtualInfo>> engineVirtualsByClass = {');
+  for (final entry in virtualsByClass.entries) {
+    buffer.writeln("  '${entry.key}': [");
+    for (final v in entry.value) {
+      final argsExpr = v.args.map(_virtualValueSpecLiteral).join(', ');
+      final returnExpr = v.returnInfo == null ? 'null' : _virtualValueSpecLiteral(v.returnInfo!);
+      buffer.writeln("    VirtualInfo('${v.godotName}', '${v.dartName}', ${v.hash}, [$argsExpr], $returnExpr),");
+    }
+    buffer.writeln('  ],');
+  }
+  buffer.writeln('};');
+
+  File('$godotDartLib/virtuals.g.dart').writeAsStringSync(buffer.toString());
+}
+
+String _virtualValueSpecLiteral(_TypeInfo info) {
+  final kind = switch (info.category) {
+    'double' => 'VirtualValueKind.double_',
+    'int' => 'VirtualValueKind.int_',
+    'bool' => 'VirtualValueKind.bool_',
+    'pod' => 'VirtualValueKind.pod',
+    'object' => 'VirtualValueKind.object',
+    'string' => 'VirtualValueKind.string',
+    'stringName' => 'VirtualValueKind.stringName',
+    _ => throw StateError('unreachable: unknown category "${info.category}"'),
+  };
+  final needsDartType = info.category == 'pod' || info.category == 'object';
+  return needsDartType ? "VirtualValueSpec($kind, '${info.dartType}')" : 'VirtualValueSpec($kind)';
 }
 
 const Set<String> _dartReservedWords = {

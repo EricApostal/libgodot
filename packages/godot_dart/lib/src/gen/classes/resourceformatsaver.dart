@@ -20,4 +20,17 @@ class ResourceFormatSaver extends RefCounted {
     return ResourceFormatSaver(resolveClassConstructor('ResourceFormatSaver'));
   }
 
+  /// Override to hook into Godot's `_save` virtual.
+  int save(Resource resource, String path, int flags) => 0;
+
+  /// Override to hook into Godot's `_set_uid` virtual.
+  int setUid(String path, int uid) => 0;
+
+  /// Override to hook into Godot's `_recognize` virtual.
+  bool recognize(Resource resource) => false;
+
+  // Skipped virtual _get_recognized_extensions(): unsupported return type "PackedStringArray".
+  /// Override to hook into Godot's `_recognize_path` virtual.
+  bool recognizePath(Resource resource, String path) => false;
+
 }

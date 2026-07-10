@@ -20,4 +20,16 @@ class MainLoop extends GodotObject {
     return MainLoop(resolveClassConstructor('MainLoop'));
   }
 
+  /// Override to hook into Godot's `_initialize` virtual.
+  void initialize() {}
+
+  /// Override to hook into Godot's `_physics_process` virtual.
+  bool physicsProcess(double delta) => false;
+
+  /// Override to hook into Godot's `_process` virtual.
+  bool process(double delta) => false;
+
+  /// Override to hook into Godot's `_finalize` virtual.
+  void finalize() {}
+
 }

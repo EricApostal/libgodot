@@ -20,6 +20,12 @@ class BaseButton extends Control {
     return BaseButton(resolveClassConstructor('BaseButton'));
   }
 
+  /// Override to hook into Godot's `_pressed` virtual.
+  void pressed() {}
+
+  /// Override to hook into Godot's `_toggled` virtual.
+  void toggled(bool toggledOn) {}
+
   static final Pointer<Void> _mb_set_pressed =
       resolveMethodBind('BaseButton', 'set_pressed', 2586408642);
 

@@ -20,6 +20,18 @@ class AudioStreamPlayback extends RefCounted {
     return AudioStreamPlayback(resolveClassConstructor('AudioStreamPlayback'));
   }
 
+  // Skipped virtual _start(): dart name "start" collides with an existing member.
+  // Skipped virtual _stop(): dart name "stop" collides with an existing member.
+  // Skipped virtual _is_playing(): dart name "isPlaying" collides with an existing member.
+  // Skipped virtual _get_loop_count(): dart name "getLoopCount" collides with an existing member.
+  // Skipped virtual _get_playback_position(): dart name "getPlaybackPosition" collides with an existing member.
+  // Skipped virtual _seek(): dart name "seek" collides with an existing member.
+  // Skipped virtual _mix(): an argument type is unsupported ("AudioFrame*").
+  /// Override to hook into Godot's `_tag_used_streams` virtual.
+  void tagUsedStreams() {}
+
+  // Skipped virtual _set_parameter(): an argument type is unsupported ("Variant").
+  // Skipped virtual _get_parameter(): unsupported return type "Variant".
   static final Pointer<Void> _mb_set_sample_playback =
       resolveMethodBind('AudioStreamPlayback', 'set_sample_playback', 3195455091);
 

@@ -20,6 +20,14 @@ class CameraFeed extends RefCounted {
     return CameraFeed(resolveClassConstructor('CameraFeed'));
   }
 
+  /// Override to hook into Godot's `_activate_feed` virtual.
+  bool activateFeed() => false;
+
+  /// Override to hook into Godot's `_deactivate_feed` virtual.
+  void deactivateFeed() {}
+
+  // Skipped virtual _set_format(): an argument type is unsupported ("Dictionary").
+  // Skipped virtual _get_formats(): unsupported return type "Array".
   static final Pointer<Void> _mb_get_id =
       resolveMethodBind('CameraFeed', 'get_id', 3905245786);
 

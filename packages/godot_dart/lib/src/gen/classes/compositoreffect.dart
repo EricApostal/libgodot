@@ -20,6 +20,9 @@ class CompositorEffect extends Resource {
     return CompositorEffect(resolveClassConstructor('CompositorEffect'));
   }
 
+  /// Override to hook into Godot's `_render_callback` virtual.
+  void renderCallback(int effectCallbackType, RenderData renderData) {}
+
   static final Pointer<Void> _mb_set_enabled =
       resolveMethodBind('CompositorEffect', 'set_enabled', 2586408642);
 

@@ -20,6 +20,8 @@ class OpenXRSpatialCapabilityConfigurationBaseHeader extends RefCounted {
     return OpenXRSpatialCapabilityConfigurationBaseHeader(resolveClassConstructor('OpenXRSpatialCapabilityConfigurationBaseHeader'));
   }
 
+  // Skipped virtual _has_valid_configuration(): dart name "hasValidConfiguration" collides with an existing member.
+  // Skipped virtual _get_configuration(): dart name "getConfiguration" collides with an existing member.
   static final Pointer<Void> _mb_has_valid_configuration =
       resolveMethodBind('OpenXRSpatialCapabilityConfigurationBaseHeader', 'has_valid_configuration', 36873697);
 

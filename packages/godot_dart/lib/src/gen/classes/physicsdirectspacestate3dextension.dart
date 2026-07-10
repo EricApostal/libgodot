@@ -20,5 +20,12 @@ class PhysicsDirectSpaceState3DExtension extends PhysicsDirectSpaceState3D {
     return PhysicsDirectSpaceState3DExtension(resolveClassConstructor('PhysicsDirectSpaceState3DExtension'));
   }
 
+  // Skipped virtual _intersect_ray(): an argument type is unsupported ("PhysicsServer3DExtensionRayResult*").
+  // Skipped virtual _intersect_point(): an argument type is unsupported ("PhysicsServer3DExtensionShapeResult*").
+  // Skipped virtual _intersect_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _cast_motion(): an argument type is unsupported ("RID").
+  // Skipped virtual _collide_shape(): an argument type is unsupported ("RID").
+  // Skipped virtual _rest_info(): an argument type is unsupported ("RID").
+  // Skipped virtual _get_closest_point_to_object_volume(): an argument type is unsupported ("RID").
   // Skipped is_body_excluded_from_query(): an argument type is unsupported.
 }

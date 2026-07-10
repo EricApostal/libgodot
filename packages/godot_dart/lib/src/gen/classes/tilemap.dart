@@ -20,6 +20,12 @@ class TileMap extends Node2D {
     return TileMap(resolveClassConstructor('TileMap'));
   }
 
+  /// Override to hook into Godot's `_use_tile_data_runtime_update` virtual.
+  bool useTileDataRuntimeUpdate(int layer, Vector2i coords) => false;
+
+  /// Override to hook into Godot's `_tile_data_runtime_update` virtual.
+  void tileDataRuntimeUpdate(int layer, Vector2i coords, TileData tileData) {}
+
   // Skipped set_navigation_map(): an argument type is unsupported.
   // Skipped get_navigation_map(): unsupported return type "RID".
   static final Pointer<Void> _mb_force_update =

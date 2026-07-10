@@ -20,6 +20,9 @@ class SubViewportContainer extends Container {
     return SubViewportContainer(resolveClassConstructor('SubViewportContainer'));
   }
 
+  /// Override to hook into Godot's `_propagate_input_event` virtual.
+  bool propagateInputEvent(InputEvent event) => false;
+
   static final Pointer<Void> _mb_set_stretch =
       resolveMethodBind('SubViewportContainer', 'set_stretch', 2586408642);
 

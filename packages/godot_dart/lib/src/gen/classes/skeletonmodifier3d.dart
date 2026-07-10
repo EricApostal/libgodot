@@ -20,6 +20,18 @@ class SkeletonModifier3D extends Node3D {
     return SkeletonModifier3D(resolveClassConstructor('SkeletonModifier3D'));
   }
 
+  /// Override to hook into Godot's `_process_modification_with_delta` virtual.
+  void processModificationWithDelta(double delta) {}
+
+  /// Override to hook into Godot's `_process_modification` virtual.
+  void processModification() {}
+
+  /// Override to hook into Godot's `_skeleton_changed` virtual.
+  void skeletonChanged(Skeleton3D oldSkeleton, Skeleton3D newSkeleton) {}
+
+  /// Override to hook into Godot's `_validate_bone_names` virtual.
+  void validateBoneNames() {}
+
   static final Pointer<Void> _mb_get_skeleton =
       resolveMethodBind('SkeletonModifier3D', 'get_skeleton', 1488626673);
 

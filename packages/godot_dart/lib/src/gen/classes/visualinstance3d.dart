@@ -20,6 +20,7 @@ class VisualInstance3D extends Node3D {
     return VisualInstance3D(resolveClassConstructor('VisualInstance3D'));
   }
 
+  // Skipped virtual _get_aabb(): dart name "getAabb" collides with an existing member.
   // Skipped set_base(): an argument type is unsupported.
   // Skipped get_base(): unsupported return type "RID".
   // Skipped get_instance(): unsupported return type "RID".

@@ -20,6 +20,15 @@ class SkeletonModification2D extends Resource {
     return SkeletonModification2D(resolveClassConstructor('SkeletonModification2D'));
   }
 
+  /// Override to hook into Godot's `_execute` virtual.
+  void execute(double delta) {}
+
+  /// Override to hook into Godot's `_setup_modification` virtual.
+  void setupModification(SkeletonModificationStack2D modificationStack) {}
+
+  /// Override to hook into Godot's `_draw_editor_gizmo` virtual.
+  void drawEditorGizmo() {}
+
   static final Pointer<Void> _mb_set_enabled =
       resolveMethodBind('SkeletonModification2D', 'set_enabled', 2586408642);
 

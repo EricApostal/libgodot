@@ -14,4 +14,5 @@ import '../classes.g.dart';
 class ResourceImporter extends RefCounted {
   ResourceImporter(super.nativePtr);
 
+  // Skipped virtual _get_build_dependencies(): unsupported return type "PackedStringArray".
 }

@@ -14,6 +14,21 @@ import '../classes.g.dart';
 class CollisionObject2D extends Node2D {
   CollisionObject2D(super.nativePtr);
 
+  /// Override to hook into Godot's `_input_event` virtual.
+  void inputEvent(Viewport viewport, InputEvent event, int shapeIdx) {}
+
+  /// Override to hook into Godot's `_mouse_enter` virtual.
+  void mouseEnter() {}
+
+  /// Override to hook into Godot's `_mouse_exit` virtual.
+  void mouseExit() {}
+
+  /// Override to hook into Godot's `_mouse_shape_enter` virtual.
+  void mouseShapeEnter(int shapeIdx) {}
+
+  /// Override to hook into Godot's `_mouse_shape_exit` virtual.
+  void mouseShapeExit(int shapeIdx) {}
+
   // Skipped get_rid(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_collision_layer =
       resolveMethodBind('CollisionObject2D', 'set_collision_layer', 1286410249);

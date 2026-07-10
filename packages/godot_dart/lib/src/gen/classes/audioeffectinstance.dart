@@ -20,4 +20,8 @@ class AudioEffectInstance extends RefCounted {
     return AudioEffectInstance(resolveClassConstructor('AudioEffectInstance'));
   }
 
+  // Skipped virtual _process(): an argument type is unsupported ("const void*").
+  /// Override to hook into Godot's `_process_silence` virtual.
+  bool processSilence() => false;
+
 }

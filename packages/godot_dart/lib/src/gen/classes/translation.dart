@@ -20,6 +20,8 @@ class Translation extends Resource {
     return Translation(resolveClassConstructor('Translation'));
   }
 
+  // Skipped virtual _get_plural_message(): dart name "getPluralMessage" collides with an existing member.
+  // Skipped virtual _get_message(): dart name "getMessage" collides with an existing member.
   static final Pointer<Void> _mb_set_locale =
       resolveMethodBind('Translation', 'set_locale', 83702148);
 

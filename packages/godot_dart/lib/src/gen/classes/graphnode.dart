@@ -20,6 +20,9 @@ class GraphNode extends GraphElement {
     return GraphNode(resolveClassConstructor('GraphNode'));
   }
 
+  /// Override to hook into Godot's `_draw_port` virtual.
+  void drawPort(int slotIndex, Vector2i position, bool left, Color color) {}
+
   static final Pointer<Void> _mb_set_title =
       resolveMethodBind('GraphNode', 'set_title', 83702148);
 

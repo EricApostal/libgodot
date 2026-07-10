@@ -18,7 +18,8 @@ part 'scene_root.g.dart';
 class SceneRoot extends Node3D {
   SceneRoot(super.nativePtr);
 
-  void _ready() {
+  @override
+  void ready() {
     _addCamera();
     _addLights();
     _addGroundPlane();

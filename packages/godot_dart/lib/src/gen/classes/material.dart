@@ -20,6 +20,16 @@ class Material extends Resource {
     return Material(resolveClassConstructor('Material'));
   }
 
+  // Skipped virtual _get_shader_rid(): unsupported return type "RID".
+  /// Override to hook into Godot's `_get_shader_mode` virtual.
+  int getShaderMode() => 0;
+
+  /// Override to hook into Godot's `_can_do_next_pass` virtual.
+  bool canDoNextPass() => false;
+
+  /// Override to hook into Godot's `_can_use_render_priority` virtual.
+  bool canUseRenderPriority() => false;
+
   static final Pointer<Void> _mb_set_next_pass =
       resolveMethodBind('Material', 'set_next_pass', 2757459619);
 

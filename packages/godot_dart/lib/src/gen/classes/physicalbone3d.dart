@@ -20,6 +20,9 @@ class PhysicalBone3D extends PhysicsBody3D {
     return PhysicalBone3D(resolveClassConstructor('PhysicalBone3D'));
   }
 
+  /// Override to hook into Godot's `_integrate_forces` virtual.
+  void integrateForces(PhysicsDirectBodyState3D state) {}
+
   static final Pointer<Void> _mb_apply_central_impulse =
       resolveMethodBind('PhysicalBone3D', 'apply_central_impulse', 3460891852);
 

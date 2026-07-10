@@ -20,4 +20,12 @@ class PacketPeerExtension extends PacketPeer {
     return PacketPeerExtension(resolveClassConstructor('PacketPeerExtension'));
   }
 
+  // Skipped virtual _get_packet(): an argument type is unsupported ("const uint8_t **").
+  // Skipped virtual _put_packet(): an argument type is unsupported ("const uint8_t*").
+  /// Override to hook into Godot's `_get_available_packet_count` virtual.
+  int getAvailablePacketCount() => 0;
+
+  /// Override to hook into Godot's `_get_max_packet_size` virtual.
+  int getMaxPacketSize() => 0;
+
 }

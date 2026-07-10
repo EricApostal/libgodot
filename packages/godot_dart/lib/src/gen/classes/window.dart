@@ -20,6 +20,7 @@ class Window extends Viewport {
     return Window(resolveClassConstructor('Window'));
   }
 
+  // Skipped virtual _get_contents_minimum_size(): dart name "getContentsMinimumSize" collides with an existing member.
   static final Pointer<Void> _mb_set_title =
       resolveMethodBind('Window', 'set_title', 83702148);
 

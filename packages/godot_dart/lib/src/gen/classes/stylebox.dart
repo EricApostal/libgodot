@@ -20,6 +20,12 @@ class StyleBox extends Resource {
     return StyleBox(resolveClassConstructor('StyleBox'));
   }
 
+  // Skipped virtual _draw(): an argument type is unsupported ("RID").
+  /// Override to hook into Godot's `_get_draw_rect` virtual.
+  Rect2 getDrawRect(Rect2 rect) => const Rect2(const Vector2(0.0, 0.0), const Vector2(0.0, 0.0));
+
+  // Skipped virtual _get_minimum_size(): dart name "getMinimumSize" collides with an existing member.
+  // Skipped virtual _test_mask(): dart name "testMask" collides with an existing member.
   static final Pointer<Void> _mb_get_minimum_size =
       resolveMethodBind('StyleBox', 'get_minimum_size', 3341600327);
 

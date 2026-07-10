@@ -20,6 +20,10 @@ class AudioStreamPlaybackResampled extends AudioStreamPlayback {
     return AudioStreamPlaybackResampled(resolveClassConstructor('AudioStreamPlaybackResampled'));
   }
 
+  // Skipped virtual _mix_resampled(): an argument type is unsupported ("AudioFrame*").
+  /// Override to hook into Godot's `_get_stream_sampling_rate` virtual.
+  double getStreamSamplingRate() => 0.0;
+
   static final Pointer<Void> _mb_begin_resample =
       resolveMethodBind('AudioStreamPlaybackResampled', 'begin_resample', 3218959716);
 

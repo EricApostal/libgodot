@@ -20,6 +20,9 @@ class CodeEdit extends TextEdit {
     return CodeEdit(resolveClassConstructor('CodeEdit'));
   }
 
+  // Skipped virtual _confirm_code_completion(): dart name "confirmCodeCompletion" collides with an existing member.
+  // Skipped virtual _request_code_completion(): dart name "requestCodeCompletion" collides with an existing member.
+  // Skipped virtual _filter_code_completion_candidates(): unsupported return type "typedarray::Dictionary".
   static final Pointer<Void> _mb_set_indent_size =
       resolveMethodBind('CodeEdit', 'set_indent_size', 1286410249);
 

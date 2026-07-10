@@ -20,6 +20,11 @@ class OpenXRSpatialComponentData extends RefCounted {
     return OpenXRSpatialComponentData(resolveClassConstructor('OpenXRSpatialComponentData'));
   }
 
+  // Skipped virtual _set_capacity(): dart name "setCapacity" collides with an existing member.
+  // Skipped virtual _get_component_type(): dart name "getComponentType" collides with an existing member.
+  /// Override to hook into Godot's `_get_structure_data` virtual.
+  int getStructureData(int next) => 0;
+
   static final Pointer<Void> _mb_set_capacity =
       resolveMethodBind('OpenXRSpatialComponentData', 'set_capacity', 1286410249);
 

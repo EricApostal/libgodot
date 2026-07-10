@@ -20,6 +20,15 @@ class AStar2D extends RefCounted {
     return AStar2D(resolveClassConstructor('AStar2D'));
   }
 
+  /// Override to hook into Godot's `_filter_neighbor` virtual.
+  bool filterNeighbor(int fromId, int neighborId) => false;
+
+  /// Override to hook into Godot's `_estimate_cost` virtual.
+  double estimateCost(int fromId, int endId) => 0.0;
+
+  /// Override to hook into Godot's `_compute_cost` virtual.
+  double computeCost(int fromId, int toId) => 0.0;
+
   static final Pointer<Void> _mb_get_available_point_id =
       resolveMethodBind('AStar2D', 'get_available_point_id', 3905245786);
 

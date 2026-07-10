@@ -20,6 +20,34 @@ class Mesh extends Resource {
     return Mesh(resolveClassConstructor('Mesh'));
   }
 
+  // Skipped virtual _get_surface_count(): dart name "getSurfaceCount" collides with an existing member.
+  /// Override to hook into Godot's `_surface_get_array_len` virtual.
+  int surfaceGetArrayLen(int index) => 0;
+
+  /// Override to hook into Godot's `_surface_get_array_index_len` virtual.
+  int surfaceGetArrayIndexLen(int index) => 0;
+
+  // Skipped virtual _surface_get_arrays(): unsupported return type "Array".
+  // Skipped virtual _surface_get_blend_shape_arrays(): unsupported return type "typedarray::Array".
+  // Skipped virtual _surface_get_lods(): unsupported return type "Dictionary".
+  /// Override to hook into Godot's `_surface_get_format` virtual.
+  int surfaceGetFormat(int index) => 0;
+
+  /// Override to hook into Godot's `_surface_get_primitive_type` virtual.
+  int surfaceGetPrimitiveType(int index) => 0;
+
+  // Skipped virtual _surface_set_material(): dart name "surfaceSetMaterial" collides with an existing member.
+  // Skipped virtual _surface_get_material(): dart name "surfaceGetMaterial" collides with an existing member.
+  /// Override to hook into Godot's `_get_blend_shape_count` virtual.
+  int getBlendShapeCount() => 0;
+
+  /// Override to hook into Godot's `_get_blend_shape_name` virtual.
+  String getBlendShapeName(int index) => '';
+
+  /// Override to hook into Godot's `_set_blend_shape_name` virtual.
+  void setBlendShapeName(int index, String name) {}
+
+  // Skipped virtual _get_aabb(): dart name "getAabb" collides with an existing member.
   static final Pointer<Void> _mb_set_lightmap_size_hint =
       resolveMethodBind('Mesh', 'set_lightmap_size_hint', 1130785943);
 

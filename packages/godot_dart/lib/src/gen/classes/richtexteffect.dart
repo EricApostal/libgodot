@@ -20,4 +20,7 @@ class RichTextEffect extends Resource {
     return RichTextEffect(resolveClassConstructor('RichTextEffect'));
   }
 
+  /// Override to hook into Godot's `_process_custom_fx` virtual.
+  bool processCustomFx(CharFXTransform charFx) => false;
+
 }

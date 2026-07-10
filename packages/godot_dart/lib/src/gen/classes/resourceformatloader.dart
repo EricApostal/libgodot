@@ -20,4 +20,27 @@ class ResourceFormatLoader extends RefCounted {
     return ResourceFormatLoader(resolveClassConstructor('ResourceFormatLoader'));
   }
 
+  // Skipped virtual _get_recognized_extensions(): unsupported return type "PackedStringArray".
+  /// Override to hook into Godot's `_recognize_path` virtual.
+  bool recognizePath(String path, String type) => false;
+
+  /// Override to hook into Godot's `_handles_type` virtual.
+  bool handlesType(String type) => false;
+
+  /// Override to hook into Godot's `_get_resource_type` virtual.
+  String getResourceType(String path) => '';
+
+  /// Override to hook into Godot's `_get_resource_script_class` virtual.
+  String getResourceScriptClass(String path) => '';
+
+  /// Override to hook into Godot's `_get_resource_uid` virtual.
+  int getResourceUid(String path) => 0;
+
+  // Skipped virtual _get_dependencies(): unsupported return type "PackedStringArray".
+  // Skipped virtual _rename_dependencies(): an argument type is unsupported ("Dictionary").
+  /// Override to hook into Godot's `_exists` virtual.
+  bool exists(String path) => false;
+
+  // Skipped virtual _get_classes_used(): unsupported return type "PackedStringArray".
+  // Skipped virtual _load(): unsupported return type "Variant".
 }

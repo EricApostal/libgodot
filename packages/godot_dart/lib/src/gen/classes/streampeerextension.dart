@@ -20,4 +20,11 @@ class StreamPeerExtension extends StreamPeer {
     return StreamPeerExtension(resolveClassConstructor('StreamPeerExtension'));
   }
 
+  // Skipped virtual _get_data(): an argument type is unsupported ("uint8_t*").
+  // Skipped virtual _get_partial_data(): an argument type is unsupported ("uint8_t*").
+  // Skipped virtual _put_data(): an argument type is unsupported ("const uint8_t*").
+  // Skipped virtual _put_partial_data(): an argument type is unsupported ("const uint8_t*").
+  /// Override to hook into Godot's `_get_available_bytes` virtual.
+  int getAvailableBytes() => 0;
+
 }

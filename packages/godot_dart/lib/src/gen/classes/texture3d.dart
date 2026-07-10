@@ -20,6 +20,12 @@ class Texture3D extends Texture {
     return Texture3D(resolveClassConstructor('Texture3D'));
   }
 
+  // Skipped virtual _get_format(): dart name "getFormat" collides with an existing member.
+  // Skipped virtual _get_width(): dart name "getWidth" collides with an existing member.
+  // Skipped virtual _get_height(): dart name "getHeight" collides with an existing member.
+  // Skipped virtual _get_depth(): dart name "getDepth" collides with an existing member.
+  // Skipped virtual _has_mipmaps(): dart name "hasMipmaps" collides with an existing member.
+  // Skipped virtual _get_data(): unsupported return type "typedarray::Image".
   static final Pointer<Void> _mb_get_format =
       resolveMethodBind('Texture3D', 'get_format', 3847873762);
 

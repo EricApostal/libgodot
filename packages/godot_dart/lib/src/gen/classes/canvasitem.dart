@@ -14,6 +14,9 @@ import '../classes.g.dart';
 class CanvasItem extends Node {
   CanvasItem(super.nativePtr);
 
+  /// Override to hook into Godot's `_draw` virtual.
+  void draw() {}
+
   // Skipped get_canvas_item(): unsupported return type "RID".
   static final Pointer<Void> _mb_set_visible =
       resolveMethodBind('CanvasItem', 'set_visible', 2586408642);

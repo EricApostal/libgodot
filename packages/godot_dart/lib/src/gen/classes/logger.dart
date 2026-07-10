@@ -20,4 +20,8 @@ class Logger extends RefCounted {
     return Logger(resolveClassConstructor('Logger'));
   }
 
+  // Skipped virtual _log_error(): an argument type is unsupported ("typedarray::ScriptBacktrace").
+  /// Override to hook into Godot's `_log_message` virtual.
+  void logMessage(String message, bool error) {}
+
 }

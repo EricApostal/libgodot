@@ -20,6 +20,8 @@ class Container extends Control {
     return Container(resolveClassConstructor('Container'));
   }
 
+  // Skipped virtual _get_allowed_size_flags_horizontal(): unsupported return type "PackedInt32Array".
+  // Skipped virtual _get_allowed_size_flags_vertical(): unsupported return type "PackedInt32Array".
   static final Pointer<Void> _mb_queue_sort =
       resolveMethodBind('Container', 'queue_sort', 3218959716);
 

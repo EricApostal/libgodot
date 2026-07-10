@@ -14,4 +14,8 @@ import '../classes.g.dart';
 class OpenXRBindingModifier extends Resource {
   OpenXRBindingModifier(super.nativePtr);
 
+  /// Override to hook into Godot's `_get_description` virtual.
+  String getDescription() => '';
+
+  // Skipped virtual _get_ip_modification(): unsupported return type "PackedByteArray".
 }

@@ -26,13 +26,14 @@ void _callVirtualProcess_OrbitingBody(Pointer<Void> instanceToken,
   final self = InstanceRegistry.lookup<OrbitingBody>(instanceToken);
   if (self == null) return;
   final arg0 = args[0].cast<Double>().value;
-  self._process(arg0);
+  self.process(arg0);
 }
 
 Pointer<NativeFunction<GDExtensionClassCallVirtualNative>>
     _getVirtual_OrbitingBody(
         Pointer<Void> classUserdata, Pointer<Void> name, int hash) {
-  if (StringNameCache.identical(name, StringNameCache.intern('_process'))) {
+  if (StringNameCache.identical(name, StringNameCache.intern('_process')) &&
+      hash == 373806689) {
     return Pointer.fromFunction<GDExtensionClassCallVirtualNative>(
         _callVirtualProcess_OrbitingBody);
   }

@@ -20,4 +20,5 @@ class AnimationNodeExtension extends AnimationNode {
     return AnimationNodeExtension(resolveClassConstructor('AnimationNodeExtension'));
   }
 
+  // Skipped virtual _process_animation_node(): unsupported return type "PackedFloat32Array".
 }
