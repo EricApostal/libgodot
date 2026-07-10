@@ -1,53 +1,46 @@
 // Batch generator: reads extension_api.json and emits Dart wrapper classes
-// for a hand-picked set of engine classes into
-// packages/godot_dart/lib/src/gen/classes/.
+// for (nearly) every non-editor engine class, plus the POD builtin value
+// types, into packages/godot_dart/lib/src/gen/.
 //
 // This is deliberately a plain `dart run` script, not a build_runner Builder:
 // it's a one-shot transform of a single large vendored spec file into
-// hundreds of potential output files, run on demand when the engine fork's
-// API changes — not an incremental, per-source-file, edit-triggered build
-// (that's what godot_dart_builder, a real Builder, is for — see its
-// annotation-driven per-app class registration instead).
+// hundreds of output files, run on demand when the engine fork's API
+// changes — not an incremental, per-source-file, edit-triggered build
+// (that's what godot_dart_builder, a real Builder, is for).
 //
-// Phase 1 scope: only methods whose every argument and return type is in
-// _supportedTypes are emitted (ptrcall raw-pointer marshaling for float/int/
-// bool only); everything else is skipped with a comment explaining why.
-// Broadening _supportedTypes (String, Vector2/3, Object references, enums)
-// is Phase 2 breadth work, not a limitation of this generator's structure.
+// Type coverage (chosen by frequency across the whole API - see commit
+// history/conversation for the analysis): primitives (float/int/bool),
+// enums/bitfields (ptrcall as raw int64, matching godot-cpp's convention of
+// encoding all enums that way), the 16 POD builtins (Vector2/3/4 + i variants,
+// Color, Rect2/2i, Plane, Quaternion, AABB, Basis, Transform2D/3D, Projection),
+// String, StringName, and Object-derived references. Together these cover
+// ~82% of all argument/return type usages in the full API. Everything else
+// (Array, Dictionary, Callable, Signal, RID, Packed*Array, Variant, NodePath,
+// typed arrays) is skipped with a comment explaining why - broadening this is
+// future work, not a limitation of the generator's structure.
+//
+// Also skipped: vararg methods (no fixed ptrcall signature), static methods
+// (no instance to bind against in this generator's calling convention), and
+// methods with no stable hash. Default argument values are not modeled -
+// every generated parameter is required.
 library;
 
 import 'dart:convert';
 import 'dart:io';
 
-/// Godot type name -> (Dart type, GDExtensionVariantType constant name,
-/// native FFI pointer type used to marshal a single raw ptrcall value).
-const Map<String, (String dartType, String variantTypeConst, String nativeType)> _supportedTypes = {
-  'float': ('double', 'GDExtensionVariantType.float', 'Double'),
-  'int': ('int', 'GDExtensionVariantType.int_', 'Int64'),
-  'bool': ('bool', 'GDExtensionVariantType.boolType', 'Uint8'),
-};
+/// Godot type name -> Dart type name for the 16 POD builtins, in dependency
+/// order (each only references earlier entries).
+const List<String> _podBuiltins = [
+  'Vector2', 'Vector2i', 'Vector3', 'Vector3i', 'Vector4', 'Vector4i', 'Color',
+  'Rect2', 'Rect2i', 'Plane', 'Quaternion', 'AABB',
+  'Basis', 'Transform2D', 'Transform3D', 'Projection',
+];
 
-/// Classes to generate wrappers for. Each is generated as `class X extends
-/// GodotObject` directly (not threading through the real engine inheritance
-/// chain yet — Object/Node/CanvasItem intermediates are Phase 2 breadth
-/// work); this is enough for Dart-authored classes extending them to be
-/// registered with the right *engine-side* parent (that's a string passed to
-/// classdb_register_extension_class6, independent of Dart's own hierarchy).
-const List<String> _targetClasses = ['Node3D', 'MeshInstance3D'];
-
-/// Manual override for which *Dart* class each target extends, when the
-/// real engine parent (per extension_api.json's `inherits`) isn't itself a
-/// target class — e.g. MeshInstance3D's real chain is
-/// MeshInstance3D -> GeometryInstance3D -> VisualInstance3D -> Node3D, but
-/// we only generate Node3D, so MeshInstance3D extends it directly in Dart to
-/// still get rotate_x/rotate_y/etc. This only affects the generated Dart
-/// hierarchy, not the actual engine class registered for a subclass (that
-/// comes from the *Dart* superclass's runtime type name regardless, so a
-/// Dart-authored class extending MeshInstance3D here still correctly
-/// registers "MeshInstance3D" as its engine parent).
-const Map<String, String> _dartSuperclassOverrides = {
-  'MeshInstance3D': 'Node3D',
-};
+/// Godot's own "Object" class would shadow dart:core's Object if generated
+/// under that name; the hand-written GodotObject already fills that role, so
+/// "Object" itself is never generated - every class with no parent (or whose
+/// parent is "Object") extends GodotObject directly instead.
+const String _rootClassName = 'Object';
 
 void main(List<String> args) {
   final scriptDir = File.fromUri(Platform.script).parent.path;
@@ -57,90 +50,315 @@ void main(List<String> args) {
   final precision = (api['header'] as Map<String, dynamic>)['precision'];
   if (precision != 'single') {
     stderr.writeln('godot_api_gen: expected header.precision == "single", got "$precision". '
-        'Variant size assumptions (variantSize = 24) in variant_marshal.dart need re-checking.');
+        'POD builtin member types (real_t) and Variant size assumptions need re-checking.');
     exit(1);
   }
 
-  final classes = (api['classes'] as List).cast<Map<String, dynamic>>();
-  final outDir = Directory('$scriptDir/../../../packages/godot_dart/lib/src/gen/classes');
-  outDir.createSync(recursive: true);
-
-  for (final className in _targetClasses) {
-    final classJson = classes.firstWhere(
-      (c) => c['name'] == className,
-      orElse: () => throw StateError('godot_api_gen: class "$className" not found in extension_api.json'),
-    );
-    final code = _generateClass(classJson);
-    final outFile = File('${outDir.path}/${className.toLowerCase()}.dart');
-    outFile.writeAsStringSync(code);
-    stdout.writeln('godot_api_gen: wrote ${outFile.path}');
-  }
+  final godotDartLib = '$scriptDir/../../../packages/godot_dart/lib/src/gen';
+  _generateBuiltins(api, godotDartLib);
+  _generateClasses(api, godotDartLib);
 }
 
-String _generateClass(Map<String, dynamic> classJson) {
+// =============================================================================
+// MARK: - POD builtins
+// =============================================================================
+
+void _generateBuiltins(Map<String, dynamic> api, String godotDartLib) {
+  final offsetsEntry = (api['builtin_class_member_offsets'] as List)
+      .cast<Map<String, dynamic>>()
+      .firstWhere((e) => e['build_configuration'] == 'float_64');
+  final classesByName = <String, Map<String, dynamic>>{
+    for (final c in (offsetsEntry['classes'] as List).cast<Map<String, dynamic>>()) c['name'] as String: c,
+  };
+
+  final outDir = Directory('$godotDartLib/builtins')..createSync(recursive: true);
+  final barrel = StringBuffer();
+  barrel.writeln('// GENERATED CODE - do not edit by hand.');
+  barrel.writeln('library;');
+  barrel.writeln();
+
+  for (final name in _podBuiltins) {
+    final classJson = classesByName[name];
+    if (classJson == null) {
+      stderr.writeln('godot_api_gen: warning: builtin "$name" not found in builtin_class_member_offsets, skipping.');
+      continue;
+    }
+    final members = (classJson['members'] as List).cast<Map<String, dynamic>>();
+    final code = _generateBuiltinClass(name, members);
+    File('${outDir.path}/${name.toLowerCase()}.dart').writeAsStringSync(code);
+    barrel.writeln("export 'builtins/${name.toLowerCase()}.dart';");
+  }
+
+  File('$godotDartLib/builtins.g.dart').writeAsStringSync(barrel.toString());
+  stdout.writeln('godot_api_gen: wrote ${_podBuiltins.length} builtins + builtins.g.dart barrel');
+}
+
+/// Maps a member's `meta` type to (Dart field type, native FFI pointer type
+/// for a single leaf read/write), or null if it's a nested builtin (handled
+/// recursively via that builtin's own readFrom/writeTo).
+const Map<String, (String, String)> _leafMemberTypes = {
+  'float': ('double', 'Float'),
+  'int32': ('int', 'Int32'),
+};
+
+String _generateBuiltinClass(String className, List<Map<String, dynamic>> members) {
+  final buffer = StringBuffer();
+  buffer.writeln('// GENERATED CODE - do not edit by hand.');
+  buffer.writeln('// Produced by tool/godot_api_gen/bin/generate.dart from extension_api.json.');
+  buffer.writeln('library;');
+  buffer.writeln();
+  buffer.writeln("import 'dart:ffi';");
+  buffer.writeln();
+
+  // Import any nested builtin member types (e.g. Transform2D needs Vector2).
+  final nestedTypes = members.map((m) => m['meta'] as String).where((t) => !_leafMemberTypes.containsKey(t)).toSet();
+  for (final nested in nestedTypes) {
+    buffer.writeln("import '${nested.toLowerCase()}.dart';");
+  }
+  buffer.writeln();
+
+  final fieldNames = members.map((m) => m['member'] as String).toList();
+  final ctorArgs = fieldNames.map((f) => 'this.$f').join(', ');
+
+  buffer.writeln('final class $className {');
+  buffer.writeln('  const $className($ctorArgs);');
+  buffer.writeln();
+  for (final m in members) {
+    final meta = m['meta'] as String;
+    final dartType = _leafMemberTypes[meta]?.$1 ?? meta;
+    buffer.writeln('  final $dartType ${m['member']};');
+  }
+  buffer.writeln();
+
+  final totalSize = _builtinSize(members);
+  buffer.writeln('  static const int nativeSize = $totalSize;');
+  buffer.writeln();
+
+  buffer.writeln('  static $className readFrom(Pointer<Uint8> buf, int offset) {');
+  buffer.writeln('    return $className(');
+  for (final m in members) {
+    final meta = m['meta'] as String;
+    final offset = m['offset'];
+    final leaf = _leafMemberTypes[meta];
+    if (leaf != null) {
+      buffer.writeln('      (buf + offset + $offset).cast<${leaf.$2}>().value,');
+    } else {
+      buffer.writeln('      $meta.readFrom(buf, offset + $offset),');
+    }
+  }
+  buffer.writeln('    );');
+  buffer.writeln('  }');
+  buffer.writeln();
+
+  buffer.writeln('  void writeTo(Pointer<Uint8> buf, int offset) {');
+  for (final m in members) {
+    final meta = m['meta'] as String;
+    final offset = m['offset'];
+    final leaf = _leafMemberTypes[meta];
+    final fieldName = m['member'];
+    if (leaf != null) {
+      buffer.writeln('    (buf + offset + $offset).cast<${leaf.$2}>().value = $fieldName;');
+    } else {
+      buffer.writeln('    $fieldName.writeTo(buf, offset + $offset);');
+    }
+  }
+  buffer.writeln('  }');
+  buffer.writeln('}');
+  return buffer.toString();
+}
+
+int _builtinSize(List<Map<String, dynamic>> members) {
+  // Every POD builtin here is tightly packed with no trailing padding (per
+  // the real offsets dumped from the engine), so size = last member's
+  // offset + its own size.
+  var maxEnd = 0;
+  for (final m in members) {
+    final meta = m['meta'] as String;
+    final offset = m['offset'] as int;
+    final leafSize = meta == 'float' || meta == 'int32' ? 4 : null;
+    final end = offset + (leafSize ?? _podSizeOf(meta));
+    if (end > maxEnd) maxEnd = end;
+  }
+  return maxEnd;
+}
+
+int _podSizeOf(String builtinName) {
+  const sizes = {
+    'Vector2': 8, 'Vector2i': 8, 'Vector3': 12, 'Vector3i': 12,
+    'Vector4': 16, 'Vector4i': 16, 'Color': 16,
+    'Rect2': 16, 'Rect2i': 16, 'Plane': 16, 'Quaternion': 16, 'AABB': 24,
+    'Basis': 36, 'Transform2D': 24, 'Transform3D': 48, 'Projection': 64,
+  };
+  return sizes[builtinName]!;
+}
+
+// =============================================================================
+// MARK: - Engine classes
+// =============================================================================
+
+class _TypeInfo {
+  const _TypeInfo(this.dartType, this.category);
+  final String dartType;
+  // One of: 'double', 'int', 'bool', 'pod', 'object', 'string', 'stringName'.
+  final String category;
+}
+
+_TypeInfo? _classify(String godotType, Set<String> classNames) {
+  switch (godotType) {
+    case 'float':
+      return const _TypeInfo('double', 'double');
+    case 'int':
+      return const _TypeInfo('int', 'int');
+    case 'bool':
+      return const _TypeInfo('bool', 'bool');
+    case 'String':
+      return const _TypeInfo('String', 'string');
+    case 'StringName':
+      return const _TypeInfo('String', 'stringName');
+  }
+  if (godotType.startsWith('enum::') || godotType.startsWith('bitfield::')) {
+    return const _TypeInfo('int', 'int');
+  }
+  if (_podBuiltins.contains(godotType)) {
+    return _TypeInfo(godotType, 'pod');
+  }
+  if (classNames.contains(godotType)) {
+    return _TypeInfo(godotType, 'object');
+  }
+  return null;
+}
+
+void _generateClasses(Map<String, dynamic> api, String godotDartLib) {
+  final allClasses = (api['classes'] as List).cast<Map<String, dynamic>>();
+  final selected = allClasses.where((c) => c['api_type'] != 'editor' && c['name'] != _rootClassName).toList();
+  final classNames = {for (final c in selected) c['name'] as String};
+  final byName = {for (final c in selected) c['name'] as String: c};
+
+  // Topological order (parent before child) via simple repeated-pass
+  // resolution - classes[] isn't guaranteed pre-sorted by inheritance.
+  final ordered = <Map<String, dynamic>>[];
+  final done = <String>{_rootClassName};
+  var remaining = List.of(selected);
+  while (remaining.isNotEmpty) {
+    final next = <Map<String, dynamic>>[];
+    for (final c in remaining) {
+      final parent = c['inherits'] as String?;
+      if (parent == null || done.contains(parent)) {
+        ordered.add(c);
+        done.add(c['name'] as String);
+      } else {
+        next.add(c);
+      }
+    }
+    if (next.length == remaining.length) {
+      // Cycle or missing parent (e.g. parent is an excluded editor-only
+      // class) - fall back to GodotObject for the rest rather than looping
+      // forever.
+      for (final c in next) {
+        ordered.add(c);
+        done.add(c['name'] as String);
+      }
+      break;
+    }
+    remaining = next;
+  }
+
+  final outDir = Directory('$godotDartLib/classes')..createSync(recursive: true);
+  final barrel = StringBuffer();
+  barrel.writeln('// GENERATED CODE - do not edit by hand.');
+  barrel.writeln('library;');
+  barrel.writeln();
+
+  var totalMethods = 0, skippedMethods = 0, emptyClasses = 0;
+
+  for (final classJson in ordered) {
+    final className = classJson['name'] as String;
+    final parentName = classJson['inherits'] as String?;
+    final dartSuper = (parentName == null || parentName == _rootClassName || !done.contains(parentName))
+        ? 'GodotObject'
+        : parentName;
+
+    final (code, emitted, skipped) = _generateClass(classJson, dartSuper, classNames);
+    totalMethods += emitted;
+    skippedMethods += skipped;
+    if (emitted == 0) emptyClasses++;
+
+    File('${outDir.path}/${className.toLowerCase()}.dart').writeAsStringSync(code);
+    barrel.writeln("export 'classes/${className.toLowerCase()}.dart';");
+  }
+
+  File('$godotDartLib/classes.g.dart').writeAsStringSync(barrel.toString());
+  stdout.writeln('godot_api_gen: wrote ${ordered.length} classes '
+      '($totalMethods methods emitted, $skippedMethods skipped, $emptyClasses classes with zero eligible methods)');
+}
+
+(String, int, int) _generateClass(
+  Map<String, dynamic> classJson,
+  String dartSuper,
+  Set<String> classNames,
+) {
   final className = classJson['name'] as String;
   final methods = (classJson['methods'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
 
   final buffer = StringBuffer();
   buffer.writeln('// GENERATED CODE - do not edit by hand.');
   buffer.writeln('// Produced by tool/godot_api_gen/bin/generate.dart from extension_api.json.');
-  buffer.writeln('//');
-  buffer.writeln('// Phase 1 scope: extends GodotObject directly (not the real Node/CanvasItem');
-  buffer.writeln('// chain yet) and only emits methods whose args/return are float/int/bool.');
   buffer.writeln('library;');
   buffer.writeln();
   buffer.writeln("import 'dart:ffi';");
   buffer.writeln();
   buffer.writeln("import 'package:ffi/ffi.dart';");
   buffer.writeln();
-
+  buffer.writeln("import '../../runtime/builtin_marshal.dart';");
   buffer.writeln("import '../../runtime/godot_object.dart';");
-  final dartSuper = _dartSuperclassOverrides[className];
-  if (dartSuper != null) {
-    buffer.writeln("import '${dartSuper.toLowerCase()}.dart';");
-  }
+  buffer.writeln("import '../builtins.g.dart';");
+  buffer.writeln("import '../classes.g.dart';");
   buffer.writeln();
-  buffer.writeln('class $className extends ${dartSuper ?? 'GodotObject'} {');
+  buffer.writeln('class $className extends $dartSuper {');
   buffer.writeln('  $className(super.nativePtr);');
   buffer.writeln();
 
-  var emitted = 0;
+  var emitted = 0, skipped = 0;
   for (final method in methods) {
     final methodName = method['name'] as String;
-    if (methodName.startsWith('_')) continue; // virtuals handled separately by consumers overriding them.
+    if (methodName.startsWith('_')) continue; // virtuals: overridden by consumers, not called directly here.
+    if (method['is_vararg'] == true) continue; // no fixed ptrcall signature.
+    if (method['is_static'] == true) continue; // no instance to bind against in this generator.
     final hash = method['hash'];
-    if (hash == null) continue; // no stable hash (e.g. a vararg/editor-only method) - skip for now.
+    if (hash == null) continue;
 
     final returnInfo = method['return_value'] as Map<String, dynamic>?;
-    final returnType = returnInfo == null ? 'void' : returnInfo['type'] as String;
-    if (returnType != 'void' && !_supportedTypes.containsKey(returnType)) {
-      buffer.writeln('  // Skipped $methodName(): unsupported return type "$returnType" (Phase 2 breadth work).');
+    final returnGodotType = returnInfo == null ? 'void' : returnInfo['type'] as String;
+    final returnTypeInfo = returnGodotType == 'void' ? null : _classify(returnGodotType, classNames);
+    if (returnGodotType != 'void' && returnTypeInfo == null) {
+      buffer.writeln('  // Skipped $methodName(): unsupported return type "$returnGodotType".');
+      skipped++;
       continue;
     }
 
     final arguments = (method['arguments'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
+    final argTypeInfos = <_TypeInfo>[];
     var allArgsSupported = true;
     for (final arg in arguments) {
-      if (!_supportedTypes.containsKey(arg['type'])) {
+      final info = _classify(arg['type'] as String, classNames);
+      if (info == null) {
         allArgsSupported = false;
         break;
       }
+      argTypeInfos.add(info);
     }
     if (!allArgsSupported) {
-      buffer.writeln('  // Skipped $methodName(): an argument type is unsupported (Phase 2 breadth work).');
+      buffer.writeln('  // Skipped $methodName(): an argument type is unsupported.');
+      skipped++;
       continue;
     }
 
-    _emitMethod(buffer, className, methodName, hash as int, arguments, returnType);
+    _emitMethod(buffer, className, methodName, hash as int, arguments, argTypeInfos, returnTypeInfo);
     emitted++;
   }
 
   buffer.writeln('}');
-
-  if (emitted == 0) {
-    stderr.writeln('godot_api_gen: warning: $className had no eligible methods to emit.');
-  }
-  return buffer.toString();
+  return (buffer.toString(), emitted, skipped);
 }
 
 void _emitMethod(
@@ -149,70 +367,140 @@ void _emitMethod(
   String methodName,
   int hash,
   List<Map<String, dynamic>> arguments,
-  String returnType,
+  List<_TypeInfo> argTypeInfos,
+  _TypeInfo? returnTypeInfo,
 ) {
-  final dartMethodName = _camelCase(methodName);
+  final dartMethodName = _sanitizeIdentifier(_camelCase(methodName));
   final fieldName = '_mb_${methodName.replaceAll(RegExp('[^a-zA-Z0-9]'), '_')}';
 
   buffer.writeln('  static final Pointer<Void> $fieldName =');
   buffer.writeln("      resolveMethodBind('$className', '$methodName', $hash);");
   buffer.writeln();
 
-  final dartReturnType = returnType == 'void' ? 'void' : _supportedTypes[returnType]!.$1;
-  final paramList = arguments
-      .map((a) => '${_supportedTypes[a['type']]!.$1} ${_camelCase(a['name'] as String)}')
-      .join(', ');
+  final isObjectReturn = returnTypeInfo?.category == 'object';
+  final dartReturnType = returnTypeInfo == null
+      ? 'void'
+      : (isObjectReturn ? '${returnTypeInfo.dartType}?' : returnTypeInfo.dartType);
+
+  final paramNames = <String>[];
+  final paramList = StringBuffer();
+  for (var i = 0; i < arguments.length; i++) {
+    final arg = arguments[i];
+    final pname = _sanitizeIdentifier(_camelCase(arg['name'] as String));
+    paramNames.add(pname);
+    if (i > 0) paramList.write(', ');
+    paramList.write('${argTypeInfos[i].dartType} $pname');
+  }
 
   buffer.writeln('  $dartReturnType $dartMethodName($paramList) {');
 
+  // Allocate + write each argument into its ptrcall slot.
   final argVars = <String>[];
   for (var i = 0; i < arguments.length; i++) {
-    final arg = arguments[i];
-    final nativeType = _supportedTypes[arg['type']]!.$3;
+    final info = argTypeInfos[i];
+    final pname = paramNames[i];
     final varName = 'arg$i';
-    buffer.writeln('    final $varName = malloc<$nativeType>()..value = ${_camelCase(arg['name'] as String)}${arg['type'] == 'bool' ? ' ? 1 : 0' : ''};');
     argVars.add(varName);
+    switch (info.category) {
+      case 'double':
+        buffer.writeln('    final $varName = malloc<Double>()..value = $pname;');
+      case 'int':
+        buffer.writeln('    final $varName = malloc<Int64>()..value = $pname;');
+      case 'bool':
+        buffer.writeln('    final $varName = malloc<Uint8>()..value = $pname ? 1 : 0;');
+      case 'pod':
+        buffer.writeln('    final $varName = malloc<Uint8>(${info.dartType}.nativeSize);');
+        buffer.writeln('    $pname.writeTo($varName, 0);');
+      case 'object':
+        buffer.writeln('    final $varName = malloc<Pointer<Void>>()..value = $pname.nativePtr;');
+      case 'string':
+        buffer.writeln('    final $varName = malloc<Uint8>(managedHandleSize);');
+        buffer.writeln('    BuiltinMarshal.writeGDString($varName.cast(), $pname);');
+      case 'stringName':
+        buffer.writeln('    final $varName = malloc<Uint8>(managedHandleSize);');
+        buffer.writeln('    BuiltinMarshal.writeStringName($varName.cast(), $pname);');
+    }
   }
 
-  if (returnType == 'void') {
-    buffer.writeln('    try {');
-    buffer.writeln('      ptrcallVoid($fieldName, nativePtr, [${argVars.map((v) => '$v.cast()').join(', ')}]);');
-    buffer.writeln('    } finally {');
-    for (final v in argVars) {
-      buffer.writeln('      malloc.free($v);');
-    }
-    buffer.writeln('    }');
+  buffer.writeln('    try {');
+  final argListExpr = '[${argVars.map((v) => '$v.cast<Void>()').join(', ')}]';
+
+  if (returnTypeInfo == null) {
+    buffer.writeln('      ptrcallVoid($fieldName, nativePtr, $argListExpr);');
+  } else if (returnTypeInfo.category == 'pod') {
+    buffer.writeln('      final ret = malloc<Uint8>(${returnTypeInfo.dartType}.nativeSize);');
+    buffer.writeln('      try {');
+    buffer.writeln('        ptrcallWithReturn($fieldName, nativePtr, $argListExpr, ret.cast());');
+    buffer.writeln('        return ${returnTypeInfo.dartType}.readFrom(ret, 0);');
+    buffer.writeln('      } finally {');
+    buffer.writeln('        malloc.free(ret);');
+    buffer.writeln('      }');
+  } else if (returnTypeInfo.category == 'object') {
+    buffer.writeln('      final ret = malloc<Pointer<Void>>();');
+    buffer.writeln('      try {');
+    buffer.writeln('        ptrcallWithReturn($fieldName, nativePtr, $argListExpr, ret.cast());');
+    buffer.writeln('        final resultPtr = ret.value;');
+    buffer.writeln('        return resultPtr.address == 0 ? null : ${returnTypeInfo.dartType}(resultPtr);');
+    buffer.writeln('      } finally {');
+    buffer.writeln('        malloc.free(ret);');
+    buffer.writeln('      }');
+  } else if (returnTypeInfo.category == 'string' || returnTypeInfo.category == 'stringName') {
+    final reader = returnTypeInfo.category == 'string' ? 'readGDString' : 'readStringName';
+    final destroyer = returnTypeInfo.category == 'string' ? 'destroyGDString' : 'destroyStringName';
+    buffer.writeln('      final ret = malloc<Uint8>(managedHandleSize);');
+    buffer.writeln('      try {');
+    buffer.writeln('        ptrcallWithReturn($fieldName, nativePtr, $argListExpr, ret.cast());');
+    buffer.writeln('        final result = BuiltinMarshal.$reader(ret.cast());');
+    buffer.writeln('        BuiltinMarshal.$destroyer(ret.cast());');
+    buffer.writeln('        return result;');
+    buffer.writeln('      } finally {');
+    buffer.writeln('        malloc.free(ret);');
+    buffer.writeln('      }');
   } else {
-    final nativeReturnType = _supportedTypes[returnType]!.$3;
-    buffer.writeln('    final ret = malloc<$nativeReturnType>();');
-    buffer.writeln('    try {');
-    buffer.writeln('      ptrcallWithReturn($fieldName, nativePtr, [${argVars.map((v) => '$v.cast()').join(', ')}], ret.cast());');
-    buffer.writeln('      return ret.value${returnType == 'bool' ? ' != 0' : ''};');
-    buffer.writeln('    } finally {');
-    buffer.writeln('      malloc.free(ret);');
-    for (final v in argVars) {
-      buffer.writeln('      malloc.free($v);');
-    }
-    buffer.writeln('    }');
+    // double/int/bool
+    final nativeType = switch (returnTypeInfo.category) { 'double' => 'Double', 'bool' => 'Uint8', _ => 'Int64' };
+    buffer.writeln('      final ret = malloc<$nativeType>();');
+    buffer.writeln('      try {');
+    buffer.writeln('        ptrcallWithReturn($fieldName, nativePtr, $argListExpr, ret.cast());');
+    buffer.writeln('        return ret.value${returnTypeInfo.category == 'bool' ? ' != 0' : ''};');
+    buffer.writeln('      } finally {');
+    buffer.writeln('        malloc.free(ret);');
+    buffer.writeln('      }');
   }
 
+  buffer.writeln('    } finally {');
+  for (var i = 0; i < arguments.length; i++) {
+    final info = argTypeInfos[i];
+    final varName = argVars[i];
+    if (info.category == 'string') {
+      buffer.writeln('      BuiltinMarshal.destroyGDString($varName.cast());');
+    } else if (info.category == 'stringName') {
+      buffer.writeln('      BuiltinMarshal.destroyStringName($varName.cast());');
+    }
+    buffer.writeln('      malloc.free($varName);');
+  }
+  buffer.writeln('    }');
   buffer.writeln('  }');
   buffer.writeln();
+}
+
+const Set<String> _dartReservedWords = {
+  'abstract', 'as', 'assert', 'async', 'await', 'break', 'case', 'catch', 'class',
+  'const', 'continue', 'covariant', 'default', 'deferred', 'do', 'dynamic', 'else',
+  'enum', 'export', 'extends', 'extension', 'external', 'factory', 'false', 'final',
+  'finally', 'for', 'function', 'get', 'hide', 'if', 'implements', 'import', 'in',
+  'interface', 'is', 'library', 'mixin', 'new', 'null', 'on', 'operator', 'part',
+  'required', 'rethrow', 'return', 'set', 'show', 'static', 'super', 'switch',
+  'sync', 'this', 'throw', 'true', 'try', 'typedef', 'var', 'void', 'while', 'with', 'yield',
+};
+
+String _sanitizeIdentifier(String name) {
+  if (_dartReservedWords.contains(name)) return '${name}_';
+  if (name.isEmpty) return 'unnamed';
+  return name;
 }
 
 String _camelCase(String snake) {
   final parts = snake.split('_');
   return parts.first + parts.skip(1).map((p) => p.isEmpty ? '' : p[0].toUpperCase() + p.substring(1)).join();
-}
-
-String _snakeCase(String pascal) {
-  final buffer = StringBuffer();
-  for (var i = 0; i < pascal.length; i++) {
-    final char = pascal[i];
-    if (char.toUpperCase() == char && char.toLowerCase() != char && i > 0) {
-      buffer.write('_');
-    }
-    buffer.write(char.toLowerCase());
-  }
-  return buffer.toString();
 }

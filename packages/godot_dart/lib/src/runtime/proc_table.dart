@@ -32,6 +32,7 @@ abstract final class GodotApi {
   static late final ClassdbRegisterExtensionClassPropertyDart classdbRegisterExtensionClassProperty;
   static late final StringNameNewWithUtf8CharsDart stringNameNewWithUtf8Chars;
   static late final StringNewWithUtf8CharsDart stringNewWithUtf8Chars;
+  static late final StringToUtf8CharsDart stringToUtf8Chars;
   static late final VariantGetPtrConstructorDart variantGetPtrConstructor;
   static late final VariantGetPtrDestructorDart variantGetPtrDestructor;
   static late final MemAllocDart memAlloc;
@@ -89,6 +90,8 @@ abstract final class GodotApi {
         proc<StringNameNewWithUtf8CharsNative>('string_name_new_with_utf8_chars').asFunction();
     stringNewWithUtf8Chars =
         proc<StringNewWithUtf8CharsNative>('string_new_with_utf8_chars').asFunction();
+    stringToUtf8Chars =
+        proc<StringToUtf8CharsNative>('string_to_utf8_chars').asFunction();
     variantGetPtrConstructor =
         proc<VariantGetPtrConstructorNative>('variant_get_ptr_constructor').asFunction();
     variantGetPtrDestructor =

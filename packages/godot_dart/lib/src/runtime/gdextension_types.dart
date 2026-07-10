@@ -350,6 +350,12 @@ typedef StringNewWithUtf8CharsNative =
 typedef StringNewWithUtf8CharsDart =
     void Function(Pointer<Void> rDest, Pointer<Char> contents);
 
+/// `GDExtensionInt (*)(GDExtensionConstStringPtr, char *, GDExtensionInt)`
+typedef StringToUtf8CharsNative =
+    GDExtensionInt Function(Pointer<Void> self, Pointer<Char> rText, GDExtensionInt maxWriteLength);
+typedef StringToUtf8CharsDart =
+    int Function(Pointer<Void> self, Pointer<Char> rText, int maxWriteLength);
+
 typedef VariantGetPtrConstructorNative =
     Pointer<NativeFunction<Void Function(Pointer<Void>, Pointer<Pointer<Void>>)>> Function(
       Int32 variantType,

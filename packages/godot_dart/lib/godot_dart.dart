@@ -3,8 +3,9 @@
 library;
 
 export 'src/annotations.dart';
-export 'src/gen/classes/meshinstance3d.dart';
-export 'src/gen/classes/node3d.dart';
+export 'src/gen/builtins.g.dart';
+export 'src/gen/classes.g.dart';
+export 'src/runtime/builtin_marshal.dart';
 export 'src/runtime/gdextension_types.dart';
 export 'src/runtime/godot_class_registry.dart';
 export 'src/runtime/godot_instance.dart';
