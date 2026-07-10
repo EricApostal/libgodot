@@ -16,11 +16,13 @@ class Libgodot {
     required String projectPath,
     int width = 480,
     int height = 270,
+    int? initFunctionAddress,
   }) {
     return LibgodotPlatform.instance.createInstance(
       projectPath: projectPath,
       width: width,
       height: height,
+      initFunctionAddress: initFunctionAddress,
     );
   }
 

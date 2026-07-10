@@ -1,0 +1,21 @@
+name: godot_dart_builder
+description: >
+  build_runner Builder generating GDExtension registration/dispatch glue for
+  @GodotClass-annotated Dart classes (create/free/ptrcall/virtual-override
+  trampolines, all pure Dart FFI callbacks, no native shim).
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  analyzer: ^6.4.0
+  build: ^2.4.1
+  glob: ^2.1.2
+  godot_dart:
+    path: ../godot_dart
+  source_gen: ^1.5.0
+
+dev_dependencies:
+  build_runner: ^2.4.13

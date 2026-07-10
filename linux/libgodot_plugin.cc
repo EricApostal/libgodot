@@ -78,8 +78,14 @@ FlMethodResponse* handle_create_instance(LibgodotPlugin* self, FlMethodCall* met
     height = (int)fl_value_get_int(height_value);
   }
 
+  int64_t init_function_address = 0;
+  FlValue* init_function_address_value = fl_value_lookup_string(args, "initFunctionAddress");
+  if (init_function_address_value != nullptr && fl_value_get_type(init_function_address_value) == FL_VALUE_TYPE_INT) {
+    init_function_address = fl_value_get_int(init_function_address_value);
+  }
+
   GError* error = nullptr;
-  LibgodotTexture* texture = libgodot_texture_new(self->texture_registrar, project_path, width, height, &error);
+  LibgodotTexture* texture = libgodot_texture_new(self->texture_registrar, project_path, width, height, init_function_address, &error);
   if (texture == nullptr) {
     FlMethodResponse* response = FL_METHOD_RESPONSE(fl_method_error_response_new(
         "create_instance_failed", error != nullptr ? error->message : "unknown error", nullptr));

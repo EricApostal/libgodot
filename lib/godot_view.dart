@@ -10,6 +10,7 @@ class GodotView extends StatefulWidget {
     required this.projectPath,
     this.width = 480,
     this.height = 270,
+    this.initFunctionAddress,
   });
 
   /// Absolute filesystem path to a Godot project directory (the folder
@@ -20,6 +21,9 @@ class GodotView extends StatefulWidget {
 
   final int width;
   final int height;
+
+  /// See [Libgodot.createInstance]'s parameter of the same name.
+  final int? initFunctionAddress;
 
   @override
   State<GodotView> createState() => _GodotViewState();
@@ -42,6 +46,7 @@ class _GodotViewState extends State<GodotView> {
         projectPath: widget.projectPath,
         width: widget.width,
         height: widget.height,
+        initFunctionAddress: widget.initFunctionAddress,
       );
       if (!mounted) {
         await _libgodot.destroyInstance(textureId);

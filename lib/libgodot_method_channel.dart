@@ -22,11 +22,13 @@ class MethodChannelLibgodot extends LibgodotPlatform {
     required String projectPath,
     int width = 480,
     int height = 270,
+    int? initFunctionAddress,
   }) async {
     final textureId = await methodChannel.invokeMethod<int>('createInstance', {
       'projectPath': projectPath,
       'width': width,
       'height': height,
+      if (initFunctionAddress != null) 'initFunctionAddress': initFunctionAddress,
     });
     if (textureId == null) {
       throw PlatformException(

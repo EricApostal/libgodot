@@ -231,6 +231,7 @@ LibgodotTexture *libgodot_texture_new(FlTextureRegistrar *registrar,
                                        const char *project_path,
                                        int width,
                                        int height,
+                                       int64_t init_function_address,
                                        GError **error) {
   LibgodotTexture *self = LIBGODOT_TEXTURE(g_object_new(libgodot_texture_get_type(), nullptr));
   self->registrar = registrar;
@@ -248,7 +249,12 @@ LibgodotTexture *libgodot_texture_new(FlTextureRegistrar *registrar,
     argv.push_back(arg.data());
   }
 
-  self->godot_instance = libgodot_create_godot_instance((int)argv.size(), argv.data(), trivial_init_func);
+  GDExtensionInitializationFunction init_func = trivial_init_func;
+  if (init_function_address != 0) {
+    init_func = reinterpret_cast<GDExtensionInitializationFunction>(init_function_address);
+  }
+
+  self->godot_instance = libgodot_create_godot_instance((int)argv.size(), argv.data(), init_func);
   if (self->godot_instance == nullptr) {
     g_set_error(error, g_quark_from_static_string("libgodot"), 1, "libgodot_create_godot_instance() failed; see stderr for engine log.");
     g_object_unref(self);

@@ -1,0 +1,13 @@
+name: godot_dart
+description: >
+  Pure-Dart FFI bindings and generated API surface for embedding a
+  Dart-authored GDExtension into a libgodot instance.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  ffi: ^2.1.3
+  meta: ^1.15.0

@@ -3,6 +3,8 @@
 
 #include <flutter_linux/flutter_linux.h>
 
+#include <cstdint>
+
 G_BEGIN_DECLS
 
 #define LIBGODOT_TYPE_TEXTURE (libgodot_texture_get_type())
@@ -13,6 +15,12 @@ G_DECLARE_FINAL_TYPE(LibgodotTexture, libgodot_texture, LIBGODOT, TEXTURE, FlTex
 // rendered frames (delivered as dma-buf handles) into a GL texture each time
 // Flutter asks for a new frame. Returns NULL (with `error` set) on failure.
 //
+// `init_function_address`, if non-zero, is the native address of a
+// GDExtensionInitializationFunction (e.g. a Dart-supplied
+// GodotDartEntryPoint.nativeFunctionPointer.address from package:godot_dart),
+// used in place of the built-in no-op init function so Dart-authored
+// GDExtension classes get registered with this instance.
+//
 // The caller owns the returned reference and is responsible for calling
 // `fl_texture_registrar_register_texture()` on it and, eventually,
 // `libgodot_texture_stop()` followed by `g_object_unref()`.
@@ -20,6 +28,7 @@ LibgodotTexture *libgodot_texture_new(FlTextureRegistrar *registrar,
                                        const char *project_path,
                                        int width,
                                        int height,
+                                       int64_t init_function_address,
                                        GError **error);
 
 // Stops the underlying Godot instance and releases its resources. Safe to

@@ -37,10 +37,18 @@ abstract class LibgodotPlatform extends PlatformInterface {
   /// placed under the app module's `src/main/assets/` at build time.
   ///
   /// Returns the Flutter texture id to pass to a [Texture] widget.
+  ///
+  /// [initFunctionAddress], if given, is the native address of a
+  /// `GDExtensionInitializationFunction` (e.g.
+  /// `GodotDartEntryPoint.nativeFunctionPointer.address` from
+  /// `package:godot_dart`), passed to `libgodot_create_godot_instance` in
+  /// place of the platform plugin's default no-op init function — this is
+  /// how Dart-authored GDExtension classes get registered with the engine.
   Future<int> createInstance({
     required String projectPath,
     int width = 480,
     int height = 270,
+    int? initFunctionAddress,
   }) {
     throw UnimplementedError('createInstance() has not been implemented.');
   }

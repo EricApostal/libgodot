@@ -1,9 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:godot_dart/godot_dart.dart';
 import 'package:libgodot/libgodot.dart';
 
+import 'godot_dart_init.g.dart';
+
 void main() {
+  // Registers every @GodotClass-annotated class (see spinning_controller.dart)
+  // with GodotClassRegistry, so GodotDartEntryPoint's init function knows
+  // about them once a Godot instance is created below.
+  initializeGodotDartClasses();
   runApp(const MyApp());
 }
 
@@ -11,12 +18,17 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   /// On Linux desktop builds the `flutter_assets` directory is unpacked as plain files next to
-  /// the executable, so the bundled Godot project can be pointed at directly. On Android this is
-  /// unused: Godot's Android build always loads the project bundled into the APK's own assets
-  /// (see example/android/app/src/main/assets/ and LibgodotPlugin.kt's class doc for why), rather
-  /// than an arbitrary runtime path.
+  /// the executable, so the bundled Godot project can be pointed at directly. On macOS it instead
+  /// lives inside the app bundle's App.framework Resources. On Android this is unused: Godot's
+  /// Android build always loads the project bundled into the APK's own assets (see
+  /// example/android/app/src/main/assets/ and LibgodotPlugin.kt's class doc for why), rather than
+  /// an arbitrary runtime path.
   String get _godotProjectPath {
     final exeDir = File(Platform.resolvedExecutable).parent.path;
+    if (Platform.isMacOS) {
+      final contentsDir = Directory(exeDir).parent.path;
+      return '$contentsDir/Frameworks/App.framework/Resources/flutter_assets/assets/godot_project';
+    }
     return '$exeDir/data/flutter_assets/assets/godot_project';
   }
 
@@ -26,7 +38,12 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: const Text('libgodot: rotating cube')),
         body: Center(
-          child: GodotView(projectPath: _godotProjectPath, width: 480, height: 270),
+          child: GodotView(
+            projectPath: _godotProjectPath,
+            width: 480,
+            height: 270,
+            initFunctionAddress: GodotDartEntryPoint.nativeFunctionPointer.address,
+          ),
         ),
       ),
     );

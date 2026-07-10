@@ -1,0 +1,15 @@
+builders:
+  godot_class_builder:
+    import: "package:godot_dart_builder/builder.dart"
+    builder_factories: ["godotClassBuilder"]
+    build_extensions: {".dart": [".g.dart"]}
+    auto_apply: dependents
+    build_to: source
+
+  godot_dart_init_builder:
+    import: "package:godot_dart_builder/builder.dart"
+    builder_factories: ["godotDartInitBuilder"]
+    build_extensions: {"$lib$": ["godot_dart_init.g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    required_inputs: [".dart"]

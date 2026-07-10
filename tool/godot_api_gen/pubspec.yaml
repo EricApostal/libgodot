@@ -1,0 +1,11 @@
+name: godot_api_gen
+description: >
+  Batch generator that reads extension_api.json (Godot's own machine-readable
+  API dump) and emits Dart wrapper classes into packages/godot_dart/lib/src/gen.
+  Run manually via `dart run bin/generate.dart`; not a build_runner Builder —
+  see its pubspec doc comment for why.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.11.4
