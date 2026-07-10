@@ -30,4 +30,9 @@ class Libgodot {
   Future<void> destroyInstance(int textureId) {
     return LibgodotPlatform.instance.destroyInstance(textureId);
   }
+
+  /// See [LibgodotPlatform.resizeInstance].
+  Future<bool> resizeInstance(int textureId, int width, int height) {
+    return LibgodotPlatform.instance.resizeInstance(textureId, width, height);
+  }
 }

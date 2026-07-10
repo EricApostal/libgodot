@@ -2,7 +2,6 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
 # Run `pod lib lint libgodot.podspec` to validate before publishing.
 #
-require 'fileutils'
 
 Pod::Spec.new do |s|
   s.name             = 'libgodot'
@@ -25,41 +24,29 @@ offscreen into an IOSurface and bridging it into a Flutter Texture.
   s.platform = :osx, '10.15'
   s.swift_version = '5.0'
 
-  # --- libgodot engine source/binary discovery -----------------------------
+  # --- libgodot engine build -------------------------------------------------
   #
-  # third_party/godot in this repo is currently an unpopulated submodule
-  # placeholder (no .gitmodules wiring yet), so the engine fork checkout is
-  # located via GODOT_SRC, falling back to third_party/godot in case it gets
-  # populated later (e.g. once the submodule is fixed up).
+  # build_godot_macos.sh builds third_party/godot via scons and vendors the resulting dylib
+  # here as libgodot.dylib. It's run here (at `pod install`) so a first-time checkout has a
+  # vendored dylib to point vendored_libraries at below, and again via script_phase further
+  # down so every subsequent Xcode build picks up engine-side changes automatically -- nobody
+  # should ever need to remember to run this by hand.
   godot_src = ENV['GODOT_SRC'] || File.expand_path('../third_party/godot', __dir__)
-  unless File.directory?(File.join(godot_src, 'core', 'extension'))
-    raise "libgodot: Godot engine source not found at '#{godot_src}'.\n" \
-          "Set GODOT_SRC to your godot fork checkout, e.g.:\n" \
-          "  export GODOT_SRC=/path/to/godot\n" \
-          "(third_party/godot is currently an empty placeholder; the submodule isn't wired up yet.)"
-  end
-
-  dylib_candidates = Dir.glob(File.join(godot_src, 'bin', 'libgodot.macos.*.dylib'))
-  if dylib_candidates.empty?
-    raise "libgodot: No libgodot.macos.*.dylib found under '#{godot_src}/bin'.\n" \
-          "Build it first with:\n" \
-          "  cd #{godot_src} && scons platform=macos target=template_debug " \
-          "library_type=shared_library arch=arm64 disable_path_overrides=no"
-  end
-  dylib_src = dylib_candidates.sort_by { |p| File.mtime(p) }.last
-
-  # Copy into this pod's own directory and fix up the install name: scons
-  # leaves a relative "bin/libgodot..." LC_ID_DYLIB, which only resolves if
-  # the process's cwd happens to be godot_src/.. ; retarget it to @rpath so
-  # it resolves correctly once CocoaPods embeds it into the app bundle.
+  build_script = File.join(__dir__, 'build_godot_macos.sh')
   vendored_dylib = File.join(__dir__, 'libgodot.dylib')
-  FileUtils.cp(dylib_src, vendored_dylib, preserve: false)
-  FileUtils.chmod('u+w', vendored_dylib)
-  system('install_name_tool', '-id', '@rpath/libgodot.dylib', vendored_dylib) \
-    or raise "libgodot: install_name_tool failed to retarget #{vendored_dylib}"
+  unless File.exist?(vendored_dylib)
+    system(build_script) or raise "libgodot: #{build_script} failed; see output above."
+  end
 
   s.vendored_libraries = 'libgodot.dylib'
-  s.preserve_paths = 'libgodot.dylib'
+  s.preserve_paths = 'libgodot.dylib', 'build_godot_macos.sh'
+
+  s.script_phase = {
+    :name => 'Build libgodot (scons)',
+    :script => 'bash "${PODS_TARGET_SRCROOT}/build_godot_macos.sh"',
+    :execution_position => :before_compile,
+    :always_out_of_date => '1',
+  }
 
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',

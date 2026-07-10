@@ -30,6 +30,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// that via its own registrar reference.
 - (void)stop;
 
+/// Requests the engine resize its offscreen surface to `width`x`height` via
+/// `DisplayServer.window_set_size()`. The resize is not immediate: the new
+/// size takes effect over the next few rendered frames as the engine
+/// reallocates its surface ring, so `copyPixelBuffer` may keep returning the
+/// previous size for a moment after this returns. Returns NO if the resize
+/// API isn't available yet (e.g. called before the instance finished
+/// starting).
+- (BOOL)resizeToWidth:(int)width height:(int)height;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -38,6 +38,8 @@ static void libgodot_plugin_handle_method_call(
     response = handle_create_instance(self, method_call);
   } else if (strcmp(method, "destroyInstance") == 0) {
     response = handle_destroy_instance(self, method_call);
+  } else if (strcmp(method, "resizeInstance") == 0) {
+    response = handle_resize_instance(self, method_call);
   } else {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
@@ -104,6 +106,46 @@ FlMethodResponse* handle_create_instance(LibgodotPlugin* self, FlMethodCall* met
   g_hash_table_insert(self->textures, (gpointer)(intptr_t)texture_id, texture);
 
   g_autoptr(FlValue) result = fl_value_new_int(texture_id);
+  return FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+}
+
+FlMethodResponse* handle_resize_instance(LibgodotPlugin* self, FlMethodCall* method_call) {
+  FlValue* args = fl_method_call_get_args(method_call);
+  FlValue* texture_id_value = args != nullptr
+      ? fl_value_lookup_string(args, "textureId")
+      : nullptr;
+
+  if (texture_id_value == nullptr || fl_value_get_type(texture_id_value) != FL_VALUE_TYPE_INT) {
+    return FL_METHOD_RESPONSE(fl_method_error_response_new(
+        "invalid_args", "resizeInstance requires an int \"textureId\" argument.", nullptr));
+  }
+
+  int width = 0;
+  FlValue* width_value = fl_value_lookup_string(args, "width");
+  if (width_value != nullptr && fl_value_get_type(width_value) == FL_VALUE_TYPE_INT) {
+    width = (int)fl_value_get_int(width_value);
+  }
+
+  int height = 0;
+  FlValue* height_value = fl_value_lookup_string(args, "height");
+  if (height_value != nullptr && fl_value_get_type(height_value) == FL_VALUE_TYPE_INT) {
+    height = (int)fl_value_get_int(height_value);
+  }
+
+  if (width <= 0 || height <= 0) {
+    return FL_METHOD_RESPONSE(fl_method_error_response_new(
+        "invalid_args", "resizeInstance requires positive \"width\"/\"height\" arguments.", nullptr));
+  }
+
+  int64_t texture_id = fl_value_get_int(texture_id_value);
+  LibgodotTexture* texture = LIBGODOT_TEXTURE(g_hash_table_lookup(self->textures, (gpointer)(intptr_t)texture_id));
+  if (texture == nullptr) {
+    return FL_METHOD_RESPONSE(fl_method_error_response_new(
+        "invalid_texture_id", "No instance is registered under that texture id.", nullptr));
+  }
+
+  gboolean resized = libgodot_texture_resize(texture, width, height);
+  g_autoptr(FlValue) result = fl_value_new_bool(resized);
   return FL_METHOD_RESPONSE(fl_method_success_response_new(result));
 }
 

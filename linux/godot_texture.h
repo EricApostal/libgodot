@@ -36,6 +36,13 @@ LibgodotTexture *libgodot_texture_new(FlTextureRegistrar *registrar,
 // texture.
 void libgodot_texture_stop(LibgodotTexture *self);
 
+// Requests the engine resize its offscreen surface to `width`x`height` via
+// DisplayServer.window_set_size(). Not immediate: the new size takes effect
+// over the next few rendered frames as the engine reallocates its dma-buf
+// ring, so populate() may keep reporting the previous size for a moment.
+// Returns FALSE if the resize API isn't available yet.
+gboolean libgodot_texture_resize(LibgodotTexture *self, int width, int height);
+
 G_END_DECLS
 
 #endif  // FLUTTER_PLUGIN_GODOT_TEXTURE_H_

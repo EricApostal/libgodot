@@ -16,3 +16,7 @@ FlMethodResponse *handle_create_instance(LibgodotPlugin *self, FlMethodCall *met
 // Handles the destroyInstance method call: stops the Godot instance backing
 // a previously created texture and unregisters it.
 FlMethodResponse *handle_destroy_instance(LibgodotPlugin *self, FlMethodCall *method_call);
+
+// Handles the resizeInstance method call: asks the engine to resize its
+// offscreen surface for a previously created texture.
+FlMethodResponse *handle_resize_instance(LibgodotPlugin *self, FlMethodCall *method_call);

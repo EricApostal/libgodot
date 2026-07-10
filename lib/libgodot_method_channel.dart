@@ -28,7 +28,7 @@ class MethodChannelLibgodot extends LibgodotPlatform {
       'projectPath': projectPath,
       'width': width,
       'height': height,
-      if (initFunctionAddress != null) 'initFunctionAddress': initFunctionAddress,
+      'initFunctionAddress': ?initFunctionAddress,
     });
     if (textureId == null) {
       throw PlatformException(
@@ -44,5 +44,15 @@ class MethodChannelLibgodot extends LibgodotPlatform {
     await methodChannel.invokeMethod<void>('destroyInstance', {
       'textureId': textureId,
     });
+  }
+
+  @override
+  Future<bool> resizeInstance(int textureId, int width, int height) async {
+    final resized = await methodChannel.invokeMethod<bool>('resizeInstance', {
+      'textureId': textureId,
+      'width': width,
+      'height': height,
+    });
+    return resized ?? false;
   }
 }

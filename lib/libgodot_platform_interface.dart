@@ -57,4 +57,18 @@ abstract class LibgodotPlatform extends PlatformInterface {
   Future<void> destroyInstance(int textureId) {
     throw UnimplementedError('destroyInstance() has not been implemented.');
   }
+
+  /// Requests the Godot instance backing [textureId] resize its offscreen
+  /// surface to [width]x[height] (via `DisplayServer.window_set_size()` on
+  /// the native side).
+  ///
+  /// Not immediate: the engine reallocates its surface ring over the next
+  /// few rendered frames, so the [Texture] may keep showing the previous
+  /// size for a moment. Returns false if the resize couldn't be performed
+  /// (e.g. the instance hasn't finished starting yet, or [textureId] is
+  /// unknown) — callers should treat this as non-fatal and simply try again
+  /// later rather than surfacing an error.
+  Future<bool> resizeInstance(int textureId, int width, int height) {
+    throw UnimplementedError('resizeInstance() has not been implemented.');
+  }
 }

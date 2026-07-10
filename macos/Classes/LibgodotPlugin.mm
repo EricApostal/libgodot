@@ -38,6 +38,8 @@
     [self handleCreateInstance:call result:result];
   } else if ([call.method isEqualToString:@"destroyInstance"]) {
     [self handleDestroyInstance:call result:result];
+  } else if ([call.method isEqualToString:@"resizeInstance"]) {
+    [self handleResizeInstance:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -83,6 +85,43 @@
 
   self.textures[@(texture.textureId)] = texture;
   result(@(texture.textureId));
+}
+
+- (void)handleResizeInstance:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSDictionary *args = call.arguments;
+  NSNumber *textureIdValue = args[@"textureId"];
+  if (![textureIdValue isKindOfClass:[NSNumber class]]) {
+    result([FlutterError errorWithCode:@"invalid_args"
+                                message:@"resizeInstance requires an int \"textureId\" argument."
+                                details:nil]);
+    return;
+  }
+  int width = 0;
+  int height = 0;
+  if ([args[@"width"] isKindOfClass:[NSNumber class]]) {
+    width = [args[@"width"] intValue];
+  }
+  if ([args[@"height"] isKindOfClass:[NSNumber class]]) {
+    height = [args[@"height"] intValue];
+  }
+  if (width <= 0 || height <= 0) {
+    result([FlutterError errorWithCode:@"invalid_args"
+                                message:@"resizeInstance requires positive \"width\"/\"height\" arguments."
+                                details:nil]);
+    return;
+  }
+
+  int64_t textureId = textureIdValue.longLongValue;
+  GodotTexture *texture = self.textures[@(textureId)];
+  if (texture == nil) {
+    result([FlutterError errorWithCode:@"invalid_texture_id"
+                                message:@"No instance is registered under that texture id."
+                                details:nil]);
+    return;
+  }
+
+  BOOL resized = [texture resizeToWidth:width height:height];
+  result(@(resized));
 }
 
 - (void)handleDestroyInstance:(FlutterMethodCall *)call result:(FlutterResult)result {
