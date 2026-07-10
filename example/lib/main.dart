@@ -38,7 +38,12 @@ class MyApp extends StatelessWidget {
       final bytes = await rootBundle.load(key);
       final file = File('${targetDir.path}/${key.substring(assetPrefix.length)}');
       await file.parent.create(recursive: true);
-      await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
+      // `bytes` may be a view into a larger shared buffer, so its offset/length must be passed
+      // explicitly -- `bytes.buffer.asUint8List()` alone would (mis)copy the whole backing buffer.
+      await file.writeAsBytes(
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
+        flush: true,
+      );
     }
 
     return targetDir.path;
@@ -53,6 +58,9 @@ class MyApp extends StatelessWidget {
           child: FutureBuilder<String>(
             future: _godotProjectPath(),
             builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Failed to extract Godot project: ${snapshot.error}');
+              }
               final projectPath = snapshot.data;
               if (projectPath == null) {
                 return const CircularProgressIndicator();

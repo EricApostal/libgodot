@@ -26,9 +26,9 @@ plugins {
     id("kotlin-android")
 }
 
-// Godot Android library, built separately via:
-//   cd third_party/godot/platform/android/java && ./gradlew :lib:assembleTemplateDebug
-// This produces godot-lib.template_debug.aar, which bundles both the org.godotengine.godot
+// Godot Android library, built separately via ./build_godot_android.sh (see that script for why
+// this can't just be done as part of this Gradle build). This produces
+// godot-lib.template_debug.aar, which bundles both the org.godotengine.godot
 // Kotlin/Java classes and the engine's native libraries (see java_godot_lib_jni.cpp/Godot.kt for
 // the JNI plumbing this plugin drives). Unlike the Linux plugin, Godot isn't linked into this
 // plugin's own native library: Android's OS_Android is coupled to the Java-side GodotJavaWrapper,
@@ -46,7 +46,7 @@ val godotAarDir = file("$godotSourceDir/platform/android/java/lib/build/outputs/
 val godotAar: File = godotAarDir.listFiles { f -> f.name.startsWith("godot-lib.") && f.name.endsWith(".aar") }?.firstOrNull()
     ?: throw GradleException(
         "No godot-lib*.aar found in $godotAarDir. Build it first with:\n" +
-            "  cd $godotSourceDir/platform/android/java && ./gradlew :lib:assembleTemplateDebug"
+            "  ${projectDir}/build_godot_android.sh"
     )
 
 android {

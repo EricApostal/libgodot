@@ -14,7 +14,7 @@ val godotAarDir = file("$godotSourceDir/platform/android/java/lib/build/outputs/
 val godotAar: File = godotAarDir.listFiles { f -> f.name.startsWith("godot-lib.") && f.name.endsWith(".aar") }?.firstOrNull()
     ?: throw GradleException(
         "No godot-lib*.aar found in $godotAarDir. Build it first with:\n" +
-            "  cd $godotSourceDir/platform/android/java && ./gradlew :lib:assembleTemplateDebug"
+            "  ${projectDir}/../../../../android/build_godot_android.sh"
     )
 
 android {
