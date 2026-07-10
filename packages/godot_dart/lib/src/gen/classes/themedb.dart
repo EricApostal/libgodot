@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class ThemeDB extends GodotObject {
   ThemeDB(super.nativePtr);
 
+  static ThemeDB? _singleton;
+  static ThemeDB get singleton {
+    return _singleton ??= ThemeDB(resolveSingleton('ThemeDB'));
+  }
+
   /// Constructs a brand-new engine-owned ThemeDB instance
   /// (via classdb_construct_object3), not an existing one.
   factory ThemeDB.create() {

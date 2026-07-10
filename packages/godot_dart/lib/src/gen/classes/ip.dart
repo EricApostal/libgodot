@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class IP extends GodotObject {
   IP(super.nativePtr);
 
+  static IP? _singleton;
+  static IP get singleton {
+    return _singleton ??= IP(resolveSingleton('IP'));
+  }
+
   static final Pointer<Void> _mb_resolve_hostname =
       resolveMethodBind('IP', 'resolve_hostname', 4283295457);
 

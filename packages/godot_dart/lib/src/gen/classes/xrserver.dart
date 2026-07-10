@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class XRServer extends GodotObject {
   XRServer(super.nativePtr);
 
+  static XRServer? _singleton;
+  static XRServer get singleton {
+    return _singleton ??= XRServer(resolveSingleton('XRServer'));
+  }
+
   /// Constructs a brand-new engine-owned XRServer instance
   /// (via classdb_construct_object3), not an existing one.
   factory XRServer.create() {

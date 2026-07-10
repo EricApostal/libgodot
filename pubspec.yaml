@@ -11,7 +11,10 @@ dependencies:
   ffi: ^2.2.0
   flutter:
     sdk: flutter
+  godot_dart:
+    path: packages/godot_dart
   plugin_platform_interface: ^2.0.2
+
 
 dev_dependencies:
   flutter_test:

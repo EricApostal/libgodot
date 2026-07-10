@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class TextServerManager extends GodotObject {
   TextServerManager(super.nativePtr);
 
+  static TextServerManager? _singleton;
+  static TextServerManager get singleton {
+    return _singleton ??= TextServerManager(resolveSingleton('TextServerManager'));
+  }
+
   /// Constructs a brand-new engine-owned TextServerManager instance
   /// (via classdb_construct_object3), not an existing one.
   factory TextServerManager.create() {

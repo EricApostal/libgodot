@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class JavaClassWrapper extends GodotObject {
   JavaClassWrapper(super.nativePtr);
 
+  static JavaClassWrapper? _singleton;
+  static JavaClassWrapper get singleton {
+    return _singleton ??= JavaClassWrapper(resolveSingleton('JavaClassWrapper'));
+  }
+
   /// Constructs a brand-new engine-owned JavaClassWrapper instance
   /// (via classdb_construct_object3), not an existing one.
   factory JavaClassWrapper.create() {

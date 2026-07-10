@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class PhysicsServer3D extends GodotObject {
   PhysicsServer3D(super.nativePtr);
 
+  static PhysicsServer3D? _singleton;
+  static PhysicsServer3D get singleton {
+    return _singleton ??= PhysicsServer3D(resolveSingleton('PhysicsServer3D'));
+  }
+
   // Skipped world_boundary_shape_create(): unsupported return type "RID".
   // Skipped separation_ray_shape_create(): unsupported return type "RID".
   // Skipped sphere_shape_create(): unsupported return type "RID".

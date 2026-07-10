@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class RenderingServer extends GodotObject {
   RenderingServer(super.nativePtr);
 
+  static RenderingServer? _singleton;
+  static RenderingServer get singleton {
+    return _singleton ??= RenderingServer(resolveSingleton('RenderingServer'));
+  }
+
   // Skipped texture_2d_create(): unsupported return type "RID".
   // Skipped texture_2d_layered_create(): unsupported return type "RID".
   // Skipped texture_3d_create(): unsupported return type "RID".

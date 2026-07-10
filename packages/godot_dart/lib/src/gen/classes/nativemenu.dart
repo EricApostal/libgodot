@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class NativeMenu extends GodotObject {
   NativeMenu(super.nativePtr);
 
+  static NativeMenu? _singleton;
+  static NativeMenu get singleton {
+    return _singleton ??= NativeMenu(resolveSingleton('NativeMenu'));
+  }
+
   /// Constructs a brand-new engine-owned NativeMenu instance
   /// (via classdb_construct_object3), not an existing one.
   factory NativeMenu.create() {

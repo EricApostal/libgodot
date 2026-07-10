@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class GDExtensionManager extends GodotObject {
   GDExtensionManager(super.nativePtr);
 
+  static GDExtensionManager? _singleton;
+  static GDExtensionManager get singleton {
+    return _singleton ??= GDExtensionManager(resolveSingleton('GDExtensionManager'));
+  }
+
   static final Pointer<Void> _mb_load_extension =
       resolveMethodBind('GDExtensionManager', 'load_extension', 4024158731);
 

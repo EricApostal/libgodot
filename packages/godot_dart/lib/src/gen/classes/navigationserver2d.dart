@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class NavigationServer2D extends GodotObject {
   NavigationServer2D(super.nativePtr);
 
+  static NavigationServer2D? _singleton;
+  static NavigationServer2D get singleton {
+    return _singleton ??= NavigationServer2D(resolveSingleton('NavigationServer2D'));
+  }
+
   // Skipped get_maps(): unsupported return type "typedarray::RID".
   // Skipped map_create(): unsupported return type "RID".
   // Skipped map_set_active(): an argument type is unsupported.

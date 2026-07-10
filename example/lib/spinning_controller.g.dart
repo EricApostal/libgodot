@@ -12,7 +12,7 @@ GDExtensionObjectPtr _create_SpinningController(
   GodotApi.objectSetInstance(
       obj, StringNameCache.intern('SpinningController'), token);
   final instance = SpinningController(obj);
-  InstanceRegistry.bind(token, instance);
+  InstanceRegistry.bind(token, instance, obj);
   return obj;
 }
 

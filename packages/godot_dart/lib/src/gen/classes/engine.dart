@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class Engine extends GodotObject {
   Engine(super.nativePtr);
 
+  static Engine? _singleton;
+  static Engine get singleton {
+    return _singleton ??= Engine(resolveSingleton('Engine'));
+  }
+
   /// Constructs a brand-new engine-owned Engine instance
   /// (via classdb_construct_object3), not an existing one.
   factory Engine.create() {

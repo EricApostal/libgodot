@@ -35,6 +35,13 @@ Pointer<Void> resolveClassConstructor(String className) {
   return GodotApi.classdbConstructObject3(StringNameCache.intern(className));
 }
 
+/// Resolves a global engine singleton object pointer by class name (e.g.
+/// `'Input'`, `'Engine'`). Used by generated singleton `.singleton` accessors.
+Pointer<Void> resolveSingleton(String name) {
+  return GodotApi.globalGetSingleton(StringNameCache.intern(name));
+}
+
+
 /// Calls a resolved method bind via ptrcall with up to a handful of
 /// pre-marshaled raw argument pointers, ignoring any return value.
 void ptrcallVoid(Pointer<Void> methodBind, Pointer<Void> instance, List<Pointer<Void>> args) {

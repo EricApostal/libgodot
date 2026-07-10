@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class Input extends GodotObject {
   Input(super.nativePtr);
 
+  static Input? _singleton;
+  static Input get singleton {
+    return _singleton ??= Input(resolveSingleton('Input'));
+  }
+
   static final Pointer<Void> _mb_is_anything_pressed =
       resolveMethodBind('Input', 'is_anything_pressed', 36873697);
 

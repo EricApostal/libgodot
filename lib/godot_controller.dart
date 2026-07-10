@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:flutter/widgets.dart';
+import 'package:godot_dart/godot_dart.dart';
 
 import 'libgodot_platform_interface.dart';
 import 'src/godot_core_bindings.g.dart';
@@ -34,14 +35,18 @@ final GodotCoreBindings _bindings = GodotCoreBindings(_openGodotCoreLibrary());
 
 class GodotController extends ChangeNotifier {
   GodotController({
-    required this.projectPath,
+    this.projectPath,
     this.initFunctionAddress,
+    this.onReady,
     int initialWidth = 480,
     int initialHeight = 270,
   }) : _renderWidth = _alignTo4(initialWidth),
        _renderHeight = _alignTo4(initialHeight);
 
-  final String projectPath;
+  final String? projectPath;
+
+  /// Optional callback invoked when the Godot instance starts and registers its texture.
+  final void Function(GodotController controller)? onReady;
 
   /// Native address of a `GDExtensionInitializationFunction` (e.g. a Dart-supplied
   /// `GodotDartEntryPoint.nativeFunctionPointer.address` from `package:godot_dart`), used in
@@ -75,6 +80,24 @@ class GodotController extends ChangeNotifier {
     if (_attached) return;
     _attached = true;
 
+    String effectivePath = projectPath ?? '';
+    if (effectivePath.isEmpty ||
+        !File('$effectivePath/project.godot').existsSync()) {
+      final tempDir = Directory.systemTemp.createTempSync('libgodot_scratch_');
+      File('${tempDir.path}/empty.tscn').writeAsStringSync(
+        '[gd_scene format=3]\n\n[node name="Root" type="Node3D"]\n',
+      );
+
+      File('${tempDir.path}/project.godot').writeAsStringSync(
+        'config_version=5\n\n'
+        '[application]\n'
+        'config/name="libgodot_scratch"\n'
+        'run/main_scene="res://empty.tscn"\n',
+      );
+      effectivePath = tempDir.path;
+    }
+
+
     if (Platform.isAndroid) {
       // Android has no godot_core_create()/_start() equivalent -- its bootstrap goes through
       // Kotlin's Godot/GodotLib JNI layer instead (see LibgodotPlugin.kt's class doc), so the
@@ -83,7 +106,7 @@ class GodotController extends ChangeNotifier {
       try {
         final (:textureId, :handleAddress) = await LibgodotPlatform.instance
             .createAndroidInstance(
-              projectPath: projectPath,
+              projectPath: effectivePath,
               width: _renderWidth,
               height: _renderHeight,
               initFunctionAddress: initFunctionAddress,
@@ -106,12 +129,13 @@ class GodotController extends ChangeNotifier {
     final args = <String>[
       'libgodot_example',
       '--path',
-      projectPath,
+      effectivePath,
       '--offscreen',
       '--resolution',
       '${_renderWidth}x$_renderHeight',
       if (Platform.isLinux) ...['--rendering-driver', 'vulkan'],
     ];
+
 
     final GDExtensionInitializationFunction initFunc =
         initFunctionAddress != null
@@ -161,12 +185,21 @@ class GodotController extends ChangeNotifier {
       }
       _textureId = textureId;
       notifyListeners();
+      onReady?.call(this);
     } catch (e) {
       _bindings.godot_core_destroy(handle);
       _handle = ffi.nullptr;
       _error = e;
       notifyListeners();
     }
+  }
+
+  /// Feeds a Godot [InputEvent] directly to the running engine instance via [Input.parseInputEvent].
+  void sendInput(InputEvent event) {
+    if (!_attached || (_handle == ffi.nullptr && !Platform.isAndroid)) return;
+    try {
+      Input.singleton.parseInputEvent(event);
+    } catch (_) {}
   }
 
   /// Reports the space a [GodotView] has available, computing the actual physical resolution,

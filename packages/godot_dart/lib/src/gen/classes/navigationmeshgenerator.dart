@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class NavigationMeshGenerator extends GodotObject {
   NavigationMeshGenerator(super.nativePtr);
 
+  static NavigationMeshGenerator? _singleton;
+  static NavigationMeshGenerator get singleton {
+    return _singleton ??= NavigationMeshGenerator(resolveSingleton('NavigationMeshGenerator'));
+  }
+
   /// Constructs a brand-new engine-owned NavigationMeshGenerator instance
   /// (via classdb_construct_object3), not an existing one.
   factory NavigationMeshGenerator.create() {

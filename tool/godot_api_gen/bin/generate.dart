@@ -339,6 +339,11 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib, Map<String,
   var totalVirtuals = 0, skippedVirtuals = 0;
   final virtualsByClass = <String, List<_VirtualSpec>>{};
 
+  final singletons = {
+    for (final s in (api['singletons'] as List).cast<Map<String, dynamic>>())
+      s['type'] as String: s['name'] as String,
+  };
+
   for (final classJson in ordered) {
     final className = classJson['name'] as String;
     final parentName = classJson['inherits'] as String?;
@@ -347,7 +352,7 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib, Map<String,
         : parentName;
 
     final (code, emitted, skipped, virtualsEmitted, virtualsSkipped) =
-        _generateClass(classJson, dartSuper, classNames, podZeroLiterals, virtualsByClass);
+        _generateClass(classJson, dartSuper, classNames, podZeroLiterals, virtualsByClass, singletons[className]);
     totalMethods += emitted;
     skippedMethods += skipped;
     totalVirtuals += virtualsEmitted;
@@ -371,6 +376,7 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib, Map<String,
   Set<String> classNames,
   Map<String, String> podZeroLiterals,
   Map<String, List<_VirtualSpec>> virtualsByClass,
+  String? singletonName,
 ) {
   final className = classJson['name'] as String;
   final methods = (classJson['methods'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
@@ -393,7 +399,16 @@ void _generateClasses(Map<String, dynamic> api, String godotDartLib, Map<String,
   buffer.writeln('  $className(super.nativePtr);');
   buffer.writeln();
 
+  if (singletonName != null) {
+    buffer.writeln('  static $className? _singleton;');
+    buffer.writeln('  static $className get singleton {');
+    buffer.writeln("    return _singleton ??= $className(resolveSingleton('$singletonName'));");
+    buffer.writeln('  }');
+    buffer.writeln();
+  }
+
   if (classJson['is_instantiable'] == true) {
+
     buffer.writeln('  /// Constructs a brand-new engine-owned $className instance');
     buffer.writeln('  /// (via classdb_construct_object3), not an existing one.');
     buffer.writeln('  factory $className.create() {');

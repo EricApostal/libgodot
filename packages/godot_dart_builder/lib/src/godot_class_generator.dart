@@ -100,8 +100,9 @@ String _emit(
   buffer.writeln('  final token = InstanceRegistry.createToken();');
   buffer.writeln("  GodotApi.objectSetInstance(obj, StringNameCache.intern('$godotClassName'), token);");
   buffer.writeln('  final instance = $className(obj);');
-  buffer.writeln('  InstanceRegistry.bind(token, instance);');
+  buffer.writeln('  InstanceRegistry.bind(token, instance, obj);');
   buffer.writeln('  return obj;');
+
   buffer.writeln('}');
   buffer.writeln();
 

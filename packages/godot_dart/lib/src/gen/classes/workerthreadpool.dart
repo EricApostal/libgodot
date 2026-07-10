@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class WorkerThreadPool extends GodotObject {
   WorkerThreadPool(super.nativePtr);
 
+  static WorkerThreadPool? _singleton;
+  static WorkerThreadPool get singleton {
+    return _singleton ??= WorkerThreadPool(resolveSingleton('WorkerThreadPool'));
+  }
+
   // Skipped add_task(): an argument type is unsupported.
   static final Pointer<Void> _mb_is_task_completed =
       resolveMethodBind('WorkerThreadPool', 'is_task_completed', 1116898809);

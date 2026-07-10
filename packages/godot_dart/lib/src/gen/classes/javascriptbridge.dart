@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class JavaScriptBridge extends GodotObject {
   JavaScriptBridge(super.nativePtr);
 
+  static JavaScriptBridge? _singleton;
+  static JavaScriptBridge get singleton {
+    return _singleton ??= JavaScriptBridge(resolveSingleton('JavaScriptBridge'));
+  }
+
   // Skipped eval(): unsupported return type "Variant".
   static final Pointer<Void> _mb_get_interface =
       resolveMethodBind('JavaScriptBridge', 'get_interface', 1355533281);

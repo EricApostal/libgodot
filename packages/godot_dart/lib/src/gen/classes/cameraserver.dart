@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class CameraServer extends GodotObject {
   CameraServer(super.nativePtr);
 
+  static CameraServer? _singleton;
+  static CameraServer get singleton {
+    return _singleton ??= CameraServer(resolveSingleton('CameraServer'));
+  }
+
   /// Constructs a brand-new engine-owned CameraServer instance
   /// (via classdb_construct_object3), not an existing one.
   factory CameraServer.create() {

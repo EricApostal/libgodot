@@ -404,3 +404,7 @@ typedef VariantDestroyDart = void Function(Pointer<Void> self);
 
 typedef VariantGetTypeNative = Int32 Function(Pointer<Void> self);
 typedef VariantGetTypeDart = int Function(Pointer<Void> self);
+
+typedef GlobalGetSingletonNative = GDExtensionObjectPtr Function(GDExtensionStringNamePtr pName);
+typedef GlobalGetSingletonDart = Pointer<Void> Function(Pointer<Void> pName);
+

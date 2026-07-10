@@ -12,7 +12,7 @@ GDExtensionObjectPtr _create_OrbitingBody(
   GodotApi.objectSetInstance(
       obj, StringNameCache.intern('OrbitingBody'), token);
   final instance = OrbitingBody(obj);
-  InstanceRegistry.bind(token, instance);
+  InstanceRegistry.bind(token, instance, obj);
   return obj;
 }
 

@@ -1,15 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:godot_dart/godot_dart.dart';
+import 'package:godot_dart/godot_dart.dart' hide Container;
 import 'package:libgodot/libgodot.dart';
 
 import 'godot_dart_init.g.dart';
+import 'scene_root.dart';
 
 void main() {
-  // Registers every @GodotClass-annotated class (see spinning_controller.dart)
-  // with GodotClassRegistry, so GodotDartEntryPoint's init function knows
-  // about them once a Godot instance is created below.
+  // Registers every @GodotClass-annotated class (see spinning_controller.dart,
+  // scene_root.dart, orbiting_body.dart) with GodotClassRegistry, so
+  // GodotDartEntryPoint's init function knows about them once Godot boots.
   initializeGodotDartClasses();
   runApp(const MyApp());
 }
@@ -23,33 +22,28 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late final _controller = GodotController(
-    projectPath: _godotProjectPath,
+    // Null projectPath boots an empty offscreen Godot instance without reading any
+    // project.godot file or filesystem assets. The scene is created and attached
+    // completely from Dart code inside onReady.
+    projectPath: null,
     initialWidth: 640,
     initialHeight: 360,
-    // On Android, Main::setup2() (which combines this into the engine's GDExtension init) runs
-    // on GodotLib.step()'s own VkThread rather than synchronously on the thread that called
-    // GodotController.attach() like every other platform -- Dart's native callback machinery
-    // can't be invoked from a thread its isolate doesn't recognize, so godot_core.cpp dispatches
-    // it (and GodotClassRegistry.registerAll(), run from the initialize callback) to the main
-    // thread and blocks until it completes. See godot_core.cpp's "Android main-thread dispatch
-    // for Dart callbacks" section.
     initFunctionAddress: GodotDartEntryPoint.nativeFunctionPointer.address,
-  );
+    onReady: (controller) {
+      final mainLoop = Engine.singleton.getMainLoop();
+      if (mainLoop == null) return;
+      final sceneTree = SceneTree(mainLoop.nativePtr);
+      final parent = sceneTree.getCurrentScene() ?? sceneTree.getRoot();
+      if (parent == null) return;
 
-  /// On Linux desktop builds the `flutter_assets` directory is unpacked as plain files next to
-  /// the executable, so the bundled Godot project can be pointed at directly. On macOS it instead
-  /// lives inside the app bundle's App.framework Resources. On Android this is unused: Godot's
-  /// Android build always loads the project bundled into the APK's own assets (see
-  /// example/android/app/src/main/assets/ and LibgodotPlugin.kt's class doc for why), rather than
-  /// an arbitrary runtime path.
-  String get _godotProjectPath {
-    final exeDir = File(Platform.resolvedExecutable).parent.path;
-    if (Platform.isMacOS) {
-      final contentsDir = Directory(exeDir).parent.path;
-      return '$contentsDir/Frameworks/App.framework/Resources/flutter_assets/assets/godot_project';
-    }
-    return '$exeDir/data/flutter_assets/assets/godot_project';
-  }
+      final sceneRoot = InstanceRegistry.constructAndWrap<SceneRoot>(
+        'SceneRoot',
+      );
+      if (sceneRoot != null) {
+        parent.addChild(sceneRoot, false, 0);
+      }
+    },
+  );
 
   @override
   void dispose() {
@@ -61,8 +55,16 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('libgodot: all-Dart scene')),
-        body: Center(child: GodotView(controller: _controller)),
+        appBar: AppBar(title: const Text('we out here')),
+        body: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: GodotView(controller: _controller, enableInput: true),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

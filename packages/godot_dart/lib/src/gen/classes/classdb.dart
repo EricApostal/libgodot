@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class ClassDB extends GodotObject {
   ClassDB(super.nativePtr);
 
+  static ClassDB? _singleton;
+  static ClassDB get singleton {
+    return _singleton ??= ClassDB(resolveSingleton('ClassDB'));
+  }
+
   /// Constructs a brand-new engine-owned ClassDB instance
   /// (via classdb_construct_object3), not an existing one.
   factory ClassDB.create() {

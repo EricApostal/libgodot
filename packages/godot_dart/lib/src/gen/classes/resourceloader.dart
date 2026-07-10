@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class ResourceLoader extends GodotObject {
   ResourceLoader(super.nativePtr);
 
+  static ResourceLoader? _singleton;
+  static ResourceLoader get singleton {
+    return _singleton ??= ResourceLoader(resolveSingleton('ResourceLoader'));
+  }
+
   /// Constructs a brand-new engine-owned ResourceLoader instance
   /// (via classdb_construct_object3), not an existing one.
   factory ResourceLoader.create() {

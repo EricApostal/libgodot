@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class ResourceUID extends GodotObject {
   ResourceUID(super.nativePtr);
 
+  static ResourceUID? _singleton;
+  static ResourceUID get singleton {
+    return _singleton ??= ResourceUID(resolveSingleton('ResourceUID'));
+  }
+
   static final Pointer<Void> _mb_id_to_text =
       resolveMethodBind('ResourceUID', 'id_to_text', 844755477);
 

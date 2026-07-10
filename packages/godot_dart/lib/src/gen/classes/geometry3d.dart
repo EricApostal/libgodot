@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class Geometry3D extends GodotObject {
   Geometry3D(super.nativePtr);
 
+  static Geometry3D? _singleton;
+  static Geometry3D get singleton {
+    return _singleton ??= Geometry3D(resolveSingleton('Geometry3D'));
+  }
+
   /// Constructs a brand-new engine-owned Geometry3D instance
   /// (via classdb_construct_object3), not an existing one.
   factory Geometry3D.create() {

@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class NavigationServer3DManager extends GodotObject {
   NavigationServer3DManager(super.nativePtr);
 
+  static NavigationServer3DManager? _singleton;
+  static NavigationServer3DManager get singleton {
+    return _singleton ??= NavigationServer3DManager(resolveSingleton('NavigationServer3DManager'));
+  }
+
   /// Constructs a brand-new engine-owned NavigationServer3DManager instance
   /// (via classdb_construct_object3), not an existing one.
   factory NavigationServer3DManager.create() {

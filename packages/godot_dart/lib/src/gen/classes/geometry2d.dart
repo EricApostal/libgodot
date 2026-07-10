@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class Geometry2D extends GodotObject {
   Geometry2D(super.nativePtr);
 
+  static Geometry2D? _singleton;
+  static Geometry2D get singleton {
+    return _singleton ??= Geometry2D(resolveSingleton('Geometry2D'));
+  }
+
   /// Constructs a brand-new engine-owned Geometry2D instance
   /// (via classdb_construct_object3), not an existing one.
   factory Geometry2D.create() {

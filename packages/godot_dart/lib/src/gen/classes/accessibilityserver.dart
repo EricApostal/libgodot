@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class AccessibilityServer extends GodotObject {
   AccessibilityServer(super.nativePtr);
 
+  static AccessibilityServer? _singleton;
+  static AccessibilityServer get singleton {
+    return _singleton ??= AccessibilityServer(resolveSingleton('AccessibilityServer'));
+  }
+
   static final Pointer<Void> _mb_is_supported =
       resolveMethodBind('AccessibilityServer', 'is_supported', 36873697);
 

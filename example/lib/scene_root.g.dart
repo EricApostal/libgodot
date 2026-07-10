@@ -11,7 +11,7 @@ GDExtensionObjectPtr _create_SceneRoot(
   final token = InstanceRegistry.createToken();
   GodotApi.objectSetInstance(obj, StringNameCache.intern('SceneRoot'), token);
   final instance = SceneRoot(obj);
-  InstanceRegistry.bind(token, instance);
+  InstanceRegistry.bind(token, instance, obj);
   return obj;
 }
 

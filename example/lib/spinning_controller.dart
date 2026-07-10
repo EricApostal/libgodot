@@ -23,7 +23,11 @@ class SpinningController extends MeshInstance3D {
 
   @override
   void process(double delta) {
-    rotateY(delta * yawSpeed);
-    rotateX(delta * rollSpeed);
+    final pressed = Input.singleton.isMouseButtonPressed(1) ||
+        Input.singleton.isKeyPressed(32); // 32 = Space
+    final mult = pressed ? 5.0 : 1.0;
+    rotateY(delta * yawSpeed * mult);
+    rotateX(delta * rollSpeed * mult);
   }
+
 }

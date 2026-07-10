@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class EngineDebugger extends GodotObject {
   EngineDebugger(super.nativePtr);
 
+  static EngineDebugger? _singleton;
+  static EngineDebugger get singleton {
+    return _singleton ??= EngineDebugger(resolveSingleton('EngineDebugger'));
+  }
+
   /// Constructs a brand-new engine-owned EngineDebugger instance
   /// (via classdb_construct_object3), not an existing one.
   factory EngineDebugger.create() {

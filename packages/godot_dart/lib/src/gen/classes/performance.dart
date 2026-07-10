@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class Performance extends GodotObject {
   Performance(super.nativePtr);
 
+  static Performance? _singleton;
+  static Performance get singleton {
+    return _singleton ??= Performance(resolveSingleton('Performance'));
+  }
+
   /// Constructs a brand-new engine-owned Performance instance
   /// (via classdb_construct_object3), not an existing one.
   factory Performance.create() {

@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class DisplayServer extends GodotObject {
   DisplayServer(super.nativePtr);
 
+  static DisplayServer? _singleton;
+  static DisplayServer get singleton {
+    return _singleton ??= DisplayServer(resolveSingleton('DisplayServer'));
+  }
+
   static final Pointer<Void> _mb_has_feature =
       resolveMethodBind('DisplayServer', 'has_feature', 334065950);
 

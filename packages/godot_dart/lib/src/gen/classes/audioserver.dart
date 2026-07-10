@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class AudioServer extends GodotObject {
   AudioServer(super.nativePtr);
 
+  static AudioServer? _singleton;
+  static AudioServer get singleton {
+    return _singleton ??= AudioServer(resolveSingleton('AudioServer'));
+  }
+
   /// Constructs a brand-new engine-owned AudioServer instance
   /// (via classdb_construct_object3), not an existing one.
   factory AudioServer.create() {

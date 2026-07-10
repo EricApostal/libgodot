@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class TranslationServer extends GodotObject {
   TranslationServer(super.nativePtr);
 
+  static TranslationServer? _singleton;
+  static TranslationServer get singleton {
+    return _singleton ??= TranslationServer(resolveSingleton('TranslationServer'));
+  }
+
   /// Constructs a brand-new engine-owned TranslationServer instance
   /// (via classdb_construct_object3), not an existing one.
   factory TranslationServer.create() {

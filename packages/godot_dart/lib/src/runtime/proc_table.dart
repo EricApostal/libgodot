@@ -42,6 +42,7 @@ abstract final class GodotApi {
   static late final VariantNewNilDart variantNewNil;
   static late final VariantDestroyDart variantDestroy;
   static late final VariantGetTypeDart variantGetType;
+  static late final GlobalGetSingletonDart globalGetSingleton;
 
   /// The GDExtensionClassLibraryPtr this Dart extension was registered
   /// under; required by every classdb_register_extension_class* call.
@@ -105,6 +106,8 @@ abstract final class GodotApi {
     variantNewNil = proc<VariantNewNilNative>('variant_new_nil').asFunction();
     variantDestroy = proc<VariantDestroyNative>('variant_destroy').asFunction();
     variantGetType = proc<VariantGetTypeNative>('variant_get_type').asFunction();
+    globalGetSingleton =
+        proc<GlobalGetSingletonNative>('global_get_singleton').asFunction();
 
     library = libraryPtr;
     _initialized = true;

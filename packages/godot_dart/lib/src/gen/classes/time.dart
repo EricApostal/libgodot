@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class Time extends GodotObject {
   Time(super.nativePtr);
 
+  static Time? _singleton;
+  static Time get singleton {
+    return _singleton ??= Time(resolveSingleton('Time'));
+  }
+
   /// Constructs a brand-new engine-owned Time instance
   /// (via classdb_construct_object3), not an existing one.
   factory Time.create() {

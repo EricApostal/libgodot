@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class OS extends GodotObject {
   OS(super.nativePtr);
 
+  static OS? _singleton;
+  static OS get singleton {
+    return _singleton ??= OS(resolveSingleton('OS'));
+  }
+
   /// Constructs a brand-new engine-owned OS instance
   /// (via classdb_construct_object3), not an existing one.
   factory OS.create() {

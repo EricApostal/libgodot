@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class InputMap extends GodotObject {
   InputMap(super.nativePtr);
 
+  static InputMap? _singleton;
+  static InputMap get singleton {
+    return _singleton ??= InputMap(resolveSingleton('InputMap'));
+  }
+
   /// Constructs a brand-new engine-owned InputMap instance
   /// (via classdb_construct_object3), not an existing one.
   factory InputMap.create() {

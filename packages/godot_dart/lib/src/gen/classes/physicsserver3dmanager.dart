@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class PhysicsServer3DManager extends GodotObject {
   PhysicsServer3DManager(super.nativePtr);
 
+  static PhysicsServer3DManager? _singleton;
+  static PhysicsServer3DManager get singleton {
+    return _singleton ??= PhysicsServer3DManager(resolveSingleton('PhysicsServer3DManager'));
+  }
+
   /// Constructs a brand-new engine-owned PhysicsServer3DManager instance
   /// (via classdb_construct_object3), not an existing one.
   factory PhysicsServer3DManager.create() {

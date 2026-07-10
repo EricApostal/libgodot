@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class ProjectSettings extends GodotObject {
   ProjectSettings(super.nativePtr);
 
+  static ProjectSettings? _singleton;
+  static ProjectSettings get singleton {
+    return _singleton ??= ProjectSettings(resolveSingleton('ProjectSettings'));
+  }
+
   /// Constructs a brand-new engine-owned ProjectSettings instance
   /// (via classdb_construct_object3), not an existing one.
   factory ProjectSettings.create() {

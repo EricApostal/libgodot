@@ -14,6 +14,11 @@ import '../classes.g.dart';
 class Marshalls extends GodotObject {
   Marshalls(super.nativePtr);
 
+  static Marshalls? _singleton;
+  static Marshalls get singleton {
+    return _singleton ??= Marshalls(resolveSingleton('Marshalls'));
+  }
+
   /// Constructs a brand-new engine-owned Marshalls instance
   /// (via classdb_construct_object3), not an existing one.
   factory Marshalls.create() {
